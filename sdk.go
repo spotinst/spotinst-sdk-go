@@ -20,8 +20,8 @@ const (
 	libraryVersion = "0.1"
 	userAgent = "spotinst-sdk-go/" + libraryVersion
 	baseUrl = "http://dev.spotinst.com"
-	apiUrl = fmt.Sprintf("%s:%d", baseUrl, 8081)
-	oauthUrl = fmt.Sprintf("%s:%d", baseUrl, 9540)
+	apiUrl = baseUrl + ":8081"
+	oauthUrl = baseUrl + ":9540"
 )
 
 type Client struct {
@@ -81,7 +81,16 @@ func NewClient(username, password, clientId, clientSecret string) (*Client, erro
 		return nil, err
 	}
 
-	c := &Client{AccessToken: accessToken, RefreshToken: refreshToken, Username: username, Password: password, ClientId: clientId, ClientSecret: clientSecret, HttpClient: &http.Client{}}
+	c := &Client{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		Username:     username,
+		Password:     password,
+		ClientId:     clientId,
+		ClientSecret: clientSecret,
+		HttpClient:   &http.Client{},
+	}
+
 	c.Group = &GroupService{client: c}
 
 	return c, nil
@@ -89,7 +98,17 @@ func NewClient(username, password, clientId, clientSecret string) (*Client, erro
 
 // GetAuthTokens creates an Authorization request to get an access and refresh token.
 func GetAuthTokens(username, password, clientId, clientSecret string) (string, string, error) {
-	res, err := http.PostForm(fmt.Sprintf("%s/token", oauthUrl), url.Values{"grant_type": {"password"}, "username": {username}, "password": {password}, "client_id": {clientId}, "client_secret": {clientSecret}})
+	res, err := http.PostForm(
+		fmt.Sprintf("%s/token", oauthUrl),
+		url.Values{
+			"grant_type":    {"password"},
+			"username":      {username},
+			"password":      {password},
+			"client_id":     {clientId},
+			"client_secret": {clientSecret},
+		},
+	)
+
 	if err != nil {
 		return "", "", err
 	}

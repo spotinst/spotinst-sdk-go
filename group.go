@@ -20,13 +20,13 @@ type GroupService struct {
 }
 
 type Group struct {
-	Id          string `json:"id,omitempty"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
+	Id          string        `json:"id,omitempty"`
+	Name        string        `json:"name"`
+	Description string        `json:"description"`
 	Capacity    GroupCapacity `json:"capacity"`
-	Compute     GroupCompute `json:"compute"`
+	Compute     GroupCompute  `json:"compute"`
 	Strategy    GroupStrategy `json:"strategy"`
-	Scaling     GroupScaling `json:"scaling,omitempty"`
+	Scaling     GroupScaling  `json:"scaling,omitempty"`
 }
 
 type GroupScaling struct {
@@ -35,22 +35,22 @@ type GroupScaling struct {
 }
 
 type GroupScalingPolicy struct {
-	PolicyName        string `json:"policyName"`
-	MetricName        string `json:"metricName"`
-	Statistic         string `json:"statistic"`
-	Unit              string `json:"unit"`
-	Threshold         float32 `json:"threshold"`
-	Adjustment        int `json:"adjustment"`
-	Namespace         string `json:"namespace"`
-	Period            int `json:"period"`
-	EvaluationPeriods int `json:"evaluationPeriods"`
-	Cooldown          int `json:"cooldown"`
+	PolicyName        string              `json:"policyName"`
+	MetricName        string              `json:"metricName"`
+	Statistic         string              `json:"statistic"`
+	Unit              string              `json:"unit"`
+	Threshold         float32             `json:"threshold"`
+	Adjustment        int                 `json:"adjustment"`
+	Namespace         string              `json:"namespace"`
+	Period            int                 `json:"period"`
+	EvaluationPeriods int                 `json:"evaluationPeriods"`
+	Cooldown          int                 `json:"cooldown"`
 	Dimensions        []map[string]string `json:"dimensions"`
 }
 
 type GroupStrategy struct {
 	Risk               float32 `json:"risk"`
-	AvailabilityVsCost string `json:"availabilityVsCost"`
+	AvailabilityVsCost string  `json:"availabilityVsCost"`
 }
 
 type GroupCapacity struct {
@@ -60,14 +60,14 @@ type GroupCapacity struct {
 }
 
 type GroupCompute struct {
-	Product             string `json:"product"`
-	InstanceTypes       GroupComputeInstanceType `json:"instanceTypes"`
+	Product             string                          `json:"product"`
+	InstanceTypes       GroupComputeInstanceType        `json:"instanceTypes"`
 	LaunchSpecification GroupComputeLaunchSpecification `json:"launchSpecification"`
-	AvailabilityZones   []GroupComputeAvailabilityZone `json:"availabilityZones"`
+	AvailabilityZones   []GroupComputeAvailabilityZone  `json:"availabilityZones"`
 }
 
 type GroupComputeInstanceType struct {
-	OnDemand string `json:"ondemand"`
+	OnDemand string   `json:"ondemand"`
 	Spot     []string `json:"spot"`
 }
 
@@ -78,9 +78,9 @@ type GroupComputeAvailabilityZone struct {
 
 type GroupComputeLaunchSpecification struct {
 	SecurityGroupIds []string `json:"securityGroupIds"`
-	Monitoring       bool  `json:"monitoring"`
-	ImageId          string `json:"imageId"`
-	KeyPair          string `json:"keyPair"`
+	Monitoring       bool     `json:"monitoring"`
+	ImageId          string   `json:"imageId"`
+	KeyPair          string   `json:"keyPair"`
 }
 
 type groupWrapper struct {
