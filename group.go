@@ -20,13 +20,13 @@ type GroupService struct {
 }
 
 type Group struct {
-	Id          string        `json:"id,omitempty"`
-	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	Capacity    GroupCapacity `json:"capacity"`
-	Compute     GroupCompute  `json:"compute"`
-	Strategy    GroupStrategy `json:"strategy"`
-	Scaling     GroupScaling  `json:"scaling,omitempty"`
+	Id          string         `json:"id,omitempty"`
+	Name        string         `json:"name,omitempty"`
+	Description string         `json:"description,omitempty"`
+	Capacity    *GroupCapacity `json:"capacity,omitempty"`
+	Compute     *GroupCompute  `json:"compute,omitempty"`
+	Strategy    *GroupStrategy `json:"strategy,omitempty"`
+	Scaling     *GroupScaling  `json:"scaling,omitempty"`
 }
 
 type GroupScaling struct {
@@ -60,10 +60,10 @@ type GroupCapacity struct {
 }
 
 type GroupCompute struct {
-	Product             string                          `json:"product"`
-	InstanceTypes       GroupComputeInstanceType        `json:"instanceTypes"`
-	LaunchSpecification GroupComputeLaunchSpecification `json:"launchSpecification"`
-	AvailabilityZones   []GroupComputeAvailabilityZone  `json:"availabilityZones"`
+	Product             string                           `json:"product"`
+	InstanceTypes       *GroupComputeInstanceType        `json:"instanceTypes"`
+	LaunchSpecification *GroupComputeLaunchSpecification `json:"launchSpecification"`
+	AvailabilityZones   []GroupComputeAvailabilityZone   `json:"availabilityZones"`
 }
 
 type GroupComputeInstanceType struct {
@@ -112,7 +112,8 @@ func (s *GroupService) Create(group Group) ([]Group, error) {
 // Updates an existing group.
 func (s *GroupService) Update(group Group) ([]Group, error) {
 	var retval GroupResponse
-	_, err := s.client.put(fmt.Sprintf("%s/%s", path, group.Id), group, &retval)
+	var gid = group.Id; group.Id = ""
+	_, err := s.client.put(fmt.Sprintf("%s/%s", path, gid), groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err
 	}
