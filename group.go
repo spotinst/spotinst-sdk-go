@@ -1,8 +1,18 @@
+/*
+  @author    Liran Polak
+  @copyright Copyright (c) 2016, Spotinst
+  @license   GPL-3.0
+*/
+
 package spotinstsdk
 
 import (
 	"net/http"
 	"fmt"
+)
+
+const (
+	path = "aws/ec2/group"
 )
 
 type GroupService struct {
@@ -79,19 +89,8 @@ type groupWrapper struct {
 
 // Lists a specific/all groups.
 func (s *GroupService) Get(id string) ([]Group, error) {
-	var (
-		retval Response
-		path string
-	)
-
-	if id != "" {
-		path = fmt.Sprintf("aws/ec2/group/%s", id)
-	} else {
-		path = "aws/ec2/group"
-	}
-
-	_, err := s.client.get(path, &retval)
-
+	var retval GroupResponse
+	_, err := s.client.get(fmt.Sprintf("%s/%s", path, id), &retval)
 	if err != nil {
 		return nil, err
 	}
@@ -101,8 +100,8 @@ func (s *GroupService) Get(id string) ([]Group, error) {
 
 // Creates a new group.
 func (s *GroupService) Create(group Group) ([]Group, error) {
-	var retval Response
-	_, err := s.client.post("aws/ec2/group", groupWrapper{Group: group}, &retval)
+	var retval GroupResponse
+	_, err := s.client.post(path, groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err
 	}
@@ -112,8 +111,8 @@ func (s *GroupService) Create(group Group) ([]Group, error) {
 
 // Updates an existing group.
 func (s *GroupService) Update(group Group) ([]Group, error) {
-	var retval Response
-	_, err := s.client.put(fmt.Sprintf("aws/ec2/group/%s", group.Id), group, &retval)
+	var retval GroupResponse
+	_, err := s.client.put(fmt.Sprintf("%s/%s", path, group.Id), group, &retval)
 	if err != nil {
 		return nil, err
 	}
@@ -123,6 +122,5 @@ func (s *GroupService) Update(group Group) ([]Group, error) {
 
 // Deletes an existing group.
 func (s *GroupService) Delete(group Group) (*http.Response, error) {
-	return s.client.delete(fmt.Sprintf("aws/ec2/group/%s", group.Id), nil)
+	return s.client.delete(fmt.Sprintf("%s/%s", path, group.Id), nil)
 }
-

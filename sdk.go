@@ -1,3 +1,9 @@
+/*
+  @author    Liran Polak
+  @copyright Copyright (c) 2016, Spotinst
+  @license   GPL-3.0
+*/
+
 package spotinstsdk
 
 import (
@@ -6,15 +12,16 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-//	"log"
 	"net/http"
 	"net/url"
 )
 
 const (
-	DefaultTestBaseURL = "http://dev.spotinst.com"
-	ApiPort = 8081
-	OAuthPort = 9540
+	libraryVersion = "0.1"
+	userAgent = "spotinst-sdk-go/" + libraryVersion
+	baseUrl = "http://dev.spotinst.com"
+	apiUrl = fmt.Sprintf("%s:%d", baseUrl, 8081)
+	oauthUrl = fmt.Sprintf("%s:%d", baseUrl, 9540)
 )
 
 type Client struct {
@@ -36,17 +43,34 @@ type Client struct {
 	Group        *GroupService
 }
 
-type AuthResponse struct {
-	Response AuthInnerResponse  `json:"response"`
+type GroupResponse struct {
+	Response struct {
+				 Errors []Error `json:"errors"`
+				 Items  []Group `json:"items"`
+			 } `json:"response"`
 }
 
-type AuthInnerResponse struct {
-	Items []Token `json:"items"`
+type AuthResponse struct {
+	Response struct {
+				 Errors []Error `json:"errors"`
+				 Items  []Token `json:"items"`
+			 } `json:"response"`
 }
 
 type Token struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
+}
+
+type Error struct {
+	Code    string `json:"code"`    // error code
+	Message string `json:"message"` // human-readable message
+	Field   string `json:"field"`
+}
+
+type ErrorResponseList struct {
+	Response *http.Response // HTTP response that caused this error
+	Errors   []Error
 }
 
 // NewClient returns a new ultradns API client.
@@ -65,7 +89,7 @@ func NewClient(username, password, clientId, clientSecret string) (*Client, erro
 
 // GetAuthTokens creates an Authorization request to get an access and refresh token.
 func GetAuthTokens(username, password, clientId, clientSecret string) (string, string, error) {
-	res, err := http.PostForm(fmt.Sprintf("%s:%d/token", DefaultTestBaseURL, OAuthPort), url.Values{"grant_type": {"password"}, "username": {username}, "password": {password}, "client_id": {clientId}, "client_secret": {clientSecret}})
+	res, err := http.PostForm(fmt.Sprintf("%s/token", oauthUrl), url.Values{"grant_type": {"password"}, "username": {username}, "password": {password}, "client_id": {clientId}, "client_secret": {clientSecret}})
 	if err != nil {
 		return "", "", err
 	}
@@ -102,7 +126,7 @@ func GetAuthTokens(username, password, clientId, clientSecret string) (string, s
 // The path is expected to be a relative path and will be resolved
 // according to the BaseURL of the Client. Paths should always be specified without a preceding slash.
 func (client *Client) NewRequest(method, path string, payload interface{}) (*http.Request, error) {
-	url := fmt.Sprintf("%s:%d/%s", DefaultTestBaseURL, ApiPort, path)
+	url := fmt.Sprintf("%s/%s", apiUrl, path)
 	body := new(bytes.Buffer)
 	if payload != nil {
 		err := json.NewEncoder(body).Encode(payload)
@@ -116,6 +140,7 @@ func (client *Client) NewRequest(method, path string, payload interface{}) (*htt
 		return nil, err
 	}
 
+	req.Header.Add("User-Agent", userAgent)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", client.AccessToken))
@@ -173,24 +198,6 @@ func (c *Client) delete(path string, payload interface{}) (*http.Response, error
 	return c.Do("DELETE", path, payload, nil)
 }
 
-type Response struct {
-	Response struct {
-				 Errors []Error `json:"errors"`
-				 Items  []Group `json:"items"`
-			 } `json:"response"`
-}
-
-type Error struct {
-	Code    string `json:"code"`    // error code
-	Message string `json:"message"` // human-readable message
-	Field   string `json:"field"`
-}
-
-type ErrorResponseList struct {
-	Response *http.Response // HTTP response that caused this error
-	Errors   []Error
-}
-
 // Error implements the error interface.
 func (r *ErrorResponseList) Error() string {
 	return fmt.Sprintf("%v %v: %d %s %v",
@@ -211,7 +218,7 @@ func CheckResponse(res *http.Response) error {
 		return err
 	}
 
-	var r Response
+	var r GroupResponse
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		return err
