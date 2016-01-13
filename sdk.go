@@ -18,11 +18,9 @@ import (
 
 const (
 	libraryVersion = "0.1"
-	userAgent = "spotinst-sdk-go/" + libraryVersion
-	defaultBaseProdURL = "http://dev.spotinst.com"
-	defaultBaseTestURL = "http://dev.spotinst.com"
-	defaultApiPort = 8081
-	defaultOAuthPort = 9540
+	userAgent 	   = "spotinst-sdk-go/" + libraryVersion
+	apiURL 		   = "http://dev.spotinst.com:8081"
+	oauthURL 	   = "http://dev.spotinst.com:9540"
 )
 
 var (
@@ -80,18 +78,7 @@ type ErrorResponseList struct {
 }
 
 // NewClient returns a new Spotinst API client.
-func NewClient(username, password, clientId, clientSecret string, test ...bool) (*Client, error) {
-	var baseURL string
-
-	if len(test) > 0 && test[0] {
-		baseURL = defaultBaseTestURL
-	} else {
-		baseURL = defaultBaseProdURL
-	}
-
-	apiURL = fmt.Sprintf("%s:%d", baseURL, defaultApiPort)
-	oauthURL = fmt.Sprintf("%s:%d", baseURL, defaultOAuthPort)
-
+func NewClient(username, password, clientId, clientSecret string) (*Client, error) {
 	accessToken, refreshToken, err := GetAuthTokens(username, password, clientId, clientSecret)
 
 	if err != nil {

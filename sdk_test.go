@@ -50,7 +50,7 @@ func TestMain(m *testing.M) {
 func Test_CreateClient(t *testing.T) {
 	t.Log("Creating a new client")
 	var err error
-	testClient, err = NewClient(testUsername, testPassword, testClientId, testClientSecret, true)
+	testClient, err = NewClient(testUsername, testPassword, testClientId, testClientSecret)
 	if testClient == nil || err != nil {
 		t.Fatal(err)
 	}
