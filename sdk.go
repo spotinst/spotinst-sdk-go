@@ -17,10 +17,10 @@ import (
 )
 
 const (
-	libraryVersion = "0.1"
-	userAgent 	   = "spotinst-sdk-go/" + libraryVersion
-	apiURL 		   = "http://dev.spotinst.com:8081"
-	oauthURL 	   = "http://dev.spotinst.com:9540"
+	libraryVersion 	= "0.1"
+	userAgent 		= "spotinst-sdk-go/" + libraryVersion
+	apiURL 			= "http://dev.spotinst.com:8081"
+	oauthURL 		= "http://dev.spotinst.com:9540"
 )
 
 var (
