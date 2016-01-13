@@ -79,15 +79,18 @@ type ErrorResponseList struct {
 	Errors   []Error
 }
 
-// NewClient returns a new ultradns API client.
+// NewClient returns a new Spotinst API client.
 func NewClient(username, password, clientId, clientSecret string, test ...bool) (*Client, error) {
+	var baseURL string
+
 	if len(test) > 0 && test[0] {
-		apiURL = fmt.Sprintf("%s:%d", defaultBaseTestURL, defaultApiPort)
-		oauthURL = fmt.Sprintf("%s:%d", defaultBaseTestURL, defaultOAuthPort)
+		baseURL = defaultBaseTestURL
 	} else {
-		apiURL = fmt.Sprintf("%s:%d", defaultBaseProdURL, defaultApiPort)
-		oauthURL = fmt.Sprintf("%s:%d", defaultBaseProdURL, defaultOAuthPort)
+		baseURL = defaultBaseProdURL
 	}
+
+	apiURL = fmt.Sprintf("%s:%d", baseURL, defaultApiPort)
+	oauthURL = fmt.Sprintf("%s:%d", baseURL, defaultOAuthPort)
 
 	accessToken, refreshToken, err := GetAuthTokens(username, password, clientId, clientSecret)
 
