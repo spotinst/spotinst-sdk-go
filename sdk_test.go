@@ -84,8 +84,8 @@ func Test_CreateGroup(t *testing.T) {
 				ImageId: "ami-f0091d91",
 				KeyPair: "float_oregon",
 			},
-			AvailabilityZones: []GroupComputeAvailabilityZone{
-				GroupComputeAvailabilityZone{
+			AvailabilityZones: []*GroupComputeAvailabilityZone{
+				&GroupComputeAvailabilityZone{
 					Name: "us-west-2b",
 				},
 			},

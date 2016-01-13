@@ -30,8 +30,8 @@ type Group struct {
 }
 
 type GroupScaling struct {
-	Up   []GroupScalingPolicy `json:"up,omitempty"`
-	Down []GroupScalingPolicy `json:"down,omitempty"`
+	Up   []*GroupScalingPolicy `json:"up,omitempty"`
+	Down []*GroupScalingPolicy `json:"down,omitempty"`
 }
 
 type GroupScalingPolicy struct {
@@ -63,7 +63,7 @@ type GroupCompute struct {
 	Product             string                           `json:"product"`
 	InstanceTypes       *GroupComputeInstanceType        `json:"instanceTypes"`
 	LaunchSpecification *GroupComputeLaunchSpecification `json:"launchSpecification"`
-	AvailabilityZones   []GroupComputeAvailabilityZone   `json:"availabilityZones"`
+	AvailabilityZones   []*GroupComputeAvailabilityZone  `json:"availabilityZones"`
 }
 
 type GroupComputeInstanceType struct {

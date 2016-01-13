@@ -23,11 +23,6 @@ const (
 	oauthURL 		= "http://dev.spotinst.com:9540"
 )
 
-var (
-	apiURL string
-	oauthURL string
-)
-
 type Client struct {
 	// This is our client structure.
 	HttpClient   *http.Client
