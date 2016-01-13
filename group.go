@@ -88,9 +88,15 @@ type groupWrapper struct {
 }
 
 // Lists a specific/all groups.
-func (s *GroupService) Get(id string) ([]Group, error) {
-	var retval GroupResponse
-	_, err := s.client.get(fmt.Sprintf("%s/%s", path, id), &retval)
+func (s *GroupService) Get(id ...string) ([]Group, error) {
+	var (
+		retval GroupResponse
+		gid string
+	)
+	if len(id) > 0 {
+		gid = id[0]
+	}
+	_, err := s.client.get(fmt.Sprintf("%s/%s", path, gid), &retval)
 	if err != nil {
 		return nil, err
 	}

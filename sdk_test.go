@@ -50,7 +50,7 @@ func TestMain(m *testing.M) {
 func Test_CreateClient(t *testing.T) {
 	t.Log("Creating a new client")
 	var err error
-	testClient, err = NewClient(testUsername, testPassword, testClientId, testClientSecret)
+	testClient, err = NewClient(testUsername, testPassword, testClientId, testClientSecret, true)
 	if testClient == nil || err != nil {
 		t.Fatal(err)
 	}
@@ -60,7 +60,7 @@ func Test_CreateClient(t *testing.T) {
 // Get Test
 func Test_GetGroups(t *testing.T) {
 	t.Log("Getting all groups")
-	res, err := testClient.Group.Get("")
+	res, err := testClient.Group.Get()
 	if err != nil {
 		t.Fatal(err)
 	}

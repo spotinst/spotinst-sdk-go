@@ -19,9 +19,15 @@ import (
 const (
 	libraryVersion = "0.1"
 	userAgent = "spotinst-sdk-go/" + libraryVersion
-	baseUrl = "http://dev.spotinst.com"
-	apiUrl = baseUrl + ":8081"
-	oauthUrl = baseUrl + ":9540"
+	defaultBaseProdURL = "http://dev.spotinst.com"
+	defaultBaseTestURL = "http://dev.spotinst.com"
+	defaultApiPort = 8081
+	defaultOAuthPort = 9540
+)
+
+var (
+	apiURL string
+	oauthURL string
 )
 
 type Client struct {
@@ -74,7 +80,15 @@ type ErrorResponseList struct {
 }
 
 // NewClient returns a new ultradns API client.
-func NewClient(username, password, clientId, clientSecret string) (*Client, error) {
+func NewClient(username, password, clientId, clientSecret string, test ...bool) (*Client, error) {
+	if len(test) > 0 && test[0] {
+		apiURL = fmt.Sprintf("%s:%d", defaultBaseTestURL, defaultApiPort)
+		oauthURL = fmt.Sprintf("%s:%d", defaultBaseTestURL, defaultOAuthPort)
+	} else {
+		apiURL = fmt.Sprintf("%s:%d", defaultBaseProdURL, defaultApiPort)
+		oauthURL = fmt.Sprintf("%s:%d", defaultBaseProdURL, defaultOAuthPort)
+	}
+
 	accessToken, refreshToken, err := GetAuthTokens(username, password, clientId, clientSecret)
 
 	if err != nil {
@@ -99,7 +113,7 @@ func NewClient(username, password, clientId, clientSecret string) (*Client, erro
 // GetAuthTokens creates an Authorization request to get an access and refresh token.
 func GetAuthTokens(username, password, clientId, clientSecret string) (string, string, error) {
 	res, err := http.PostForm(
-		fmt.Sprintf("%s/token", oauthUrl),
+		fmt.Sprintf("%s/token", oauthURL),
 		url.Values{
 			"grant_type":    {"password"},
 			"username":      {username},
@@ -145,7 +159,7 @@ func GetAuthTokens(username, password, clientId, clientSecret string) (string, s
 // The path is expected to be a relative path and will be resolved
 // according to the BaseURL of the Client. Paths should always be specified without a preceding slash.
 func (client *Client) NewRequest(method, path string, payload interface{}) (*http.Request, error) {
-	url := fmt.Sprintf("%s/%s", apiUrl, path)
+	url := fmt.Sprintf("%s/%s", apiURL, path)
 	body := new(bytes.Buffer)
 	if payload != nil {
 		err := json.NewEncoder(body).Encode(payload)
