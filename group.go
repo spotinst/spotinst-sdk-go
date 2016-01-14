@@ -7,8 +7,8 @@
 package spotinstsdk
 
 import (
-	"net/http"
 	"fmt"
+	"net/http"
 )
 
 const (
@@ -35,22 +35,22 @@ type GroupScaling struct {
 }
 
 type GroupScalingPolicy struct {
-	PolicyName        string              `json:"policyName"`
-	MetricName        string              `json:"metricName"`
-	Statistic         string              `json:"statistic"`
-	Unit              string              `json:"unit"`
-	Threshold         float32             `json:"threshold"`
-	Adjustment        int                 `json:"adjustment"`
-	Namespace         string              `json:"namespace"`
-	Period            int                 `json:"period"`
+	PolicyName        string              `json:"policyName,omitempty"`
+	MetricName        string              `json:"metricName,omitempty"`
+	Statistic         string              `json:"statistic,omitempty"`
+	Unit              string              `json:"unit,omitempty"`
+	Threshold         float64             `json:"threshold,omitempty"`
+	Adjustment        int                 `json:"adjustment,omitempty"`
+	Namespace         string              `json:"namespace,omitempty"`
+	Dimensions        []map[string]string `json:"dimensions,omitempty"`
 	EvaluationPeriods int                 `json:"evaluationPeriods"`
+	Period            int                 `json:"period"`
 	Cooldown          int                 `json:"cooldown"`
-	Dimensions        []map[string]string `json:"dimensions"`
 }
 
 type GroupStrategy struct {
-	Risk               float32 `json:"risk"`
-	AvailabilityVsCost string  `json:"availabilityVsCost"`
+	AvailabilityVsCost string  `json:"availabilityVsCost,omitempty"`
+	Risk               float64 `json:"risk"`
 }
 
 type GroupCapacity struct {
@@ -60,27 +60,27 @@ type GroupCapacity struct {
 }
 
 type GroupCompute struct {
-	Product             string                           `json:"product"`
-	InstanceTypes       *GroupComputeInstanceType        `json:"instanceTypes"`
-	LaunchSpecification *GroupComputeLaunchSpecification `json:"launchSpecification"`
-	AvailabilityZones   []*GroupComputeAvailabilityZone  `json:"availabilityZones"`
+	Product             string                           `json:"product,omitempty"`
+	InstanceTypes       *GroupComputeInstanceType        `json:"instanceTypes,omitempty"`
+	LaunchSpecification *GroupComputeLaunchSpecification `json:"launchSpecification,omitempty"`
+	AvailabilityZones   []*GroupComputeAvailabilityZone  `json:"availabilityZones,omitempty"`
 }
 
 type GroupComputeInstanceType struct {
-	OnDemand string   `json:"ondemand"`
-	Spot     []string `json:"spot"`
+	OnDemand string   `json:"ondemand,omitempty"`
+	Spot     []string `json:"spot,omitempty"`
 }
 
 type GroupComputeAvailabilityZone struct {
-	Name     string `json:"name"`
+	Name     string `json:"name,omitempty"`
 	SubnetId string `json:"subnetId,omitempty"`
 }
 
 type GroupComputeLaunchSpecification struct {
-	SecurityGroupIds []string `json:"securityGroupIds"`
+	SecurityGroupIds []string `json:"securityGroupIds,omitempty"`
+	ImageId          string   `json:"imageId,omitempty"`
+	KeyPair          string   `json:"keyPair,omitempty"`
 	Monitoring       bool     `json:"monitoring"`
-	ImageId          string   `json:"imageId"`
-	KeyPair          string   `json:"keyPair"`
 }
 
 type groupWrapper struct {
@@ -91,7 +91,7 @@ type groupWrapper struct {
 func (s *GroupService) Get(id ...string) ([]Group, error) {
 	var (
 		retval GroupResponse
-		gid string
+		gid    string
 	)
 	if len(id) > 0 {
 		gid = id[0]
@@ -118,7 +118,8 @@ func (s *GroupService) Create(group Group) ([]Group, error) {
 // Updates an existing group.
 func (s *GroupService) Update(group Group) ([]Group, error) {
 	var retval GroupResponse
-	var gid = group.Id; group.Id = ""
+	var gid = group.Id
+	group.Id = ""
 	_, err := s.client.put(fmt.Sprintf("%s/%s", path, gid), groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err

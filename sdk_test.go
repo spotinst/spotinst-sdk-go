@@ -10,18 +10,18 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"regexp"
 	"testing"
 	"time"
-	"regexp"
 )
 
 var (
 	testClient       *Client
-	testUsername 	 = os.Getenv("SPOTINST_USERNAME")
-	testPassword 	 = os.Getenv("SPOTINST_PASSWORD")
-	testClientId 	 = os.Getenv("SPOTINST_CLIENT_ID")
+	testUsername     = os.Getenv("SPOTINST_USERNAME")
+	testPassword     = os.Getenv("SPOTINST_PASSWORD")
+	testClientId     = os.Getenv("SPOTINST_CLIENT_ID")
 	testClientSecret = os.Getenv("SPOTINST_CLIENT_SECRET")
-	testGroupId 	 string
+	testGroupId      string
 )
 
 func TestMain(m *testing.M) {
@@ -71,18 +71,18 @@ func Test_GetGroups(t *testing.T) {
 func Test_CreateGroup(t *testing.T) {
 	t.Log("Creating a new group")
 	g := &Group{
-		Name: "spotinst-sdk-go-test",
+		Name:        "spotinst-sdk-go-test",
 		Description: "Created by Spotinst SDK for the Go programming language",
 		Strategy: &GroupStrategy{
-			Risk: 100,
+			Risk:               100,
 			AvailabilityVsCost: "balanced",
 		},
 		Compute: &GroupCompute{
 			Product: "Linux/UNIX",
 			LaunchSpecification: &GroupComputeLaunchSpecification{
 				SecurityGroupIds: []string{"default"},
-				ImageId: "ami-f0091d91",
-				KeyPair: "float_oregon",
+				ImageId:          "ami-f0091d91",
+				KeyPair:          "float_oregon",
 			},
 			AvailabilityZones: []*GroupComputeAvailabilityZone{
 				&GroupComputeAvailabilityZone{
@@ -91,13 +91,13 @@ func Test_CreateGroup(t *testing.T) {
 			},
 			InstanceTypes: &GroupComputeInstanceType{
 				OnDemand: "c3.large",
-				Spot: []string{"c3.large"},
+				Spot:     []string{"c3.large"},
 			},
 		},
 		Capacity: &GroupCapacity{
 			Minimum: 0,
 			Maximum: 1,
-			Target: 0,
+			Target:  0,
 		},
 	}
 	res, err := testClient.Group.Create(*g)

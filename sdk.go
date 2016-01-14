@@ -17,15 +17,15 @@ import (
 )
 
 const (
-	libraryVersion 	= "0.1"
-	userAgent 		= "spotinst-sdk-go/" + libraryVersion
-	apiURL 			= "http://dev.spotinst.com:8081"
-	oauthURL 		= "http://dev.spotinst.com:9540"
+	libraryVersion = "0.1"
+	userAgent      = "spotinst-sdk-go/" + libraryVersion
+	apiURL         = "http://dev.spotinst.com:8081"
+	oauthURL       = "http://dev.spotinst.com:9540"
 )
 
 type Client struct {
 	// This is our client structure.
-	HttpClient   *http.Client
+	HttpClient *http.Client
 
 	// Spotinst makes a call to an authorization API using your username and
 	// password, returning an 'Access Token' and a 'Refresh Token'.
@@ -39,21 +39,21 @@ type Client struct {
 	ClientSecret string
 
 	// Spotinst services.
-	Group        *GroupService
+	Group *GroupService
 }
 
 type GroupResponse struct {
 	Response struct {
-				 Errors []Error `json:"errors"`
-				 Items  []Group `json:"items"`
-			 } `json:"response"`
+		Errors []Error `json:"errors"`
+		Items  []Group `json:"items"`
+	} `json:"response"`
 }
 
 type AuthResponse struct {
 	Response struct {
-				 Errors []Error `json:"errors"`
-				 Items  []Token `json:"items"`
-			 } `json:"response"`
+		Errors []Error `json:"errors"`
+		Items  []Token `json:"items"`
+	} `json:"response"`
 }
 
 type Token struct {
