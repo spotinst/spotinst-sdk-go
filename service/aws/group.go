@@ -4,19 +4,23 @@
   @license   GPL-3.0
 */
 
-package spotinstsdk
+package spotinstaws
 
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/spotinst/spotinst-sdk-go"
 )
 
 const (
-	path = "aws/ec2/group"
+	serviceName = "group"
+	endpoint    = "aws/ec2/group"
+	apiVersion  = "v1"
 )
 
 type GroupService struct {
-	client *Client
+	client *spotinstsdk.Client
 }
 
 type Group struct {
@@ -95,13 +99,13 @@ type groupWrapper struct {
 // Lists a specific/all groups.
 func (s *GroupService) Get(id ...string) ([]Group, error) {
 	var (
-		retval GroupResponse
+		retval spotinstsdk.GroupResponse
 		gid    string
 	)
 	if len(id) > 0 {
 		gid = id[0]
 	}
-	_, err := s.client.get(fmt.Sprintf("%s/%s", path, gid), &retval)
+	_, err := s.client.get(fmt.Sprintf("%s/%s", endpoint, gid), &retval)
 	if err != nil {
 		return nil, err
 	}
@@ -111,8 +115,8 @@ func (s *GroupService) Get(id ...string) ([]Group, error) {
 
 // Creates a new group.
 func (s *GroupService) Create(group Group) ([]Group, error) {
-	var retval GroupResponse
-	_, err := s.client.post(path, groupWrapper{Group: group}, &retval)
+	var retval spotinstsdk.GroupResponse
+	_, err := s.client.post(endpoint, groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err
 	}
@@ -122,10 +126,10 @@ func (s *GroupService) Create(group Group) ([]Group, error) {
 
 // Updates an existing group.
 func (s *GroupService) Update(group Group) ([]Group, error) {
-	var retval GroupResponse
+	var retval spotinstsdk.GroupResponse
 	var gid = group.Id
 	group.Id = ""
-	_, err := s.client.put(fmt.Sprintf("%s/%s", path, gid), groupWrapper{Group: group}, &retval)
+	_, err := s.client.put(fmt.Sprintf("%s/%s", endpoint, gid), groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err
 	}
@@ -135,5 +139,5 @@ func (s *GroupService) Update(group Group) ([]Group, error) {
 
 // Deletes an existing group.
 func (s *GroupService) Delete(group Group) (*http.Response, error) {
-	return s.client.delete(fmt.Sprintf("%s/%s", path, group.Id), nil)
+	return s.client.delete(fmt.Sprintf("%s/%s", endpoint, group.Id), nil)
 }

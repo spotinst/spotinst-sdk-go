@@ -14,11 +14,13 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+
+	"github.com/spotinst/spotinst-sdk-go/service/aws"
 )
 
 const (
-	libraryVersion = "0.1"
-	userAgent      = "spotinst-sdk-go/" + libraryVersion
+	libraryVersion = "0.0.1"
+	userAgent      = "spotinst-sdk-go/v" + libraryVersion
 	apiURL         = "http://dev.spotinst.com:8081"
 	oauthURL       = "http://dev.spotinst.com:9540"
 )
@@ -39,7 +41,9 @@ type Client struct {
 	ClientSecret string
 
 	// Spotinst services.
-	Group *GroupService
+	AWS struct {
+		Group *spotinstaws.GroupService
+	}
 }
 
 type GroupResponse struct {
