@@ -35,17 +35,22 @@ type GroupScaling struct {
 }
 
 type GroupScalingPolicy struct {
-	PolicyName        string              `json:"policyName,omitempty"`
-	MetricName        string              `json:"metricName,omitempty"`
-	Statistic         string              `json:"statistic,omitempty"`
-	Unit              string              `json:"unit,omitempty"`
-	Threshold         float64             `json:"threshold,omitempty"`
-	Adjustment        int                 `json:"adjustment,omitempty"`
-	Namespace         string              `json:"namespace,omitempty"`
-	Dimensions        []map[string]string `json:"dimensions,omitempty"`
-	EvaluationPeriods int                 `json:"evaluationPeriods"`
-	Period            int                 `json:"period"`
-	Cooldown          int                 `json:"cooldown"`
+	PolicyName        string                         `json:"policyName,omitempty"`
+	MetricName        string                         `json:"metricName,omitempty"`
+	Statistic         string                         `json:"statistic,omitempty"`
+	Unit              string                         `json:"unit,omitempty"`
+	Threshold         float64                        `json:"threshold,omitempty"`
+	Adjustment        int                            `json:"adjustment,omitempty"`
+	Namespace         string                         `json:"namespace,omitempty"`
+	EvaluationPeriods int                            `json:"evaluationPeriods"`
+	Period            int                            `json:"period"`
+	Cooldown          int                            `json:"cooldown"`
+	Dimensions        []*GroupScalingPolicyDimension `json:"dimensions,omitempty"`
+}
+
+type GroupScalingPolicyDimension struct {
+	Name  string `json:"name,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type GroupStrategy struct {
