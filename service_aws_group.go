@@ -4,13 +4,11 @@
   @license   GPL-3.0
 */
 
-package spotinstaws
+package spotinstsdk
 
 import (
 	"fmt"
 	"net/http"
-
-	"github.com/spotinst/spotinst-sdk-go"
 )
 
 const (
@@ -20,7 +18,7 @@ const (
 )
 
 type GroupService struct {
-	client *spotinstsdk.Client
+	client *Client
 }
 
 type Group struct {
@@ -99,7 +97,7 @@ type groupWrapper struct {
 // Lists a specific/all groups.
 func (s *GroupService) Get(id ...string) ([]Group, error) {
 	var (
-		retval spotinstsdk.GroupResponse
+		retval GroupResponse
 		gid    string
 	)
 	if len(id) > 0 {
@@ -115,7 +113,7 @@ func (s *GroupService) Get(id ...string) ([]Group, error) {
 
 // Creates a new group.
 func (s *GroupService) Create(group Group) ([]Group, error) {
-	var retval spotinstsdk.GroupResponse
+	var retval GroupResponse
 	_, err := s.client.post(endpoint, groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err
@@ -126,7 +124,7 @@ func (s *GroupService) Create(group Group) ([]Group, error) {
 
 // Updates an existing group.
 func (s *GroupService) Update(group Group) ([]Group, error) {
-	var retval spotinstsdk.GroupResponse
+	var retval GroupResponse
 	var gid = group.Id
 	group.Id = ""
 	_, err := s.client.put(fmt.Sprintf("%s/%s", endpoint, gid), groupWrapper{Group: group}, &retval)

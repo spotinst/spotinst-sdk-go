@@ -14,8 +14,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-
-	"github.com/spotinst/spotinst-sdk-go/service/aws"
 )
 
 const (
@@ -42,7 +40,7 @@ type Client struct {
 
 	// Spotinst services.
 	AWS struct {
-		Group *spotinstaws.GroupService
+		Group *GroupService
 	}
 }
 
