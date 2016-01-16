@@ -17,87 +17,94 @@ const (
 	apiVersion  = "v1"
 )
 
-type GroupService struct {
+type AwsGroupService struct {
 	client *Client
 }
 
-type Group struct {
-	Id          string         `json:"id,omitempty"`
-	Name        string         `json:"name,omitempty"`
-	Description string         `json:"description,omitempty"`
-	Capacity    *GroupCapacity `json:"capacity,omitempty"`
-	Compute     *GroupCompute  `json:"compute,omitempty"`
-	Strategy    *GroupStrategy `json:"strategy,omitempty"`
-	Scaling     *GroupScaling  `json:"scaling,omitempty"`
+type AwsGroup struct {
+	Id          string            `json:"id,omitempty"`
+	Name        string            `json:"name,omitempty"`
+	Description string            `json:"description,omitempty"`
+	Capacity    *AwsGroupCapacity `json:"capacity,omitempty"`
+	Compute     *AwsGroupCompute  `json:"compute,omitempty"`
+	Strategy    *AwsGroupStrategy `json:"strategy,omitempty"`
+	Scaling     *AwsGroupScaling  `json:"scaling,omitempty"`
 }
 
-type GroupScaling struct {
-	Up   []*GroupScalingPolicy `json:"up,omitempty"`
-	Down []*GroupScalingPolicy `json:"down,omitempty"`
+type AwsGroupResponse struct {
+	Response struct {
+		Errors []Error    `json:"errors"`
+		Items  []AwsGroup `json:"items"`
+	} `json:"response"`
 }
 
-type GroupScalingPolicy struct {
-	PolicyName        string                         `json:"policyName,omitempty"`
-	MetricName        string                         `json:"metricName,omitempty"`
-	Statistic         string                         `json:"statistic,omitempty"`
-	Unit              string                         `json:"unit,omitempty"`
-	Threshold         float64                        `json:"threshold,omitempty"`
-	Adjustment        int                            `json:"adjustment,omitempty"`
-	Namespace         string                         `json:"namespace,omitempty"`
-	EvaluationPeriods int                            `json:"evaluationPeriods"`
-	Period            int                            `json:"period"`
-	Cooldown          int                            `json:"cooldown"`
-	Dimensions        []*GroupScalingPolicyDimension `json:"dimensions,omitempty"`
+type AwsGroupScaling struct {
+	Up   []*AwsGroupScalingPolicy `json:"up,omitempty"`
+	Down []*AwsGroupScalingPolicy `json:"down,omitempty"`
 }
 
-type GroupScalingPolicyDimension struct {
+type AwsGroupScalingPolicy struct {
+	PolicyName        string                            `json:"policyName,omitempty"`
+	MetricName        string                            `json:"metricName,omitempty"`
+	Statistic         string                            `json:"statistic,omitempty"`
+	Unit              string                            `json:"unit,omitempty"`
+	Threshold         float64                           `json:"threshold,omitempty"`
+	Adjustment        int                               `json:"adjustment,omitempty"`
+	Namespace         string                            `json:"namespace,omitempty"`
+	EvaluationPeriods int                               `json:"evaluationPeriods"`
+	Period            int                               `json:"period"`
+	Cooldown          int                               `json:"cooldown"`
+	Dimensions        []*AwsGroupScalingPolicyDimension `json:"dimensions,omitempty"`
+}
+
+type AwsGroupScalingPolicyDimension struct {
 	Name  string `json:"name,omitempty"`
 	Value string `json:"value,omitempty"`
 }
 
-type GroupStrategy struct {
+type AwsGroupStrategy struct {
 	AvailabilityVsCost string  `json:"availabilityVsCost,omitempty"`
 	Risk               float64 `json:"risk"`
 }
 
-type GroupCapacity struct {
+type AwsGroupCapacity struct {
 	Minimum int `json:"minimum"`
 	Maximum int `json:"maximum"`
 	Target  int `json:"target"`
 }
 
-type GroupCompute struct {
-	Product             string                           `json:"product,omitempty"`
-	InstanceTypes       *GroupComputeInstanceType        `json:"instanceTypes,omitempty"`
-	LaunchSpecification *GroupComputeLaunchSpecification `json:"launchSpecification,omitempty"`
-	AvailabilityZones   []*GroupComputeAvailabilityZone  `json:"availabilityZones,omitempty"`
+type AwsGroupCompute struct {
+	Product             string                              `json:"product,omitempty"`
+	InstanceTypes       *AwsGroupComputeInstanceType        `json:"instanceTypes,omitempty"`
+	LaunchSpecification *AwsGroupComputeLaunchSpecification `json:"launchSpecification,omitempty"`
+	AvailabilityZones   []*AwsGroupComputeAvailabilityZone  `json:"availabilityZones,omitempty"`
 }
 
-type GroupComputeInstanceType struct {
+type AwsGroupComputeInstanceType struct {
 	OnDemand string   `json:"ondemand,omitempty"`
 	Spot     []string `json:"spot,omitempty"`
 }
 
-type GroupComputeAvailabilityZone struct {
+type AwsGroupComputeAvailabilityZone struct {
 	Name     string `json:"name,omitempty"`
 	SubnetId string `json:"subnetId,omitempty"`
 }
 
-type GroupComputeLaunchSpecification struct {
-	SecurityGroupIds []string `json:"securityGroupIds,omitempty"`
-	ImageId          string   `json:"imageId,omitempty"`
-	KeyPair          string   `json:"keyPair,omitempty"`
-	Monitoring       bool     `json:"monitoring"`
+type AwsGroupComputeLaunchSpecification struct {
+	SecurityAwsGroupIds []string `json:"securityGroupIds,omitempty"`
+	ImageId             string   `json:"imageId,omitempty"`
+	KeyPair             string   `json:"keyPair,omitempty"`
+	Monitoring          bool     `json:"monitoring"`
 }
 
 type groupWrapper struct {
-	Group Group `json:"group"`
+	Group AwsGroup `json:"group"`
 }
 
 // Lists a specific/all groups.
-func (s *GroupService) Get(id ...string) ([]Group, error) {
+func (s *AwsGroupService) Get(id ...string) ([]AwsGroup, error) {
 	var (
-		retval GroupResponse
+		retval AwsGroupResponse
 		gid    string
 	)
 	if len(id) > 0 {
@@ -112,8 +119,8 @@ func (s *GroupService) Get(id ...string) ([]Group, error) {
 }
 
 // Creates a new group.
-func (s *GroupService) Create(group Group) ([]Group, error) {
-	var retval GroupResponse
+func (s *AwsGroupService) Create(group AwsGroup) ([]AwsGroup, error) {
+	var retval AwsGroupResponse
 	_, err := s.client.post(endpoint, groupWrapper{Group: group}, &retval)
 	if err != nil {
 		return nil, err
@@ -123,8 +130,8 @@ func (s *GroupService) Create(group Group) ([]Group, error) {
 }
 
 // Updates an existing group.
-func (s *GroupService) Update(group Group) ([]Group, error) {
-	var retval GroupResponse
+func (s *AwsGroupService) Update(group AwsGroup) ([]AwsGroup, error) {
+	var retval AwsGroupResponse
 	var gid = group.Id
 	group.Id = ""
 	_, err := s.client.put(fmt.Sprintf("%s/%s", endpoint, gid), groupWrapper{Group: group}, &retval)
@@ -136,6 +143,6 @@ func (s *GroupService) Update(group Group) ([]Group, error) {
 }
 
 // Deletes an existing group.
-func (s *GroupService) Delete(group Group) (*http.Response, error) {
+func (s *AwsGroupService) Delete(group AwsGroup) (*http.Response, error) {
 	return s.client.delete(fmt.Sprintf("%s/%s", endpoint, group.Id), nil)
 }

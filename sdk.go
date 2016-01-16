@@ -39,16 +39,7 @@ type Client struct {
 	ClientSecret string
 
 	// Spotinst services.
-	AWS struct {
-		Group *GroupService
-	}
-}
-
-type GroupResponse struct {
-	Response struct {
-		Errors []Error `json:"errors"`
-		Items  []Group `json:"items"`
-	} `json:"response"`
+	AwsGroup *AwsGroupService
 }
 
 type AuthResponse struct {
@@ -92,7 +83,8 @@ func NewClient(username, password, clientId, clientSecret string) (*Client, erro
 		HttpClient:   &http.Client{},
 	}
 
-	c.Group = &GroupService{client: c}
+	// Spotinst services.
+	c.AwsGroup = &AwsGroupService{client: c}
 
 	return c, nil
 }
@@ -238,7 +230,7 @@ func CheckResponse(res *http.Response) error {
 		return err
 	}
 
-	var r GroupResponse
+	var r AwsGroupResponse
 	err = json.Unmarshal(body, &r)
 	if err != nil {
 		return err

@@ -23,7 +23,7 @@ var (
 	testPassword     = os.Getenv("SPOTINST_PASSWORD")
 	testClientId     = os.Getenv("SPOTINST_CLIENT_ID")
 	testClientSecret = os.Getenv("SPOTINST_CLIENT_SECRET")
-	testGroupId      string
+	testAwsGroupId   string
 )
 
 func TestMain(m *testing.M) {
@@ -60,9 +60,9 @@ func Test_CreateClient(t *testing.T) {
 }
 
 // Get Test
-func Test_GetGroups(t *testing.T) {
+func Test_GetAwsGroups(t *testing.T) {
 	t.Log("Getting all groups")
-	res, err := testClient.AWS.Group.Get()
+	res, err := testClient.AwsGroup.Get()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -70,52 +70,52 @@ func Test_GetGroups(t *testing.T) {
 }
 
 // Create Test
-func Test_CreateGroup(t *testing.T) {
+func Test_CreateAwsGroup(t *testing.T) {
 	t.Log("Creating a new group")
-	g := &spotinstaws.Group{
+	g := &AwsGroup{
 		Name:        "spotinst-sdk-go-test",
 		Description: "Created by Spotinst SDK for the Go programming language",
-		Strategy: &spotinstaws.GroupStrategy{
+		Strategy: &AwsGroupStrategy{
 			Risk:               100,
 			AvailabilityVsCost: "balanced",
 		},
-		Compute: &spotinstaws.GroupCompute{
+		Compute: &AwsGroupCompute{
 			Product: "Linux/UNIX",
-			LaunchSpecification: &spotinstaws.GroupComputeLaunchSpecification{
-				SecurityGroupIds: []string{"default"},
-				ImageId:          "ami-f0091d91",
-				KeyPair:          "float_oregon",
+			LaunchSpecification: &AwsGroupComputeLaunchSpecification{
+				SecurityAwsGroupIds: []string{"default"},
+				ImageId:             "ami-f0091d91",
+				KeyPair:             "float_oregon",
 			},
-			AvailabilityZones: []*spotinstaws.GroupComputeAvailabilityZone{
-				&spotinstaws.GroupComputeAvailabilityZone{
+			AvailabilityZones: []*AwsGroupComputeAvailabilityZone{
+				&AwsGroupComputeAvailabilityZone{
 					Name: "us-west-2b",
 				},
 			},
-			InstanceTypes: &spotinstaws.GroupComputeInstanceType{
+			InstanceTypes: &AwsGroupComputeInstanceType{
 				OnDemand: "c3.large",
 				Spot:     []string{"c3.large"},
 			},
 		},
-		Capacity: &spotinstaws.GroupCapacity{
+		Capacity: &AwsGroupCapacity{
 			Minimum: 0,
 			Maximum: 1,
 			Target:  0,
 		},
 	}
-	res, err := testClient.AWS.Group.Create(*g)
+	res, err := testClient.AwsGroup.Create(*g)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	testGroupId = res[0].Id
+	testAwsGroupId = res[0].Id
 	t.Logf("%+v", res)
 }
 
 // Another Get Test with a specific ID
-func Test_GetGroupById(t *testing.T) {
-	if testGroupId != "" {
+func Test_GetAwsGroupById(t *testing.T) {
+	if testAwsGroupId != "" {
 		t.Log("Getting a group by ID")
-		res, err := testClient.AWS.Group.Get(testGroupId)
+		res, err := testClient.AwsGroup.Get(testAwsGroupId)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -126,11 +126,11 @@ func Test_GetGroupById(t *testing.T) {
 }
 
 // Update Test
-func Test_UpdateGroup(t *testing.T) {
-	if testGroupId != "" {
+func Test_UpdateAwsGroup(t *testing.T) {
+	if testAwsGroupId != "" {
 		t.Log("Updating group")
-		g := &spotinstaws.Group{Id: testGroupId, Name: "spotinst-sdk-go-test-updated"}
-		res, err := testClient.AWS.Group.Update(*g)
+		g := &AwsGroup{Id: testAwsGroupId, Name: "spotinst-sdk-go-test-updated"}
+		res, err := testClient.AwsGroup.Update(*g)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -141,11 +141,11 @@ func Test_UpdateGroup(t *testing.T) {
 }
 
 // Delete Test
-func Test_DeleteGroup(t *testing.T) {
-	if testGroupId != "" {
+func Test_DeleteAwsGroup(t *testing.T) {
+	if testAwsGroupId != "" {
 		t.Log("Deleting group")
-		g := &spotinstaws.Group{Id: testGroupId}
-		res, err := testClient.AWS.Group.Delete(*g)
+		g := &AwsGroup{Id: testAwsGroupId}
+		res, err := testClient.AwsGroup.Delete(*g)
 		if err != nil {
 			t.Fatal(err)
 		}
