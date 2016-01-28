@@ -1,22 +1,12 @@
-/*
-  @author    Liran Polak
-  @copyright Copyright (c) 2016, Spotinst
-  @license   GPL-3.0
-*/
-
-package spotinstsdk
+package spotinst
 
 import (
 	"fmt"
 	"net/http"
 )
 
-const (
-	serviceName = "group"
-	endpoint    = "aws/ec2/group"
-	apiVersion  = "v1"
-)
-
+// AwsGroupService handles communication with the AwsGroup related methods of
+// the Spotinst API.
 type AwsGroupService struct {
 	client *Client
 }
@@ -33,8 +23,8 @@ type AwsGroup struct {
 
 type AwsGroupResponse struct {
 	Response struct {
-		Errors []Error    `json:"errors"`
-		Items  []AwsGroup `json:"items"`
+		Errors []Error     `json:"errors"`
+		Items  []*AwsGroup `json:"items"`
 	} `json:"response"`
 }
 
@@ -101,48 +91,81 @@ type groupWrapper struct {
 	Group AwsGroup `json:"group"`
 }
 
-// Lists a specific/all groups.
-func (s *AwsGroupService) Get(id ...string) ([]AwsGroup, error) {
-	var (
-		retval AwsGroupResponse
-		gid    string
-	)
-	if len(id) > 0 {
-		gid = id[0]
+// Get an existing group configuration.
+func (s *AwsGroupService) Get(args ...string) ([]*AwsGroup, *http.Response, error) {
+	var gid string
+	if len(args) > 0 {
+		gid = args[0]
 	}
-	_, err := s.client.get(fmt.Sprintf("%s/%s", endpoint, gid), &retval)
+
+	path := fmt.Sprintf("aws/ec2/group/%s", gid)
+	req, err := s.client.NewRequest("GET", path, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return retval.Response.Items, nil
-}
-
-// Creates a new group.
-func (s *AwsGroupService) Create(group AwsGroup) ([]AwsGroup, error) {
 	var retval AwsGroupResponse
-	_, err := s.client.post(endpoint, groupWrapper{Group: group}, &retval)
+	resp, err := s.client.Do(req, &retval)
 	if err != nil {
-		return nil, err
+		return nil, resp, err
 	}
 
-	return retval.Response.Items, nil
+	return retval.Response.Items, resp, err
 }
 
-// Updates an existing group.
-func (s *AwsGroupService) Update(group AwsGroup) ([]AwsGroup, error) {
+// Create a new group.
+func (s *AwsGroupService) Create(group *AwsGroup) ([]*AwsGroup, *http.Response, error) {
+	path := "aws/ec2/group"
+
+	req, err := s.client.NewRequest("POST", path, groupWrapper{Group: *group})
+	if err != nil {
+		return nil, nil, err
+	}
+
 	var retval AwsGroupResponse
-	var gid = group.Id
-	group.Id = ""
-	_, err := s.client.put(fmt.Sprintf("%s/%s", endpoint, gid), groupWrapper{Group: group}, &retval)
+	resp, err := s.client.Do(req, &retval)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return retval.Response.Items, resp, nil
+}
+
+// Update an existing group.
+func (s *AwsGroupService) Update(group *AwsGroup) ([]*AwsGroup, *http.Response, error) {
+	gid := (*group).Id
+	(*group).Id = ""
+	path := fmt.Sprintf("aws/ec2/group/%s", gid)
+
+	req, err := s.client.NewRequest("PUT", path, groupWrapper{Group: *group})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var retval AwsGroupResponse
+	resp, err := s.client.Do(req, &retval)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return retval.Response.Items, resp, nil
+}
+
+// Delete an existing group.
+func (s *AwsGroupService) Delete(group *AwsGroup) (*http.Response, error) {
+	gid := (*group).Id
+	(*group).Id = ""
+	path := fmt.Sprintf("aws/ec2/group/%s", gid)
+
+	req, err := s.client.NewRequest("DELETE", path, nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return retval.Response.Items, nil
-}
+	resp, err := s.client.Do(req, nil)
+	if err != nil {
+		return resp, err
+	}
 
-// Deletes an existing group.
-func (s *AwsGroupService) Delete(group AwsGroup) (*http.Response, error) {
-	return s.client.delete(fmt.Sprintf("%s/%s", endpoint, group.Id), nil)
+	return resp, nil
 }
