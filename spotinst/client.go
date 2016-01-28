@@ -18,10 +18,10 @@ type Client struct {
 	// User agent for client
 	UserAgent string
 
-	//	 Spotinst makes a call to an authorization API using your username and
-	//	 password, returning an 'Access Token' and a 'Refresh Token'.
-	//	 Our use case does not require the refresh token, but we should implement
-	//	 for completeness.
+	//	Spotinst makes a call to an authorization API using your username and
+	//	password, returning an 'Access Token' and a 'Refresh Token'.
+	//	Our use case does not require the refresh token, but we should implement
+	//	for completeness.
 	AccessToken  string
 	RefreshToken string
 
