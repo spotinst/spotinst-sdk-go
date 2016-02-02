@@ -17,6 +17,7 @@ type Credentials struct {
 	Password     string `json:"password"`
 	ClientID     string `json:"client_id"`
 	ClientSecret string `json:"client_secret"`
+	Token        string `json:"token"`
 }
 
 type Response struct {

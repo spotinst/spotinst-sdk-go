@@ -12,13 +12,27 @@ type AwsGroupService struct {
 }
 
 type AwsGroup struct {
-	Id          string            `json:"id,omitempty"`
-	Name        string            `json:"name,omitempty"`
-	Description string            `json:"description,omitempty"`
-	Capacity    *AwsGroupCapacity `json:"capacity,omitempty"`
-	Compute     *AwsGroupCompute  `json:"compute,omitempty"`
-	Strategy    *AwsGroupStrategy `json:"strategy,omitempty"`
-	Scaling     *AwsGroupScaling  `json:"scaling,omitempty"`
+	ID             string                  `json:"id,omitempty"`
+	Name           string                  `json:"name,omitempty"`
+	Description    string                  `json:"description,omitempty"`
+	Capacity       *AwsGroupCapacity       `json:"capacity,omitempty"`
+	Compute        *AwsGroupCompute        `json:"compute,omitempty"`
+	Strategy       *AwsGroupStrategy       `json:"strategy,omitempty"`
+	Scaling        *AwsGroupScaling        `json:"scaling,omitempty"`
+	ScheduledTasks *AwsGroupScheduledTasks `json:"scheduling,omitempty"`
+}
+
+type AwsGroupScheduledTasks struct {
+	Tasks []*AwsGroupScheduledTask `json:"tasks,omitempty"`
+}
+
+type AwsGroupScheduledTask struct {
+	Frequency           string `json:"frequency,omitempty"`
+	CronExpression      string `json:"cronExpression,omitempty"`
+	TaskType            string `json:"taskType,omitempty"`
+	ScaleTargetCapacity int    `json:"scaleTargetCapacity,omitempty"`
+	ScaleMinCapacity    int    `json:"scaleMinCapacity,omitempty"`
+	ScaleMaxCapacity    int    `json:"scaleMaxCapacity,omitempty"`
 }
 
 type AwsGroupResponse struct {
@@ -40,10 +54,12 @@ type AwsGroupScalingPolicy struct {
 	Unit              string                            `json:"unit,omitempty"`
 	Threshold         float64                           `json:"threshold,omitempty"`
 	Adjustment        int                               `json:"adjustment,omitempty"`
+	MinTargetCapacity int                               `json:"minTargetCapacity,omitempty"`
+	MaxTargetCapacity int                               `json:"maxTargetCapacity,omitempty"`
 	Namespace         string                            `json:"namespace,omitempty"`
 	EvaluationPeriods int                               `json:"evaluationPeriods"`
-	Period            int                               `json:"period"`
-	Cooldown          int                               `json:"cooldown"`
+	Period            int                               `json:"period,omitempty"`
+	Cooldown          int                               `json:"cooldown,omitempty"`
 	Dimensions        []*AwsGroupScalingPolicyDimension `json:"dimensions,omitempty"`
 }
 
@@ -53,8 +69,10 @@ type AwsGroupScalingPolicyDimension struct {
 }
 
 type AwsGroupStrategy struct {
+	Risk               float64 `json:"risk,omitempty"`
+	OnDemandCount      int     `json:"onDemandCount,omitempty"`
+	DrainingTimeout    int     `json:"drainingTimeout,omitempty"`
 	AvailabilityVsCost string  `json:"availabilityVsCost,omitempty"`
-	Risk               float64 `json:"risk"`
 }
 
 type AwsGroupCapacity struct {
@@ -68,6 +86,7 @@ type AwsGroupCompute struct {
 	InstanceTypes       *AwsGroupComputeInstanceType        `json:"instanceTypes,omitempty"`
 	LaunchSpecification *AwsGroupComputeLaunchSpecification `json:"launchSpecification,omitempty"`
 	AvailabilityZones   []*AwsGroupComputeAvailabilityZone  `json:"availabilityZones,omitempty"`
+	ElasticIPs          []string                            `json:"elasticIps,omitempty"`
 }
 
 type AwsGroupComputeInstanceType struct {
@@ -77,14 +96,59 @@ type AwsGroupComputeInstanceType struct {
 
 type AwsGroupComputeAvailabilityZone struct {
 	Name     string `json:"name,omitempty"`
-	SubnetId string `json:"subnetId,omitempty"`
+	SubnetID string `json:"subnetId,omitempty"`
 }
 
 type AwsGroupComputeLaunchSpecification struct {
-	SecurityAwsGroupIds []string `json:"securityGroupIds,omitempty"`
-	ImageId             string   `json:"imageId,omitempty"`
-	KeyPair             string   `json:"keyPair,omitempty"`
-	Monitoring          bool     `json:"monitoring"`
+	LoadBalancerNames      []string                           `json:"loadBalancerNames,omitempty"`
+	SecurityGroupIDs       []string                           `json:"securityGroupIds,omitempty"`
+	HealthCheckType        string                             `json:"healthCheckType,omitempty"`
+	HealthCheckGracePeriod int                                `json:"healthCheckGracePeriod,omitempty"`
+	ImageID                string                             `json:"imageId,omitempty"`
+	KeyPair                string                             `json:"keyPair,omitempty"`
+	UserData               string                             `json:"userData,omitempty"`
+	Monitoring             bool                               `json:"monitoring"`
+	IamRole                *AwsGroupComputeIamRole            `json:"iamRole,omitempty"`
+	BlockDevices           []*AwsGroupComputeBlockDevice      `json:"blockDeviceMappings,omitempty"`
+	NetworkInterfaces      []*AwsGroupComputeNetworkInterface `json:"networkInterfaces,omitempty"`
+	Tags                   []*AwsGroupComputeTag              `json:"tags,omitempty"`
+}
+
+type AwsGroupComputeNetworkInterface struct {
+	ID                             string   `json:"networkInterfaceId,omitempty"`
+	Description                    string   `json:"description,omitempty"`
+	DeviceIndex                    int      `json:"deviceIndex,omitempty"`
+	SecondaryPrivateIPAddressCount int      `json:"secondaryPrivateIpAddressCount,omitempty"`
+	AssociatePublicIPAddress       bool     `json:"associatePublicIpAddress"`
+	DeleteOnTermination            bool     `json:"deleteOnTermination"`
+	SecurityGroupsIDs              []string `json:"groups,omitempty"`
+	PrivateIPAddress               string   `json:"privateIpAddress,omitempty"`
+	SubnetID                       string   `json:"subnetId,omitempty"`
+}
+
+type AwsGroupComputeBlockDevice struct {
+	DeviceName  string              `json:"deviceName,omitempty"`
+	VirtualName string              `json:"virtualName,omitempty"`
+	EBS         *AwsGroupComputeEBS `json:"ebs,omitempty"`
+}
+
+type AwsGroupComputeEBS struct {
+	DeleteOnTermination bool   `json:"deleteOnTermination"`
+	Encrypted           bool   `json:"encrypted"`
+	SnapshotID          string `json:"snapshotId,omitempty"`
+	VolumeType          string `json:"volumeType,omitempty"`
+	VolumeSize          int    `json:"volumeSize,omitempty"`
+	IOPS                int    `json:"iops,omitempty"`
+}
+
+type AwsGroupComputeIamRole struct {
+	Name string `json:"name,omitempty"`
+	Arn  string `json:"arn,omitempty"`
+}
+
+type AwsGroupComputeTag struct {
+	Key   string `json:"tagKey,omitempty"`
+	Value string `json:"tagValue,omitempty"`
 }
 
 type groupWrapper struct {
@@ -133,8 +197,8 @@ func (s *AwsGroupService) Create(group *AwsGroup) ([]*AwsGroup, *http.Response, 
 
 // Update an existing group.
 func (s *AwsGroupService) Update(group *AwsGroup) ([]*AwsGroup, *http.Response, error) {
-	gid := (*group).Id
-	(*group).Id = ""
+	gid := (*group).ID
+	(*group).ID = ""
 	path := fmt.Sprintf("aws/ec2/group/%s", gid)
 
 	req, err := s.client.NewRequest("PUT", path, groupWrapper{Group: *group})
@@ -153,8 +217,8 @@ func (s *AwsGroupService) Update(group *AwsGroup) ([]*AwsGroup, *http.Response, 
 
 // Delete an existing group.
 func (s *AwsGroupService) Delete(group *AwsGroup) (*http.Response, error) {
-	gid := (*group).Id
-	(*group).Id = ""
+	gid := (*group).ID
+	(*group).ID = ""
 	path := fmt.Sprintf("aws/ec2/group/%s", gid)
 
 	req, err := s.client.NewRequest("DELETE", path, nil)

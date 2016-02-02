@@ -35,13 +35,19 @@ func NewClient(creds *Credentials) (*Client, error) {
 	c := &Client{HttpClient: &http.Client{}, BaseURL: baseURL, UserAgent: userAgent}
 
 	if creds != nil {
-		accessToken, refreshToken, err := getOAuthTokens(creds.Email, creds.Password, creds.ClientID, creds.ClientSecret)
-		if err != nil {
-			return nil, err
-		}
+		if creds.Token != "" {
+			// Use a Personal API Access Token
+			c.AccessToken = creds.Token
+		} else {
+			// Get new OAuth access and refresh tokens using the client credentials.
+			accessToken, refreshToken, err := getOAuthTokens(creds.Email, creds.Password, creds.ClientID, creds.ClientSecret)
+			if err != nil {
+				return nil, err
+			}
 
-		c.AccessToken = accessToken
-		c.RefreshToken = refreshToken
+			c.AccessToken = accessToken
+			c.RefreshToken = refreshToken
+		}
 	}
 
 	// Spotinst services
