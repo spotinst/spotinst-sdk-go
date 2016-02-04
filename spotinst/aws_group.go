@@ -12,17 +12,38 @@ type AwsGroupService struct {
 }
 
 type AwsGroup struct {
-	ID             string                  `json:"id,omitempty"`
-	Name           string                  `json:"name,omitempty"`
-	Description    string                  `json:"description,omitempty"`
-	Capacity       *AwsGroupCapacity       `json:"capacity,omitempty"`
-	Compute        *AwsGroupCompute        `json:"compute,omitempty"`
-	Strategy       *AwsGroupStrategy       `json:"strategy,omitempty"`
-	Scaling        *AwsGroupScaling        `json:"scaling,omitempty"`
-	ScheduledTasks *AwsGroupScheduledTasks `json:"scheduling,omitempty"`
+	ID          string               `json:"id,omitempty"`
+	Name        string               `json:"name,omitempty"`
+	Description string               `json:"description,omitempty"`
+	Capacity    *AwsGroupCapacity    `json:"capacity,omitempty"`
+	Compute     *AwsGroupCompute     `json:"compute,omitempty"`
+	Strategy    *AwsGroupStrategy    `json:"strategy,omitempty"`
+	Scaling     *AwsGroupScaling     `json:"scaling,omitempty"`
+	Scheduling  *AwsGroupScheduling  `json:"scheduling,omitempty"`
+	Integration *AwsGroupIntegration `json:"thirdPartiesIntegration,omitempty"`
 }
 
-type AwsGroupScheduledTasks struct {
+type AwsGroupIntegration struct {
+	Rancher          *AwsGroupRancherIntegration          `json:"rancher,omitempty"`
+	ElasticBeanstalk *AwsGroupElasticBeanstalkIntegration `json:"elasticBeanstalk,omitempty"`
+	Nirmata          *AwsGroupNirmataIntegration          `json:"nirmata,omitempty"`
+}
+
+type AwsGroupRancherIntegration struct {
+	MasterHost string `json:"masterHost,omitempty"`
+	AccessKey  string `json:"accessKey,omitempty"`
+	SecretKey  string `json:"secretKey,omitempty"`
+}
+
+type AwsGroupElasticBeanstalkIntegration struct {
+	EnvironmentID string `json:"environmentId,omitempty"`
+}
+
+type AwsGroupNirmataIntegration struct {
+	APIKey string `json:"apiKey,omitempty"`
+}
+
+type AwsGroupScheduling struct {
 	Tasks []*AwsGroupScheduledTask `json:"tasks,omitempty"`
 }
 
