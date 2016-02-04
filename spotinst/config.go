@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	apiURL    = "http://dev.spotinst.com:8081"
-	oauthURL  = "http://dev.spotinst.com:9540"
+	apiURL    = "https://api.spotinst.io"
+	oauthURL  = "https://oauth.spotinst.io"
 	mediaType = "application/json"
 	userAgent = SDKName + "/" + SDKVersion
 )
