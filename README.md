@@ -25,7 +25,7 @@ creds := &spotinst.Credentials{
   ClientID: "CJZzWvP3e5vefCgt",
   ClientSecret: "EluFEJCfje78eQxP3u6X0cyH2scw6ZIP",
 }
-client := spotinst.NewClient(creds)
+client, err := spotinst.NewClient(creds)
 ```
 
 Or, you can use your Personal API Access Token to create a new client:
@@ -34,7 +34,7 @@ Or, you can use your Personal API Access Token to create a new client:
 creds := &spotinst.Credentials{
   Token: "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc",
 }
-client := spotinst.NewClient(creds)
+client, err := spotinst.NewClient(creds)
 ```
 
 ## Examples
@@ -43,13 +43,13 @@ To create a new Elastigroup:
 
 ```go
 group := &spotinst.AwsGroup{
-  Name: "foo",
-  Desciption: "bar",
+  Name:        "foo",
+  Description: "bar",
   Strategy: &spotinst.AwsGroupStrategy{
     Risk: 100,
   },
   Capacity: &spotinst.AwsGroupCapacity{
-    Target: 75,
+    Target:  75,
     Minimum: 50,
     Maximum: 100,
   },
@@ -57,26 +57,26 @@ group := &spotinst.AwsGroup{
     Product: "Linux/UNIX",
     InstanceTypes: &spotinst.AwsGroupComputeInstanceType{
       OnDemand: "c4.large",
-      Spot: ["c3.large", "c4.large"],
+      Spot:     []string{"c3.large", "c4.large"},
     },
     AvailabilityZones: []*spotinst.AwsGroupComputeAvailabilityZone{
       &spotinst.AwsGroupComputeAvailabilityZone{
-        Name: "us-east-1a",
-        SubnetID: "subnet-foo"
+        Name:     "us-west-2b",
+        SubnetID: "subnet-foo",
       },
       &spotinst.AwsGroupComputeAvailabilityZone{
-        Name: "us-east-1b",
-        SubnetID: "subnet-foo"
-      }
+        Name:     "us-west-2c",
+        SubnetID: "subnet-bar",
+      },
     },
     LaunchSpecification: &spotinst.AwsGroupComputeLaunchSpecification{
-      Monitoring: false,
-      ImageID: "ami-",
-      KeyPair: "pemfile",
-      SecurityGroupIDs: ["default"],
-      LoadBalancerNames: ["aws-elb-prod"]
-    }
-  }
+      Monitoring:        true,
+      ImageID:           "ami-f0091d91",
+      KeyPair:           "pemfile_name",
+      SecurityGroupIDs:  []string{"wide-open"},
+      LoadBalancerNames: []string{"aws-elb-prod"},
+    },
+  },
 }
 
 group, _, err := client.AwsGroup.Create(group)
