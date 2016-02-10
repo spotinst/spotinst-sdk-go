@@ -1,7 +1,6 @@
 package spotinst
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -74,7 +73,6 @@ func Test_NewClient(t *testing.T) {
 
 func Test_NewClientWithToken(t *testing.T) {
 	c, err := NewClient(&Credentials{Token: "foo"})
-	fmt.Printf("%#v\n", c)
 	if err != nil {
 		t.Errorf("NewClient Unexpected error returned %+v", err)
 	}
