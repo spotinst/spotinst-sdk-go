@@ -68,15 +68,17 @@ func getOAuthTokens(username, password, clientID, clientSecret string) (string, 
 			"client_secret": {clientSecret},
 		},
 	)
+	if err != nil {
+		return "", "", err
+	}
+	defer res.Body.Close()
 
+	err = CheckResponse(res)
 	if err != nil {
 		return "", "", err
 	}
 
 	body, err := ioutil.ReadAll(res.Body)
-	defer res.Body.Close()
-
-	err = CheckResponse(res)
 	if err != nil {
 		return "", "", err
 	}
