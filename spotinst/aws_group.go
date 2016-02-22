@@ -138,7 +138,7 @@ type AwsGroupComputeLaunchSpecification struct {
 type AwsGroupComputeNetworkInterface struct {
 	ID                             string   `json:"networkInterfaceId,omitempty"`
 	Description                    string   `json:"description,omitempty"`
-	DeviceIndex                    int      `json:"deviceIndex,omitempty"`
+	DeviceIndex                    int      `json:"deviceIndex"`
 	SecondaryPrivateIPAddressCount int      `json:"secondaryPrivateIpAddressCount,omitempty"`
 	AssociatePublicIPAddress       bool     `json:"associatePublicIpAddress"`
 	DeleteOnTermination            bool     `json:"deleteOnTermination"`
