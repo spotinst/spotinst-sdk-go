@@ -129,7 +129,7 @@ type AwsGroupComputeLaunchSpecification struct {
 	KeyPair                string                             `json:"keyPair,omitempty"`
 	UserData               string                             `json:"userData,omitempty"`
 	Monitoring             bool                               `json:"monitoring"`
-	IamRole                *AwsGroupComputeIamRole            `json:"iamRole,omitempty"`
+	IamInstanceProfile     *AwsGroupComputeIamInstanceProfile `json:"iamRole,omitempty"`
 	BlockDevices           []*AwsGroupComputeBlockDevice      `json:"blockDeviceMappings,omitempty"`
 	NetworkInterfaces      []*AwsGroupComputeNetworkInterface `json:"networkInterfaces,omitempty"`
 	Tags                   []*AwsGroupComputeTag              `json:"tags,omitempty"`
@@ -162,7 +162,7 @@ type AwsGroupComputeEBS struct {
 	IOPS                int    `json:"iops,omitempty"`
 }
 
-type AwsGroupComputeIamRole struct {
+type AwsGroupComputeIamInstanceProfile struct {
 	Name string `json:"name,omitempty"`
 	Arn  string `json:"arn,omitempty"`
 }
