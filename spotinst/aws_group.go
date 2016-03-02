@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-// AwsGroupService handles communication with the AwsGroup related methods of
-// the Spotinst API.
+// AwsGroupService handles communication with the AwsGroup related
+// methods of the Spotinst API.
 type AwsGroupService struct {
 	client *Client
 }
