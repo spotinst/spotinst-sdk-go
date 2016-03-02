@@ -28,12 +28,10 @@ creds := &spotinst.Credentials{
 client, err := spotinst.NewClient(creds)
 ```
 
-Or, you can use your Personal API Access Token to create a new client:
+Or, you can use your [Personal Access Token](https://spotinst.atlassian.net/wiki/display/API/Get+API+Personal+Access+Token) to create a new client:
 
 ```go
-creds := &spotinst.Credentials{
-  Token: "aaaaaaaaaa.bbbbbbbbbbb.cccccccccccc",
-}
+creds := &spotinst.Credentials{Token: "foo"}
 client, err := spotinst.NewClient(creds)
 ```
 
