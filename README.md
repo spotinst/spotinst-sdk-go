@@ -2,7 +2,7 @@
 
 A Go client library for accessing the Spotinst API.
 
-You can view Spotinst API docs here: [https://spotinst.atlassian.net/wiki/display/API](https://spotinst.atlassian.net/wiki/display/API)
+You can view Spotinst API docs [here](https://spotinst.atlassian.net/wiki/display/API).
 
 
 ## Usage
