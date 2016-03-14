@@ -12,11 +12,12 @@ type SubscriptionService struct {
 }
 
 type Subscription struct {
-	ID         string `json:"id,omitempty"`
-	ResourceID string `json:"resourceId,omitempty"`
-	Protocol   string `json:"protocol,omitempty"`
-	Endpoint   string `json:"endpoint,omitempty"`
-	EventType  string `json:"eventType,omitempty"`
+	ID         string                 `json:"id,omitempty"`
+	ResourceID string                 `json:"resourceId,omitempty"`
+	EventType  string                 `json:"eventType,omitempty"`
+	Protocol   string                 `json:"protocol,omitempty"`
+	Endpoint   string                 `json:"endpoint,omitempty"`
+	Format     map[string]interface{} `json:"eventFormat,omitempty"`
 }
 
 type SubscriptionResponse struct {
