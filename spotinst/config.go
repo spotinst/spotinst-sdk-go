@@ -48,14 +48,21 @@ type ErrorResponse struct {
 }
 
 // Error implements the error interface.
-func (r *ErrorResponse) Error() string {
-	if len(r.Errors) > 0 {
-		return fmt.Sprintf("%v %v: %d %s %v",
-			r.Response.Request.Method, r.Response.Request.URL,
-			r.Response.StatusCode, r.Errors[0].Code, r.Errors[0].Message)
+func (e *ErrorResponse) Error() string {
+	if len(e.Errors) > 0 {
+		return fmt.Sprintf("Method: %s, URL: %s, StatusCode: %d, ErrorCode: %s, Field: %s, Message: %s",
+			e.Response.Request.Method,
+			e.Response.Request.URL,
+			e.Response.StatusCode,
+			e.Errors[0].Code,
+			e.Errors[0].Field,
+			e.Errors[0].Message,
+		)
 	} else {
-		return fmt.Sprintf("%v %v: %d",
-			r.Response.Request.Method, r.Response.Request.URL,
-			r.Response.StatusCode)
+		return fmt.Sprintf("Method: %s, URL: %s, StatusCode: %d",
+			e.Response.Request.Method,
+			e.Response.Request.URL,
+			e.Response.StatusCode,
+		)
 	}
 }
