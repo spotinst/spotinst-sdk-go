@@ -90,7 +90,7 @@ type AwsGroupScalingPolicyDimension struct {
 }
 
 type AwsGroupStrategy struct {
-	Risk               float64 `json:"risk,omitempty"`
+	Risk               float64 `json:"risk"`
 	OnDemandCount      int     `json:"onDemandCount,omitempty"`
 	DrainingTimeout    int     `json:"drainingTimeout,omitempty"`
 	AvailabilityVsCost string  `json:"availabilityVsCost,omitempty"`
