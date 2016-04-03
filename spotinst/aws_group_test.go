@@ -17,7 +17,7 @@ func Test_AwsGroupGet(t *testing.T) {
 		fmt.Fprint(w, response)
 	})
 
-	expected := &AwsGroup{ID: "foo", Name: "bar"}
+	expected := &AwsGroup{ID: String("foo"), Name: String("bar")}
 	group, _, err := client.AwsGroup.Get("foo")
 	if err != nil {
 		t.Errorf("AwsGroup.Get returned error: %v", err)
@@ -38,7 +38,7 @@ func Test_AwsGroupCreate(t *testing.T) {
 		fmt.Fprint(w, response)
 	})
 
-	expected := &AwsGroup{ID: "foo", Name: "bar"}
+	expected := &AwsGroup{ID: String("foo"), Name: String("bar")}
 	group, _, err := client.AwsGroup.Create(expected)
 	if err != nil {
 		t.Errorf("AwsGroup.Create returned error: %v", err)
@@ -59,13 +59,13 @@ func Test_AwsGroupUpdate(t *testing.T) {
 		fmt.Fprint(w, response)
 	})
 
-	expected := &AwsGroup{ID: "foo", Name: "baz"}
+	expected := &AwsGroup{ID: String("foo"), Name: String("baz")}
 	group, _, err := client.AwsGroup.Update(expected)
 	if err != nil {
 		t.Errorf("AwsGroup.Update returned error: %v", err)
 	}
 
-	expected.ID = "foo"
+	expected.ID = String("foo")
 	if len(group) > 0 && !reflect.DeepEqual(group[0], expected) {
 		t.Errorf("AwsGroup.Update returned %+v, expected %+v", group[0], expected)
 	}
@@ -80,7 +80,7 @@ func Test_AwsGroupDelete(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	resp, err := client.AwsGroup.Delete(&AwsGroup{ID: "foo"})
+	resp, err := client.AwsGroup.Delete(&AwsGroup{ID: String("foo")})
 	if err != nil {
 		t.Errorf("AwsGroup.Delete returned error: %v", err)
 	}

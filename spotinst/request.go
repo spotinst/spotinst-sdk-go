@@ -9,9 +9,10 @@ import (
 	"net/http"
 )
 
-// NewRequest creates an API request. A relative URL can be provided in urlStr, which will be resolved to the
-// BaseURL of the Client. Relative URLS should always be specified without a preceding slash. If specified, the
-// value pointed to by body is JSON encoded and included in as the request body.
+// NewRequest creates an API request. A relative URL can be provided in urlStr,
+// which will be resolved to the BaseURL of the Client. Relative URLS should
+// always be specified without a preceding slash. If specified, the value
+// pointed to by body is JSON encoded and included in as the request body.
 func (c *Client) NewRequest(method, path string, payload interface{}) (*http.Request, error) {
 	url := fmt.Sprintf("%s/%s", c.BaseURL, path)
 	body := new(bytes.Buffer)
@@ -38,8 +39,9 @@ func (c *Client) NewRequest(method, path string, payload interface{}) (*http.Req
 	return req, nil
 }
 
-// Do sends an API request and returns the API response. The API response is JSON decoded and stored in the value
-// pointed to by v, or returned as an error if an API error has occurred. If v implements the io.Writer interface,
+// Do sends an API request and returns the API response. The API response is
+// JSON decoded and stored in the value pointed to by v, or returned as an
+// error if an API error has occurred. If v implements the io.Writer interface,
 // the raw response will be written to v, without attempting to decode it.
 func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	res, err := c.HttpClient.Do(req)
@@ -71,8 +73,9 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 }
 
 // CheckResponse checks the API response for errors, and returns them if present.
-// A response is considered an error if the status code is different than 2xx. Specific requests
-// may have additional requirements, but this is sufficient in most of the cases.
+// A response is considered an error if the status code is different than 2xx.
+// Specific requests may have additional requirements, but this is sufficient
+// in most of the cases.
 func CheckResponse(res *http.Response) error {
 	if code := res.StatusCode; 200 <= code && code <= 299 {
 		return nil

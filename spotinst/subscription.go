@@ -12,11 +12,11 @@ type SubscriptionService struct {
 }
 
 type Subscription struct {
-	ID         string                 `json:"id,omitempty"`
-	ResourceID string                 `json:"resourceId,omitempty"`
-	EventType  string                 `json:"eventType,omitempty"`
-	Protocol   string                 `json:"protocol,omitempty"`
-	Endpoint   string                 `json:"endpoint,omitempty"`
+	ID         *string                `json:"id,omitempty"`
+	ResourceID *string                `json:"resourceId,omitempty"`
+	EventType  *string                `json:"eventType,omitempty"`
+	Protocol   *string                `json:"protocol,omitempty"`
+	Endpoint   *string                `json:"endpoint,omitempty"`
 	Format     map[string]interface{} `json:"eventFormat,omitempty"`
 }
 
@@ -74,8 +74,8 @@ func (s *SubscriptionService) Create(subscription *Subscription) ([]*Subscriptio
 // Update an existing subscription.
 func (s *SubscriptionService) Update(subscription *Subscription) ([]*Subscription, *http.Response, error) {
 	id := (*subscription).ID
-	(*subscription).ID = ""
-	path := fmt.Sprintf("events/subscription/%s", id)
+	(*subscription).ID = nil
+	path := fmt.Sprintf("events/subscription/%s", *id)
 
 	req, err := s.client.NewRequest("PUT", path, subscriptionWrapper{Subscription: *subscription})
 	if err != nil {
@@ -94,8 +94,8 @@ func (s *SubscriptionService) Update(subscription *Subscription) ([]*Subscriptio
 // Delete an existing subscription.
 func (s *SubscriptionService) Delete(subscription *Subscription) (*http.Response, error) {
 	id := (*subscription).ID
-	(*subscription).ID = ""
-	path := fmt.Sprintf("events/subscription/%s", id)
+	(*subscription).ID = nil
+	path := fmt.Sprintf("events/subscription/%s", *id)
 
 	req, err := s.client.NewRequest("DELETE", path, nil)
 	if err != nil {

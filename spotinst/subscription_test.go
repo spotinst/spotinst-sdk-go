@@ -17,7 +17,7 @@ func Test_SubscriptionGet(t *testing.T) {
 		fmt.Fprint(w, response)
 	})
 
-	expected := &Subscription{ID: "foo", ResourceID: "bar"}
+	expected := &Subscription{ID: String("foo"), ResourceID: String("bar")}
 	subscription, _, err := client.Subscription.Get("foo")
 	if err != nil {
 		t.Errorf("Subscription.Get returned error: %v", err)
@@ -38,7 +38,7 @@ func Test_SubscriptionCreate(t *testing.T) {
 		fmt.Fprint(w, response)
 	})
 
-	expected := &Subscription{ID: "foo", ResourceID: "bar"}
+	expected := &Subscription{ID: String("foo"), ResourceID: String("bar")}
 	subscription, _, err := client.Subscription.Create(expected)
 	if err != nil {
 		t.Errorf("Subscription.Create returned error: %v", err)
@@ -59,13 +59,13 @@ func Test_SubscriptionUpdate(t *testing.T) {
 		fmt.Fprint(w, response)
 	})
 
-	expected := &Subscription{ID: "foo", ResourceID: "baz"}
+	expected := &Subscription{ID: String("foo"), ResourceID: String("baz")}
 	subscription, _, err := client.Subscription.Update(expected)
 	if err != nil {
 		t.Errorf("Subscription.Update returned error: %v", err)
 	}
 
-	expected.ID = "foo"
+	expected.ID = String("foo")
 	if len(subscription) > 0 && !reflect.DeepEqual(subscription[0], expected) {
 		t.Errorf("Subscription.Update returned %+v, expected %+v", subscription[0], expected)
 	}
@@ -80,7 +80,7 @@ func Test_SubscriptionDelete(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	})
 
-	resp, err := client.Subscription.Delete(&Subscription{ID: "foo"})
+	resp, err := client.Subscription.Delete(&Subscription{ID: String("foo")})
 	if err != nil {
 		t.Errorf("Subscription.Delete returned error: %v", err)
 	}

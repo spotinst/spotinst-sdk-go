@@ -28,22 +28,22 @@ type Response struct {
 }
 
 type Error struct {
-	// Error code
+	// Error code.
 	Code string `json:"code"`
 
-	// Human-readable message
+	// Human-readable message.
 	Message string `json:"message"`
 
-	// The field in error
+	// The field in error.
 	Field string `json:"field"`
 }
 
-// An ErrorResponse reports the errors caused by an API request
+// An ErrorResponse reports the errors caused by an API request.
 type ErrorResponse struct {
-	// HTTP response that caused this error
+	// HTTP response that caused this error.
 	Response *http.Response
 
-	// A list of errors
+	// A list of errors.
 	Errors []Error
 }
 

@@ -9,13 +9,13 @@ import (
 )
 
 type Client struct {
-	// HTTP client used to communicate with the DO API
+	// HTTP client used to communicate with the Spotinst API.
 	HttpClient *http.Client
 
 	// Base URL for API requests.
 	BaseURL *url.URL
 
-	// User agent for client
+	// User agent for client.
 	UserAgent string
 
 	//	Spotinst makes a call to an authorization API using your username and
@@ -25,7 +25,7 @@ type Client struct {
 	AccessToken  string
 	RefreshToken string
 
-	// Services used for communicating with the API
+	// Services used for communicating with the API.
 	Subscription *SubscriptionService
 	AwsGroup     *AwsGroupService
 }
@@ -37,7 +37,7 @@ func NewClient(creds *Credentials) (*Client, error) {
 
 	if creds != nil {
 		if creds.Token != "" {
-			// Use a Personal API Access Token
+			// Use a Personal API Access Token.
 			c.AccessToken = creds.Token
 		} else {
 			// Get new OAuth access and refresh tokens using the client credentials.
@@ -51,7 +51,7 @@ func NewClient(creds *Credentials) (*Client, error) {
 		}
 	}
 
-	// Spotinst services
+	// Spotinst services.
 	c.Subscription = &SubscriptionService{client: c}
 	c.AwsGroup = &AwsGroupService{client: c}
 
