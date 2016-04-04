@@ -109,3 +109,8 @@ func (s *SubscriptionService) Delete(subscription *Subscription) (*http.Response
 
 	return resp, nil
 }
+
+// String creates a reasonable string representation.
+func (s Subscription) String() string {
+	return Stringify(s)
+}

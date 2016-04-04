@@ -254,3 +254,8 @@ func (s *AwsGroupService) Delete(group *AwsGroup) (*http.Response, error) {
 
 	return resp, nil
 }
+
+// String creates a reasonable string representation.
+func (a AwsGroup) String() string {
+	return Stringify(a)
+}
