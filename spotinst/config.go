@@ -3,6 +3,7 @@ package spotinst
 import (
 	"fmt"
 	"net/http"
+	"strings"
 )
 
 const (
@@ -50,14 +51,19 @@ type ErrorResponse struct {
 // Error implements the error interface.
 func (e *ErrorResponse) Error() string {
 	if len(e.Errors) > 0 {
-		return fmt.Sprintf("Method: %s, URL: %s, StatusCode: %d, ErrorCode: %s, Field: %s, Message: %s",
-			e.Response.Request.Method,
-			e.Response.Request.URL,
-			e.Response.StatusCode,
-			e.Errors[0].Code,
-			e.Errors[0].Field,
-			e.Errors[0].Message,
-		)
+		errs := make([]string, len(e.Errors))
+		for i, err := range e.Errors {
+			serr := fmt.Sprintf("Method: %s, URL: %s, StatusCode: %d, ErrorCode: %s, Field: %s, Message: %s",
+				e.Response.Request.Method,
+				e.Response.Request.URL,
+				e.Response.StatusCode,
+				err.Code,
+				err.Field,
+				err.Message,
+			)
+			errs[i] = serr
+		}
+		return strings.Join(errs, "\n")
 	} else {
 		return fmt.Sprintf("Method: %s, URL: %s, StatusCode: %d",
 			e.Response.Request.Method,
