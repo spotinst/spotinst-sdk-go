@@ -1,4 +1,4 @@
-# Spotinst SDK GO
+# Spotinst SDK Go
 
 A Go client library for accessing the Spotinst API.
 
