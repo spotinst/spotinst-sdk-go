@@ -91,7 +91,7 @@ type AwsGroupStrategy struct {
 }
 
 type AwsGroupStrategySignal struct {
-	Name string `json:"name"`
+	Name *string `json:"name"`
 }
 
 type AwsGroupCapacity struct {
