@@ -44,33 +44,33 @@ group := &spotinst.AwsGroup{
   Name:        "foo",
   Description: "bar",
   Strategy: &spotinst.AwsGroupStrategy{
-    Risk: 100,
+    Risk: spotinst.Float64(100),
   },
   Capacity: &spotinst.AwsGroupCapacity{
-    Target:  75,
-    Minimum: 50,
-    Maximum: 100,
+    Target:  spotinst.Int(75),
+    Minimum: spotinst.Int(50),
+    Maximum: spotinst.Int(100),
   },
   Compute: &spotinst.AwsGroupCompute{
-    Product: "Linux/UNIX",
+    Product: spotinst.String("Linux/UNIX"),
     InstanceTypes: &spotinst.AwsGroupComputeInstanceType{
-      OnDemand: "c4.large",
+      OnDemand: spotinst.String("c4.large"),
       Spot:     []string{"c3.large", "c4.large"},
     },
     AvailabilityZones: []*spotinst.AwsGroupComputeAvailabilityZone{
       &spotinst.AwsGroupComputeAvailabilityZone{
-        Name:     "us-west-2b",
-        SubnetID: "subnet-foo",
+        Name:     spotinst.String("us-west-2b"),
+        SubnetID: spotinst.String("subnet-foo"),
       },
       &spotinst.AwsGroupComputeAvailabilityZone{
-        Name:     "us-west-2c",
-        SubnetID: "subnet-bar",
+        Name:     spotinst.String("us-west-2c"),
+        SubnetID: spotinst.String("subnet-bar"),
       },
     },
     LaunchSpecification: &spotinst.AwsGroupComputeLaunchSpecification{
-      Monitoring:        true,
-      ImageID:           "ami-f0091d91",
-      KeyPair:           "pemfile_name",
+      Monitoring:        spotinst.Bool(true),
+      ImageID:           spotinst.String("ami-f0091d91"),
+      KeyPair:           spotinst.String("pemfile_name"),
       SecurityGroupIDs:  []string{"wide-open"},
       LoadBalancerNames: []string{"aws-elb-prod"},
     },
