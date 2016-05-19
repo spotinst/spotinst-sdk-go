@@ -24,9 +24,10 @@ type AwsGroup struct {
 }
 
 type AwsGroupIntegration struct {
-	Rancher          *AwsGroupRancherIntegration          `json:"rancher,omitempty"`
-	ElasticBeanstalk *AwsGroupElasticBeanstalkIntegration `json:"elasticBeanstalk,omitempty"`
-	Nirmata          *AwsGroupNirmataIntegration          `json:"nirmata,omitempty"`
+	EC2ContainerService *AwsGroupEC2ContainerServiceIntegration `json:"ecs,omitempty"`
+	ElasticBeanstalk    *AwsGroupElasticBeanstalkIntegration    `json:"elasticBeanstalk,omitempty"`
+	Rancher             *AwsGroupRancherIntegration             `json:"rancher,omitempty"`
+	Nirmata             *AwsGroupNirmataIntegration             `json:"nirmata,omitempty"`
 }
 
 type AwsGroupRancherIntegration struct {
@@ -37,6 +38,10 @@ type AwsGroupRancherIntegration struct {
 
 type AwsGroupElasticBeanstalkIntegration struct {
 	EnvironmentID *string `json:"environmentId,omitempty"`
+}
+
+type AwsGroupEC2ContainerServiceIntegration struct {
+	ClusterName *string `json:"clusterName,omitempty"`
 }
 
 type AwsGroupNirmataIntegration struct {
