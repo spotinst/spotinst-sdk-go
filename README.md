@@ -41,8 +41,8 @@ To create a new Elastigroup:
 
 ```go
 group := &spotinst.AwsGroup{
-  Name:        "foo",
-  Description: "bar",
+  Name:        spotinst.String("foo"),
+  Description: spotinst.String("bar"),
   Strategy: &spotinst.AwsGroupStrategy{
     Risk: spotinst.Float64(100),
   },
