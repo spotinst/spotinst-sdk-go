@@ -184,7 +184,7 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 		return nil, err
 	}
 
-	// We do not need the ID anymore so let's omit it.
+	// We do not need the ID anymore so let's drop it.
 	input.Subscription.ID = ""
 
 	r := s.client.newRequest("PUT", path)
