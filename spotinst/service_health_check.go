@@ -203,7 +203,7 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 	}
 
 	// We do not need the ID anymore so let's drop it.
-	input.HealthCheck.ID = ""
+	input.HealthCheck.ID = nil
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input

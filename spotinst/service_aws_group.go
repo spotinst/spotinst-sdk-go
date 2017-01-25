@@ -371,7 +371,7 @@ func (s *AwsGroupServiceOp) Update(input *UpdateAwsGroupInput) (*UpdateAwsGroupO
 	}
 
 	// We do not need the ID anymore so let's drop it.
-	input.Group.ID = ""
+	input.Group.ID = nil
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
