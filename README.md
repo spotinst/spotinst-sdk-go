@@ -4,7 +4,6 @@ A Go client library for accessing the Spotinst API.
 
 You can view Spotinst API docs [here](https://spotinst.atlassian.net/wiki/display/API).
 
-
 ## Usage
 
 ```go
@@ -16,23 +15,10 @@ access different parts of the Spotinst API.
 
 ### Authentication
 
-You can use your credentials to create a new client:
-
 ```go
-creds := &spotinst.Credentials{
-  Email: "foo@bar.com",
-  Password: "p@ssw0rd",
-  ClientID: "CJZzWvP3e5vefCgt",
-  ClientSecret: "EluFEJCfje78eQxP3u6X0cyH2scw6ZIP",
-}
-client, err := spotinst.NewClient(creds)
-```
-
-Or, you can use your [Personal Access Token](https://spotinst.atlassian.net/wiki/display/API/Get+API+Personal+Access+Token) to create a new client:
-
-```go
-creds := &spotinst.Credentials{Token: "foo"}
-client, err := spotinst.NewClient(creds)
+client, _ := spotinst.NewClient(
+    spotinst.SetToken("foo"),
+)
 ```
 
 ## Examples
@@ -40,48 +26,28 @@ client, err := spotinst.NewClient(creds)
 To create a new Elastigroup:
 
 ```go
-group := &spotinst.AwsGroup{
-  Name:        spotinst.String("foo"),
-  Description: spotinst.String("bar"),
-  Strategy: &spotinst.AwsGroupStrategy{
-    Risk: spotinst.Float64(100),
-  },
-  Capacity: &spotinst.AwsGroupCapacity{
-    Target:  spotinst.Int(75),
-    Minimum: spotinst.Int(50),
-    Maximum: spotinst.Int(100),
-  },
-  Compute: &spotinst.AwsGroupCompute{
-    Product: spotinst.String("Linux/UNIX"),
-    InstanceTypes: &spotinst.AwsGroupComputeInstanceType{
-      OnDemand: spotinst.String("c4.large"),
-      Spot:     []string{"c3.large", "c4.large"},
-    },
-    AvailabilityZones: []*spotinst.AwsGroupComputeAvailabilityZone{
-      &spotinst.AwsGroupComputeAvailabilityZone{
-        Name:     spotinst.String("us-west-2b"),
-        SubnetID: spotinst.String("subnet-foo"),
-      },
-      &spotinst.AwsGroupComputeAvailabilityZone{
-        Name:     spotinst.String("us-west-2c"),
-        SubnetID: spotinst.String("subnet-bar"),
-      },
-    },
-    LaunchSpecification: &spotinst.AwsGroupComputeLaunchSpecification{
-      Monitoring:        spotinst.Bool(true),
-      ImageID:           spotinst.String("ami-f0091d91"),
-      KeyPair:           spotinst.String("pemfile_name"),
-      SecurityGroupIDs:  []string{"wide-open"},
-      LoadBalancerNames: []string{"aws-elb-prod"},
-    },
-  },
+logger := log.New(os.Stderr, "", 0)
+
+clientOpts := []spotinst.ClientOptionFunc{
+    spotinst.SetToken("foo"),
+    spotinst.SetInfoLog(logger),
+    spotinst.SetErrorLog(logger),
+}
+client, err := spotinst.NewClient(clientOpts...)
+if err != nil {
+    panic(err)
 }
 
-group, _, err := client.AwsGroup.Create(group)
-
+resp, err := client.AwsGroupService.List(nil)
 if err != nil {
-    fmt.Printf("Something bad happened: %s\n", err)
-    return err
+    panic(err)
+}
+
+if len(resp.Groups) > 0 {
+    for _, g := range resp.Groups {
+        b, _ := json.MarshalIndent(g, "", "  ")
+        log.Infof(context.TODO(), string(b))
+    }
 }
 ```
 
