@@ -133,12 +133,12 @@ func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthChe
 	}
 	defer resp.Body.Close()
 
-	gs, err := healthChecksFromHttpResponse(resp)
+	hcs, err := healthChecksFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ListHealthCheckOutput{HealthChecks: gs}, nil
+	return &ListHealthCheckOutput{HealthChecks: hcs}, nil
 }
 
 func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHealthCheckOutput, error) {
@@ -151,12 +151,17 @@ func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHea
 	}
 	defer resp.Body.Close()
 
-	gs, err := healthChecksFromHttpResponse(resp)
+	hcs, err := healthChecksFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CreateHealthCheckOutput{HealthCheck: gs[0]}, nil
+	output := new(CreateHealthCheckOutput)
+	if len(hcs) > 0 {
+		output.HealthCheck = hcs[0]
+	}
+
+	return output, nil
 }
 
 func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthCheckOutput, error) {
@@ -176,12 +181,17 @@ func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthChe
 	}
 	defer resp.Body.Close()
 
-	gs, err := healthChecksFromHttpResponse(resp)
+	hcs, err := healthChecksFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ReadHealthCheckOutput{HealthCheck: gs[0]}, nil
+	output := new(ReadHealthCheckOutput)
+	if len(hcs) > 0 {
+		output.HealthCheck = hcs[0]
+	}
+
+	return output, nil
 }
 
 func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHealthCheckOutput, error) {
@@ -201,12 +211,17 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 	}
 	defer resp.Body.Close()
 
-	gs, err := healthChecksFromHttpResponse(resp)
+	hcs, err := healthChecksFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &UpdateHealthCheckOutput{HealthCheck: gs[0]}, nil
+	output := new(UpdateHealthCheckOutput)
+	if len(hcs) > 0 {
+		output.HealthCheck = hcs[0]
+	}
+
+	return output, nil
 }
 
 func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHealthCheckOutput, error) {

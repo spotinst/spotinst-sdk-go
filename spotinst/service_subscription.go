@@ -133,12 +133,17 @@ func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateS
 	}
 	defer resp.Body.Close()
 
-	gs, err := subscriptionsFromHttpResponse(resp)
+	ss, err := subscriptionsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CreateSubscriptionOutput{Subscription: gs[0]}, nil
+	output := new(CreateSubscriptionOutput)
+	if len(ss) > 0 {
+		output.Subscription = ss[0]
+	}
+
+	return output, nil
 }
 
 func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscriptionOutput, error) {
@@ -158,12 +163,17 @@ func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscri
 	}
 	defer resp.Body.Close()
 
-	gs, err := subscriptionsFromHttpResponse(resp)
+	ss, err := subscriptionsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ReadSubscriptionOutput{Subscription: gs[0]}, nil
+	output := new(ReadSubscriptionOutput)
+	if len(ss) > 0 {
+		output.Subscription = ss[0]
+	}
+
+	return output, nil
 }
 
 func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateSubscriptionOutput, error) {
@@ -183,12 +193,17 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 	}
 	defer resp.Body.Close()
 
-	gs, err := subscriptionsFromHttpResponse(resp)
+	ss, err := subscriptionsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &UpdateSubscriptionOutput{Subscription: gs[0]}, nil
+	output := new(UpdateSubscriptionOutput)
+	if len(ss) > 0 {
+		output.Subscription = ss[0]
+	}
+
+	return output, nil
 }
 
 func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteSubscriptionOutput, error) {

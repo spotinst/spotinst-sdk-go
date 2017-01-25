@@ -324,7 +324,12 @@ func (s *AwsGroupServiceOp) Create(input *CreateAwsGroupInput) (*CreateAwsGroupO
 		return nil, err
 	}
 
-	return &CreateAwsGroupOutput{Group: gs[0]}, nil
+	output := new(CreateAwsGroupOutput)
+	if len(gs) > 0 {
+		output.Group = gs[0]
+	}
+
+	return output, nil
 }
 
 func (s *AwsGroupServiceOp) Read(input *ReadAwsGroupInput) (*ReadAwsGroupOutput, error) {
@@ -349,7 +354,12 @@ func (s *AwsGroupServiceOp) Read(input *ReadAwsGroupInput) (*ReadAwsGroupOutput,
 		return nil, err
 	}
 
-	return &ReadAwsGroupOutput{Group: gs[0]}, nil
+	output := new(ReadAwsGroupOutput)
+	if len(gs) > 0 {
+		output.Group = gs[0]
+	}
+
+	return output, nil
 }
 
 func (s *AwsGroupServiceOp) Update(input *UpdateAwsGroupInput) (*UpdateAwsGroupOutput, error) {
@@ -374,7 +384,12 @@ func (s *AwsGroupServiceOp) Update(input *UpdateAwsGroupInput) (*UpdateAwsGroupO
 		return nil, err
 	}
 
-	return &UpdateAwsGroupOutput{Group: gs[0]}, nil
+	output := new(UpdateAwsGroupOutput)
+	if len(gs) > 0 {
+		output.Group = gs[0]
+	}
+
+	return output, nil
 }
 
 func (s *AwsGroupServiceOp) Delete(input *DeleteAwsGroupInput) (*DeleteAwsGroupOutput, error) {
