@@ -43,6 +43,7 @@ type AwsGroupIntegration struct {
 	ElasticBeanstalk    *AwsGroupElasticBeanstalkIntegration    `json:"elasticBeanstalk,omitempty"`
 	Rancher             *AwsGroupRancherIntegration             `json:"rancher,omitempty"`
 	Kubernetes          *AwsGroupKubernetesIntegration          `json:"kubernetes,omitempty"`
+	Mesosphere          *AwsGroupMesosphereIntegration          `json:"mesosphere,omitempty"`
 }
 
 type AwsGroupRancherIntegration struct {
@@ -62,6 +63,10 @@ type AwsGroupEC2ContainerServiceIntegration struct {
 type AwsGroupKubernetesIntegration struct {
 	Server *string `json:"apiServer,omitempty"`
 	Token  *string `json:"token,omitempty"`
+}
+
+type AwsGroupMesosphereIntegration struct {
+	Server *string `json:"apiServer,omitempty"`
 }
 
 type AwsGroupScheduling struct {
