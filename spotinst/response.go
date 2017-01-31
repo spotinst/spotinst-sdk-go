@@ -51,7 +51,7 @@ type Error struct {
 }
 
 func (e Error) Error() string {
-	msg := fmt.Sprintf("%v %v: %d (request: %q), %v: %v",
+	msg := fmt.Sprintf("%v %v: %d (request: %q) %v: %v",
 		e.Response.Request.Method, e.Response.Request.URL,
 		e.Response.StatusCode, e.RequestID, e.Code, e.Message)
 
