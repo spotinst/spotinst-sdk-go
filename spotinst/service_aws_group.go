@@ -118,6 +118,7 @@ type AwsGroupStrategy struct {
 	AvailabilityVsCost       *string                   `json:"availabilityVsCost,omitempty"`
 	UtilizeReservedInstances *bool                     `json:"utilizeReservedInstances,omitempty"`
 	FallbackToOnDemand       *bool                     `json:"fallbackToOd,omitempty"`
+	SpinUpTime               *int                      `json:"spinUpTime,omitempty"`
 	Signals                  []*AwsGroupStrategySignal `json:"signals"`
 }
 
