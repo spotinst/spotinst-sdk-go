@@ -39,11 +39,11 @@ type AwsGroup struct {
 }
 
 type AwsGroupIntegration struct {
-	EC2ContainerService *AwsGroupEC2ContainerServiceIntegration `json:"ecs,omitempty"`
-	ElasticBeanstalk    *AwsGroupElasticBeanstalkIntegration    `json:"elasticBeanstalk,omitempty"`
-	Rancher             *AwsGroupRancherIntegration             `json:"rancher,omitempty"`
-	Kubernetes          *AwsGroupKubernetesIntegration          `json:"kubernetes,omitempty"`
-	Mesosphere          *AwsGroupMesosphereIntegration          `json:"mesosphere,omitempty"`
+	EC2ContainerService *AwsGroupEC2ContainerServiceIntegration `json:"ecs"`
+	ElasticBeanstalk    *AwsGroupElasticBeanstalkIntegration    `json:"elasticBeanstalk"`
+	Rancher             *AwsGroupRancherIntegration             `json:"rancher"`
+	Kubernetes          *AwsGroupKubernetesIntegration          `json:"kubernetes"`
+	Mesosphere          *AwsGroupMesosphereIntegration          `json:"mesosphere"`
 }
 
 type AwsGroupRancherIntegration struct {
@@ -70,7 +70,7 @@ type AwsGroupMesosphereIntegration struct {
 }
 
 type AwsGroupScheduling struct {
-	Tasks []*AwsGroupScheduledTask `json:"tasks,omitempty"`
+	Tasks []*AwsGroupScheduledTask `json:"tasks"`
 }
 
 type AwsGroupScheduledTask struct {
@@ -85,8 +85,8 @@ type AwsGroupScheduledTask struct {
 }
 
 type AwsGroupScaling struct {
-	Up   []*AwsGroupScalingPolicy `json:"up,omitempty"`
-	Down []*AwsGroupScalingPolicy `json:"down,omitempty"`
+	Up   []*AwsGroupScalingPolicy `json:"up"`
+	Down []*AwsGroupScalingPolicy `json:"down"`
 }
 
 type AwsGroupScalingPolicy struct {
@@ -118,7 +118,6 @@ type AwsGroupStrategy struct {
 	AvailabilityVsCost       *string                   `json:"availabilityVsCost,omitempty"`
 	UtilizeReservedInstances *bool                     `json:"utilizeReservedInstances,omitempty"`
 	FallbackToOnDemand       *bool                     `json:"fallbackToOd,omitempty"`
-	SpinUpTime               *int                      `json:"spinUpTime,omitempty"`
 	Signals                  []*AwsGroupStrategySignal `json:"signals"`
 }
 
@@ -139,7 +138,7 @@ type AwsGroupCompute struct {
 	LaunchSpecification *AwsGroupComputeLaunchSpecification `json:"launchSpecification,omitempty"`
 	AvailabilityZones   []*AwsGroupComputeAvailabilityZone  `json:"availabilityZones,omitempty"`
 	ElasticIPs          []string                            `json:"elasticIps,omitempty"`
-	EBSVolumePool       []*AwsGroupComputeEBSVolume         `json:"ebsVolumePool,omitempty"`
+	EBSVolumePool       []*AwsGroupComputeEBSVolume         `json:"ebsVolumePool"`
 }
 
 type AwsGroupComputeEBSVolume struct {
@@ -164,7 +163,7 @@ type AwsGroupComputeAvailabilityZone struct {
 }
 
 type AwsGroupComputeLaunchSpecification struct {
-	LoadBalancerNames      []string                            `json:"loadBalancerNames,omitempty"`
+	LoadBalancerNames      []string                            `json:"loadBalancerNames"`
 	LoadBalancersConfig    *AwsGroupComputeLoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
 	SecurityGroupIDs       []string                            `json:"securityGroupIds,omitempty"`
 	HealthCheckType        *string                             `json:"healthCheckType,omitempty"`
@@ -176,13 +175,13 @@ type AwsGroupComputeLaunchSpecification struct {
 	Monitoring             *bool                               `json:"monitoring,omitempty"`
 	EBSOptimized           *bool                               `json:"ebsOptimized,omitempty"`
 	IamInstanceProfile     *AwsGroupComputeIamInstanceProfile  `json:"iamRole,omitempty"`
-	BlockDevices           []*AwsGroupComputeBlockDevice       `json:"blockDeviceMappings,omitempty"`
-	NetworkInterfaces      []*AwsGroupComputeNetworkInterface  `json:"networkInterfaces,omitempty"`
-	Tags                   []*AwsGroupComputeTag               `json:"tags,omitempty"`
+	BlockDevices           []*AwsGroupComputeBlockDevice       `json:"blockDeviceMappings"`
+	NetworkInterfaces      []*AwsGroupComputeNetworkInterface  `json:"networkInterfaces"`
+	Tags                   []*AwsGroupComputeTag               `json:"tags"`
 }
 
 type AwsGroupComputeLoadBalancersConfig struct {
-	LoadBalancers []*AwsGroupComputeLoadBalancer `json:"loadBalancers,omitempty"`
+	LoadBalancers []*AwsGroupComputeLoadBalancer `json:"loadBalancers"`
 }
 
 type AwsGroupComputeLoadBalancer struct {
