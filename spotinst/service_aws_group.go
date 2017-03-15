@@ -33,9 +33,10 @@ type AwsGroup struct {
 	Capacity    *AwsGroupCapacity    `json:"capacity,omitempty"`
 	Compute     *AwsGroupCompute     `json:"compute,omitempty"`
 	Strategy    *AwsGroupStrategy    `json:"strategy,omitempty"`
-	Scaling     *AwsGroupScaling     `json:"scaling,omitempty"`
-	Scheduling  *AwsGroupScheduling  `json:"scheduling,omitempty"`
-	Integration *AwsGroupIntegration `json:"thirdPartiesIntegration,omitempty"`
+	Scaling     *AwsGroupScaling     `json:"scaling"`
+	Scheduling  *AwsGroupScheduling  `json:"scheduling"`
+	Integration *AwsGroupIntegration `json:"thirdPartiesIntegration"`
+	Multai      *AwsGroupMultai      `json:"multai"`
 }
 
 type AwsGroupIntegration struct {
@@ -44,6 +45,19 @@ type AwsGroupIntegration struct {
 	Rancher             *AwsGroupRancherIntegration             `json:"rancher"`
 	Kubernetes          *AwsGroupKubernetesIntegration          `json:"kubernetes"`
 	Mesosphere          *AwsGroupMesosphereIntegration          `json:"mesosphere"`
+}
+
+type AwsGroupMultai struct {
+	Token     *string                   `json:"token"`
+	Balancers []*AwsGroupMultaiBalancer `json:"balancers"`
+}
+
+type AwsGroupMultaiBalancer struct {
+	ProjectID   *string `json:"projectId"`
+	BalancerID  *string `json:"balancerId"`
+	TargetSetID *string `json:"targetSetId"`
+	AzAwareness *bool   `json:"azAwareness"`
+	AutoWeight  *bool   `json:"autoWeight"`
 }
 
 type AwsGroupRancherIntegration struct {
