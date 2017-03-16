@@ -36,7 +36,7 @@ type AwsGroup struct {
 	Scaling     *AwsGroupScaling     `json:"scaling,omitempty"`
 	Scheduling  *AwsGroupScheduling  `json:"scheduling,omitempty"`
 	Integration *AwsGroupIntegration `json:"thirdPartiesIntegration,omitempty"`
-	Multai      *AwsGroupMultai      `json:"multai"`
+	Multai      *AwsGroupMultai      `json:"multai,omitempty"`
 }
 
 type AwsGroupIntegration struct {
