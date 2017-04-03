@@ -134,6 +134,7 @@ type AwsGroupStrategy struct {
 	FallbackToOnDemand       *bool                     `json:"fallbackToOd,omitempty"`
 	SpinUpTime               *int                      `json:"spinUpTime,omitempty"`
 	Signals                  []*AwsGroupStrategySignal `json:"signals,omitempty"`
+	Persistence              *AwsGroupPersistence      `json:"persistence,omitempty"`
 }
 
 type AwsGroupStrategySignal struct {
@@ -145,6 +146,12 @@ type AwsGroupCapacity struct {
 	Maximum *int    `json:"maximum,omitempty"`
 	Target  *int    `json:"target,omitempty"`
 	Unit    *string `json:"unit,omitempty"`
+}
+
+type AwsGroupPersistence struct {
+	ShouldPersistPrivateIp    *bool                     `json:"shouldPersistPrivateIp,omitempty"`
+	ShouldPersistBlockDevices *bool                     `json:"shouldPersistBlockDevices,omitempty"`
+	ShouldPersistRootDevice   *bool                     `json:"shouldPersistRootDevice,omitempty"`
 }
 
 type AwsGroupCompute struct {
