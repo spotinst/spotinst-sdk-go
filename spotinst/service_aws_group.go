@@ -33,58 +33,101 @@ type AwsGroup struct {
 	Capacity    *AwsGroupCapacity    `json:"capacity,omitempty"`
 	Compute     *AwsGroupCompute     `json:"compute,omitempty"`
 	Strategy    *AwsGroupStrategy    `json:"strategy,omitempty"`
-	Scaling     *AwsGroupScaling     `json:"scaling,omitempty"`
-	Scheduling  *AwsGroupScheduling  `json:"scheduling,omitempty"`
-	Integration *AwsGroupIntegration `json:"thirdPartiesIntegration,omitempty"`
-	Multai      *AwsGroupMultai      `json:"multai,omitempty"`
+	Scaling     *AwsGroupScaling     `json:"scaling"`
+	Scheduling  *AwsGroupScheduling  `json:"scheduling"`
+	Integration *AwsGroupIntegration `json:"thirdPartiesIntegration"`
+	Multai      *AwsGroupMultai      `json:"multai"`
+
+	// forceSendFields is a list of field names (e.g. "Keys") to
+	// unconditionally include in API requests. By default, fields with
+	// empty values are omitted from API requests. However, any non-pointer,
+	// non-interface field appearing in ForceSendFields will be sent to the
+	// server regardless of whether the field is empty or not. This may be
+	// used to include empty fields in Patch requests.
+	forceSendFields []string `json:"-"`
+
+	// nullFields is a list of field names (e.g. "Keys") to include in API
+	// requests with the JSON null value. By default, fields with empty
+	// values are omitted from API requests. However, any field with an
+	// empty value appearing in NullFields will be sent to the server as
+	// null. It is an error if a field in this list has a non-empty value.
+	// This may be used to include null fields in Patch requests.
+	nullFields []string `json:"-"`
 }
 
 type AwsGroupIntegration struct {
-	EC2ContainerService *AwsGroupEC2ContainerServiceIntegration `json:"ecs,omitempty"`
-	ElasticBeanstalk    *AwsGroupElasticBeanstalkIntegration    `json:"elasticBeanstalk,omitempty"`
-	Rancher             *AwsGroupRancherIntegration             `json:"rancher,omitempty"`
-	Kubernetes          *AwsGroupKubernetesIntegration          `json:"kubernetes,omitempty"`
-	Mesosphere          *AwsGroupMesosphereIntegration          `json:"mesosphere,omitempty"`
+	EC2ContainerService *AwsGroupEC2ContainerServiceIntegration `json:"ecs"`
+	ElasticBeanstalk    *AwsGroupElasticBeanstalkIntegration    `json:"elasticBeanstalk"`
+	Rancher             *AwsGroupRancherIntegration             `json:"rancher"`
+	Kubernetes          *AwsGroupKubernetesIntegration          `json:"kubernetes"`
+	Mesosphere          *AwsGroupMesosphereIntegration          `json:"mesosphere"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupMultai struct {
-	Token     *string                   `json:"token,omitempty"`
-	Balancers []*AwsGroupMultaiBalancer `json:"balancers,omitempty"`
+	Token     *string                   `json:"token"`
+	Balancers []*AwsGroupMultaiBalancer `json:"balancers"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupMultaiBalancer struct {
-	ProjectID   *string `json:"projectId,omitempty"`
-	BalancerID  *string `json:"balancerId,omitempty"`
-	TargetSetID *string `json:"targetSetId,omitempty"`
-	AzAwareness *bool   `json:"azAwareness,omitempty"`
-	AutoWeight  *bool   `json:"autoWeight,omitempty"`
+	ProjectID   *string `json:"projectId"`
+	BalancerID  *string `json:"balancerId"`
+	TargetSetID *string `json:"targetSetId"`
+	AzAwareness *bool   `json:"azAwareness"`
+	AutoWeight  *bool   `json:"autoWeight"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupRancherIntegration struct {
 	MasterHost *string `json:"masterHost,omitempty"`
 	AccessKey  *string `json:"accessKey,omitempty"`
 	SecretKey  *string `json:"secretKey,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupElasticBeanstalkIntegration struct {
 	EnvironmentID *string `json:"environmentId,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupEC2ContainerServiceIntegration struct {
 	ClusterName *string `json:"clusterName,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupKubernetesIntegration struct {
 	Server *string `json:"apiServer,omitempty"`
 	Token  *string `json:"token,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupMesosphereIntegration struct {
 	Server *string `json:"apiServer,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupScheduling struct {
-	Tasks []*AwsGroupScheduledTask `json:"tasks,omitempty"`
+	Tasks []*AwsGroupScheduledTask `json:"tasks"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupScheduledTask struct {
@@ -96,11 +139,17 @@ type AwsGroupScheduledTask struct {
 	ScaleMaxCapacity    *int    `json:"scaleMaxCapacity,omitempty"`
 	BatchSizePercentage *int    `json:"batchSizePercentage,omitempty"`
 	GracePeriod         *int    `json:"gracePeriod,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupScaling struct {
-	Up   []*AwsGroupScalingPolicy `json:"up,omitempty"`
-	Down []*AwsGroupScalingPolicy `json:"down,omitempty"`
+	Up   []*AwsGroupScalingPolicy `json:"up"`
+	Down []*AwsGroupScalingPolicy `json:"down"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupScalingPolicy struct {
@@ -118,11 +167,17 @@ type AwsGroupScalingPolicy struct {
 	Cooldown          *int                              `json:"cooldown,omitempty"`
 	Operator          *string                           `json:"operator,omitempty"`
 	Dimensions        []*AwsGroupScalingPolicyDimension `json:"dimensions,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupScalingPolicyDimension struct {
 	Name  *string `json:"name,omitempty"`
 	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupStrategy struct {
@@ -133,12 +188,17 @@ type AwsGroupStrategy struct {
 	UtilizeReservedInstances *bool                     `json:"utilizeReservedInstances,omitempty"`
 	FallbackToOnDemand       *bool                     `json:"fallbackToOd,omitempty"`
 	SpinUpTime               *int                      `json:"spinUpTime,omitempty"`
-	Signals                  []*AwsGroupStrategySignal `json:"signals,omitempty"`
-	Persistence              *AwsGroupPersistence      `json:"persistence,omitempty"`
+	Signals                  []*AwsGroupStrategySignal `json:"signals"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupStrategySignal struct {
-	Name *string `json:"name,omitempty"`
+	Name *string `json:"name"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupCapacity struct {
@@ -146,12 +206,9 @@ type AwsGroupCapacity struct {
 	Maximum *int    `json:"maximum,omitempty"`
 	Target  *int    `json:"target,omitempty"`
 	Unit    *string `json:"unit,omitempty"`
-}
 
-type AwsGroupPersistence struct {
-	ShouldPersistPrivateIp    *bool                     `json:"shouldPersistPrivateIp,omitempty"`
-	ShouldPersistBlockDevices *bool                     `json:"shouldPersistBlockDevices,omitempty"`
-	ShouldPersistRootDevice   *bool                     `json:"shouldPersistRootDevice,omitempty"`
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupCompute struct {
@@ -160,32 +217,47 @@ type AwsGroupCompute struct {
 	LaunchSpecification *AwsGroupComputeLaunchSpecification `json:"launchSpecification,omitempty"`
 	AvailabilityZones   []*AwsGroupComputeAvailabilityZone  `json:"availabilityZones,omitempty"`
 	ElasticIPs          []string                            `json:"elasticIps,omitempty"`
-	EBSVolumePool       []*AwsGroupComputeEBSVolume         `json:"ebsVolumePool,omitempty"`
+	EBSVolumePool       []*AwsGroupComputeEBSVolume         `json:"ebsVolumePool"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeEBSVolume struct {
 	DeviceName *string  `json:"deviceName,omitempty"`
 	VolumeIDs  []string `json:"volumeIds,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeInstanceType struct {
 	OnDemand *string                              `json:"ondemand,omitempty"`
 	Spot     []string                             `json:"spot,omitempty"`
 	Weights  []*AwsGroupComputeInstanceTypeWeight `json:"weights,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeInstanceTypeWeight struct {
 	InstanceType *string `json:"instanceType,omitempty"`
 	Weight       *int    `json:"weightedCapacity,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeAvailabilityZone struct {
 	Name     *string `json:"name,omitempty"`
 	SubnetID *string `json:"subnetId,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeLaunchSpecification struct {
-	LoadBalancerNames      []string                            `json:"loadBalancerNames,omitempty"`
+	LoadBalancerNames      []string                            `json:"loadBalancerNames"`
 	LoadBalancersConfig    *AwsGroupComputeLoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
 	SecurityGroupIDs       []string                            `json:"securityGroupIds,omitempty"`
 	HealthCheckType        *string                             `json:"healthCheckType,omitempty"`
@@ -197,19 +269,28 @@ type AwsGroupComputeLaunchSpecification struct {
 	Monitoring             *bool                               `json:"monitoring,omitempty"`
 	EBSOptimized           *bool                               `json:"ebsOptimized,omitempty"`
 	IamInstanceProfile     *AwsGroupComputeIamInstanceProfile  `json:"iamRole,omitempty"`
-	BlockDevices           []*AwsGroupComputeBlockDevice       `json:"blockDeviceMappings,omitempty"`
-	NetworkInterfaces      []*AwsGroupComputeNetworkInterface  `json:"networkInterfaces,omitempty"`
-	Tags                   []*AwsGroupComputeTag               `json:"tags,omitempty"`
+	BlockDevices           []*AwsGroupComputeBlockDevice       `json:"blockDeviceMappings"`
+	NetworkInterfaces      []*AwsGroupComputeNetworkInterface  `json:"networkInterfaces"`
+	Tags                   []*AwsGroupComputeTag               `json:"tags"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeLoadBalancersConfig struct {
-	LoadBalancers []*AwsGroupComputeLoadBalancer `json:"loadBalancers,omitempty"`
+	LoadBalancers []*AwsGroupComputeLoadBalancer `json:"loadBalancers"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeLoadBalancer struct {
 	Name *string `json:"name,omitempty"`
 	Arn  *string `json:"arn,omitempty"`
 	Type *string `json:"type,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeNetworkInterface struct {
@@ -222,12 +303,18 @@ type AwsGroupComputeNetworkInterface struct {
 	SecurityGroupsIDs              []string `json:"groups,omitempty"`
 	PrivateIPAddress               *string  `json:"privateIpAddress,omitempty"`
 	SubnetID                       *string  `json:"subnetId,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeBlockDevice struct {
 	DeviceName  *string             `json:"deviceName,omitempty"`
 	VirtualName *string             `json:"virtualName,omitempty"`
 	EBS         *AwsGroupComputeEBS `json:"ebs,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeEBS struct {
@@ -237,16 +324,25 @@ type AwsGroupComputeEBS struct {
 	VolumeType          *string `json:"volumeType,omitempty"`
 	VolumeSize          *int    `json:"volumeSize,omitempty"`
 	IOPS                *int    `json:"iops,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeIamInstanceProfile struct {
 	Name *string `json:"name,omitempty"`
 	Arn  *string `json:"arn,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type AwsGroupComputeTag struct {
 	Key   *string `json:"tagKey,omitempty"`
 	Value *string `json:"tagValue,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListAwsGroupInput struct{}
@@ -340,6 +436,8 @@ func (s *AwsGroupServiceOp) List(input *ListAwsGroupInput) (*ListAwsGroupOutput,
 func (s *AwsGroupServiceOp) Create(input *CreateAwsGroupInput) (*CreateAwsGroupOutput, error) {
 	r := s.client.newRequest("POST", "/aws/ec2/group")
 	r.obj = input
+	r.forceSendFields = input.Group.forceSendFields
+	r.nullFields = input.Group.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -403,6 +501,8 @@ func (s *AwsGroupServiceOp) Update(input *UpdateAwsGroupInput) (*UpdateAwsGroupO
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
+	r.forceSendFields = input.Group.forceSendFields
+	r.nullFields = input.Group.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {

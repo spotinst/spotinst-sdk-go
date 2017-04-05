@@ -33,6 +33,22 @@ type Subscription struct {
 	Protocol   *string                `json:"protocol,omitempty"`
 	Endpoint   *string                `json:"endpoint,omitempty"`
 	Format     map[string]interface{} `json:"eventFormat,omitempty"`
+
+	// forceSendFields is a list of field names (e.g. "Keys") to
+	// unconditionally include in API requests. By default, fields with
+	// empty values are omitted from API requests. However, any non-pointer,
+	// non-interface field appearing in ForceSendFields will be sent to the
+	// server regardless of whether the field is empty or not. This may be
+	// used to include empty fields in Patch requests.
+	forceSendFields []string `json:"-"`
+
+	// nullFields is a list of field names (e.g. "Keys") to include in API
+	// requests with the JSON null value. By default, fields with empty
+	// values are omitted from API requests. However, any field with an
+	// empty value appearing in NullFields will be sent to the server as
+	// null. It is an error if a field in this list has a non-empty value.
+	// This may be used to include null fields in Patch requests.
+	nullFields []string `json:"-"`
 }
 
 type ListSubscriptionInput struct{}
@@ -126,6 +142,8 @@ func (s *SubscriptionServiceOp) List(input *ListSubscriptionInput) (*ListSubscri
 func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateSubscriptionOutput, error) {
 	r := s.client.newRequest("POST", "/events/subscription")
 	r.obj = input
+	r.forceSendFields = input.Subscription.forceSendFields
+	r.nullFields = input.Subscription.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -189,6 +207,8 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
+	r.forceSendFields = input.Subscription.forceSendFields
+	r.nullFields = input.Subscription.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {

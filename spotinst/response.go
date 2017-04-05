@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	jsonutil "github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 )
 
 type responseWrapper struct {
@@ -79,13 +81,12 @@ func decodeBody(resp *http.Response, out interface{}) error {
 }
 
 // encodeBody is used to encode a request body
-func encodeBody(obj interface{}) (io.Reader, error) {
-	buf := bytes.NewBuffer(nil)
-	enc := json.NewEncoder(buf)
-	if err := enc.Encode(obj); err != nil {
+func encodeBody(obj interface{}, forceSendFields, nullFields []string) (io.Reader, error) {
+	b, err := jsonutil.MarshalJSON(obj, forceSendFields, nullFields)
+	if err != nil {
 		return nil, err
 	}
-	return buf, nil
+	return bytes.NewBuffer(b), nil
 }
 
 // requireOK is used to verify response status code is a successful one (200 OK)

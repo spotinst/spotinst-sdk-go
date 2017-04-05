@@ -32,11 +32,30 @@ type HealthCheck struct {
 	ResourceID *string            `json:"resourceId,omitempty"`
 	Check      *HealthCheckConfig `json:"check,omitempty"`
 	*HealthCheckProxy
+
+	// forceSendFields is a list of field names (e.g. "Keys") to
+	// unconditionally include in API requests. By default, fields with
+	// empty values are omitted from API requests. However, any non-pointer,
+	// non-interface field appearing in ForceSendFields will be sent to the
+	// server regardless of whether the field is empty or not. This may be
+	// used to include empty fields in Patch requests.
+	forceSendFields []string `json:"-"`
+
+	// nullFields is a list of field names (e.g. "Keys") to include in API
+	// requests with the JSON null value. By default, fields with empty
+	// values are omitted from API requests. However, any field with an
+	// empty value appearing in NullFields will be sent to the server as
+	// null. It is an error if a field in this list has a non-empty value.
+	// This may be used to include null fields in Patch requests.
+	nullFields []string `json:"-"`
 }
 
 type HealthCheckProxy struct {
 	Addr *string `json:"proxyAddress,omitempty"`
 	Port *int    `json:"proxyPort,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type HealthCheckConfig struct {
@@ -46,11 +65,17 @@ type HealthCheckConfig struct {
 	Interval *int    `json:"interval,omitempty"`
 	Timeout  *int    `json:"timeout,omitempty"`
 	*HealthCheckThreshold
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type HealthCheckThreshold struct {
 	Healthy   *int `json:"healthyThreshold,omitempty"`
 	Unhealthy *int `json:"unhealthyThreshold,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListHealthCheckInput struct{}
@@ -144,6 +169,8 @@ func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthChe
 func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHealthCheckOutput, error) {
 	r := s.client.newRequest("POST", "/healthCheck")
 	r.obj = input
+	r.forceSendFields = input.HealthCheck.forceSendFields
+	r.nullFields = input.HealthCheck.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -207,6 +234,8 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
+	r.forceSendFields = input.HealthCheck.forceSendFields
+	r.nullFields = input.HealthCheck.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
