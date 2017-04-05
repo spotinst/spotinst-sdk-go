@@ -263,51 +263,46 @@ func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteS
 
 //region Subscription
 
-func (o *Subscription) SetID(v *string) *Subscription{
+func (o *Subscription) SetID(v *string) *Subscription {
 	if o.ID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
-
 	return o
 }
 
-func (o *Subscription) SetResourceID(v *string) *Subscription{
+func (o *Subscription) SetResourceID(v *string) *Subscription {
 	if o.ResourceID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ResourceID")
 	}
-
 	return o
 }
 
-func (o *Subscription) SetEventType(v *string) *Subscription{
+func (o *Subscription) SetEventType(v *string) *Subscription {
 	if o.EventType = v; v == nil {
 		o.nullFields = append(o.nullFields, "EventType")
 	}
-
 	return o
 }
 
-func (o *Subscription) SetProtocol(v *string) *Subscription{
+func (o *Subscription) SetProtocol(v *string) *Subscription {
 	if o.Protocol = v; v == nil {
 		o.nullFields = append(o.nullFields, "Protocol")
 	}
-
 	return o
 }
 
-func (o *Subscription) SetEndpoint(v *string) *Subscription{
+func (o *Subscription) SetEndpoint(v *string) *Subscription {
 	if o.Endpoint = v; v == nil {
 		o.nullFields = append(o.nullFields, "Endpoint")
 	}
-
 	return o
 }
 
-func (o *Subscription) SetFormat(v map[string]interface{}) *Subscription{
+func (o *Subscription) SetFormat(v map[string]interface{}) *Subscription {
 	if o.Format = v; v == nil {
 		o.nullFields = append(o.nullFields, "Format")
 	}
-
 	return o
 }
+
 //endregion
