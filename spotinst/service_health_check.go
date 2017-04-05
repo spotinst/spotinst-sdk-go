@@ -287,3 +287,121 @@ func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHea
 
 	return &DeleteHealthCheckOutput{}, nil
 }
+
+
+
+//region HealthCheck
+
+func (o *HealthCheck) SetID(v *string) *HealthCheck{
+	if o.ID = v; v == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+
+	return o
+}
+
+func (o *HealthCheck) SetName(v *string) *HealthCheck{
+	if o.Name = v; v == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+
+	return o
+}
+
+func (o *HealthCheck) SetResourceID(v *string) *HealthCheck{
+	if o.ResourceID = v; v == nil {
+		o.nullFields = append(o.nullFields, "ResourceID")
+	}
+
+	return o
+}
+
+func (o *HealthCheck) SetCheck(v *HealthCheckConfig) *HealthCheck{
+	if o.Check = v; v == nil {
+		o.nullFields = append(o.nullFields, "Check")
+	}
+
+	return o
+}
+//endregion
+
+//region HealthCheckProxy
+
+func (o *HealthCheckProxy) SetAddr(v *string) *HealthCheckProxy{
+	if o.Addr = v; v == nil {
+		o.nullFields = append(o.nullFields, "Addr")
+	}
+
+	return o
+}
+
+func (o *HealthCheckProxy) SetPort(v *int) *HealthCheckProxy{
+	if o.Port = v; v == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+
+	return o
+}
+//endregion
+
+//region HealthCheckConfig
+
+func (o *HealthCheckConfig) SetProtocol(v *string) *HealthCheckConfig{
+	if o.Protocol = v; v == nil {
+		o.nullFields = append(o.nullFields, "Protocol")
+	}
+
+	return o
+}
+
+func (o *HealthCheckConfig) SetEndpoint(v *string) *HealthCheckConfig{
+	if o.Endpoint = v; v == nil {
+		o.nullFields = append(o.nullFields, "Endpoint")
+	}
+
+	return o
+}
+
+func (o *HealthCheckConfig) SetPort(v *int) *HealthCheckConfig{
+	if o.Port = v; v == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+
+	return o
+}
+
+func (o *HealthCheckConfig) SetInterval(v *int) *HealthCheckConfig{
+	if o.Interval = v; v == nil {
+		o.nullFields = append(o.nullFields, "Interval")
+	}
+
+	return o
+}
+
+func (o *HealthCheckConfig) SetTimeout(v *int) *HealthCheckConfig{
+	if o.Timeout = v; v == nil {
+		o.nullFields = append(o.nullFields, "Timeout")
+	}
+
+	return o
+}
+//endregion
+
+//region HealthCheckThreshold
+
+func (o *HealthCheckThreshold) SetHealthy(v *int) *HealthCheckThreshold{
+	if o.Healthy = v; v == nil {
+		o.nullFields = append(o.nullFields, "Healthy")
+	}
+
+	return o
+}
+
+func (o *HealthCheckThreshold) SetUnhealthy(v *int) *HealthCheckThreshold{
+	if o.Unhealthy = v; v == nil {
+		o.nullFields = append(o.nullFields, "Unhealthy")
+	}
+
+	return o
+}
+//endregion
