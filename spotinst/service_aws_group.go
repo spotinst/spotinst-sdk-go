@@ -189,6 +189,16 @@ type AwsGroupStrategy struct {
 	FallbackToOnDemand       *bool                     `json:"fallbackToOd,omitempty"`
 	SpinUpTime               *int                      `json:"spinUpTime,omitempty"`
 	Signals                  []*AwsGroupStrategySignal `json:"signals"`
+	Persistence              *AwsGroupPersistence      `json:"persistence,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AwsGroupPersistence struct {
+	ShouldPersistPrivateIp    *bool                     `json:"shouldPersistPrivateIp,omitempty"`
+	ShouldPersistBlockDevices *bool                     `json:"shouldPersistBlockDevices,omitempty"`
+	ShouldPersistRootDevice   *bool                     `json:"shouldPersistRootDevice,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1068,6 +1078,41 @@ func (o *AwsGroupStrategy) SetSignals(v []*AwsGroupStrategySignal) *AwsGroupStra
 	return o
 }
 
+func (o *AwsGroupStrategy) SetPersistence(v *AwsGroupPersistence) *AwsGroupStrategy{
+	if o.Persistence = v; v == nil {
+		o.nullFields = append(o.nullFields, "Persistence")
+	}
+
+	return o
+}
+
+//endregion
+
+//region AwsGroupPersistence
+
+func (o *AwsGroupPersistence) SetShouldPersistPrivateIp(v *bool) *AwsGroupPersistence{
+	if o.ShouldPersistPrivateIp = v; v == nil {
+		o.nullFields = append(o.nullFields, "ShouldPersistPrivateIp")
+	}
+
+	return o
+}
+
+func (o *AwsGroupPersistence) SetShouldPersistBlockDevices(v *bool) *AwsGroupPersistence{
+	if o.ShouldPersistBlockDevices = v; v == nil {
+		o.nullFields = append(o.nullFields, "ShouldPersistBlockDevices")
+	}
+
+	return o
+}
+
+func (o *AwsGroupPersistence) SetShouldPersistRootDevice(v *bool) *AwsGroupPersistence{
+	if o.ShouldPersistRootDevice = v; v == nil {
+		o.nullFields = append(o.nullFields, "ShouldPersistRootDevice")
+	}
+
+	return o
+}
 //endregion
 
 //region AwsGroupStrategySignal
