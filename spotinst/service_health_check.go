@@ -59,20 +59,13 @@ type HealthCheckProxy struct {
 }
 
 type HealthCheckConfig struct {
-	Protocol *string `json:"protocol,omitempty"`
-	Endpoint *string `json:"endpoint,omitempty"`
-	Port     *int    `json:"port,omitempty"`
-	Interval *int    `json:"interval,omitempty"`
-	Timeout  *int    `json:"timeout,omitempty"`
-	*HealthCheckThreshold
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
-}
-
-type HealthCheckThreshold struct {
-	Healthy   *int `json:"healthyThreshold,omitempty"`
-	Unhealthy *int `json:"unhealthyThreshold,omitempty"`
+	Protocol  *string `json:"protocol,omitempty"`
+	Endpoint  *string `json:"endpoint,omitempty"`
+	Port      *int    `json:"port,omitempty"`
+	Interval  *int    `json:"interval,omitempty"`
+	Timeout   *int    `json:"timeout,omitempty"`
+	Healthy   *int    `json:"healthyThreshold,omitempty"`
+	Unhealthy *int    `json:"unhealthyThreshold,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -375,18 +368,14 @@ func (o *HealthCheckConfig) SetTimeout(v *int) *HealthCheckConfig {
 	return o
 }
 
-//endregion
-
-//region HealthCheckThreshold
-
-func (o *HealthCheckThreshold) SetHealthy(v *int) *HealthCheckThreshold {
+func (o *HealthCheckConfig) SetHealthCheckHealthy(v *int) *HealthCheckConfig {
 	if o.Healthy = v; v == nil {
 		o.nullFields = append(o.nullFields, "Healthy")
 	}
 	return o
 }
 
-func (o *HealthCheckThreshold) SetUnhealthy(v *int) *HealthCheckThreshold {
+func (o *HealthCheckConfig) SetHealthCheckUnhealthy(v *int) *HealthCheckConfig {
 	if o.Unhealthy = v; v == nil {
 		o.nullFields = append(o.nullFields, "Unhealthy")
 	}
