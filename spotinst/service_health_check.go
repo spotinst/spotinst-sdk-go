@@ -178,7 +178,6 @@ func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHea
 		r.nullFields = input.HealthCheck.nullFields
 	}
 
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -249,7 +248,6 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 	if r.nullFields != nil {
 		r.nullFields = input.HealthCheck.nullFields
 	}
-
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {

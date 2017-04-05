@@ -151,7 +151,6 @@ func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateS
 		r.nullFields = input.Subscription.nullFields
 	}
 
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
