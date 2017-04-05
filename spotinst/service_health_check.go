@@ -169,8 +169,15 @@ func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthChe
 func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHealthCheckOutput, error) {
 	r := s.client.newRequest("POST", "/healthCheck")
 	r.obj = input
-	r.forceSendFields = input.HealthCheck.forceSendFields
-	r.nullFields = input.HealthCheck.nullFields
+
+	if r.forceSendFields != nil {
+		r.forceSendFields = input.HealthCheck.forceSendFields
+	}
+
+	if r.nullFields != nil {
+		r.nullFields = input.HealthCheck.nullFields
+	}
+
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -234,8 +241,15 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
-	r.forceSendFields = input.HealthCheck.forceSendFields
-	r.nullFields = input.HealthCheck.nullFields
+
+	if r.forceSendFields != nil {
+		r.forceSendFields = input.HealthCheck.forceSendFields
+	}
+
+	if r.nullFields != nil {
+		r.nullFields = input.HealthCheck.nullFields
+	}
+
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {

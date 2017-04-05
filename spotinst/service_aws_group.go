@@ -436,8 +436,14 @@ func (s *AwsGroupServiceOp) List(input *ListAwsGroupInput) (*ListAwsGroupOutput,
 func (s *AwsGroupServiceOp) Create(input *CreateAwsGroupInput) (*CreateAwsGroupOutput, error) {
 	r := s.client.newRequest("POST", "/aws/ec2/group")
 	r.obj = input
-	r.forceSendFields = input.Group.forceSendFields
-	r.nullFields = input.Group.nullFields
+
+	if r.forceSendFields != nil {
+		r.forceSendFields = input.Group.forceSendFields
+	}
+
+	if r.nullFields != nil {
+		r.nullFields = input.Group.nullFields
+	}
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -501,8 +507,15 @@ func (s *AwsGroupServiceOp) Update(input *UpdateAwsGroupInput) (*UpdateAwsGroupO
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
-	r.forceSendFields = input.Group.forceSendFields
-	r.nullFields = input.Group.nullFields
+
+	if r.forceSendFields != nil {
+		r.forceSendFields = input.Group.forceSendFields
+	}
+
+	if r.nullFields != nil {
+		r.nullFields = input.Group.nullFields
+	}
+
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
