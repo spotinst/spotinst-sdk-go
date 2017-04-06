@@ -163,11 +163,8 @@ func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHea
 	r := s.client.newRequest("POST", "/healthCheck")
 	r.obj = input
 
-	if r.forceSendFields != nil {
+	if input.HealthCheck != nil {
 		r.forceSendFields = input.HealthCheck.forceSendFields
-	}
-
-	if r.nullFields != nil {
 		r.nullFields = input.HealthCheck.nullFields
 	}
 
@@ -234,11 +231,8 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
 
-	if r.forceSendFields != nil {
+	if input.HealthCheck != nil {
 		r.forceSendFields = input.HealthCheck.forceSendFields
-	}
-
-	if r.nullFields != nil {
 		r.nullFields = input.HealthCheck.nullFields
 	}
 

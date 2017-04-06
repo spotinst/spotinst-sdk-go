@@ -143,11 +143,8 @@ func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateS
 	r := s.client.newRequest("POST", "/events/subscription")
 	r.obj = input
 
-	if r.forceSendFields != nil {
+	if input.Subscription != nil {
 		r.forceSendFields = input.Subscription.forceSendFields
-	}
-
-	if r.nullFields != nil {
 		r.nullFields = input.Subscription.nullFields
 	}
 
@@ -214,11 +211,8 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
 
-	if r.forceSendFields != nil {
+	if input.Subscription != nil {
 		r.forceSendFields = input.Subscription.forceSendFields
-	}
-
-	if r.nullFields != nil {
 		r.nullFields = input.Subscription.nullFields
 	}
 
