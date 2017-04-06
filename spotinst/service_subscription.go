@@ -142,11 +142,9 @@ func (s *SubscriptionServiceOp) List(input *ListSubscriptionInput) (*ListSubscri
 func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateSubscriptionOutput, error) {
 	r := s.client.newRequest("POST", "/events/subscription")
 	r.obj = input
+	r.forceSendFields = input.Subscription.forceSendFields
+	r.nullFields = input.Subscription.nullFields
 
-	if input.Subscription != nil {
-		r.forceSendFields = input.Subscription.forceSendFields
-		r.nullFields = input.Subscription.nullFields
-	}
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -210,11 +208,8 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
-
-	if input.Subscription != nil {
-		r.forceSendFields = input.Subscription.forceSendFields
-		r.nullFields = input.Subscription.nullFields
-	}
+	r.forceSendFields = input.Subscription.forceSendFields
+	r.nullFields = input.Subscription.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
