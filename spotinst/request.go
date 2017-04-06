@@ -8,15 +8,13 @@ import (
 
 // request is used to help build up a request
 type request struct {
-	config          *clientConfig
-	method          string
-	url             *url.URL
-	params          url.Values
-	body            io.Reader
-	header          http.Header
-	obj             interface{}
-	forceSendFields []string
-	nullFields      []string
+	config *clientConfig
+	method string
+	url    *url.URL
+	params url.Values
+	body   io.Reader
+	header http.Header
+	obj    interface{}
 }
 
 // toHTTP converts the request to an HTTP request
@@ -26,7 +24,7 @@ func (r *request) toHTTP() (*http.Request, error) {
 
 	// Check if we should encode the body
 	if r.body == nil && r.obj != nil {
-		if b, err := encodeBody(r.obj, r.forceSendFields, r.nullFields); err != nil {
+		if b, err := encodeBody(r.obj); err != nil {
 			return nil, err
 		} else {
 			r.body = b

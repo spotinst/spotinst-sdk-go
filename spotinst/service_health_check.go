@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
@@ -162,9 +163,6 @@ func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthChe
 func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHealthCheckOutput, error) {
 	r := s.client.newRequest("POST", "/healthCheck")
 	r.obj = input
-	r.forceSendFields = input.HealthCheck.forceSendFields
-	r.nullFields = input.HealthCheck.nullFields
-
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -228,9 +226,6 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
-	r.forceSendFields = input.HealthCheck.forceSendFields
-	r.nullFields = input.HealthCheck.nullFields
-
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -272,6 +267,11 @@ func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHea
 }
 
 //region HealthCheck
+func (o *HealthCheck) MarshalJSON() ([]byte, error) {
+	type noMethod HealthCheck
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *HealthCheck) SetID(v *string) *HealthCheck {
 	if o.ID = v; v == nil {
@@ -304,6 +304,11 @@ func (o *HealthCheck) SetCheck(v *HealthCheckConfig) *HealthCheck {
 //endregion
 
 //region HealthCheckProxy
+func (o *HealthCheckProxy) MarshalJSON() ([]byte, error) {
+	type noMethod HealthCheckProxy
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *HealthCheckProxy) SetAddr(v *string) *HealthCheckProxy {
 	if o.Addr = v; v == nil {
@@ -322,6 +327,11 @@ func (o *HealthCheckProxy) SetPort(v *int) *HealthCheckProxy {
 //endregion
 
 //region HealthCheckConfig
+func (o *HealthCheckConfig) MarshalJSON() ([]byte, error) {
+	type noMethod HealthCheckConfig
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *HealthCheckConfig) SetProtocol(v *string) *HealthCheckConfig {
 	if o.Protocol = v; v == nil {
@@ -358,14 +368,14 @@ func (o *HealthCheckConfig) SetTimeout(v *int) *HealthCheckConfig {
 	return o
 }
 
-func (o *HealthCheckConfig) SetHealthCheckHealthy(v *int) *HealthCheckConfig {
+func (o *HealthCheckConfig) SetHealthy(v *int) *HealthCheckConfig {
 	if o.Healthy = v; v == nil {
 		o.nullFields = append(o.nullFields, "Healthy")
 	}
 	return o
 }
 
-func (o *HealthCheckConfig) SetHealthCheckUnhealthy(v *int) *HealthCheckConfig {
+func (o *HealthCheckConfig) SetUnhealthy(v *int) *HealthCheckConfig {
 	if o.Unhealthy = v; v == nil {
 		o.nullFields = append(o.nullFields, "Unhealthy")
 	}

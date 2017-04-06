@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
@@ -142,9 +143,6 @@ func (s *SubscriptionServiceOp) List(input *ListSubscriptionInput) (*ListSubscri
 func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateSubscriptionOutput, error) {
 	r := s.client.newRequest("POST", "/events/subscription")
 	r.obj = input
-	r.forceSendFields = input.Subscription.forceSendFields
-	r.nullFields = input.Subscription.nullFields
-
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -208,8 +206,6 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
-	r.forceSendFields = input.Subscription.forceSendFields
-	r.nullFields = input.Subscription.nullFields
 
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
@@ -251,6 +247,11 @@ func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteS
 }
 
 //region Subscription
+func (o *Subscription) MarshalJSON() ([]byte, error) {
+	type noMethod Subscription
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *Subscription) SetID(v *string) *Subscription {
 	if o.ID = v; v == nil {
