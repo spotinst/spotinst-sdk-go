@@ -2,7 +2,7 @@
 
 A Go client library for accessing the Spotinst API.
 
-You can view Spotinst API docs [here](https://spotinst.atlassian.net/wiki/display/API).
+You can view Spotinst API docs [here](http://help.spotinst.com/api/).
 
 ## Usage
 
@@ -23,7 +23,7 @@ client, _ := spotinst.NewClient(
 
 ## Examples
 
-To create a new Elastigroup:
+To list all existing Elastigroups:
 
 ```go
 logger := log.New(os.Stderr, "", 0)
@@ -53,7 +53,7 @@ if len(resp.Groups) > 0 {
 
 ## Documentation
 
-For a comprehensive list of examples, check out the [API documentation](https://spotinst.atlassian.net/wiki/display/API).
+For a comprehensive list of examples, check out the [API documentation](http://help.spotinst.com/api/).
 
 ## Contributing
 
