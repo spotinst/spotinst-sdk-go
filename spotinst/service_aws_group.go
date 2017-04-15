@@ -206,7 +206,8 @@ type AwsGroupPersistence struct {
 }
 
 type AwsGroupStrategySignal struct {
-	Name *string `json:"name,omitempty"`
+	Name    *string `json:"name,omitempty"`
+	Timeout *int    `json:"timeout,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1188,6 +1189,13 @@ func (o *AwsGroupStrategySignal) MarshalJSON() ([]byte, error) {
 func (o *AwsGroupStrategySignal) SetName(v *string) *AwsGroupStrategySignal {
 	if o.Name = v; v == nil {
 		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *AwsGroupStrategySignal) SetTimeout(v *int) *AwsGroupStrategySignal {
+	if o.Timeout = v; v == nil {
+		o.nullFields = append(o.nullFields, "Timeout")
 	}
 	return o
 }
