@@ -276,6 +276,7 @@ type AwsGroupComputeLaunchSpecification struct {
 	ImageID                *string                             `json:"imageId,omitempty"`
 	KeyPair                *string                             `json:"keyPair,omitempty"`
 	UserData               *string                             `json:"userData,omitempty"`
+	ShutdownScript         *string                             `json:"shutdownScript,omitempty"`
 	Tenancy                *string                             `json:"tenancy,omitempty"`
 	Monitoring             *bool                               `json:"monitoring,omitempty"`
 	EBSOptimized           *bool                               `json:"ebsOptimized,omitempty"`
@@ -1439,6 +1440,13 @@ func (o *AwsGroupComputeLaunchSpecification) SetKeyPair(v *string) *AwsGroupComp
 func (o *AwsGroupComputeLaunchSpecification) SetUserData(v *string) *AwsGroupComputeLaunchSpecification {
 	if o.UserData = v; v == nil {
 		o.nullFields = append(o.nullFields, "UserData")
+	}
+	return o
+}
+
+func (o *AwsGroupComputeLaunchSpecification) SetShutdownScript(v *string) *AwsGroupComputeLaunchSpecification {
+	if o.ShutdownScript = v; v == nil {
+		o.nullFields = append(o.nullFields, "ShutdownScript")
 	}
 	return o
 }
