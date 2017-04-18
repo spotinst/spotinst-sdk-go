@@ -95,8 +95,8 @@ func SetAPIAddress(addr string) ClientOptionFunc {
 	}
 }
 
-// SetOauthAddress defines the address of the Spotinst OAuth API.
-func SetOauthAddress(addr string) ClientOptionFunc {
+// SetOAuthAddress defines the address of the Spotinst OAuth API.
+func SetOAuthAddress(addr string) ClientOptionFunc {
 	return func(c *clientConfig) {
 		c.oauthAddress = addr
 	}
