@@ -132,6 +132,7 @@ type AwsGroupScheduling struct {
 }
 
 type AwsGroupScheduledTask struct {
+	IsEnabled           *bool   `json:"isEnabled,omitempty"`
 	Frequency           *string `json:"frequency,omitempty"`
 	CronExpression      *string `json:"cronExpression,omitempty"`
 	TaskType            *string `json:"taskType,omitempty"`
@@ -864,6 +865,13 @@ func (o *AwsGroupScheduledTask) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupScheduledTask
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AwsGroupScheduledTask) SetIsEnabled(v *bool) *AwsGroupScheduledTask {
+	if o.IsEnabled = v; v == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
 }
 
 func (o *AwsGroupScheduledTask) SetFrequency(v *string) *AwsGroupScheduledTask {
