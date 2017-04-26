@@ -253,14 +253,14 @@ func (o *Subscription) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Subscription) SetID(v *string) *Subscription {
+func (o *Subscription) SetId(v *string) *Subscription {
 	if o.ID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
-func (o *Subscription) SetResourceID(v *string) *Subscription {
+func (o *Subscription) SetResourceId(v *string) *Subscription {
 	if o.ResourceID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ResourceID")
 	}

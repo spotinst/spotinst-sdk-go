@@ -560,7 +560,7 @@ func (o *AwsGroup) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *AwsGroup) SetID(v *string) *AwsGroup {
+func (o *AwsGroup) SetId(v *string) *AwsGroup {
 	if o.ID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
@@ -706,21 +706,21 @@ func (o *AwsGroupMultaiBalancer) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *AwsGroupMultaiBalancer) SetProjectID(v *string) *AwsGroupMultaiBalancer {
+func (o *AwsGroupMultaiBalancer) SetProjectId(v *string) *AwsGroupMultaiBalancer {
 	if o.ProjectID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ProjectID")
 	}
 	return o
 }
 
-func (o *AwsGroupMultaiBalancer) SetBalancerID(v *string) *AwsGroupMultaiBalancer {
+func (o *AwsGroupMultaiBalancer) SetBalancerId(v *string) *AwsGroupMultaiBalancer {
 	if o.BalancerID = v; v == nil {
 		o.nullFields = append(o.nullFields, "BalancerID")
 	}
 	return o
 }
 
-func (o *AwsGroupMultaiBalancer) SetTargetSetID(v *string) *AwsGroupMultaiBalancer {
+func (o *AwsGroupMultaiBalancer) SetTargetSetId(v *string) *AwsGroupMultaiBalancer {
 	if o.TargetSetID = v; v == nil {
 		o.nullFields = append(o.nullFields, "TargetSetID")
 	}
@@ -780,7 +780,7 @@ func (o *AwsGroupElasticBeanstalkIntegration) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *AwsGroupElasticBeanstalkIntegration) SetEnvironmentID(v *string) *AwsGroupElasticBeanstalkIntegration {
+func (o *AwsGroupElasticBeanstalkIntegration) SetEnvironmentId(v *string) *AwsGroupElasticBeanstalkIntegration {
 	if o.EnvironmentID = v; v == nil {
 		o.nullFields = append(o.nullFields, "EnvironmentID")
 	}
@@ -1388,7 +1388,7 @@ func (o *AwsGroupComputeAvailabilityZone) SetName(v *string) *AwsGroupComputeAva
 	return o
 }
 
-func (o *AwsGroupComputeAvailabilityZone) SetSubnetID(v *string) *AwsGroupComputeAvailabilityZone {
+func (o *AwsGroupComputeAvailabilityZone) SetSubnetId(v *string) *AwsGroupComputeAvailabilityZone {
 	if o.SubnetID = v; v == nil {
 		o.nullFields = append(o.nullFields, "SubnetID")
 	}
@@ -1439,7 +1439,7 @@ func (o *AwsGroupComputeLaunchSpecification) SetHealthCheckGracePeriod(v *int) *
 	return o
 }
 
-func (o *AwsGroupComputeLaunchSpecification) SetImageID(v *string) *AwsGroupComputeLaunchSpecification {
+func (o *AwsGroupComputeLaunchSpecification) SetImageId(v *string) *AwsGroupComputeLaunchSpecification {
 	if o.ImageID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ImageID")
 	}
@@ -1571,7 +1571,7 @@ func (o *AwsGroupComputeNetworkInterface) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *AwsGroupComputeNetworkInterface) SetID(v *string) *AwsGroupComputeNetworkInterface {
+func (o *AwsGroupComputeNetworkInterface) SetId(v *string) *AwsGroupComputeNetworkInterface {
 	if o.ID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
@@ -1627,7 +1627,7 @@ func (o *AwsGroupComputeNetworkInterface) SetPrivateIPAddress(v *string) *AwsGro
 	return o
 }
 
-func (o *AwsGroupComputeNetworkInterface) SetSubnetID(v *string) *AwsGroupComputeNetworkInterface {
+func (o *AwsGroupComputeNetworkInterface) SetSubnetId(v *string) *AwsGroupComputeNetworkInterface {
 	if o.SubnetID = v; v == nil {
 		o.nullFields = append(o.nullFields, "SubnetID")
 	}
@@ -1687,7 +1687,7 @@ func (o *AwsGroupComputeEBS) SetEncrypted(v *bool) *AwsGroupComputeEBS {
 	return o
 }
 
-func (o *AwsGroupComputeEBS) SetSnapshotID(v *string) *AwsGroupComputeEBS {
+func (o *AwsGroupComputeEBS) SetSnapshotId(v *string) *AwsGroupComputeEBS {
 	if o.SnapshotID = v; v == nil {
 		o.nullFields = append(o.nullFields, "SnapshotID")
 	}

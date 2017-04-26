@@ -273,7 +273,7 @@ func (o *HealthCheck) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *HealthCheck) SetID(v *string) *HealthCheck {
+func (o *HealthCheck) SetId(v *string) *HealthCheck {
 	if o.ID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
@@ -287,7 +287,7 @@ func (o *HealthCheck) SetName(v *string) *HealthCheck {
 	return o
 }
 
-func (o *HealthCheck) SetResourceID(v *string) *HealthCheck {
+func (o *HealthCheck) SetResourceId(v *string) *HealthCheck {
 	if o.ResourceID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ResourceID")
 	}
