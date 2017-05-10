@@ -192,8 +192,6 @@ func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthChe
 	}
 
 	r := s.client.newRequest("GET", path)
-	r.obj = input
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -255,8 +253,6 @@ func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHea
 	}
 
 	r := s.client.newRequest("DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -267,6 +263,7 @@ func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHea
 }
 
 //region HealthCheck
+
 func (o *HealthCheck) MarshalJSON() ([]byte, error) {
 	type noMethod HealthCheck
 	raw := noMethod(*o)
@@ -327,6 +324,7 @@ func (o *HealthCheckProxy) SetPort(v *int) *HealthCheckProxy {
 //endregion
 
 //region HealthCheckConfig
+
 func (o *HealthCheckConfig) MarshalJSON() ([]byte, error) {
 	type noMethod HealthCheckConfig
 	raw := noMethod(*o)

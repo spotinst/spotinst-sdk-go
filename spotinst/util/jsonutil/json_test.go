@@ -8,8 +8,6 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
-
-	"google.golang.org/api/googleapi"
 )
 
 type schema struct {
@@ -28,7 +26,6 @@ type schema struct {
 	PStr  *string  `json:"pstr,omitempty"`
 
 	// Other types
-	Int64s        googleapi.Int64s         `json:"i64s,omitempty"`
 	S             []int                    `json:"s,omitempty"`
 	M             map[string]string        `json:"m,omitempty"`
 	Any           interface{}              `json:"any,omitempty"`
@@ -73,11 +70,11 @@ func TestBasics(t *testing.T) {
 				I:     1,
 				Istr:  2,
 				Str:   "a",
-				PB:    googleapi.Bool(true),
-				PF:    googleapi.Float64(1.2),
-				PI:    googleapi.Int64(int64(1)),
-				PIStr: googleapi.Int64(int64(2)),
-				PStr:  googleapi.String("a"),
+				PB:    boolPtr(true),
+				PF:    float64Ptr(1.2),
+				PI:    int64Ptr(int64(1)),
+				PIStr: int64Ptr(int64(2)),
+				PStr:  stringPtr("a"),
 			},
 			want: `{"b":true,"f":1.2,"i":1,"istr":"2","str":"a","pb":true,"pf":1.2,"pi":1,"pistr":"2","pstr":"a"}`,
 		},
@@ -88,11 +85,11 @@ func TestBasics(t *testing.T) {
 				I:     0,
 				Istr:  0,
 				Str:   "",
-				PB:    googleapi.Bool(false),
-				PF:    googleapi.Float64(0.0),
-				PI:    googleapi.Int64(int64(0)),
-				PIStr: googleapi.Int64(int64(0)),
-				PStr:  googleapi.String(""),
+				PB:    boolPtr(false),
+				PF:    float64Ptr(0.0),
+				PI:    int64Ptr(int64(0)),
+				PIStr: int64Ptr(int64(0)),
+				PStr:  stringPtr(""),
 			},
 			want: `{"pb":false,"pf":0.0,"pi":0,"pistr":"0","pstr":""}`,
 		},
@@ -103,11 +100,11 @@ func TestBasics(t *testing.T) {
 				I:               0,
 				Istr:            0,
 				Str:             "",
-				PB:              googleapi.Bool(false),
-				PF:              googleapi.Float64(0.0),
-				PI:              googleapi.Int64(int64(0)),
-				PIStr:           googleapi.Int64(int64(0)),
-				PStr:            googleapi.String(""),
+				PB:              boolPtr(false),
+				PF:              float64Ptr(0.0),
+				PI:              int64Ptr(int64(0)),
+				PIStr:           int64Ptr(int64(0)),
+				PStr:            stringPtr(""),
 				ForceSendFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
 			},
 			want: `{"b":false,"f":0.0,"i":0,"istr":"0","str":"","pb":false,"pf":0.0,"pi":0,"pistr":"0","pstr":""}`,
@@ -119,11 +116,11 @@ func TestBasics(t *testing.T) {
 				I:          0,
 				Istr:       0,
 				Str:        "",
-				PB:         googleapi.Bool(false),
-				PF:         googleapi.Float64(0.0),
-				PI:         googleapi.Int64(int64(0)),
-				PIStr:      googleapi.Int64(int64(0)),
-				PStr:       googleapi.String(""),
+				PB:         boolPtr(false),
+				PF:         float64Ptr(0.0),
+				PI:         int64Ptr(int64(0)),
+				PIStr:      int64Ptr(int64(0)),
+				PStr:       stringPtr(""),
 				NullFields: []string{"B", "F", "I", "Istr", "Str"},
 			},
 			want: `{"b":null,"f":null,"i":null,"istr":null,"str":null,"pb":false,"pf":0.0,"pi":0,"pistr":"0","pstr":""}`,
@@ -140,40 +137,34 @@ func TestSliceFields(t *testing.T) {
 			want: `{}`,
 		},
 		{
-			s:    schema{S: []int{}, Int64s: googleapi.Int64s{}},
-			want: `{}`,
-		},
-		{
-			s:    schema{S: []int{1}, Int64s: googleapi.Int64s{1}},
-			want: `{"s":[1],"i64s":["1"]}`,
+			s:    schema{S: []int{1}},
+			want: `{"s":[1]}`,
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"S", "Int64s"},
+				ForceSendFields: []string{"S"},
 			},
-			want: `{"s":[],"i64s":[]}`,
+			want: `{"s":[]}`,
 		},
 		{
 			s: schema{
 				S:               []int{},
-				Int64s:          googleapi.Int64s{},
-				ForceSendFields: []string{"S", "Int64s"},
+				ForceSendFields: []string{"S"},
 			},
-			want: `{"s":[],"i64s":[]}`,
+			want: `{"s":[]}`,
 		},
 		{
 			s: schema{
 				S:               []int{1},
-				Int64s:          googleapi.Int64s{1},
-				ForceSendFields: []string{"S", "Int64s"},
+				ForceSendFields: []string{"S"},
 			},
-			want: `{"s":[1],"i64s":["1"]}`,
+			want: `{"s":[1]}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"S", "Int64s"},
+				NullFields: []string{"S"},
 			},
-			want: `{"s":null,"i64s":null}`,
+			want: `{"s":null}`,
 		},
 	} {
 		checkMarshalJSON(t, tc)
@@ -245,7 +236,7 @@ func TestMapToAnyArray(t *testing.T) {
 		{
 			s: schema{
 				MapToAnyArray: map[string][]interface{}{
-					"a": []interface{}{2, "b"},
+					"a": {2, "b"},
 				},
 			},
 			want: `{"maptoanyarray":{"a":[2, "b"]}}`,
@@ -261,7 +252,7 @@ func TestMapToAnyArray(t *testing.T) {
 		{
 			s: schema{
 				MapToAnyArray: map[string][]interface{}{
-					"a": []interface{}{nil},
+					"a": {nil},
 				},
 			},
 			want: `{"maptoanyarray":{"a":[null]}}`,
@@ -288,7 +279,7 @@ func TestMapToAnyArray(t *testing.T) {
 		{
 			s: schema{
 				MapToAnyArray: map[string][]interface{}{
-					"a": []interface{}{2, "b"},
+					"a": {2, "b"},
 				},
 				ForceSendFields: []string{"MapToAnyArray"},
 			},
@@ -470,6 +461,7 @@ func TestParseJSONTag(t *testing.T) {
 		}
 	}
 }
+
 func TestParseMalformedJSONTag(t *testing.T) {
 	for _, tag := range []string{
 		"",
@@ -487,3 +479,8 @@ func TestParseMalformedJSONTag(t *testing.T) {
 		}
 	}
 }
+
+func int64Ptr(v int64) *int64       { return &v }
+func float64Ptr(v float64) *float64 { return &v }
+func boolPtr(v bool) *bool          { return &v }
+func stringPtr(v string) *string    { return &v }

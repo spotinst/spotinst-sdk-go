@@ -172,8 +172,6 @@ func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscri
 	}
 
 	r := s.client.newRequest("GET", path)
-	r.obj = input
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -235,8 +233,6 @@ func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteS
 	}
 
 	r := s.client.newRequest("DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -247,6 +243,7 @@ func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteS
 }
 
 //region Subscription
+
 func (o *Subscription) MarshalJSON() ([]byte, error) {
 	type noMethod Subscription
 	raw := noMethod(*o)

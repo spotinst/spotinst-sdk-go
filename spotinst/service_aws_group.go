@@ -17,6 +17,7 @@ type AwsGroupService interface {
 	Read(*ReadAwsGroupInput) (*ReadAwsGroupOutput, error)
 	Update(*UpdateAwsGroupInput) (*UpdateAwsGroupOutput, error)
 	Delete(*DeleteAwsGroupInput) (*DeleteAwsGroupOutput, error)
+	Status(*StatusAwsGroupInput) (*StatusAwsGroupOutput, error)
 }
 
 // AwsGroupServiceOp handles communication with the balancer related methods
@@ -395,6 +396,23 @@ type DeleteAwsGroupInput struct {
 
 type DeleteAwsGroupOutput struct{}
 
+type StatusAwsGroupInput struct {
+	ID *string `json:"groupId,omitempty"`
+}
+
+type StatusAwsGroupOutput struct {
+	Instances []*AwsInstance `json:"instances,omitempty"`
+}
+
+type AwsInstance struct {
+	ID               *string `json:"instanceId,omitempty"`
+	SpotRequestID    *string `json:"spotRequestId,omitempty"`
+	InstanceType     *string `json:"instanceType,omitempty"`
+	Status           *string `json:"status,omitempty"`
+	Product          *string `json:"product,omitempty"`
+	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+}
+
 func awsGroupFromJSON(in []byte) (*AwsGroup, error) {
 	b := new(AwsGroup)
 	if err := json.Unmarshal(in, b); err != nil {
@@ -428,6 +446,41 @@ func awsGroupsFromHttpResponse(resp *http.Response) ([]*AwsGroup, error) {
 		return nil, err
 	}
 	return awsGroupsFromJSON(body)
+}
+
+func awsInstanceFromJSON(in []byte) (*AwsInstance, error) {
+	b := new(AwsInstance)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func awsInstancesFromJSON(in []byte) ([]*AwsInstance, error) {
+	var rw responseWrapper
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*AwsInstance, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := awsInstanceFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func awsInstancesFromHttpResponse(resp *http.Response) ([]*AwsInstance, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return awsInstancesFromJSON(body)
 }
 
 func (s *AwsGroupServiceOp) List(input *ListAwsGroupInput) (*ListAwsGroupOutput, error) {
@@ -479,8 +532,6 @@ func (s *AwsGroupServiceOp) Read(input *ReadAwsGroupInput) (*ReadAwsGroupOutput,
 	}
 
 	r := s.client.newRequest("GET", path)
-	r.obj = input
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -542,8 +593,6 @@ func (s *AwsGroupServiceOp) Delete(input *DeleteAwsGroupInput) (*DeleteAwsGroupO
 	}
 
 	r := s.client.newRequest("DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -553,7 +602,31 @@ func (s *AwsGroupServiceOp) Delete(input *DeleteAwsGroupInput) (*DeleteAwsGroupO
 	return &DeleteAwsGroupOutput{}, nil
 }
 
+func (s *AwsGroupServiceOp) Status(input *StatusAwsGroupInput) (*StatusAwsGroupOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/status", map[string]string{
+		"groupId": StringValue(input.ID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := s.client.newRequest("GET", path)
+	_, resp, err := requireOK(s.client.doRequest(r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	is, err := awsInstancesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &StatusAwsGroupOutput{Instances: is}, nil
+}
+
 //region AwsGroup
+
 func (o *AwsGroup) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroup
 	raw := noMethod(*o)
@@ -633,6 +706,7 @@ func (o *AwsGroup) SetMultai(v *AwsGroupMultai) *AwsGroup {
 //endregion
 
 //region AwsGroupIntegration
+
 func (o *AwsGroupIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupIntegration
 	raw := noMethod(*o)
@@ -677,6 +751,7 @@ func (o *AwsGroupIntegration) SetMesosphere(v *AwsGroupMesosphereIntegration) *A
 //endregion
 
 //region AwsGroupMultai
+
 func (o *AwsGroupMultai) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupMultai
 	raw := noMethod(*o)
@@ -700,6 +775,7 @@ func (o *AwsGroupMultai) SetBalancers(v []*AwsGroupMultaiBalancer) *AwsGroupMult
 //endregion
 
 //region AwsGroupMultaiBalancer
+
 func (o *AwsGroupMultaiBalancer) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupMultaiBalancer
 	raw := noMethod(*o)
@@ -744,6 +820,7 @@ func (o *AwsGroupMultaiBalancer) SetAutoWeight(v *bool) *AwsGroupMultaiBalancer 
 //endregion
 
 //region AwsGroupRancherIntegration
+
 func (o *AwsGroupRancherIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupRancherIntegration
 	raw := noMethod(*o)
@@ -774,6 +851,7 @@ func (o *AwsGroupRancherIntegration) SetSecretKey(v *string) *AwsGroupRancherInt
 //endregion
 
 //region AwsGroupElasticBeanstalkIntegration
+
 func (o *AwsGroupElasticBeanstalkIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupElasticBeanstalkIntegration
 	raw := noMethod(*o)
@@ -790,6 +868,7 @@ func (o *AwsGroupElasticBeanstalkIntegration) SetEnvironmentId(v *string) *AwsGr
 //endregion
 
 //region AwsGroupEC2ContainerServiceIntegration
+
 func (o *AwsGroupEC2ContainerServiceIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupEC2ContainerServiceIntegration
 	raw := noMethod(*o)
@@ -806,6 +885,7 @@ func (o *AwsGroupEC2ContainerServiceIntegration) SetClusterName(v *string) *AwsG
 //endregion
 
 //region AwsGroupKubernetesIntegration
+
 func (o *AwsGroupKubernetesIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupKubernetesIntegration
 	raw := noMethod(*o)
@@ -829,6 +909,7 @@ func (o *AwsGroupKubernetesIntegration) SetToken(v *string) *AwsGroupKubernetesI
 //endregion
 
 //region AwsGroupMesosphereIntegration
+
 func (o *AwsGroupMesosphereIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupMesosphereIntegration
 	raw := noMethod(*o)
@@ -845,6 +926,7 @@ func (o *AwsGroupMesosphereIntegration) SetServer(v *string) *AwsGroupMesosphere
 //endregion
 
 //region AwsGroupScheduling
+
 func (o *AwsGroupScheduling) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupScheduling
 	raw := noMethod(*o)
@@ -861,6 +943,7 @@ func (o *AwsGroupScheduling) SetTasks(v []*AwsGroupScheduledTask) *AwsGroupSched
 //endregion
 
 //region AwsGroupScheduledTask
+
 func (o *AwsGroupScheduledTask) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupScheduledTask
 	raw := noMethod(*o)
@@ -933,6 +1016,7 @@ func (o *AwsGroupScheduledTask) SetGracePeriod(v *int) *AwsGroupScheduledTask {
 //endregion
 
 //region AwsGroupScaling
+
 func (o *AwsGroupScaling) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupScaling
 	raw := noMethod(*o)
@@ -956,6 +1040,7 @@ func (o *AwsGroupScaling) SetDown(v []*AwsGroupScalingPolicy) *AwsGroupScaling {
 //endregion
 
 //region AwsGroupScalingPolicy
+
 func (o *AwsGroupScalingPolicy) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupScalingPolicy
 	raw := noMethod(*o)
@@ -1063,6 +1148,7 @@ func (o *AwsGroupScalingPolicy) SetDimensions(v []*AwsGroupScalingPolicyDimensio
 //endregion
 
 //region AwsGroupScalingPolicyDimension
+
 func (o *AwsGroupScalingPolicyDimension) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupScalingPolicyDimension
 	raw := noMethod(*o)
@@ -1086,6 +1172,7 @@ func (o *AwsGroupScalingPolicyDimension) SetValue(v *string) *AwsGroupScalingPol
 //endregion
 
 //region AwsGroupStrategy
+
 func (o *AwsGroupStrategy) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupStrategy
 	raw := noMethod(*o)
@@ -1158,6 +1245,7 @@ func (o *AwsGroupStrategy) SetPersistence(v *AwsGroupPersistence) *AwsGroupStrat
 //endregion
 
 //region AwsGroupPersistence
+
 func (o *AwsGroupPersistence) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupPersistence
 	raw := noMethod(*o)
@@ -1188,6 +1276,7 @@ func (o *AwsGroupPersistence) SetShouldPersistRootDevice(v *bool) *AwsGroupPersi
 //endregion
 
 //region AwsGroupStrategySignal
+
 func (o *AwsGroupStrategySignal) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupStrategySignal
 	raw := noMethod(*o)
@@ -1211,6 +1300,7 @@ func (o *AwsGroupStrategySignal) SetTimeout(v *int) *AwsGroupStrategySignal {
 //endregion
 
 //region AwsGroupCapacity
+
 func (o *AwsGroupCapacity) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupCapacity
 	raw := noMethod(*o)
@@ -1248,6 +1338,7 @@ func (o *AwsGroupCapacity) SetUnit(v *string) *AwsGroupCapacity {
 //endregion
 
 //region AwsGroupCompute
+
 func (o *AwsGroupCompute) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupCompute
 	raw := noMethod(*o)
@@ -1299,6 +1390,7 @@ func (o *AwsGroupCompute) SetEBSVolumePool(v []*AwsGroupComputeEBSVolume) *AwsGr
 //endregion
 
 //region AwsGroupComputeEBSVolume
+
 func (o *AwsGroupComputeEBSVolume) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeEBSVolume
 	raw := noMethod(*o)
@@ -1322,6 +1414,7 @@ func (o *AwsGroupComputeEBSVolume) SetVolumeIDs(v []string) *AwsGroupComputeEBSV
 //endregion
 
 //region AwsGroupComputeInstanceType
+
 func (o *AwsGroupComputeInstanceType) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeInstanceType
 	raw := noMethod(*o)
@@ -1352,6 +1445,7 @@ func (o *AwsGroupComputeInstanceType) SetWeights(v []*AwsGroupComputeInstanceTyp
 //endregion
 
 //region AwsGroupComputeInstanceTypeWeight
+
 func (o *AwsGroupComputeInstanceTypeWeight) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeInstanceTypeWeight
 	raw := noMethod(*o)
@@ -1375,6 +1469,7 @@ func (o *AwsGroupComputeInstanceTypeWeight) SetWeight(v *int) *AwsGroupComputeIn
 //endregion
 
 //region AwsGroupComputeAvailabilityZone
+
 func (o *AwsGroupComputeAvailabilityZone) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeAvailabilityZone
 	raw := noMethod(*o)
@@ -1398,6 +1493,7 @@ func (o *AwsGroupComputeAvailabilityZone) SetSubnetId(v *string) *AwsGroupComput
 //endregion
 
 //region AwsGroupComputeLaunchSpecification
+
 func (o *AwsGroupComputeLaunchSpecification) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeLaunchSpecification
 	raw := noMethod(*o)
@@ -1519,6 +1615,7 @@ func (o *AwsGroupComputeLaunchSpecification) SetTags(v []*AwsGroupComputeTag) *A
 //endregion
 
 //region AwsGroupComputeLoadBalancersConfig
+
 func (o *AwsGroupComputeLoadBalancersConfig) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeLoadBalancersConfig
 	raw := noMethod(*o)
@@ -1535,6 +1632,7 @@ func (o *AwsGroupComputeLoadBalancersConfig) SetLoadBalancers(v []*AwsGroupCompu
 //endregion
 
 //region AwsGroupComputeLoadBalancer
+
 func (o *AwsGroupComputeLoadBalancer) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeLoadBalancer
 	raw := noMethod(*o)
@@ -1565,6 +1663,7 @@ func (o *AwsGroupComputeLoadBalancer) SetType(v *string) *AwsGroupComputeLoadBal
 //endregion
 
 //region AwsGroupComputeNetworkInterface
+
 func (o *AwsGroupComputeNetworkInterface) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeNetworkInterface
 	raw := noMethod(*o)
@@ -1637,6 +1736,7 @@ func (o *AwsGroupComputeNetworkInterface) SetSubnetId(v *string) *AwsGroupComput
 //endregion
 
 //region AwsGroupComputeBlockDevice
+
 func (o *AwsGroupComputeBlockDevice) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeBlockDevice
 	raw := noMethod(*o)
@@ -1667,6 +1767,7 @@ func (o *AwsGroupComputeBlockDevice) SetEBS(v *AwsGroupComputeEBS) *AwsGroupComp
 //endregion
 
 //region AwsGroupComputeEBS
+
 func (o *AwsGroupComputeEBS) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeEBS
 	raw := noMethod(*o)
@@ -1718,6 +1819,7 @@ func (o *AwsGroupComputeEBS) SetIOPS(v *int) *AwsGroupComputeEBS {
 //endregion
 
 //region AwsGroupComputeIamInstanceProfile
+
 func (o *AwsGroupComputeIamInstanceProfile) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeIamInstanceProfile
 	raw := noMethod(*o)
@@ -1741,6 +1843,7 @@ func (o *AwsGroupComputeIamInstanceProfile) SetArn(v *string) *AwsGroupComputeIa
 //endregion
 
 //region AwsGroupComputeTag
+
 func (o *AwsGroupComputeTag) MarshalJSON() ([]byte, error) {
 	type noMethod AwsGroupComputeTag
 	raw := noMethod(*o)
