@@ -18,6 +18,7 @@ type AwsGroupService interface {
 	Update(*UpdateAwsGroupInput) (*UpdateAwsGroupOutput, error)
 	Delete(*DeleteAwsGroupInput) (*DeleteAwsGroupOutput, error)
 	Status(*StatusAwsGroupInput) (*StatusAwsGroupOutput, error)
+	Detach(*DetachAwsGroupInput) (*DetachAwsGroupOutput, error)
 }
 
 // AwsGroupServiceOp handles communication with the balancer related methods
@@ -360,6 +361,16 @@ type AwsGroupComputeTag struct {
 	nullFields      []string `json:"-"`
 }
 
+type AwsInstance struct {
+	ID               *string    `json:"instanceId,omitempty"`
+	SpotRequestID    *string    `json:"spotRequestId,omitempty"`
+	InstanceType     *string    `json:"instanceType,omitempty"`
+	Status           *string    `json:"status,omitempty"`
+	Product          *string    `json:"product,omitempty"`
+	AvailabilityZone *string    `json:"availabilityZone,omitempty"`
+	CreatedAt        *time.Time `json:"createdAt,omitempty"`
+}
+
 type ListAwsGroupInput struct{}
 
 type ListAwsGroupOutput struct {
@@ -404,14 +415,15 @@ type StatusAwsGroupOutput struct {
 	Instances []*AwsInstance `json:"instances,omitempty"`
 }
 
-type AwsInstance struct {
-	ID               *string `json:"instanceId,omitempty"`
-	SpotRequestID    *string `json:"spotRequestId,omitempty"`
-	InstanceType     *string `json:"instanceType,omitempty"`
-	Status           *string `json:"status,omitempty"`
-	Product          *string `json:"product,omitempty"`
-	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+type DetachAwsGroupInput struct {
+	ID                            *string  `json:"groupId,omitempty"`
+	InstanceIDs                   []string `json:"instancesToDetach,omitempty"`
+	ShouldDecrementTargetCapacity *bool    `json:"shouldDecrementTargetCapacity,omitempty"`
+	ShouldTerminateInstances      *bool    `json:"shouldTerminateInstances,omitempty"`
+	DrainingTimeout               *int     `json:"drainingTimeout,omitempty"`
 }
+
+type DetachAwsGroupOutput struct{}
 
 func awsGroupFromJSON(in []byte) (*AwsGroup, error) {
 	b := new(AwsGroup)
@@ -623,6 +635,26 @@ func (s *AwsGroupServiceOp) Status(input *StatusAwsGroupInput) (*StatusAwsGroupO
 	}
 
 	return &StatusAwsGroupOutput{Instances: is}, nil
+}
+
+func (s *AwsGroupServiceOp) Detach(input *DetachAwsGroupInput) (*DetachAwsGroupOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/detachInstances", map[string]string{
+		"groupId": StringValue(input.ID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := s.client.newRequest("PUT", path)
+	r.obj = input
+
+	_, resp, err := requireOK(s.client.doRequest(r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DetachAwsGroupOutput{}, nil
 }
 
 //region AwsGroup
