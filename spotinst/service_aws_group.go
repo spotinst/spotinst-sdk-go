@@ -364,7 +364,7 @@ type AwsGroupComputeTag struct {
 
 type AwsInstance struct {
 	ID               *string    `json:"instanceId,omitempty"`
-	SpotRequestID    *string    `json:"spotRequestId,omitempty"`
+	SpotRequestID    *string    `json:"spotInstanceRequestId,omitempty"`
 	InstanceType     *string    `json:"instanceType,omitempty"`
 	Status           *string    `json:"status,omitempty"`
 	Product          *string    `json:"product,omitempty"`
