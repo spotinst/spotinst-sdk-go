@@ -646,6 +646,9 @@ func (s *AwsGroupServiceOp) Detach(input *DetachAwsGroupInput) (*DetachAwsGroupO
 		return nil, err
 	}
 
+	// We do not need the ID anymore so let's drop it.
+	input.ID = nil
+
 	r := s.client.newRequest("PUT", path)
 	r.obj = input
 
