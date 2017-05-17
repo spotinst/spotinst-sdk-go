@@ -172,6 +172,20 @@ type AwsGroupScalingPolicy struct {
 	Cooldown          *int                              `json:"cooldown,omitempty"`
 	Operator          *string                           `json:"operator,omitempty"`
 	Dimensions        []*AwsGroupScalingPolicyDimension `json:"dimensions,omitempty"`
+	Action            *AwsGroupScalingPolicyAction      `json:"action,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AwsGroupScalingPolicyAction struct {
+	Type              *string                           `json:"type,omitempty"`
+	Adjustment        *string                           `json:"adjustment,omitempty"`
+	MinTargetCapacity *string                           `json:"minTargetCapacity,omitempty"`
+	MaxTargetCapacity *string                           `json:"maxTargetCapacity,omitempty"`
+	Maximum           *string                           `json:"maximum,omitempty"`
+	Minimum           *string                           `json:"minimum,omitempty"`
+	Target            *string                           `json:"target,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1177,6 +1191,71 @@ func (o *AwsGroupScalingPolicy) SetOperator(v *string) *AwsGroupScalingPolicy {
 func (o *AwsGroupScalingPolicy) SetDimensions(v []*AwsGroupScalingPolicyDimension) *AwsGroupScalingPolicy {
 	if o.Dimensions = v; v == nil {
 		o.nullFields = append(o.nullFields, "Dimensions")
+	}
+	return o
+}
+
+func (o *AwsGroupScalingPolicy) SetAction(v *AwsGroupScalingPolicyAction) *AwsGroupScalingPolicy {
+	if o.Action = v; v == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+//endregion
+
+//region AwsGroupScalingPolicyAction
+
+func (o *AwsGroupScalingPolicyAction) MarshalJSON() ([]byte, error) {
+	type noMethod AwsGroupScalingPolicyAction
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AwsGroupScalingPolicyAction) SetAdjustment(v *string) *AwsGroupScalingPolicyAction {
+	if o.Adjustment = v; v == nil {
+		o.nullFields = append(o.nullFields, "Adjustment")
+	}
+	return o
+}
+
+func (o *AwsGroupScalingPolicyAction) SetMinTargetCapacity(v *string) *AwsGroupScalingPolicyAction {
+	if o.MinTargetCapacity = v; v == nil {
+		o.nullFields = append(o.nullFields, "MinTargetCapacity")
+	}
+	return o
+}
+
+func (o *AwsGroupScalingPolicyAction) SetMaxTargetCapacity(v *string) *AwsGroupScalingPolicyAction {
+	if o.MaxTargetCapacity = v; v == nil {
+		o.nullFields = append(o.nullFields, "MaxTargetCapacity")
+	}
+	return o
+}
+func (o *AwsGroupScalingPolicyAction) SetMinimum(v *string) *AwsGroupScalingPolicyAction {
+	if o.Minimum = v; v == nil {
+		o.nullFields = append(o.nullFields, "Minimum")
+	}
+	return o
+}
+
+func (o *AwsGroupScalingPolicyAction) SetMaximum(v *string) *AwsGroupScalingPolicyAction {
+	if o.Maximum = v; v == nil {
+		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+func (o *AwsGroupScalingPolicyAction) SetTarget(v *string) *AwsGroupScalingPolicyAction {
+	if o.Target = v; v == nil {
+		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
+func (o *AwsGroupScalingPolicyAction) SetType(v *string) *AwsGroupScalingPolicyAction {
+	if o.Type = v; v == nil {
+		o.nullFields = append(o.nullFields, "Type")
 	}
 	return o
 }
