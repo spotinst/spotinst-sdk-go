@@ -12,13 +12,9 @@ const (
 	// SDKName is the name of the SDK.
 	SDKName = "spotinst-sdk-go"
 
-	// DefaultAPIAddress is the default address of the Spotinst API.
+	// DefaultAddress is the default address of the Spotinst API.
 	// It is used e.g. when initializing a new Client without a specific address.
-	DefaultAPIAddress = "api.spotinst.io"
-
-	// DefaultOAuthAddress is the default address of the Spotinst OAuth API.
-	// It is used e.g. when initializing a new Client without a specific address.
-	DefaultOAuthAddress = "oauth.spotinst.io"
+	DefaultAddress = "api.spotinst.io"
 
 	// DefaultScheme is the default protocol scheme to use when making HTTP
 	// calls.
@@ -44,10 +40,7 @@ const (
 // clientConfig is used to configure the creation of a client.
 type clientConfig struct {
 	// address is the address of the API server.
-	apiAddress string
-
-	// oauthAddress is the address of the OAuth server.
-	oauthAddress string
+	address string
 
 	// scheme is the URI scheme for the API server.
 	scheme string
@@ -77,28 +70,17 @@ type clientConfig struct {
 
 // credentials is used to configure the credentials used by a client.
 type credentials struct {
-	Email        string `json:"username"`
-	Password     string `json:"password"`
-	ClientID     string `json:"client_id"`
-	ClientSecret string `json:"client_secret"`
-	Token        string `json:"token"`
+	Token string `json:"token"`
 }
 
 // ClientOptionFunc is a function that configures a Client.
 // It is used in NewClient.
 type ClientOptionFunc func(*clientConfig)
 
-// SetAPIAddress defines the address of the Spotinst API.
-func SetAPIAddress(addr string) ClientOptionFunc {
+// SetAddress defines the address of the Spotinst API.
+func SetAddress(addr string) ClientOptionFunc {
 	return func(c *clientConfig) {
-		c.apiAddress = addr
-	}
-}
-
-// SetOAuthAddress defines the address of the Spotinst OAuth API.
-func SetOAuthAddress(addr string) ClientOptionFunc {
-	return func(c *clientConfig) {
-		c.oauthAddress = addr
+		c.address = addr
 	}
 }
 
@@ -121,18 +103,6 @@ func SetToken(token string) ClientOptionFunc {
 	return func(c *clientConfig) {
 		c.credentials = &credentials{
 			Token: token,
-		}
-	}
-}
-
-// SetCredentials defines the authorization credentials.
-func SetCredentials(email, password, clientID, clientSecret string) ClientOptionFunc {
-	return func(c *clientConfig) {
-		c.credentials = &credentials{
-			Email:        email,
-			Password:     password,
-			ClientID:     clientID,
-			ClientSecret: clientSecret,
 		}
 	}
 }

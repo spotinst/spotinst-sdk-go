@@ -102,8 +102,7 @@ func requireOK(d time.Duration, resp *http.Response, err error) (time.Duration, 
 func extractError(resp *http.Response) error {
 	b := bytes.NewBuffer(make([]byte, 0))
 
-	// TeeReader returns a Reader that writes to b
-	// what it reads from r.Body.
+	// TeeReader returns a Reader that writes to b what it reads from r.Body.
 	reader := io.TeeReader(resp.Body, b)
 	defer resp.Body.Close()
 	resp.Body = ioutil.NopCloser(b)

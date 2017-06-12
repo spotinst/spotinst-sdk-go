@@ -25,7 +25,7 @@ func defaultTransport() *http.Transport {
 // it can leak file descriptors over time. Only use this for transports that
 // will be re-used for the same host(s).
 func defaultPooledTransport() *http.Transport {
-	transport := &http.Transport{
+	return &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		Dial: (&net.Dialer{
 			Timeout:   30 * time.Second,
@@ -35,7 +35,6 @@ func defaultPooledTransport() *http.Transport {
 		DisableKeepAlives:   false,
 		MaxIdleConnsPerHost: 1,
 	}
-	return transport
 }
 
 // defaultHttpClient returns a new http.Client with similar default values to
@@ -79,29 +78,29 @@ func defaultNonPooledConfig() *clientConfig {
 // defaultConfig returns the default configuration for the client, using the
 // given function to make the transport.
 func defaultConfig(transportFn func() *http.Transport) *clientConfig {
-	config := &clientConfig{
-		apiAddress:   DefaultAPIAddress,
-		oauthAddress: DefaultOAuthAddress,
-		scheme:       DefaultScheme,
-		userAgent:    DefaultUserAgent,
-		contentType:  DefaultContentType,
+	return &clientConfig{
+		address:     DefaultAddress,
+		scheme:      DefaultScheme,
+		userAgent:   DefaultUserAgent,
+		contentType: DefaultContentType,
 		httpClient: &http.Client{
 			Transport: transportFn(),
 		},
 	}
-
-	return config
 }
 
-// Client provides a client to the API
+// Client provides a client to the API.
 type Client struct {
 	config              *clientConfig
 	AwsGroupService     AwsGroupService
+	DeploymentService   DeploymentService
+	CertificateService  CertificateService
+	BalancerService     BalancerService
 	HealthCheckService  HealthCheckService
 	SubscriptionService SubscriptionService
 }
 
-// NewClient returns a new client
+// NewClient returns a new client.
 func NewClient(opts ...ClientOptionFunc) (*Client, error) {
 	config := defaultPooledConfig()
 
@@ -110,92 +109,32 @@ func NewClient(opts ...ClientOptionFunc) (*Client, error) {
 	}
 
 	client := &Client{config: config}
-	client.AwsGroupService = &AwsGroupServiceOp{client}
-	client.HealthCheckService = &HealthCheckServiceOp{client}
-	client.SubscriptionService = &SubscriptionServiceOp{client}
 
-	// Should we request a new access token/refresh token pair?
-	if creds := config.credentials; creds != nil && creds.Token == "" {
-		accessToken, _, err := client.obtainOAuthTokens(
-			creds.Email,
-			creds.Password,
-			creds.ClientID,
-			creds.ClientSecret,
-		)
-		if err != nil {
-			return nil, err
-		}
-		config.credentials.Token = accessToken
-	}
+	// Elastigroup services.
+	client.AwsGroupService = &AwsGroupServiceOp{client}
+
+	// Load Balancer services.
+	client.DeploymentService = &DeploymentServiceOp{client}
+	client.CertificateService = &CertificateServiceOp{client}
+	client.BalancerService = &BalancerServiceOp{client}
+
+	// Health Check services.
+	client.HealthCheckService = &HealthCheckServiceOp{client}
+
+	// Subscription services.
+	client.SubscriptionService = &SubscriptionServiceOp{client}
 
 	return client, nil
 }
 
-type oauthTokenPair struct {
-	AccessToken  string `json:"accessToken"`
-	RefreshToken string `json:"refreshToken"`
-}
-
-// obtainOAuthTokens obtains a new access token/refresh token pair.
-func (c *Client) obtainOAuthTokens(username, password, clientID, clientSecret string) (string, string, error) {
-	u := url.URL{
-		Scheme: c.config.scheme,
-		Host:   c.config.oauthAddress,
-		Path:   "/token",
-	}
-	res, err := http.PostForm(u.String(), url.Values{
-		"grant_type":    {"password"},
-		"username":      {username},
-		"password":      {password},
-		"client_id":     {clientID},
-		"client_secret": {clientSecret},
-	})
-	_, resp, err := requireOK(0, res, err)
-	if err != nil {
-		return "", "", err
-	}
-	defer resp.Body.Close()
-
-	pair, err := oauthTokensFromHttpResponse(resp)
-	if err != nil {
-		return "", "", err
-	}
-	return pair.AccessToken, pair.RefreshToken, nil
-}
-
-func oauthTokensFromJSON(in []byte) (*oauthTokenPair, error) {
-	var rw responseWrapper
-	if err := json.Unmarshal(in, &rw); err != nil {
-		return nil, err
-	}
-	if len(rw.Response.Items) == 0 {
-		return nil, fmt.Errorf("invalid or malformed response")
-	}
-	out := new(oauthTokenPair)
-	for _, i := range rw.Response.Items {
-		if err := json.Unmarshal(i, out); err != nil {
-			return nil, err
-		}
-	}
-	return out, nil
-}
-
-func oauthTokensFromHttpResponse(resp *http.Response) (*oauthTokenPair, error) {
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	return oauthTokensFromJSON(body)
-}
-
-// newRequest is used to create a new request
+// newRequest is used to create a new request.
 func (c *Client) newRequest(method, path string) *request {
-	r := &request{
+	req := &request{
 		config: c.config,
 		method: method,
 		url: &url.URL{
 			Scheme: c.config.scheme,
-			Host:   c.config.apiAddress,
+			Host:   c.config.address,
 			Path:   path,
 		},
 		params: make(map[string][]string),
@@ -203,13 +142,13 @@ func (c *Client) newRequest(method, path string) *request {
 	}
 	if creds := c.config.credentials; creds != nil {
 		if token := creds.Token; token != "" {
-			r.header.Set("Authorization", "Bearer "+token)
+			req.header.Set("Authorization", "Bearer "+token)
 		}
 	}
-	return r
+	return req
 }
 
-// doRequest runs a request with our client
+// doRequest runs a request with our client.
 func (c *Client) doRequest(r *request) (time.Duration, *http.Response, error) {
 	req, err := r.toHTTP()
 	if err != nil {
