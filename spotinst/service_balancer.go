@@ -937,20 +937,20 @@ func (b *BalancerServiceOp) DeleteMiddleware(input *DeleteMiddlewareInput) (*Del
 }
 
 type TargetSet struct {
-	ID           *string      `json:"id,omitempty"`
-	BalancerID   *string      `json:"balancerId,omitempty"`
-	DeploymentID *string      `json:"deploymentId,omitempty"`
-	Name         *string      `json:"name,omitempty"`
-	Protocol     *string      `json:"protocol,omitempty"`
-	Port         *int         `json:"port,omitempty"`
-	Weight       *int         `json:"weight,omitempty"`
-	HealthCheck  *HealthCheck `json:"healthCheck,omitempty"`
-	Tags         []*Tag       `json:"tags,omitempty"`
-	CreatedAt    *time.Time   `json:"createdAt,omitempty"`
-	UpdatedAt    *time.Time   `json:"updatedAt,omitempty"`
+	ID           *string               `json:"id,omitempty"`
+	BalancerID   *string               `json:"balancerId,omitempty"`
+	DeploymentID *string               `json:"deploymentId,omitempty"`
+	Name         *string               `json:"name,omitempty"`
+	Protocol     *string               `json:"protocol,omitempty"`
+	Port         *int                  `json:"port,omitempty"`
+	Weight       *int                  `json:"weight,omitempty"`
+	HealthCheck  *TargetSetHealthCheck `json:"healthCheck,omitempty"`
+	Tags         []*Tag                `json:"tags,omitempty"`
+	CreatedAt    *time.Time            `json:"createdAt,omitempty"`
+	UpdatedAt    *time.Time            `json:"updatedAt,omitempty"`
 }
 
-type HealthCheck struct {
+type TargetSetHealthCheck struct {
 	Path                    *string `json:"path,omitempty"`
 	Port                    *int    `json:"port,omitempty"`
 	Protocol                *string `json:"protocol,omitempty"`
