@@ -49,8 +49,11 @@ type clientConfig struct {
 	// used if not provided.
 	httpClient *http.Client
 
-	// credentials is used to provide a per-request authorization token.
-	credentials *credentials
+	// token is used to provide a per-request authorization token.
+	token string
+
+	// accountID is the target account ID.
+	accountID string
 
 	// userAgent is the user agent to use when making HTTP calls.
 	userAgent string
@@ -101,9 +104,14 @@ func SetHttpClient(client *http.Client) ClientOptionFunc {
 // SetToken defines the authorization token.
 func SetToken(token string) ClientOptionFunc {
 	return func(c *clientConfig) {
-		c.credentials = &credentials{
-			Token: token,
-		}
+		c.token = token
+	}
+}
+
+// SetAccountId defines the account ID.
+func SetAccountId(id string) ClientOptionFunc {
+	return func(c *clientConfig) {
+		c.accountID = id
 	}
 }
 

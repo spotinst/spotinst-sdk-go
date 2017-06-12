@@ -169,7 +169,6 @@ var _ BalancerService = &BalancerServiceOp{}
 
 type Balancer struct {
 	ID              *string    `json:"id,omitempty"`
-	AccountID       *string    `json:"accountId,omitempty"`
 	Name            *string    `json:"name,omitempty"`
 	DNSRRType       *string    `json:"dnsRrType,omitempty"`
 	DNSRRName       *string    `json:"dnsRrName,omitempty"`
@@ -186,7 +185,6 @@ type Timeouts struct {
 }
 
 type ListBalancersInput struct {
-	AccountID    *string `json:"accountId,omitempty"`
 	DeploymentID *string `json:"deploymentId,omitempty"`
 }
 
@@ -195,8 +193,7 @@ type ListBalancersOutput struct {
 }
 
 type CreateBalancerInput struct {
-	AccountID *string   `json:"accountId,omitempty"`
-	Balancer  *Balancer `json:"balancer,omitempty"`
+	Balancer *Balancer `json:"balancer,omitempty"`
 }
 
 type CreateBalancerOutput struct {
@@ -204,7 +201,6 @@ type CreateBalancerOutput struct {
 }
 
 type ReadBalancerInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	BalancerID *string `json:"balancerId,omitempty"`
 }
 
@@ -213,14 +209,12 @@ type ReadBalancerOutput struct {
 }
 
 type UpdateBalancerInput struct {
-	AccountID *string   `json:"accountId,omitempty"`
-	Balancer  *Balancer `json:"balancer,omitempty"`
+	Balancer *Balancer `json:"balancer,omitempty"`
 }
 
 type UpdateBalancerOutput struct{}
 
 type DeleteBalancerInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	BalancerID *string `json:"balancerId,omitempty"`
 }
 
@@ -263,11 +257,6 @@ func balancersFromHttpResponse(resp *http.Response) ([]*Balancer, error) {
 
 func (b *BalancerServiceOp) ListBalancers(input *ListBalancersInput) (*ListBalancersOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/balancer")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.DeploymentID != nil {
 		r.params.Set("deploymentId", StringValue(input.DeploymentID))
@@ -292,10 +281,6 @@ func (b *BalancerServiceOp) ListBalancers(input *ListBalancersInput) (*ListBalan
 func (b *BalancerServiceOp) CreateBalancer(input *CreateBalancerInput) (*CreateBalancerOutput, error) {
 	r := b.client.newRequest("POST", "/loadBalancer/balancer")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -322,12 +307,6 @@ func (b *BalancerServiceOp) ReadBalancer(input *ReadBalancerInput) (*ReadBalance
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -355,10 +334,6 @@ func (b *BalancerServiceOp) UpdateBalancer(input *UpdateBalancerInput) (*UpdateB
 	r := b.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -378,10 +353,6 @@ func (b *BalancerServiceOp) DeleteBalancer(input *DeleteBalancerInput) (*DeleteB
 
 	r := b.client.newRequest("DELETE", path)
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -404,7 +375,6 @@ type Listener struct {
 }
 
 type ListListenersInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	BalancerID *string `json:"balancerId,omitempty"`
 }
 
@@ -413,8 +383,7 @@ type ListListenersOutput struct {
 }
 
 type CreateListenerInput struct {
-	AccountID *string   `json:"accountId,omitempty"`
-	Listener  *Listener `json:"listener,omitempty"`
+	Listener *Listener `json:"listener,omitempty"`
 }
 
 type CreateListenerOutput struct {
@@ -422,7 +391,6 @@ type CreateListenerOutput struct {
 }
 
 type ReadListenerInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	ListenerID *string `json:"listenerId,omitempty"`
 }
 
@@ -431,14 +399,12 @@ type ReadListenerOutput struct {
 }
 
 type UpdateListenerInput struct {
-	AccountID *string   `json:"accountId,omitempty"`
-	Listener  *Listener `json:"listener,omitempty"`
+	Listener *Listener `json:"listener,omitempty"`
 }
 
 type UpdateListenerOutput struct{}
 
 type DeleteListenerInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	ListenerID *string `json:"listenerId,omitempty"`
 }
 
@@ -481,11 +447,6 @@ func listenersFromHttpResponse(resp *http.Response) ([]*Listener, error) {
 
 func (b *BalancerServiceOp) ListListeners(input *ListListenersInput) (*ListListenersOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/listener")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -510,10 +471,6 @@ func (b *BalancerServiceOp) ListListeners(input *ListListenersInput) (*ListListe
 func (b *BalancerServiceOp) CreateListener(input *CreateListenerInput) (*CreateListenerOutput, error) {
 	r := b.client.newRequest("POST", "/loadBalancer/listener")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -540,12 +497,6 @@ func (b *BalancerServiceOp) ReadListener(input *ReadListenerInput) (*ReadListene
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -573,10 +524,6 @@ func (b *BalancerServiceOp) UpdateListener(input *UpdateListenerInput) (*UpdateL
 	r := b.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -596,10 +543,6 @@ func (b *BalancerServiceOp) DeleteListener(input *DeleteListenerInput) (*DeleteL
 
 	r := b.client.newRequest("DELETE", path)
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -625,7 +568,6 @@ type RoutingRule struct {
 }
 
 type ListRoutingRulesInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	BalancerID *string `json:"balancerId,omitempty"`
 }
 
@@ -634,7 +576,6 @@ type ListRoutingRulesOutput struct {
 }
 
 type CreateRoutingRuleInput struct {
-	AccountID   *string      `json:"accountId,omitempty"`
 	RoutingRule *RoutingRule `json:"routingRule,omitempty"`
 }
 
@@ -643,7 +584,6 @@ type CreateRoutingRuleOutput struct {
 }
 
 type ReadRoutingRuleInput struct {
-	AccountID     *string `json:"accountId,omitempty"`
 	RoutingRuleID *string `json:"routingRuleId,omitempty"`
 }
 
@@ -652,14 +592,12 @@ type ReadRoutingRuleOutput struct {
 }
 
 type UpdateRoutingRuleInput struct {
-	AccountID   *string      `json:"accountId,omitempty"`
 	RoutingRule *RoutingRule `json:"routingRule,omitempty"`
 }
 
 type UpdateRoutingRuleOutput struct{}
 
 type DeleteRoutingRuleInput struct {
-	AccountID     *string `json:"accountId,omitempty"`
 	RoutingRuleID *string `json:"routingRuleId,omitempty"`
 }
 
@@ -702,11 +640,6 @@ func routingRulesFromHttpResponse(resp *http.Response) ([]*RoutingRule, error) {
 
 func (b *BalancerServiceOp) ListRoutingRules(input *ListRoutingRulesInput) (*ListRoutingRulesOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/routingRule")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -731,10 +664,6 @@ func (b *BalancerServiceOp) ListRoutingRules(input *ListRoutingRulesInput) (*Lis
 func (b *BalancerServiceOp) CreateRoutingRule(input *CreateRoutingRuleInput) (*CreateRoutingRuleOutput, error) {
 	r := b.client.newRequest("POST", "/loadBalancer/routingRule")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -761,12 +690,6 @@ func (b *BalancerServiceOp) ReadRoutingRule(input *ReadRoutingRuleInput) (*ReadR
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -794,10 +717,6 @@ func (b *BalancerServiceOp) UpdateRoutingRule(input *UpdateRoutingRuleInput) (*U
 	r := b.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -818,10 +737,6 @@ func (b *BalancerServiceOp) DeleteRoutingRule(input *DeleteRoutingRuleInput) (*D
 	r := b.client.newRequest("DELETE", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -833,7 +748,6 @@ func (b *BalancerServiceOp) DeleteRoutingRule(input *DeleteRoutingRuleInput) (*D
 
 type Middleware struct {
 	ID         *string         `json:"id,omitempty"`
-	AccountID  *string         `json:"accountId,omitempty"`
 	BalancerID *string         `json:"balancerId,omitempty"`
 	Type       *string         `json:"type,omitempty"`
 	Priority   *int            `json:"priority,omitempty"`
@@ -844,7 +758,6 @@ type Middleware struct {
 }
 
 type ListMiddlewaresInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	BalancerID *string `json:"balancerId,omitempty"`
 }
 
@@ -853,7 +766,6 @@ type ListMiddlewaresOutput struct {
 }
 
 type CreateMiddlewareInput struct {
-	AccountID  *string     `json:"accountId,omitempty"`
 	Middleware *Middleware `json:"middleware,omitempty"`
 }
 
@@ -862,7 +774,6 @@ type CreateMiddlewareOutput struct {
 }
 
 type ReadMiddlewareInput struct {
-	AccountID    *string `json:"accountId,omitempty"`
 	MiddlewareID *string `json:"middlewareId,omitempty"`
 }
 
@@ -871,14 +782,12 @@ type ReadMiddlewareOutput struct {
 }
 
 type UpdateMiddlewareInput struct {
-	AccountID  *string     `json:"accountId,omitempty"`
 	Middleware *Middleware `json:"middleware,omitempty"`
 }
 
 type UpdateMiddlewareOutput struct{}
 
 type DeleteMiddlewareInput struct {
-	AccountID    *string `json:"accountId,omitempty"`
 	MiddlewareID *string `json:"middlewareId,omitempty"`
 }
 
@@ -921,11 +830,6 @@ func middlewaresFromHttpResponse(resp *http.Response) ([]*Middleware, error) {
 
 func (b *BalancerServiceOp) ListMiddlewares(input *ListMiddlewaresInput) (*ListMiddlewaresOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/middleware")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -950,10 +854,6 @@ func (b *BalancerServiceOp) ListMiddlewares(input *ListMiddlewaresInput) (*ListM
 func (b *BalancerServiceOp) CreateMiddleware(input *CreateMiddlewareInput) (*CreateMiddlewareOutput, error) {
 	r := b.client.newRequest("POST", "/loadBalancer/middleware")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -980,12 +880,6 @@ func (b *BalancerServiceOp) ReadMiddleware(input *ReadMiddlewareInput) (*ReadMid
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1013,10 +907,6 @@ func (b *BalancerServiceOp) UpdateMiddleware(input *UpdateMiddlewareInput) (*Upd
 	r := b.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1036,10 +926,6 @@ func (b *BalancerServiceOp) DeleteMiddleware(input *DeleteMiddlewareInput) (*Del
 
 	r := b.client.newRequest("DELETE", path)
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -1075,7 +961,6 @@ type HealthCheck struct {
 }
 
 type ListTargetSetsInput struct {
-	AccountID  *string `json:"accountId,omitempty"`
 	BalancerID *string `json:"balancerId,omitempty"`
 }
 
@@ -1084,7 +969,6 @@ type ListTargetSetsOutput struct {
 }
 
 type CreateTargetSetInput struct {
-	AccountID *string    `json:"accountId,omitempty"`
 	TargetSet *TargetSet `json:"targetSet,omitempty"`
 }
 
@@ -1093,7 +977,6 @@ type CreateTargetSetOutput struct {
 }
 
 type ReadTargetSetInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 }
 
@@ -1102,14 +985,12 @@ type ReadTargetSetOutput struct {
 }
 
 type UpdateTargetSetInput struct {
-	AccountID *string    `json:"accountId,omitempty"`
 	TargetSet *TargetSet `json:"targetSet,omitempty"`
 }
 
 type UpdateTargetSetOutput struct{}
 
 type DeleteTargetSetInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 }
 
@@ -1152,11 +1033,6 @@ func targetSetsFromHttpResponse(resp *http.Response) ([]*TargetSet, error) {
 
 func (b *BalancerServiceOp) ListTargetSets(input *ListTargetSetsInput) (*ListTargetSetsOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/targetSet")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -1181,10 +1057,6 @@ func (b *BalancerServiceOp) ListTargetSets(input *ListTargetSetsInput) (*ListTar
 func (b *BalancerServiceOp) CreateTargetSet(input *CreateTargetSetInput) (*CreateTargetSetOutput, error) {
 	r := b.client.newRequest("POST", "/loadBalancer/targetSet")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
@@ -1211,12 +1083,6 @@ func (b *BalancerServiceOp) ReadTargetSet(input *ReadTargetSetInput) (*ReadTarge
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1244,10 +1110,6 @@ func (b *BalancerServiceOp) UpdateTargetSet(input *UpdateTargetSetInput) (*Updat
 	r := b.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1268,10 +1130,6 @@ func (b *BalancerServiceOp) DeleteTargetSet(input *DeleteTargetSetInput) (*Delet
 	r := b.client.newRequest("DELETE", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1283,7 +1141,6 @@ func (b *BalancerServiceOp) DeleteTargetSet(input *DeleteTargetSetInput) (*Delet
 
 type Target struct {
 	ID          *string    `json:"id,omitempty"`
-	AccountID   *string    `json:"accountId,omitempty"`
 	BalancerID  *string    `json:"balancerId,omitempty"`
 	TargetSetID *string    `json:"targetSetId,omitempty"`
 	Name        *string    `json:"name,omitempty"`
@@ -1302,7 +1159,6 @@ type Status struct {
 }
 
 type ListTargetsInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	BalancerID  *string `json:"balancerId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 }
@@ -1312,7 +1168,6 @@ type ListTargetsOutput struct {
 }
 
 type CreateTargetInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 	Target      *Target `json:"target,omitempty"`
 }
@@ -1322,7 +1177,6 @@ type CreateTargetOutput struct {
 }
 
 type ReadTargetInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 	TargetID    *string `json:"targetId,omitempty"`
 }
@@ -1332,7 +1186,6 @@ type ReadTargetOutput struct {
 }
 
 type UpdateTargetInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 	Target      *Target `json:"target,omitempty"`
 }
@@ -1340,7 +1193,6 @@ type UpdateTargetInput struct {
 type UpdateTargetOutput struct{}
 
 type DeleteTargetInput struct {
-	AccountID   *string `json:"accountId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
 	TargetID    *string `json:"targetId,omitempty"`
 }
@@ -1384,11 +1236,6 @@ func targetsFromHttpResponse(resp *http.Response) ([]*Target, error) {
 
 func (b *BalancerServiceOp) ListTargets(input *ListTargetsInput) (*ListTargetsOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/target")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -1418,10 +1265,6 @@ func (b *BalancerServiceOp) CreateTarget(input *CreateTargetInput) (*CreateTarge
 	r := b.client.newRequest("POST", "/loadBalancer/target")
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1447,12 +1290,6 @@ func (b *BalancerServiceOp) ReadTarget(input *ReadTargetInput) (*ReadTargetOutpu
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1480,10 +1317,6 @@ func (b *BalancerServiceOp) UpdateTarget(input *UpdateTargetInput) (*UpdateTarge
 	r := b.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1504,10 +1337,6 @@ func (b *BalancerServiceOp) DeleteTarget(input *DeleteTargetInput) (*DeleteTarge
 	r := b.client.newRequest("DELETE", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1519,7 +1348,6 @@ func (b *BalancerServiceOp) DeleteTarget(input *DeleteTargetInput) (*DeleteTarge
 
 type Runtime struct {
 	ID             *string    `json:"id,omitempty"`
-	AccountID      *string    `json:"accountId,omitempty"`
 	DeploymentID   *string    `json:"deploymentId,omitempty"`
 	IPAddr         *string    `json:"ip,omitempty"`
 	Version        *string    `json:"version,omitempty"`
@@ -1532,7 +1360,6 @@ type Runtime struct {
 }
 
 type ListRuntimesInput struct {
-	AccountID    *string `json:"accountId,omitempty"`
 	DeploymentID *string `json:"deploymentId,omitempty"`
 }
 
@@ -1541,7 +1368,6 @@ type ListRuntimesOutput struct {
 }
 
 type ReadRuntimeInput struct {
-	AccountID *string `json:"accountId,omitempty"`
 	RuntimeID *string `json:"runtimeId,omitempty"`
 }
 
@@ -1586,11 +1412,6 @@ func runtimesFromHttpResponse(resp *http.Response) ([]*Runtime, error) {
 
 func (b *BalancerServiceOp) ListRuntimes(input *ListRuntimesInput) (*ListRuntimesOutput, error) {
 	r := b.client.newRequest("GET", "/loadBalancer/runtime")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	if input.DeploymentID != nil {
 		r.params.Set("deploymentId", StringValue(input.DeploymentID))
@@ -1621,12 +1442,6 @@ func (b *BalancerServiceOp) ReadRuntime(input *ReadRuntimeInput) (*ReadRuntimeOu
 	}
 
 	r := b.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err

@@ -179,13 +179,13 @@ type AwsGroupScalingPolicy struct {
 }
 
 type AwsGroupScalingPolicyAction struct {
-	Type              *string                           `json:"type,omitempty"`
-	Adjustment        *string                           `json:"adjustment,omitempty"`
-	MinTargetCapacity *string                           `json:"minTargetCapacity,omitempty"`
-	MaxTargetCapacity *string                           `json:"maxTargetCapacity,omitempty"`
-	Maximum           *string                           `json:"maximum,omitempty"`
-	Minimum           *string                           `json:"minimum,omitempty"`
-	Target            *string                           `json:"target,omitempty"`
+	Type              *string `json:"type,omitempty"`
+	Adjustment        *string `json:"adjustment,omitempty"`
+	MinTargetCapacity *string `json:"minTargetCapacity,omitempty"`
+	MaxTargetCapacity *string `json:"maxTargetCapacity,omitempty"`
+	Maximum           *string `json:"maximum,omitempty"`
+	Minimum           *string `json:"minimum,omitempty"`
+	Target            *string `json:"target,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -401,7 +401,7 @@ type CreateAwsGroupOutput struct {
 }
 
 type ReadAwsGroupInput struct {
-	ID *string `json:"groupId,omitempty"`
+	GroupID *string `json:"groupId,omitempty"`
 }
 
 type ReadAwsGroupOutput struct {
@@ -417,13 +417,13 @@ type UpdateAwsGroupOutput struct {
 }
 
 type DeleteAwsGroupInput struct {
-	ID *string `json:"groupId,omitempty"`
+	GroupID *string `json:"groupId,omitempty"`
 }
 
 type DeleteAwsGroupOutput struct{}
 
 type StatusAwsGroupInput struct {
-	ID *string `json:"groupId,omitempty"`
+	GroupID *string `json:"groupId,omitempty"`
 }
 
 type StatusAwsGroupOutput struct {
@@ -431,7 +431,7 @@ type StatusAwsGroupOutput struct {
 }
 
 type DetachAwsGroupInput struct {
-	ID                            *string  `json:"groupId,omitempty"`
+	GroupID                       *string  `json:"groupId,omitempty"`
 	InstanceIDs                   []string `json:"instancesToDetach,omitempty"`
 	ShouldDecrementTargetCapacity *bool    `json:"shouldDecrementTargetCapacity,omitempty"`
 	ShouldTerminateInstances      *bool    `json:"shouldTerminateInstances,omitempty"`
@@ -512,7 +512,6 @@ func awsInstancesFromHttpResponse(resp *http.Response) ([]*AwsInstance, error) {
 
 func (s *AwsGroupServiceOp) List(input *ListAwsGroupInput) (*ListAwsGroupOutput, error) {
 	r := s.client.newRequest("GET", "/aws/ec2/group")
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -552,7 +551,7 @@ func (s *AwsGroupServiceOp) Create(input *CreateAwsGroupInput) (*CreateAwsGroupO
 
 func (s *AwsGroupServiceOp) Read(input *ReadAwsGroupInput) (*ReadAwsGroupOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}", map[string]string{
-		"groupId": StringValue(input.ID),
+		"groupId": StringValue(input.GroupID),
 	})
 	if err != nil {
 		return nil, err
@@ -613,7 +612,7 @@ func (s *AwsGroupServiceOp) Update(input *UpdateAwsGroupInput) (*UpdateAwsGroupO
 
 func (s *AwsGroupServiceOp) Delete(input *DeleteAwsGroupInput) (*DeleteAwsGroupOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}", map[string]string{
-		"groupId": StringValue(input.ID),
+		"groupId": StringValue(input.GroupID),
 	})
 	if err != nil {
 		return nil, err
@@ -631,7 +630,7 @@ func (s *AwsGroupServiceOp) Delete(input *DeleteAwsGroupInput) (*DeleteAwsGroupO
 
 func (s *AwsGroupServiceOp) Status(input *StatusAwsGroupInput) (*StatusAwsGroupOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/status", map[string]string{
-		"groupId": StringValue(input.ID),
+		"groupId": StringValue(input.GroupID),
 	})
 	if err != nil {
 		return nil, err
@@ -654,14 +653,14 @@ func (s *AwsGroupServiceOp) Status(input *StatusAwsGroupInput) (*StatusAwsGroupO
 
 func (s *AwsGroupServiceOp) Detach(input *DetachAwsGroupInput) (*DetachAwsGroupOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/detachInstances", map[string]string{
-		"groupId": StringValue(input.ID),
+		"groupId": StringValue(input.GroupID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do not need the ID anymore so let's drop it.
-	input.ID = nil
+	input.GroupID = nil
 
 	r := s.client.newRequest("PUT", path)
 	r.obj = input

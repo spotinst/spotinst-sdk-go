@@ -29,23 +29,19 @@ var _ DeploymentService = &DeploymentServiceOp{}
 
 type Deployment struct {
 	ID        *string    `json:"id,omitempty"`
-	AccountID *string    `json:"accountId,omitempty"`
 	Name      *string    `json:"name,omitempty"`
 	Tags      []*Tag     `json:"tags,omitempty"`
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
 
-type ListDeploymentsInput struct {
-	AccountID *string `json:"accountId,omitempty"`
-}
+type ListDeploymentsInput struct{}
 
 type ListDeploymentsOutput struct {
 	Deployments []*Deployment `json:"deployments,omitempty"`
 }
 
 type CreateDeploymentInput struct {
-	AccountID  *string     `json:"accountId,omitempty"`
 	Deployment *Deployment `json:"deployment,omitempty"`
 }
 
@@ -54,7 +50,6 @@ type CreateDeploymentOutput struct {
 }
 
 type ReadDeploymentInput struct {
-	AccountID    *string `json:"accountId,omitempty"`
 	DeploymentID *string `json:"deploymentId,omitempty"`
 }
 
@@ -63,14 +58,12 @@ type ReadDeploymentOutput struct {
 }
 
 type UpdateDeploymentInput struct {
-	AccountID  *string     `json:"accountId,omitempty"`
 	Deployment *Deployment `json:"deployment,omitempty"`
 }
 
 type UpdateDeploymentOutput struct{}
 
 type DeleteDeploymentInput struct {
-	AccountID    *string `json:"accountId,omitempty"`
 	DeploymentID *string `json:"deployment,omitempty"`
 }
 
@@ -113,12 +106,6 @@ func deploymentsFromHttpResponse(resp *http.Response) ([]*Deployment, error) {
 
 func (c *DeploymentServiceOp) ListDeployments(input *ListDeploymentsInput) (*ListDeploymentsOutput, error) {
 	r := c.client.newRequest("GET", "/loadBalancer/deployment")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -138,10 +125,6 @@ func (c *DeploymentServiceOp) ListDeployments(input *ListDeploymentsInput) (*Lis
 func (c *DeploymentServiceOp) CreateDeployment(input *CreateDeploymentInput) (*CreateDeploymentOutput, error) {
 	r := c.client.newRequest("POST", "/loadBalancer/deployment")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
@@ -168,12 +151,6 @@ func (c *DeploymentServiceOp) ReadDeployment(input *ReadDeploymentInput) (*ReadD
 	}
 
 	r := c.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -201,10 +178,6 @@ func (c *DeploymentServiceOp) UpdateDeployment(input *UpdateDeploymentInput) (*U
 	r := c.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -224,10 +197,6 @@ func (c *DeploymentServiceOp) DeleteDeployment(input *DeleteDeploymentInput) (*D
 
 	r := c.client.newRequest("DELETE", path)
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {

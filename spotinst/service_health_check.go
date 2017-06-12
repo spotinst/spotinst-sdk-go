@@ -87,7 +87,7 @@ type CreateHealthCheckOutput struct {
 }
 
 type ReadHealthCheckInput struct {
-	ID *string `json:"healthCheckId,omitempty"`
+	HealthCheckID *string `json:"healthCheckId,omitempty"`
 }
 
 type ReadHealthCheckOutput struct {
@@ -103,7 +103,7 @@ type UpdateHealthCheckOutput struct {
 }
 
 type DeleteHealthCheckInput struct {
-	ID *string `json:"healthCheckId,omitempty"`
+	HealthCheckID *string `json:"healthCheckId,omitempty"`
 }
 
 type DeleteHealthCheckOutput struct{}
@@ -145,7 +145,6 @@ func healthChecksFromHttpResponse(resp *http.Response) ([]*HealthCheck, error) {
 
 func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthCheckOutput, error) {
 	r := s.client.newRequest("GET", "/healthCheck")
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err

@@ -29,7 +29,6 @@ var _ CertificateService = &CertificateServiceOp{}
 
 type Certificate struct {
 	ID           *string    `json:"id,omitempty"`
-	AccountID    *string    `json:"accountId,omitempty"`
 	Name         *string    `json:"name,omitempty"`
 	CertPEMBlock *string    `json:"certificatePemBlock,omitempty"`
 	KeyPEMBlock  *string    `json:"keyPemBlock,omitempty"`
@@ -38,16 +37,13 @@ type Certificate struct {
 	UpdatedAt    *time.Time `json:"updatedAt,omitempty"`
 }
 
-type ListCertificatesInput struct {
-	AccountID *string `json:"accountId,omitempty"`
-}
+type ListCertificatesInput struct{}
 
 type ListCertificatesOutput struct {
 	Certificates []*Certificate `json:"certificates,omitempty"`
 }
 
 type CreateCertificateInput struct {
-	AccountID   *string      `json:"accountId,omitempty"`
 	Certificate *Certificate `json:"certificate,omitempty"`
 }
 
@@ -56,7 +52,6 @@ type CreateCertificateOutput struct {
 }
 
 type ReadCertificateInput struct {
-	AccountID     *string `json:"accountId,omitempty"`
 	CertificateID *string `json:"certificateId,omitempty"`
 }
 
@@ -65,14 +60,12 @@ type ReadCertificateOutput struct {
 }
 
 type UpdateCertificateInput struct {
-	AccountID   *string      `json:"accountId,omitempty"`
 	Certificate *Certificate `json:"certificate,omitempty"`
 }
 
 type UpdateCertificateOutput struct{}
 
 type DeleteCertificateInput struct {
-	AccountID     *string `json:"accountId,omitempty"`
 	CertificateID *string `json:"certificateId,omitempty"`
 }
 
@@ -115,12 +108,6 @@ func certificatesFromHttpResponse(resp *http.Response) ([]*Certificate, error) {
 
 func (c *CertificateServiceOp) ListCertificates(input *ListCertificatesInput) (*ListCertificatesOutput, error) {
 	r := c.client.newRequest("GET", "/loadBalancer/certificate")
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -140,10 +127,6 @@ func (c *CertificateServiceOp) ListCertificates(input *ListCertificatesInput) (*
 func (c *CertificateServiceOp) CreateCertificate(input *CreateCertificateInput) (*CreateCertificateOutput, error) {
 	r := c.client.newRequest("POST", "/loadBalancer/certificate")
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
@@ -170,12 +153,6 @@ func (c *CertificateServiceOp) ReadCertificate(input *ReadCertificateInput) (*Re
 	}
 
 	r := c.client.newRequest("GET", path)
-	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -203,10 +180,6 @@ func (c *CertificateServiceOp) UpdateCertificate(input *UpdateCertificateInput) 
 	r := c.client.newRequest("PUT", path)
 	r.obj = input
 
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -226,10 +199,6 @@ func (c *CertificateServiceOp) DeleteCertificate(input *DeleteCertificateInput) 
 
 	r := c.client.newRequest("DELETE", path)
 	r.obj = input
-
-	if input.AccountID != nil {
-		r.params.Set("accountId", StringValue(input.AccountID))
-	}
 
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {

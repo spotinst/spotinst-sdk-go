@@ -3,6 +3,7 @@ package spotinst
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/micro/micro/bot/input"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -140,10 +141,11 @@ func (c *Client) newRequest(method, path string) *request {
 		params: make(map[string][]string),
 		header: make(http.Header),
 	}
-	if creds := c.config.credentials; creds != nil {
-		if token := creds.Token; token != "" {
-			req.header.Set("Authorization", "Bearer "+token)
-		}
+	if token := c.config.token; token != "" {
+		req.header.Set("Authorization", "Bearer "+token)
+	}
+	if accountID := c.config.accountID; accountID != "" {
+		req.params.Set("accountId", accountID)
 	}
 	return req
 }

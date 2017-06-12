@@ -67,7 +67,7 @@ type CreateSubscriptionOutput struct {
 }
 
 type ReadSubscriptionInput struct {
-	ID *string `json:"subscriptionId,omitempty"`
+	SubscriptionID *string `json:"subscriptionId,omitempty"`
 }
 
 type ReadSubscriptionOutput struct {
@@ -83,7 +83,7 @@ type UpdateSubscriptionOutput struct {
 }
 
 type DeleteSubscriptionInput struct {
-	ID *string `json:"subscriptionId,omitempty"`
+	SubscriptionID *string `json:"subscriptionId,omitempty"`
 }
 
 type DeleteSubscriptionOutput struct{}
@@ -125,7 +125,6 @@ func subscriptionsFromHttpResponse(resp *http.Response) ([]*Subscription, error)
 
 func (s *SubscriptionServiceOp) List(input *ListSubscriptionInput) (*ListSubscriptionOutput, error) {
 	r := s.client.newRequest("GET", "/events/subscription")
-
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
