@@ -3,7 +3,6 @@ package spotinst
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/micro/micro/bot/input"
 	"io/ioutil"
 	"net"
 	"net/http"
