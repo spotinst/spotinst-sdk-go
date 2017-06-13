@@ -184,7 +184,7 @@ func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHea
 
 func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthCheckOutput, error) {
 	path, err := uritemplates.Expand("/healthCheck/{healthCheckId}", map[string]string{
-		"healthCheckId": StringValue(input.ID),
+		"healthCheckId": StringValue(input.HealthCheckID),
 	})
 	if err != nil {
 		return nil, err
@@ -245,7 +245,7 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 
 func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHealthCheckOutput, error) {
 	path, err := uritemplates.Expand("/healthCheck/{healthCheckId}", map[string]string{
-		"healthCheckId": StringValue(input.ID),
+		"healthCheckId": StringValue(input.HealthCheckID),
 	})
 	if err != nil {
 		return nil, err

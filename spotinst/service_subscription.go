@@ -164,7 +164,7 @@ func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateS
 
 func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscriptionOutput, error) {
 	path, err := uritemplates.Expand("/events/subscription/{subscriptionId}", map[string]string{
-		"subscriptionId": StringValue(input.ID),
+		"subscriptionId": StringValue(input.SubscriptionID),
 	})
 	if err != nil {
 		return nil, err
@@ -225,7 +225,7 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 
 func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteSubscriptionOutput, error) {
 	path, err := uritemplates.Expand("/events/subscription/{subscriptionId}", map[string]string{
-		"subscriptionId": StringValue(input.ID),
+		"subscriptionId": StringValue(input.SubscriptionID),
 	})
 	if err != nil {
 		return nil, err
