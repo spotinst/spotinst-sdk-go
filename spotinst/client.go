@@ -1,9 +1,6 @@
 package spotinst
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net"
 	"net/http"
 	"net/http/httputil"
