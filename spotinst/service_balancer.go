@@ -26,14 +26,20 @@ const (
 	ProtocolHTTP2
 )
 
-var protocolName = map[Protocol]string{
+var Protocol_name = map[Protocol]string{
 	ProtocolHTTP:  "HTTP",
 	ProtocolHTTPS: "HTTPS",
 	ProtocolHTTP2: "HTTP2",
 }
 
+var Protocol_value = map[string]Protocol{
+	"HTTP":  ProtocolHTTP,
+	"HTTPS": ProtocolHTTPS,
+	"HTTP2": ProtocolHTTP2,
+}
+
 func (p Protocol) String() string {
-	return protocolName[p]
+	return Protocol_name[p]
 }
 
 // A ReadinessStatus represents the readiness status of a target.
@@ -47,13 +53,18 @@ const (
 	StatusMaintenance
 )
 
-var readinessStatusName = map[ReadinessStatus]string{
+var ReadinessStatus_name = map[ReadinessStatus]string{
 	StatusReady:       "READY",
 	StatusMaintenance: "MAINTENANCE",
 }
 
+var ReadinessStatus_value = map[string]ReadinessStatus{
+	"READY":       StatusReady,
+	"MAINTENANCE": StatusMaintenance,
+}
+
 func (s ReadinessStatus) String() string {
-	return readinessStatusName[s]
+	return ReadinessStatus_name[s]
 }
 
 // A HealthinessStatus represents the healthiness status of a target.
@@ -70,14 +81,20 @@ const (
 	StatusUnhealthy
 )
 
-var healthinessStatusName = map[HealthinessStatus]string{
+var HealthinessStatus_name = map[HealthinessStatus]string{
 	StatusUnknown:   "UNKNOWN",
 	StatusHealthy:   "HEALTHY",
 	StatusUnhealthy: "UNHEALTHY",
 }
 
+var HealthinessStatus_value = map[string]HealthinessStatus{
+	"UNKNOWN":   StatusUnknown,
+	"HEALTHY":   StatusHealthy,
+	"UNHEALTHY": StatusUnhealthy,
+}
+
 func (s HealthinessStatus) String() string {
-	return healthinessStatusName[s]
+	return HealthinessStatus_name[s]
 }
 
 // A Strategy represents the load balancing methods used to determine which
@@ -105,15 +122,22 @@ const (
 	StrategyIPHash
 )
 
-var strategyName = map[Strategy]string{
+var Strategy_name = map[Strategy]string{
 	StrategyRandom:     "RANDOM",
 	StrategyRoundRobin: "ROUNDROBIN",
 	StrategyLeastConn:  "LEASTCONN",
 	StrategyIPHash:     "IPHASH",
 }
 
+var Strategy_value = map[string]Strategy{
+	"RANDOM":     StrategyRandom,
+	"ROUNDROBIN": StrategyRoundRobin,
+	"LEASTCONN":  StrategyLeastConn,
+	"IPHASH":     StrategyIPHash,
+}
+
 func (s Strategy) String() string {
-	return strategyName[s]
+	return Strategy_name[s]
 }
 
 // BalancerService is an interface for interfacing with the balancer
