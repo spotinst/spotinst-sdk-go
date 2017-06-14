@@ -71,11 +71,6 @@ type clientConfig struct {
 	tracelog Logger
 }
 
-// credentials is used to configure the credentials used by a client.
-type credentials struct {
-	Token string `json:"token"`
-}
-
 // ClientOptionFunc is a function that configures a Client.
 // It is used in NewClient.
 type ClientOptionFunc func(*clientConfig)
