@@ -287,22 +287,23 @@ type AwsGroupComputeAvailabilityZone struct {
 }
 
 type AwsGroupComputeLaunchSpecification struct {
-	LoadBalancerNames      []string                            `json:"loadBalancerNames,omitempty"`
-	LoadBalancersConfig    *AwsGroupComputeLoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
-	SecurityGroupIDs       []string                            `json:"securityGroupIds,omitempty"`
-	HealthCheckType        *string                             `json:"healthCheckType,omitempty"`
-	HealthCheckGracePeriod *int                                `json:"healthCheckGracePeriod,omitempty"`
-	ImageID                *string                             `json:"imageId,omitempty"`
-	KeyPair                *string                             `json:"keyPair,omitempty"`
-	UserData               *string                             `json:"userData,omitempty"`
-	ShutdownScript         *string                             `json:"shutdownScript,omitempty"`
-	Tenancy                *string                             `json:"tenancy,omitempty"`
-	Monitoring             *bool                               `json:"monitoring,omitempty"`
-	EBSOptimized           *bool                               `json:"ebsOptimized,omitempty"`
-	IamInstanceProfile     *AwsGroupComputeIamInstanceProfile  `json:"iamRole,omitempty"`
-	BlockDevices           []*AwsGroupComputeBlockDevice       `json:"blockDeviceMappings,omitempty"`
-	NetworkInterfaces      []*AwsGroupComputeNetworkInterface  `json:"networkInterfaces,omitempty"`
-	Tags                   []*AwsGroupComputeTag               `json:"tags,omitempty"`
+	LoadBalancerNames                             []string                            `json:"loadBalancerNames,omitempty"`
+	LoadBalancersConfig                           *AwsGroupComputeLoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
+	SecurityGroupIDs                              []string                            `json:"securityGroupIds,omitempty"`
+	HealthCheckType                               *string                             `json:"healthCheckType,omitempty"`
+	HealthCheckGracePeriod                        *int                                `json:"healthCheckGracePeriod,omitempty"`
+	HealthCheckUnhealthyDurationBeforeReplacement *int                                `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
+	ImageID                                       *string                             `json:"imageId,omitempty"`
+	KeyPair                                       *string                             `json:"keyPair,omitempty"`
+	UserData                                      *string                             `json:"userData,omitempty"`
+	ShutdownScript                                *string                             `json:"shutdownScript,omitempty"`
+	Tenancy                                       *string                             `json:"tenancy,omitempty"`
+	Monitoring                                    *bool                               `json:"monitoring,omitempty"`
+	EBSOptimized                                  *bool                               `json:"ebsOptimized,omitempty"`
+	IamInstanceProfile                            *AwsGroupComputeIamInstanceProfile  `json:"iamRole,omitempty"`
+	BlockDevices                                  []*AwsGroupComputeBlockDevice       `json:"blockDeviceMappings,omitempty"`
+	NetworkInterfaces                             []*AwsGroupComputeNetworkInterface  `json:"networkInterfaces,omitempty"`
+	Tags                                          []*AwsGroupComputeTag               `json:"tags,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1645,6 +1646,13 @@ func (o *AwsGroupComputeLaunchSpecification) SetHealthCheckType(v *string) *AwsG
 func (o *AwsGroupComputeLaunchSpecification) SetHealthCheckGracePeriod(v *int) *AwsGroupComputeLaunchSpecification {
 	if o.HealthCheckGracePeriod = v; v == nil {
 		o.nullFields = append(o.nullFields, "HealthCheckGracePeriod")
+	}
+	return o
+}
+
+func (o *AwsGroupComputeLaunchSpecification) SetHealthCheckUnhealthyDurationBeforeReplacement(v *int) *AwsGroupComputeLaunchSpecification {
+	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; v == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
 	}
 	return o
 }
