@@ -7,7 +7,7 @@ import (
 
 const (
 	// SDKVersion is the current version of the SDK.
-	SDKVersion = "2.2.6"
+	SDKVersion = "2.2.7"
 
 	// SDKName is the name of the SDK.
 	SDKName = "spotinst-sdk-go"
