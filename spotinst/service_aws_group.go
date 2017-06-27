@@ -387,6 +387,11 @@ type AwsInstance struct {
 	CreatedAt        *time.Time `json:"createdAt,omitempty"`
 }
 
+type AwsGroupRollStrategy struct {
+	Action                        *string                       `json:"action,omitempty"`
+	ShouldDrainInstances          *bool                         `json:"shouldDrainInstances,omitempty"`
+}
+
 type ListAwsGroupInput struct{}
 
 type ListAwsGroupOutput struct {
@@ -440,6 +445,16 @@ type DetachAwsGroupInput struct {
 }
 
 type DetachAwsGroupOutput struct{}
+
+type RollAwsGroupInput struct{
+	GroupID                       *string                       `json:"groupId,omitempty"`
+	BatchSizePercentage           *int                          `json:"batchSizePercentage,omitempty"`
+	GracePeriod                   *int                          `json:"gracePeriod,omitempty"`
+	HealthCheckType               *string                       `json:"healthCheckType,omitempty"`
+	Strategy                      *AwsGroupRollStrategy         `json:"strategy,omitempty"`
+}
+
+type RollAwsGroupOutput struct{}
 
 func awsGroupFromJSON(in []byte) (*AwsGroup, error) {
 	b := new(AwsGroup)
@@ -673,6 +688,29 @@ func (s *AwsGroupServiceOp) Detach(input *DetachAwsGroupInput) (*DetachAwsGroupO
 	defer resp.Body.Close()
 
 	return &DetachAwsGroupOutput{}, nil
+}
+
+func (s *AwsGroupServiceOp) Roll(input *RollAwsGroupInput) (*RollAwsGroupOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/roll", map[string]string{
+		"groupId": StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := s.client.newRequest("PUT", path)
+	r.obj = input
+
+	_, resp, err := requireOK(s.client.doRequest(r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &RollAwsGroupOutput{}, nil
 }
 
 //region AwsGroup
