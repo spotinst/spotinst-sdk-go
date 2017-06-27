@@ -20,6 +20,7 @@ type AwsGroupService interface {
 	Delete(*DeleteAwsGroupInput) (*DeleteAwsGroupOutput, error)
 	Status(*StatusAwsGroupInput) (*StatusAwsGroupOutput, error)
 	Detach(*DetachAwsGroupInput) (*DetachAwsGroupOutput, error)
+	Roll(input *RollAwsGroupInput) (*RollAwsGroupOutput, error)
 }
 
 // AwsGroupServiceOp handles communication with the balancer related methods
