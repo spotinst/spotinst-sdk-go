@@ -387,9 +387,22 @@ type AwsInstance struct {
 	CreatedAt        *time.Time `json:"createdAt,omitempty"`
 }
 
+type AwsGroupRoll struct {
+	BatchSizePercentage           *int                          `json:"batchSizePercentage,omitempty"`
+	GracePeriod                   *int                          `json:"gracePeriod,omitempty"`
+	HealthCheckType               *string                       `json:"healthCheckType,omitempty"`
+	Strategy                      *AwsGroupRollStrategy         `json:"strategy,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
 type AwsGroupRollStrategy struct {
 	Action                        *string                       `json:"action,omitempty"`
 	ShouldDrainInstances          *bool                         `json:"shouldDrainInstances,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListAwsGroupInput struct{}
@@ -2020,6 +2033,65 @@ func (o *AwsGroupComputeTag) SetKey(v *string) *AwsGroupComputeTag {
 func (o *AwsGroupComputeTag) SetValue(v *string) *AwsGroupComputeTag {
 	if o.Value = v; v == nil {
 		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+//endregion
+
+//region AwsGroupRoll
+func (o *AwsGroupRoll) MarshalJSON() ([]byte, error) {
+	type noMethod AwsGroupRoll
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AwsGroupRoll) SetBatchSizePercentage(v *int) *AwsGroupRoll {
+	if o.BatchSizePercentage = v; v == nil {
+		o.nullFields = append(o.nullFields, "BatchSizePercentage")
+	}
+	return o
+}
+
+func (o *AwsGroupRoll) SetHealthCheckType(v *string) *AwsGroupRoll {
+	if o.HealthCheckType = v; v == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckType")
+	}
+	return o
+}
+
+func (o *AwsGroupRoll) SetGracePeriod(v *int) *AwsGroupRoll {
+	if o.GracePeriod = v; v == nil {
+		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o *AwsGroupRoll) SetStrategy(v *AwsGroupRollStrategy) *AwsGroupRoll {
+	if o.Strategy = v; v == nil {
+		o.nullFields = append(o.nullFields, "Strategy")
+	}
+	return o
+}
+//endregion
+
+//region AwsGroupRollStrategy
+func (o *AwsGroupRollStrategy) MarshalJSON() ([]byte, error) {
+	type noMethod AwsGroupRollStrategy
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AwsGroupRollStrategy) SetAction(v *string) *AwsGroupRollStrategy {
+	if o.Action = v; v == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+func (o *AwsGroupRollStrategy) SetShouldDrainInstances(v *bool) *AwsGroupRollStrategy {
+	if o.ShouldDrainInstances = v; v == nil {
+		o.nullFields = append(o.nullFields, "ShouldDrainInstances")
 	}
 	return o
 }
