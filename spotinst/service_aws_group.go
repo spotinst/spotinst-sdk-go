@@ -389,18 +389,18 @@ type AwsInstance struct {
 }
 
 type AwsGroupRoll struct {
-	BatchSizePercentage           *int                          `json:"batchSizePercentage,omitempty"`
-	GracePeriod                   *int                          `json:"gracePeriod,omitempty"`
-	HealthCheckType               *string                       `json:"healthCheckType,omitempty"`
-	Strategy                      *AwsGroupRollStrategy         `json:"strategy,omitempty"`
+	BatchSizePercentage *int                  `json:"batchSizePercentage,omitempty"`
+	GracePeriod         *int                  `json:"gracePeriod,omitempty"`
+	HealthCheckType     *string               `json:"healthCheckType,omitempty"`
+	Strategy            *AwsGroupRollStrategy `json:"strategy,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
 }
 
 type AwsGroupRollStrategy struct {
-	Action                        *string                       `json:"action,omitempty"`
-	ShouldDrainInstances          *bool                         `json:"shouldDrainInstances,omitempty"`
+	Action               *string `json:"action,omitempty"`
+	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -460,12 +460,12 @@ type DetachAwsGroupInput struct {
 
 type DetachAwsGroupOutput struct{}
 
-type RollAwsGroupInput struct{
-	GroupID                       *string                       `json:"groupId,omitempty"`
-	BatchSizePercentage           *int                          `json:"batchSizePercentage,omitempty"`
-	GracePeriod                   *int                          `json:"gracePeriod,omitempty"`
-	HealthCheckType               *string                       `json:"healthCheckType,omitempty"`
-	Strategy                      *AwsGroupRollStrategy         `json:"strategy,omitempty"`
+type RollAwsGroupInput struct {
+	GroupID             *string               `json:"groupId,omitempty"`
+	BatchSizePercentage *int                  `json:"batchSizePercentage,omitempty"`
+	GracePeriod         *int                  `json:"gracePeriod,omitempty"`
+	HealthCheckType     *string               `json:"healthCheckType,omitempty"`
+	Strategy            *AwsGroupRollStrategy `json:"strategy,omitempty"`
 }
 
 type RollAwsGroupOutput struct{}
@@ -2074,6 +2074,7 @@ func (o *AwsGroupRoll) SetStrategy(v *AwsGroupRollStrategy) *AwsGroupRoll {
 	}
 	return o
 }
+
 //endregion
 
 //region AwsGroupRollStrategy

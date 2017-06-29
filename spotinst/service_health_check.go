@@ -32,7 +32,8 @@ type HealthCheck struct {
 	Name       *string            `json:"name,omitempty"`
 	ResourceID *string            `json:"resourceId,omitempty"`
 	Check      *HealthCheckConfig `json:"check,omitempty"`
-	*HealthCheckProxy
+	ProxyAddr  *string            `json:"proxyAddress,omitempty"`
+	ProxyPort  *int               `json:"proxyPort,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -49,14 +50,6 @@ type HealthCheck struct {
 	// null. It is an error if a field in this list has a non-empty value.
 	// This may be used to include null fields in Patch requests.
 	nullFields []string `json:"-"`
-}
-
-type HealthCheckProxy struct {
-	Addr *string `json:"proxyAddress,omitempty"`
-	Port *int    `json:"proxyPort,omitempty"`
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
 }
 
 type HealthCheckConfig struct {
@@ -297,25 +290,16 @@ func (o *HealthCheck) SetCheck(v *HealthCheckConfig) *HealthCheck {
 	return o
 }
 
-//endregion
-
-//region HealthCheckProxy
-func (o *HealthCheckProxy) MarshalJSON() ([]byte, error) {
-	type noMethod HealthCheckProxy
-	raw := noMethod(*o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *HealthCheckProxy) SetAddr(v *string) *HealthCheckProxy {
-	if o.Addr = v; v == nil {
-		o.nullFields = append(o.nullFields, "Addr")
+func (o *HealthCheck) SetProxyAddr(v *string) *HealthCheck {
+	if o.ProxyAddr = v; v == nil {
+		o.nullFields = append(o.nullFields, "ProxyAddr")
 	}
 	return o
 }
 
-func (o *HealthCheckProxy) SetPort(v *int) *HealthCheckProxy {
-	if o.Port = v; v == nil {
-		o.nullFields = append(o.nullFields, "Port")
+func (o *HealthCheck) SetProxyPort(v *int) *HealthCheck {
+	if o.ProxyPort = v; v == nil {
+		o.nullFields = append(o.nullFields, "ProxyPort")
 	}
 	return o
 }
