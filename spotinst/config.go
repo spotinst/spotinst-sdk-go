@@ -103,8 +103,8 @@ func SetToken(token string) ClientOptionFunc {
 	}
 }
 
-// SetAccountId defines the account ID.
-func SetAccountId(id string) ClientOptionFunc {
+// SetAccount defines the account ID.
+func SetAccount(id string) ClientOptionFunc {
 	return func(c *clientConfig) {
 		c.accountID = id
 	}
