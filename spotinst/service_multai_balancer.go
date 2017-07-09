@@ -1,11 +1,13 @@
 package spotinst
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"time"
 
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
@@ -143,44 +145,44 @@ func (s Strategy) String() string {
 // BalancerService is an interface for interfacing with the balancer
 // targets of the Spotinst API.
 type BalancerService interface {
-	ListBalancers(*ListBalancersInput) (*ListBalancersOutput, error)
-	CreateBalancer(*CreateBalancerInput) (*CreateBalancerOutput, error)
-	ReadBalancer(*ReadBalancerInput) (*ReadBalancerOutput, error)
-	UpdateBalancer(*UpdateBalancerInput) (*UpdateBalancerOutput, error)
-	DeleteBalancer(*DeleteBalancerInput) (*DeleteBalancerOutput, error)
+	ListBalancers(context.Context, *ListBalancersInput) (*ListBalancersOutput, error)
+	CreateBalancer(context.Context, *CreateBalancerInput) (*CreateBalancerOutput, error)
+	ReadBalancer(context.Context, *ReadBalancerInput) (*ReadBalancerOutput, error)
+	UpdateBalancer(context.Context, *UpdateBalancerInput) (*UpdateBalancerOutput, error)
+	DeleteBalancer(context.Context, *DeleteBalancerInput) (*DeleteBalancerOutput, error)
 
-	ListListeners(*ListListenersInput) (*ListListenersOutput, error)
-	CreateListener(*CreateListenerInput) (*CreateListenerOutput, error)
-	ReadListener(*ReadListenerInput) (*ReadListenerOutput, error)
-	UpdateListener(*UpdateListenerInput) (*UpdateListenerOutput, error)
-	DeleteListener(*DeleteListenerInput) (*DeleteListenerOutput, error)
+	ListListeners(context.Context, *ListListenersInput) (*ListListenersOutput, error)
+	CreateListener(context.Context, *CreateListenerInput) (*CreateListenerOutput, error)
+	ReadListener(context.Context, *ReadListenerInput) (*ReadListenerOutput, error)
+	UpdateListener(context.Context, *UpdateListenerInput) (*UpdateListenerOutput, error)
+	DeleteListener(context.Context, *DeleteListenerInput) (*DeleteListenerOutput, error)
 
-	ListRoutingRules(*ListRoutingRulesInput) (*ListRoutingRulesOutput, error)
-	CreateRoutingRule(*CreateRoutingRuleInput) (*CreateRoutingRuleOutput, error)
-	ReadRoutingRule(*ReadRoutingRuleInput) (*ReadRoutingRuleOutput, error)
-	UpdateRoutingRule(*UpdateRoutingRuleInput) (*UpdateRoutingRuleOutput, error)
-	DeleteRoutingRule(*DeleteRoutingRuleInput) (*DeleteRoutingRuleOutput, error)
+	ListRoutingRules(context.Context, *ListRoutingRulesInput) (*ListRoutingRulesOutput, error)
+	CreateRoutingRule(context.Context, *CreateRoutingRuleInput) (*CreateRoutingRuleOutput, error)
+	ReadRoutingRule(context.Context, *ReadRoutingRuleInput) (*ReadRoutingRuleOutput, error)
+	UpdateRoutingRule(context.Context, *UpdateRoutingRuleInput) (*UpdateRoutingRuleOutput, error)
+	DeleteRoutingRule(context.Context, *DeleteRoutingRuleInput) (*DeleteRoutingRuleOutput, error)
 
-	ListMiddlewares(*ListMiddlewaresInput) (*ListMiddlewaresOutput, error)
-	CreateMiddleware(*CreateMiddlewareInput) (*CreateMiddlewareOutput, error)
-	ReadMiddleware(*ReadMiddlewareInput) (*ReadMiddlewareOutput, error)
-	UpdateMiddleware(*UpdateMiddlewareInput) (*UpdateMiddlewareOutput, error)
-	DeleteMiddleware(*DeleteMiddlewareInput) (*DeleteMiddlewareOutput, error)
+	ListMiddlewares(context.Context, *ListMiddlewaresInput) (*ListMiddlewaresOutput, error)
+	CreateMiddleware(context.Context, *CreateMiddlewareInput) (*CreateMiddlewareOutput, error)
+	ReadMiddleware(context.Context, *ReadMiddlewareInput) (*ReadMiddlewareOutput, error)
+	UpdateMiddleware(context.Context, *UpdateMiddlewareInput) (*UpdateMiddlewareOutput, error)
+	DeleteMiddleware(context.Context, *DeleteMiddlewareInput) (*DeleteMiddlewareOutput, error)
 
-	ListTargetSets(*ListTargetSetsInput) (*ListTargetSetsOutput, error)
-	CreateTargetSet(*CreateTargetSetInput) (*CreateTargetSetOutput, error)
-	ReadTargetSet(*ReadTargetSetInput) (*ReadTargetSetOutput, error)
-	UpdateTargetSet(*UpdateTargetSetInput) (*UpdateTargetSetOutput, error)
-	DeleteTargetSet(*DeleteTargetSetInput) (*DeleteTargetSetOutput, error)
+	ListTargetSets(context.Context, *ListTargetSetsInput) (*ListTargetSetsOutput, error)
+	CreateTargetSet(context.Context, *CreateTargetSetInput) (*CreateTargetSetOutput, error)
+	ReadTargetSet(context.Context, *ReadTargetSetInput) (*ReadTargetSetOutput, error)
+	UpdateTargetSet(context.Context, *UpdateTargetSetInput) (*UpdateTargetSetOutput, error)
+	DeleteTargetSet(context.Context, *DeleteTargetSetInput) (*DeleteTargetSetOutput, error)
 
-	ListTargets(*ListTargetsInput) (*ListTargetsOutput, error)
-	CreateTarget(*CreateTargetInput) (*CreateTargetOutput, error)
-	ReadTarget(*ReadTargetInput) (*ReadTargetOutput, error)
-	UpdateTarget(*UpdateTargetInput) (*UpdateTargetOutput, error)
-	DeleteTarget(*DeleteTargetInput) (*DeleteTargetOutput, error)
+	ListTargets(context.Context, *ListTargetsInput) (*ListTargetsOutput, error)
+	CreateTarget(context.Context, *CreateTargetInput) (*CreateTargetOutput, error)
+	ReadTarget(context.Context, *ReadTargetInput) (*ReadTargetOutput, error)
+	UpdateTarget(context.Context, *UpdateTargetInput) (*UpdateTargetOutput, error)
+	DeleteTarget(context.Context, *DeleteTargetInput) (*DeleteTargetOutput, error)
 
-	ListRuntimes(*ListRuntimesInput) (*ListRuntimesOutput, error)
-	ReadRuntime(*ReadRuntimeInput) (*ReadRuntimeOutput, error)
+	ListRuntimes(context.Context, *ListRuntimesInput) (*ListRuntimesOutput, error)
+	ReadRuntime(context.Context, *ReadRuntimeInput) (*ReadRuntimeOutput, error)
 }
 
 // BalancerServiceOp handles communication with the balancer related methods
@@ -201,11 +203,17 @@ type Balancer struct {
 	Tags            []*Tag     `json:"tags,omitempty"`
 	CreatedAt       *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt       *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type Timeouts struct {
 	Idle     *int `json:"idle"`
 	Draining *int `json:"draining"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListBalancersInput struct {
@@ -279,8 +287,8 @@ func balancersFromHttpResponse(resp *http.Response) ([]*Balancer, error) {
 	return balancersFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListBalancers(input *ListBalancersInput) (*ListBalancersOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/balancer")
+func (b *BalancerServiceOp) ListBalancers(ctx context.Context, input *ListBalancersInput) (*ListBalancersOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/balancer")
 
 	if input.DeploymentID != nil {
 		r.params.Set("deploymentId", StringValue(input.DeploymentID))
@@ -302,8 +310,8 @@ func (b *BalancerServiceOp) ListBalancers(input *ListBalancersInput) (*ListBalan
 	}, nil
 }
 
-func (b *BalancerServiceOp) CreateBalancer(input *CreateBalancerInput) (*CreateBalancerOutput, error) {
-	r := b.client.newRequest("POST", "/loadBalancer/balancer")
+func (b *BalancerServiceOp) CreateBalancer(ctx context.Context, input *CreateBalancerInput) (*CreateBalancerOutput, error) {
+	r := b.client.newRequest(ctx, "POST", "/loadBalancer/balancer")
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -322,7 +330,7 @@ func (b *BalancerServiceOp) CreateBalancer(input *CreateBalancerInput) (*CreateB
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadBalancer(input *ReadBalancerInput) (*ReadBalancerOutput, error) {
+func (b *BalancerServiceOp) ReadBalancer(ctx context.Context, input *ReadBalancerInput) (*ReadBalancerOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/balancer/{balancerId}", map[string]string{
 		"balancerId": StringValue(input.BalancerID),
 	})
@@ -330,7 +338,7 @@ func (b *BalancerServiceOp) ReadBalancer(input *ReadBalancerInput) (*ReadBalance
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -347,7 +355,7 @@ func (b *BalancerServiceOp) ReadBalancer(input *ReadBalancerInput) (*ReadBalance
 	}, nil
 }
 
-func (b *BalancerServiceOp) UpdateBalancer(input *UpdateBalancerInput) (*UpdateBalancerOutput, error) {
+func (b *BalancerServiceOp) UpdateBalancer(ctx context.Context, input *UpdateBalancerInput) (*UpdateBalancerOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/balancer/{balancerId}", map[string]string{
 		"balancerId": StringValue(input.Balancer.ID),
 	})
@@ -355,7 +363,7 @@ func (b *BalancerServiceOp) UpdateBalancer(input *UpdateBalancerInput) (*UpdateB
 		return nil, err
 	}
 
-	r := b.client.newRequest("PUT", path)
+	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -367,7 +375,7 @@ func (b *BalancerServiceOp) UpdateBalancer(input *UpdateBalancerInput) (*UpdateB
 	return &UpdateBalancerOutput{}, nil
 }
 
-func (b *BalancerServiceOp) DeleteBalancer(input *DeleteBalancerInput) (*DeleteBalancerOutput, error) {
+func (b *BalancerServiceOp) DeleteBalancer(ctx context.Context, input *DeleteBalancerInput) (*DeleteBalancerOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/balancer/{balancerId}", map[string]string{
 		"balancerId": StringValue(input.BalancerID),
 	})
@@ -375,7 +383,7 @@ func (b *BalancerServiceOp) DeleteBalancer(input *DeleteBalancerInput) (*DeleteB
 		return nil, err
 	}
 
-	r := b.client.newRequest("DELETE", path)
+	r := b.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -387,6 +395,79 @@ func (b *BalancerServiceOp) DeleteBalancer(input *DeleteBalancerInput) (*DeleteB
 	return &DeleteBalancerOutput{}, nil
 }
 
+// region Balancer
+
+func (o *Balancer) MarshalJSON() ([]byte, error) {
+	type noMethod Balancer
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Balancer) SetId(v *string) *Balancer {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Balancer) SetName(v *string) *Balancer {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Balancer) SetDNSRRType(v *string) *Balancer {
+	if o.DNSRRType = v; o.DNSRRType == nil {
+		o.nullFields = append(o.nullFields, "DNSRRType")
+	}
+	return o
+}
+
+func (o *Balancer) SetDNSRRName(v *string) *Balancer {
+	if o.DNSRRName = v; o.DNSRRName == nil {
+		o.nullFields = append(o.nullFields, "DNSRRName")
+	}
+	return o
+}
+
+func (o *Balancer) SetDNSCNAMEAliases(v []string) *Balancer {
+	if o.DNSCNAMEAliases = v; o.DNSCNAMEAliases == nil {
+		o.nullFields = append(o.nullFields, "DNSCNAMEAliases")
+	}
+	return o
+}
+
+func (o *Balancer) SetTimeouts(v *Timeouts) *Balancer {
+	if o.Timeouts = v; o.Timeouts == nil {
+		o.nullFields = append(o.nullFields, "Timeouts")
+	}
+	return o
+}
+
+func (o *Balancer) SetTags(v []*Tag) *Balancer {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+func (o *Balancer) SetCreatedAt(v *time.Time) *Balancer {
+	if o.CreatedAt = v; o.CreatedAt == nil {
+		o.nullFields = append(o.nullFields, "CreatedAt")
+	}
+	return o
+}
+
+func (o *Balancer) SetUpdatedAt(v *time.Time) *Balancer {
+	if o.UpdatedAt = v; o.UpdatedAt == nil {
+		o.nullFields = append(o.nullFields, "UpdatedAt")
+	}
+	return o
+}
+
+// endregion
+
 type Listener struct {
 	ID         *string    `json:"id,omitempty"`
 	BalancerID *string    `json:"balancerId,omitempty"`
@@ -396,6 +477,9 @@ type Listener struct {
 	Tags       []*Tag     `json:"tags,omitempty"`
 	CreatedAt  *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt  *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListListenersInput struct {
@@ -469,8 +553,8 @@ func listenersFromHttpResponse(resp *http.Response) ([]*Listener, error) {
 	return listenersFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListListeners(input *ListListenersInput) (*ListListenersOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/listener")
+func (b *BalancerServiceOp) ListListeners(ctx context.Context, input *ListListenersInput) (*ListListenersOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/listener")
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -492,8 +576,8 @@ func (b *BalancerServiceOp) ListListeners(input *ListListenersInput) (*ListListe
 	}, nil
 }
 
-func (b *BalancerServiceOp) CreateListener(input *CreateListenerInput) (*CreateListenerOutput, error) {
-	r := b.client.newRequest("POST", "/loadBalancer/listener")
+func (b *BalancerServiceOp) CreateListener(ctx context.Context, input *CreateListenerInput) (*CreateListenerOutput, error) {
+	r := b.client.newRequest(ctx, "POST", "/loadBalancer/listener")
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -512,7 +596,7 @@ func (b *BalancerServiceOp) CreateListener(input *CreateListenerInput) (*CreateL
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadListener(input *ReadListenerInput) (*ReadListenerOutput, error) {
+func (b *BalancerServiceOp) ReadListener(ctx context.Context, input *ReadListenerInput) (*ReadListenerOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/listener/{listenerId}", map[string]string{
 		"listenerId": StringValue(input.ListenerID),
 	})
@@ -520,7 +604,7 @@ func (b *BalancerServiceOp) ReadListener(input *ReadListenerInput) (*ReadListene
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -537,7 +621,7 @@ func (b *BalancerServiceOp) ReadListener(input *ReadListenerInput) (*ReadListene
 	}, nil
 }
 
-func (b *BalancerServiceOp) UpdateListener(input *UpdateListenerInput) (*UpdateListenerOutput, error) {
+func (b *BalancerServiceOp) UpdateListener(ctx context.Context, input *UpdateListenerInput) (*UpdateListenerOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/listener/{listenerId}", map[string]string{
 		"listenerId": StringValue(input.Listener.ID),
 	})
@@ -545,7 +629,7 @@ func (b *BalancerServiceOp) UpdateListener(input *UpdateListenerInput) (*UpdateL
 		return nil, err
 	}
 
-	r := b.client.newRequest("PUT", path)
+	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -557,7 +641,7 @@ func (b *BalancerServiceOp) UpdateListener(input *UpdateListenerInput) (*UpdateL
 	return &UpdateListenerOutput{}, nil
 }
 
-func (b *BalancerServiceOp) DeleteListener(input *DeleteListenerInput) (*DeleteListenerOutput, error) {
+func (b *BalancerServiceOp) DeleteListener(ctx context.Context, input *DeleteListenerInput) (*DeleteListenerOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/listener/{listenerId}", map[string]string{
 		"listenerId": StringValue(input.ListenerID),
 	})
@@ -565,7 +649,7 @@ func (b *BalancerServiceOp) DeleteListener(input *DeleteListenerInput) (*DeleteL
 		return nil, err
 	}
 
-	r := b.client.newRequest("DELETE", path)
+	r := b.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -576,6 +660,117 @@ func (b *BalancerServiceOp) DeleteListener(input *DeleteListenerInput) (*DeleteL
 
 	return &DeleteListenerOutput{}, nil
 }
+
+// region Listener
+
+func (o *Listener) MarshalJSON() ([]byte, error) {
+	type noMethod Listener
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Listener) SetId(v *string) *Listener {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Listener) SetBalancerId(v *string) *Listener {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *Listener) SetProtocol(v *string) *Listener {
+	if o.Protocol = v; o.Protocol == nil {
+		o.nullFields = append(o.nullFields, "Protocol")
+	}
+	return o
+}
+
+func (o *Listener) SetPort(v *int) *Listener {
+	if o.Port = v; o.Port == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+	return o
+}
+
+func (o *Listener) SetTLSConfig(v *TLSConfig) *Listener {
+	if o.TLSConfig = v; o.TLSConfig == nil {
+		o.nullFields = append(o.nullFields, "TLSConfig")
+	}
+	return o
+}
+
+func (o *Listener) SetTags(v []*Tag) *Listener {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion
+
+// region TLSConfig
+
+func (o *TLSConfig) MarshalJSON() ([]byte, error) {
+	type noMethod TLSConfig
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TLSConfig) SetCertificateIDs(v []string) *TLSConfig {
+	if o.CertificateIDs = v; o.CertificateIDs == nil {
+		o.nullFields = append(o.nullFields, "CertificateIDs")
+	}
+	return o
+}
+
+func (o *TLSConfig) SetMinVersion(v *string) *TLSConfig {
+	if o.MinVersion = v; o.MinVersion == nil {
+		o.nullFields = append(o.nullFields, "MinVersion")
+	}
+	return o
+}
+
+func (o *TLSConfig) SetMaxVersion(v *string) *TLSConfig {
+	if o.MaxVersion = v; o.MaxVersion == nil {
+		o.nullFields = append(o.nullFields, "MaxVersion")
+	}
+	return o
+}
+
+func (o *TLSConfig) SetSessionTicketsDisabled(v *bool) *TLSConfig {
+	if o.SessionTicketsDisabled = v; o.SessionTicketsDisabled == nil {
+		o.nullFields = append(o.nullFields, "SessionTicketsDisabled")
+	}
+	return o
+}
+
+func (o *TLSConfig) SetPreferServerCipherSuites(v *bool) *TLSConfig {
+	if o.PreferServerCipherSuites = v; o.PreferServerCipherSuites == nil {
+		o.nullFields = append(o.nullFields, "PreferServerCipherSuites")
+	}
+	return o
+}
+
+func (o *TLSConfig) SetCipherSuites(v []string) *TLSConfig {
+	if o.CipherSuites = v; o.CipherSuites == nil {
+		o.nullFields = append(o.nullFields, "CipherSuites")
+	}
+	return o
+}
+
+func (o *TLSConfig) SetInsecureSkipVerify(v *bool) *TLSConfig {
+	if o.InsecureSkipVerify = v; o.InsecureSkipVerify == nil {
+		o.nullFields = append(o.nullFields, "InsecureSkipVerify")
+	}
+	return o
+}
+
+// endregion
 
 type RoutingRule struct {
 	ID            *string    `json:"id,omitempty"`
@@ -589,6 +784,9 @@ type RoutingRule struct {
 	Tags          []*Tag     `json:"tags,omitempty"`
 	CreatedAt     *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt     *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListRoutingRulesInput struct {
@@ -662,8 +860,8 @@ func routingRulesFromHttpResponse(resp *http.Response) ([]*RoutingRule, error) {
 	return routingRulesFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListRoutingRules(input *ListRoutingRulesInput) (*ListRoutingRulesOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/routingRule")
+func (b *BalancerServiceOp) ListRoutingRules(ctx context.Context, input *ListRoutingRulesInput) (*ListRoutingRulesOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/routingRule")
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -685,8 +883,8 @@ func (b *BalancerServiceOp) ListRoutingRules(input *ListRoutingRulesInput) (*Lis
 	}, nil
 }
 
-func (b *BalancerServiceOp) CreateRoutingRule(input *CreateRoutingRuleInput) (*CreateRoutingRuleOutput, error) {
-	r := b.client.newRequest("POST", "/loadBalancer/routingRule")
+func (b *BalancerServiceOp) CreateRoutingRule(ctx context.Context, input *CreateRoutingRuleInput) (*CreateRoutingRuleOutput, error) {
+	r := b.client.newRequest(ctx, "POST", "/loadBalancer/routingRule")
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -705,7 +903,7 @@ func (b *BalancerServiceOp) CreateRoutingRule(input *CreateRoutingRuleInput) (*C
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadRoutingRule(input *ReadRoutingRuleInput) (*ReadRoutingRuleOutput, error) {
+func (b *BalancerServiceOp) ReadRoutingRule(ctx context.Context, input *ReadRoutingRuleInput) (*ReadRoutingRuleOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/routingRule/{routingRuleId}", map[string]string{
 		"routingRuleId": StringValue(input.RoutingRuleID),
 	})
@@ -713,7 +911,7 @@ func (b *BalancerServiceOp) ReadRoutingRule(input *ReadRoutingRuleInput) (*ReadR
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -730,7 +928,7 @@ func (b *BalancerServiceOp) ReadRoutingRule(input *ReadRoutingRuleInput) (*ReadR
 	}, nil
 }
 
-func (b *BalancerServiceOp) UpdateRoutingRule(input *UpdateRoutingRuleInput) (*UpdateRoutingRuleOutput, error) {
+func (b *BalancerServiceOp) UpdateRoutingRule(ctx context.Context, input *UpdateRoutingRuleInput) (*UpdateRoutingRuleOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/routingRule/{routingRuleId}", map[string]string{
 		"routingRuleId": StringValue(input.RoutingRule.ID),
 	})
@@ -738,7 +936,7 @@ func (b *BalancerServiceOp) UpdateRoutingRule(input *UpdateRoutingRuleInput) (*U
 		return nil, err
 	}
 
-	r := b.client.newRequest("PUT", path)
+	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -750,7 +948,7 @@ func (b *BalancerServiceOp) UpdateRoutingRule(input *UpdateRoutingRuleInput) (*U
 	return &UpdateRoutingRuleOutput{}, nil
 }
 
-func (b *BalancerServiceOp) DeleteRoutingRule(input *DeleteRoutingRuleInput) (*DeleteRoutingRuleOutput, error) {
+func (b *BalancerServiceOp) DeleteRoutingRule(ctx context.Context, input *DeleteRoutingRuleInput) (*DeleteRoutingRuleOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/routingRule/{routingRuleId}", map[string]string{
 		"routingRuleId": StringValue(input.RoutingRuleID),
 	})
@@ -758,7 +956,7 @@ func (b *BalancerServiceOp) DeleteRoutingRule(input *DeleteRoutingRuleInput) (*D
 		return nil, err
 	}
 
-	r := b.client.newRequest("DELETE", path)
+	r := b.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -770,6 +968,93 @@ func (b *BalancerServiceOp) DeleteRoutingRule(input *DeleteRoutingRuleInput) (*D
 	return &DeleteRoutingRuleOutput{}, nil
 }
 
+// region RoutingRule
+
+func (o *RoutingRule) MarshalJSON() ([]byte, error) {
+	type noMethod RoutingRule
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RoutingRule) SetId(v *string) *RoutingRule {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetBalancerId(v *string) *RoutingRule {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetListenerId(v *string) *RoutingRule {
+	if o.ListenerID = v; o.ListenerID == nil {
+		o.nullFields = append(o.nullFields, "ListenerID")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetMiddlewareIDs(v []string) *RoutingRule {
+	if o.MiddlewareIDs = v; o.MiddlewareIDs == nil {
+		o.nullFields = append(o.nullFields, "MiddlewareIDs")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetTargetSetIDs(v []string) *RoutingRule {
+	if o.TargetSetIDs = v; o.TargetSetIDs == nil {
+		o.nullFields = append(o.nullFields, "TargetSetIDs")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetPriority(v *int) *RoutingRule {
+	if o.Priority = v; o.Priority == nil {
+		o.nullFields = append(o.nullFields, "Priority")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetStrategy(v *string) *RoutingRule {
+	if o.Strategy = v; o.Strategy == nil {
+		o.nullFields = append(o.nullFields, "Strategy")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetRoute(v *string) *RoutingRule {
+	if o.Route = v; o.Route == nil {
+		o.nullFields = append(o.nullFields, "Route")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetTags(v []*Tag) *RoutingRule {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetCreatedAt(v *time.Time) *RoutingRule {
+	if o.CreatedAt = v; o.CreatedAt == nil {
+		o.nullFields = append(o.nullFields, "CreatedAt")
+	}
+	return o
+}
+
+func (o *RoutingRule) SetUpdatedAt(v *time.Time) *RoutingRule {
+	if o.UpdatedAt = v; o.UpdatedAt == nil {
+		o.nullFields = append(o.nullFields, "UpdatedAt")
+	}
+	return o
+}
+
+// endregion
+
 type Middleware struct {
 	ID         *string         `json:"id,omitempty"`
 	BalancerID *string         `json:"balancerId,omitempty"`
@@ -779,6 +1064,9 @@ type Middleware struct {
 	Tags       []*Tag          `json:"tags,omitempty"`
 	CreatedAt  *time.Time      `json:"createdAt,omitempty"`
 	UpdatedAt  *time.Time      `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListMiddlewaresInput struct {
@@ -852,8 +1140,8 @@ func middlewaresFromHttpResponse(resp *http.Response) ([]*Middleware, error) {
 	return middlewaresFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListMiddlewares(input *ListMiddlewaresInput) (*ListMiddlewaresOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/middleware")
+func (b *BalancerServiceOp) ListMiddlewares(ctx context.Context, input *ListMiddlewaresInput) (*ListMiddlewaresOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/middleware")
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -875,8 +1163,8 @@ func (b *BalancerServiceOp) ListMiddlewares(input *ListMiddlewaresInput) (*ListM
 	}, nil
 }
 
-func (b *BalancerServiceOp) CreateMiddleware(input *CreateMiddlewareInput) (*CreateMiddlewareOutput, error) {
-	r := b.client.newRequest("POST", "/loadBalancer/middleware")
+func (b *BalancerServiceOp) CreateMiddleware(ctx context.Context, input *CreateMiddlewareInput) (*CreateMiddlewareOutput, error) {
+	r := b.client.newRequest(ctx, "POST", "/loadBalancer/middleware")
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -895,7 +1183,7 @@ func (b *BalancerServiceOp) CreateMiddleware(input *CreateMiddlewareInput) (*Cre
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadMiddleware(input *ReadMiddlewareInput) (*ReadMiddlewareOutput, error) {
+func (b *BalancerServiceOp) ReadMiddleware(ctx context.Context, input *ReadMiddlewareInput) (*ReadMiddlewareOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/middleware/{middlewareId}", map[string]string{
 		"middlewareId": StringValue(input.MiddlewareID),
 	})
@@ -903,7 +1191,7 @@ func (b *BalancerServiceOp) ReadMiddleware(input *ReadMiddlewareInput) (*ReadMid
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -920,7 +1208,7 @@ func (b *BalancerServiceOp) ReadMiddleware(input *ReadMiddlewareInput) (*ReadMid
 	}, nil
 }
 
-func (b *BalancerServiceOp) UpdateMiddleware(input *UpdateMiddlewareInput) (*UpdateMiddlewareOutput, error) {
+func (b *BalancerServiceOp) UpdateMiddleware(ctx context.Context, input *UpdateMiddlewareInput) (*UpdateMiddlewareOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/middleware/{middlewareId}", map[string]string{
 		"middlewareId": StringValue(input.Middleware.ID),
 	})
@@ -928,7 +1216,7 @@ func (b *BalancerServiceOp) UpdateMiddleware(input *UpdateMiddlewareInput) (*Upd
 		return nil, err
 	}
 
-	r := b.client.newRequest("PUT", path)
+	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -940,7 +1228,7 @@ func (b *BalancerServiceOp) UpdateMiddleware(input *UpdateMiddlewareInput) (*Upd
 	return &UpdateMiddlewareOutput{}, nil
 }
 
-func (b *BalancerServiceOp) DeleteMiddleware(input *DeleteMiddlewareInput) (*DeleteMiddlewareOutput, error) {
+func (b *BalancerServiceOp) DeleteMiddleware(ctx context.Context, input *DeleteMiddlewareInput) (*DeleteMiddlewareOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/middleware/{middlewareId}", map[string]string{
 		"middlewareId": StringValue(input.MiddlewareID),
 	})
@@ -948,7 +1236,7 @@ func (b *BalancerServiceOp) DeleteMiddleware(input *DeleteMiddlewareInput) (*Del
 		return nil, err
 	}
 
-	r := b.client.newRequest("DELETE", path)
+	r := b.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -959,6 +1247,58 @@ func (b *BalancerServiceOp) DeleteMiddleware(input *DeleteMiddlewareInput) (*Del
 
 	return &DeleteMiddlewareOutput{}, nil
 }
+
+// region Middleware
+
+func (o *Middleware) MarshalJSON() ([]byte, error) {
+	type noMethod Middleware
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Middleware) SetId(v *string) *Middleware {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Middleware) SetBalancerId(v *string) *Middleware {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *Middleware) SetType(v *string) *Middleware {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Middleware) SetPriority(v *int) *Middleware {
+	if o.Priority = v; o.Priority == nil {
+		o.nullFields = append(o.nullFields, "Priority")
+	}
+	return o
+}
+
+func (o *Middleware) SetSpec(v json.RawMessage) *Middleware {
+	if o.Spec = v; o.Spec == nil {
+		o.nullFields = append(o.nullFields, "Spec")
+	}
+	return o
+}
+
+func (o *Middleware) SetTags(v []*Tag) *Middleware {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion
 
 type TargetSet struct {
 	ID           *string               `json:"id,omitempty"`
@@ -972,6 +1312,9 @@ type TargetSet struct {
 	Tags         []*Tag                `json:"tags,omitempty"`
 	CreatedAt    *time.Time            `json:"createdAt,omitempty"`
 	UpdatedAt    *time.Time            `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type TargetSetHealthCheck struct {
@@ -982,6 +1325,9 @@ type TargetSetHealthCheck struct {
 	Interval                *int    `json:"interval,omitempty"`
 	HealthyThresholdCount   *int    `json:"healthyThresholdCount,omitempty"`
 	UnhealthyThresholdCount *int    `json:"unhealthyThresholdCount,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListTargetSetsInput struct {
@@ -1055,8 +1401,8 @@ func targetSetsFromHttpResponse(resp *http.Response) ([]*TargetSet, error) {
 	return targetSetsFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListTargetSets(input *ListTargetSetsInput) (*ListTargetSetsOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/targetSet")
+func (b *BalancerServiceOp) ListTargetSets(ctx context.Context, input *ListTargetSetsInput) (*ListTargetSetsOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/targetSet")
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -1078,8 +1424,8 @@ func (b *BalancerServiceOp) ListTargetSets(input *ListTargetSetsInput) (*ListTar
 	}, nil
 }
 
-func (b *BalancerServiceOp) CreateTargetSet(input *CreateTargetSetInput) (*CreateTargetSetOutput, error) {
-	r := b.client.newRequest("POST", "/loadBalancer/targetSet")
+func (b *BalancerServiceOp) CreateTargetSet(ctx context.Context, input *CreateTargetSetInput) (*CreateTargetSetOutput, error) {
+	r := b.client.newRequest(ctx, "POST", "/loadBalancer/targetSet")
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -1098,7 +1444,7 @@ func (b *BalancerServiceOp) CreateTargetSet(input *CreateTargetSetInput) (*Creat
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadTargetSet(input *ReadTargetSetInput) (*ReadTargetSetOutput, error) {
+func (b *BalancerServiceOp) ReadTargetSet(ctx context.Context, input *ReadTargetSetInput) (*ReadTargetSetOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/targetSet/{targetSetId}", map[string]string{
 		"targetSetId": StringValue(input.TargetSetID),
 	})
@@ -1106,7 +1452,7 @@ func (b *BalancerServiceOp) ReadTargetSet(input *ReadTargetSetInput) (*ReadTarge
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1123,7 +1469,7 @@ func (b *BalancerServiceOp) ReadTargetSet(input *ReadTargetSetInput) (*ReadTarge
 	}, nil
 }
 
-func (b *BalancerServiceOp) UpdateTargetSet(input *UpdateTargetSetInput) (*UpdateTargetSetOutput, error) {
+func (b *BalancerServiceOp) UpdateTargetSet(ctx context.Context, input *UpdateTargetSetInput) (*UpdateTargetSetOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/targetSet/{targetSetId}", map[string]string{
 		"targetSetId": StringValue(input.TargetSet.ID),
 	})
@@ -1131,7 +1477,7 @@ func (b *BalancerServiceOp) UpdateTargetSet(input *UpdateTargetSetInput) (*Updat
 		return nil, err
 	}
 
-	r := b.client.newRequest("PUT", path)
+	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -1143,7 +1489,7 @@ func (b *BalancerServiceOp) UpdateTargetSet(input *UpdateTargetSetInput) (*Updat
 	return &UpdateTargetSetOutput{}, nil
 }
 
-func (b *BalancerServiceOp) DeleteTargetSet(input *DeleteTargetSetInput) (*DeleteTargetSetOutput, error) {
+func (b *BalancerServiceOp) DeleteTargetSet(ctx context.Context, input *DeleteTargetSetInput) (*DeleteTargetSetOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/targetSet/{targetSetId}", map[string]string{
 		"targetSetId": StringValue(input.TargetSetID),
 	})
@@ -1151,7 +1497,7 @@ func (b *BalancerServiceOp) DeleteTargetSet(input *DeleteTargetSetInput) (*Delet
 		return nil, err
 	}
 
-	r := b.client.newRequest("DELETE", path)
+	r := b.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -1162,6 +1508,138 @@ func (b *BalancerServiceOp) DeleteTargetSet(input *DeleteTargetSetInput) (*Delet
 
 	return &DeleteTargetSetOutput{}, nil
 }
+
+// region TargetSet
+
+func (o *TargetSet) MarshalJSON() ([]byte, error) {
+	type noMethod TargetSet
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TargetSet) SetId(v *string) *TargetSet {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *TargetSet) SetBalancerId(v *string) *TargetSet {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *TargetSet) SetDeploymentId(v *string) *TargetSet {
+	if o.DeploymentID = v; o.DeploymentID == nil {
+		o.nullFields = append(o.nullFields, "DeploymentID")
+	}
+	return o
+}
+
+func (o *TargetSet) SetName(v *string) *TargetSet {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *TargetSet) SetProtocol(v *string) *TargetSet {
+	if o.Protocol = v; o.Protocol == nil {
+		o.nullFields = append(o.nullFields, "Protocol")
+	}
+	return o
+}
+
+func (o *TargetSet) SetPort(v *int) *TargetSet {
+	if o.Port = v; o.Port == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+	return o
+}
+
+func (o *TargetSet) SetWeight(v *int) *TargetSet {
+	if o.Weight = v; o.Weight == nil {
+		o.nullFields = append(o.nullFields, "Weight")
+	}
+	return o
+}
+
+func (o *TargetSet) SetHealthCheck(v *TargetSetHealthCheck) *TargetSet {
+	if o.HealthCheck = v; o.HealthCheck == nil {
+		o.nullFields = append(o.nullFields, "HealthCheck")
+	}
+	return o
+}
+
+func (o *TargetSet) SetTags(v []*Tag) *TargetSet {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion
+
+// region TargetSetHealthCheck
+
+func (o *TargetSetHealthCheck) MarshalJSON() ([]byte, error) {
+	type noMethod TargetSetHealthCheck
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TargetSetHealthCheck) SetPath(v *string) *TargetSetHealthCheck {
+	if o.Path = v; o.Path == nil {
+		o.nullFields = append(o.nullFields, "Path")
+	}
+	return o
+}
+
+func (o *TargetSetHealthCheck) SetPort(v *int) *TargetSetHealthCheck {
+	if o.Port = v; o.Port == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+	return o
+}
+
+func (o *TargetSetHealthCheck) SetProtocol(v *string) *TargetSetHealthCheck {
+	if o.Protocol = v; o.Protocol == nil {
+		o.nullFields = append(o.nullFields, "Protocol")
+	}
+	return o
+}
+
+func (o *TargetSetHealthCheck) SetTimeout(v *int) *TargetSetHealthCheck {
+	if o.Timeout = v; o.Timeout == nil {
+		o.nullFields = append(o.nullFields, "Timeout")
+	}
+	return o
+}
+
+func (o *TargetSetHealthCheck) SetInterval(v *int) *TargetSetHealthCheck {
+	if o.Interval = v; o.Interval == nil {
+		o.nullFields = append(o.nullFields, "Interval")
+	}
+	return o
+}
+
+func (o *TargetSetHealthCheck) SetHealthyThresholdCount(v *int) *TargetSetHealthCheck {
+	if o.HealthyThresholdCount = v; o.HealthyThresholdCount == nil {
+		o.nullFields = append(o.nullFields, "HealthyThresholdCount")
+	}
+	return o
+}
+
+func (o *TargetSetHealthCheck) SetUnhealthyThresholdCount(v *int) *TargetSetHealthCheck {
+	if o.UnhealthyThresholdCount = v; o.UnhealthyThresholdCount == nil {
+		o.nullFields = append(o.nullFields, "UnhealthyThresholdCount")
+	}
+	return o
+}
+
+// endregion
 
 type Target struct {
 	ID          *string    `json:"id,omitempty"`
@@ -1175,11 +1653,17 @@ type Target struct {
 	Tags        []*Tag     `json:"tags,omitempty"`
 	CreatedAt   *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt   *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type Status struct {
 	Readiness   *string `json:"readiness"`
 	Healthiness *string `json:"healthiness"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListTargetsInput struct {
@@ -1258,8 +1742,8 @@ func targetsFromHttpResponse(resp *http.Response) ([]*Target, error) {
 	return targetsFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListTargets(input *ListTargetsInput) (*ListTargetsOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/target")
+func (b *BalancerServiceOp) ListTargets(ctx context.Context, input *ListTargetsInput) (*ListTargetsOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/target")
 
 	if input.BalancerID != nil {
 		r.params.Set("balancerId", StringValue(input.BalancerID))
@@ -1285,8 +1769,8 @@ func (b *BalancerServiceOp) ListTargets(input *ListTargetsInput) (*ListTargetsOu
 	}, nil
 }
 
-func (b *BalancerServiceOp) CreateTarget(input *CreateTargetInput) (*CreateTargetOutput, error) {
-	r := b.client.newRequest("POST", "/loadBalancer/target")
+func (b *BalancerServiceOp) CreateTarget(ctx context.Context, input *CreateTargetInput) (*CreateTargetOutput, error) {
+	r := b.client.newRequest(ctx, "POST", "/loadBalancer/target")
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -1305,7 +1789,7 @@ func (b *BalancerServiceOp) CreateTarget(input *CreateTargetInput) (*CreateTarge
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadTarget(input *ReadTargetInput) (*ReadTargetOutput, error) {
+func (b *BalancerServiceOp) ReadTarget(ctx context.Context, input *ReadTargetInput) (*ReadTargetOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/target/{targetId}", map[string]string{
 		"targetId": StringValue(input.TargetID),
 	})
@@ -1313,7 +1797,7 @@ func (b *BalancerServiceOp) ReadTarget(input *ReadTargetInput) (*ReadTargetOutpu
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1330,7 +1814,7 @@ func (b *BalancerServiceOp) ReadTarget(input *ReadTargetInput) (*ReadTargetOutpu
 	}, nil
 }
 
-func (b *BalancerServiceOp) UpdateTarget(input *UpdateTargetInput) (*UpdateTargetOutput, error) {
+func (b *BalancerServiceOp) UpdateTarget(ctx context.Context, input *UpdateTargetInput) (*UpdateTargetOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/target/{targetId}", map[string]string{
 		"targetId": StringValue(input.Target.ID),
 	})
@@ -1338,7 +1822,7 @@ func (b *BalancerServiceOp) UpdateTarget(input *UpdateTargetInput) (*UpdateTarge
 		return nil, err
 	}
 
-	r := b.client.newRequest("PUT", path)
+	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -1350,7 +1834,7 @@ func (b *BalancerServiceOp) UpdateTarget(input *UpdateTargetInput) (*UpdateTarge
 	return &UpdateTargetOutput{}, nil
 }
 
-func (b *BalancerServiceOp) DeleteTarget(input *DeleteTargetInput) (*DeleteTargetOutput, error) {
+func (b *BalancerServiceOp) DeleteTarget(ctx context.Context, input *DeleteTargetInput) (*DeleteTargetOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/target/{targetId}", map[string]string{
 		"targetId": StringValue(input.TargetID),
 	})
@@ -1358,7 +1842,7 @@ func (b *BalancerServiceOp) DeleteTarget(input *DeleteTargetInput) (*DeleteTarge
 		return nil, err
 	}
 
-	r := b.client.newRequest("DELETE", path)
+	r := b.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(b.client.doRequest(r))
@@ -1369,6 +1853,79 @@ func (b *BalancerServiceOp) DeleteTarget(input *DeleteTargetInput) (*DeleteTarge
 
 	return &DeleteTargetOutput{}, nil
 }
+
+// region Target
+
+func (o *Target) MarshalJSON() ([]byte, error) {
+	type noMethod Target
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Target) SetId(v *string) *Target {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Target) SetBalancerId(v *string) *Target {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *Target) SetTargetSetId(v *string) *Target {
+	if o.TargetSetID = v; o.TargetSetID == nil {
+		o.nullFields = append(o.nullFields, "TargetSetID")
+	}
+	return o
+}
+
+func (o *Target) SetName(v *string) *Target {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Target) SetHost(v *string) *Target {
+	if o.Host = v; o.Host == nil {
+		o.nullFields = append(o.nullFields, "Host")
+	}
+	return o
+}
+
+func (o *Target) SetPort(v *int) *Target {
+	if o.Port = v; o.Port == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+	return o
+}
+
+func (o *Target) SetWeight(v *int) *Target {
+	if o.Weight = v; o.Weight == nil {
+		o.nullFields = append(o.nullFields, "Weight")
+	}
+	return o
+}
+
+func (o *Target) SetStatus(v *Status) *Target {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
+	}
+	return o
+}
+
+func (o *Target) SetTags(v []*Tag) *Target {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion
 
 type Runtime struct {
 	ID             *string    `json:"id,omitempty"`
@@ -1381,6 +1938,9 @@ type Runtime struct {
 	Tags           []*Tag     `json:"tags,omitempty"`
 	CreatedAt      *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt      *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListRuntimesInput struct {
@@ -1434,8 +1994,8 @@ func runtimesFromHttpResponse(resp *http.Response) ([]*Runtime, error) {
 	return runtimesFromJSON(body)
 }
 
-func (b *BalancerServiceOp) ListRuntimes(input *ListRuntimesInput) (*ListRuntimesOutput, error) {
-	r := b.client.newRequest("GET", "/loadBalancer/runtime")
+func (b *BalancerServiceOp) ListRuntimes(ctx context.Context, input *ListRuntimesInput) (*ListRuntimesOutput, error) {
+	r := b.client.newRequest(ctx, "GET", "/loadBalancer/runtime")
 
 	if input.DeploymentID != nil {
 		r.params.Set("deploymentId", StringValue(input.DeploymentID))
@@ -1457,7 +2017,7 @@ func (b *BalancerServiceOp) ListRuntimes(input *ListRuntimesInput) (*ListRuntime
 	}, nil
 }
 
-func (b *BalancerServiceOp) ReadRuntime(input *ReadRuntimeInput) (*ReadRuntimeOutput, error) {
+func (b *BalancerServiceOp) ReadRuntime(ctx context.Context, input *ReadRuntimeInput) (*ReadRuntimeOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/runtime/{runtimeId}", map[string]string{
 		"runtimeId": StringValue(input.RuntimeID),
 	})
@@ -1465,7 +2025,7 @@ func (b *BalancerServiceOp) ReadRuntime(input *ReadRuntimeInput) (*ReadRuntimeOu
 		return nil, err
 	}
 
-	r := b.client.newRequest("GET", path)
+	r := b.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1481,3 +2041,41 @@ func (b *BalancerServiceOp) ReadRuntime(input *ReadRuntimeInput) (*ReadRuntimeOu
 		Runtime: rt[0],
 	}, nil
 }
+
+// region Runtime
+
+func (o *Runtime) MarshalJSON() ([]byte, error) {
+	type noMethod Runtime
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Runtime) SetId(v *string) *Runtime {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Runtime) SetDeploymentId(v *string) *Runtime {
+	if o.DeploymentID = v; o.DeploymentID == nil {
+		o.nullFields = append(o.nullFields, "DeploymentID")
+	}
+	return o
+}
+
+func (o *Runtime) SetStatus(v *Status) *Runtime {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
+	}
+	return o
+}
+
+func (o *Runtime) SetTags(v []*Tag) *Runtime {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion

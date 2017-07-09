@@ -1,22 +1,24 @@
 package spotinst
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"time"
 
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
 // DeploymentService is an interface for interfacing with the deployment
 // endpoints of the Spotinst API.
 type DeploymentService interface {
-	ListDeployments(*ListDeploymentsInput) (*ListDeploymentsOutput, error)
-	CreateDeployment(*CreateDeploymentInput) (*CreateDeploymentOutput, error)
-	ReadDeployment(*ReadDeploymentInput) (*ReadDeploymentOutput, error)
-	UpdateDeployment(*UpdateDeploymentInput) (*UpdateDeploymentOutput, error)
-	DeleteDeployment(*DeleteDeploymentInput) (*DeleteDeploymentOutput, error)
+	List(context.Context, *ListDeploymentsInput) (*ListDeploymentsOutput, error)
+	Create(context.Context, *CreateDeploymentInput) (*CreateDeploymentOutput, error)
+	Read(context.Context, *ReadDeploymentInput) (*ReadDeploymentOutput, error)
+	Update(context.Context, *UpdateDeploymentInput) (*UpdateDeploymentOutput, error)
+	Delete(context.Context, *DeleteDeploymentInput) (*DeleteDeploymentOutput, error)
 }
 
 // DeploymentServiceOp handles communication with the deployment related methods
@@ -33,6 +35,9 @@ type Deployment struct {
 	Tags      []*Tag     `json:"tags,omitempty"`
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListDeploymentsInput struct{}
@@ -104,8 +109,8 @@ func deploymentsFromHttpResponse(resp *http.Response) ([]*Deployment, error) {
 	return deploymentsFromJSON(body)
 }
 
-func (c *DeploymentServiceOp) ListDeployments(input *ListDeploymentsInput) (*ListDeploymentsOutput, error) {
-	r := c.client.newRequest("GET", "/loadBalancer/deployment")
+func (c *DeploymentServiceOp) List(ctx context.Context, input *ListDeploymentsInput) (*ListDeploymentsOutput, error) {
+	r := c.client.newRequest(ctx, "GET", "/loadBalancer/deployment")
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -122,8 +127,8 @@ func (c *DeploymentServiceOp) ListDeployments(input *ListDeploymentsInput) (*Lis
 	}, nil
 }
 
-func (c *DeploymentServiceOp) CreateDeployment(input *CreateDeploymentInput) (*CreateDeploymentOutput, error) {
-	r := c.client.newRequest("POST", "/loadBalancer/deployment")
+func (c *DeploymentServiceOp) Create(ctx context.Context, input *CreateDeploymentInput) (*CreateDeploymentOutput, error) {
+	r := c.client.newRequest(ctx, "POST", "/loadBalancer/deployment")
 	r.obj = input
 
 	_, resp, err := requireOK(c.client.doRequest(r))
@@ -142,7 +147,7 @@ func (c *DeploymentServiceOp) CreateDeployment(input *CreateDeploymentInput) (*C
 	}, nil
 }
 
-func (c *DeploymentServiceOp) ReadDeployment(input *ReadDeploymentInput) (*ReadDeploymentOutput, error) {
+func (c *DeploymentServiceOp) Read(ctx context.Context, input *ReadDeploymentInput) (*ReadDeploymentOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/deployment/{deploymentId}", map[string]string{
 		"deploymentId": StringValue(input.DeploymentID),
 	})
@@ -150,7 +155,7 @@ func (c *DeploymentServiceOp) ReadDeployment(input *ReadDeploymentInput) (*ReadD
 		return nil, err
 	}
 
-	r := c.client.newRequest("GET", path)
+	r := c.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -167,7 +172,7 @@ func (c *DeploymentServiceOp) ReadDeployment(input *ReadDeploymentInput) (*ReadD
 	}, nil
 }
 
-func (c *DeploymentServiceOp) UpdateDeployment(input *UpdateDeploymentInput) (*UpdateDeploymentOutput, error) {
+func (c *DeploymentServiceOp) Update(ctx context.Context, input *UpdateDeploymentInput) (*UpdateDeploymentOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/deployment/{deploymentId}", map[string]string{
 		"deploymentId": StringValue(input.Deployment.ID),
 	})
@@ -175,7 +180,7 @@ func (c *DeploymentServiceOp) UpdateDeployment(input *UpdateDeploymentInput) (*U
 		return nil, err
 	}
 
-	r := c.client.newRequest("PUT", path)
+	r := c.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(c.client.doRequest(r))
@@ -187,7 +192,7 @@ func (c *DeploymentServiceOp) UpdateDeployment(input *UpdateDeploymentInput) (*U
 	return &UpdateDeploymentOutput{}, nil
 }
 
-func (c *DeploymentServiceOp) DeleteDeployment(input *DeleteDeploymentInput) (*DeleteDeploymentOutput, error) {
+func (c *DeploymentServiceOp) Delete(ctx context.Context, input *DeleteDeploymentInput) (*DeleteDeploymentOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/deployment/{deploymentId}", map[string]string{
 		"deploymentId": StringValue(input.DeploymentID),
 	})
@@ -195,7 +200,7 @@ func (c *DeploymentServiceOp) DeleteDeployment(input *DeleteDeploymentInput) (*D
 		return nil, err
 	}
 
-	r := c.client.newRequest("DELETE", path)
+	r := c.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(c.client.doRequest(r))
@@ -206,3 +211,34 @@ func (c *DeploymentServiceOp) DeleteDeployment(input *DeleteDeploymentInput) (*D
 
 	return &DeleteDeploymentOutput{}, nil
 }
+
+// region Deployment
+
+func (o *Deployment) MarshalJSON() ([]byte, error) {
+	type noMethod Deployment
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Deployment) SetId(v *string) *Deployment {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Deployment) SetName(v *string) *Deployment {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Deployment) SetTags(v []*Tag) *Deployment {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion

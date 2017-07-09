@@ -1,22 +1,24 @@
 package spotinst
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
 	"time"
 
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
 // CertificateService is an interface for interfacing with the certificate
 // endpoints of the Spotinst API.
 type CertificateService interface {
-	ListCertificates(*ListCertificatesInput) (*ListCertificatesOutput, error)
-	CreateCertificate(*CreateCertificateInput) (*CreateCertificateOutput, error)
-	ReadCertificate(*ReadCertificateInput) (*ReadCertificateOutput, error)
-	UpdateCertificate(*UpdateCertificateInput) (*UpdateCertificateOutput, error)
-	DeleteCertificate(*DeleteCertificateInput) (*DeleteCertificateOutput, error)
+	List(context.Context, *ListCertificatesInput) (*ListCertificatesOutput, error)
+	Create(context.Context, *CreateCertificateInput) (*CreateCertificateOutput, error)
+	Read(context.Context, *ReadCertificateInput) (*ReadCertificateOutput, error)
+	Update(context.Context, *UpdateCertificateInput) (*UpdateCertificateOutput, error)
+	Delete(context.Context, *DeleteCertificateInput) (*DeleteCertificateOutput, error)
 }
 
 // CertificateServiceOp handles communication with the certificate related methods
@@ -35,6 +37,9 @@ type Certificate struct {
 	Tags         []*Tag     `json:"tags,omitempty"`
 	CreatedAt    *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt    *time.Time `json:"updatedAt,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 type ListCertificatesInput struct{}
@@ -106,8 +111,8 @@ func certificatesFromHttpResponse(resp *http.Response) ([]*Certificate, error) {
 	return certificatesFromJSON(body)
 }
 
-func (c *CertificateServiceOp) ListCertificates(input *ListCertificatesInput) (*ListCertificatesOutput, error) {
-	r := c.client.newRequest("GET", "/loadBalancer/certificate")
+func (c *CertificateServiceOp) List(ctx context.Context, input *ListCertificatesInput) (*ListCertificatesOutput, error) {
+	r := c.client.newRequest(ctx, "GET", "/loadBalancer/certificate")
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -124,8 +129,8 @@ func (c *CertificateServiceOp) ListCertificates(input *ListCertificatesInput) (*
 	}, nil
 }
 
-func (c *CertificateServiceOp) CreateCertificate(input *CreateCertificateInput) (*CreateCertificateOutput, error) {
-	r := c.client.newRequest("POST", "/loadBalancer/certificate")
+func (c *CertificateServiceOp) Create(ctx context.Context, input *CreateCertificateInput) (*CreateCertificateOutput, error) {
+	r := c.client.newRequest(ctx, "POST", "/loadBalancer/certificate")
 	r.obj = input
 
 	_, resp, err := requireOK(c.client.doRequest(r))
@@ -144,7 +149,7 @@ func (c *CertificateServiceOp) CreateCertificate(input *CreateCertificateInput) 
 	}, nil
 }
 
-func (c *CertificateServiceOp) ReadCertificate(input *ReadCertificateInput) (*ReadCertificateOutput, error) {
+func (c *CertificateServiceOp) Read(ctx context.Context, input *ReadCertificateInput) (*ReadCertificateOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/certificate/{certificateId}", map[string]string{
 		"certificateId": StringValue(input.CertificateID),
 	})
@@ -152,7 +157,7 @@ func (c *CertificateServiceOp) ReadCertificate(input *ReadCertificateInput) (*Re
 		return nil, err
 	}
 
-	r := c.client.newRequest("GET", path)
+	r := c.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -169,7 +174,7 @@ func (c *CertificateServiceOp) ReadCertificate(input *ReadCertificateInput) (*Re
 	}, nil
 }
 
-func (c *CertificateServiceOp) UpdateCertificate(input *UpdateCertificateInput) (*UpdateCertificateOutput, error) {
+func (c *CertificateServiceOp) Update(ctx context.Context, input *UpdateCertificateInput) (*UpdateCertificateOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/certificate/{certificateId}", map[string]string{
 		"certificateId": StringValue(input.Certificate.ID),
 	})
@@ -177,7 +182,7 @@ func (c *CertificateServiceOp) UpdateCertificate(input *UpdateCertificateInput) 
 		return nil, err
 	}
 
-	r := c.client.newRequest("PUT", path)
+	r := c.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(c.client.doRequest(r))
@@ -189,7 +194,7 @@ func (c *CertificateServiceOp) UpdateCertificate(input *UpdateCertificateInput) 
 	return &UpdateCertificateOutput{}, nil
 }
 
-func (c *CertificateServiceOp) DeleteCertificate(input *DeleteCertificateInput) (*DeleteCertificateOutput, error) {
+func (c *CertificateServiceOp) Delete(ctx context.Context, input *DeleteCertificateInput) (*DeleteCertificateOutput, error) {
 	path, err := uritemplates.Expand("/loadBalancer/certificate/{certificateId}", map[string]string{
 		"certificateId": StringValue(input.CertificateID),
 	})
@@ -197,7 +202,7 @@ func (c *CertificateServiceOp) DeleteCertificate(input *DeleteCertificateInput) 
 		return nil, err
 	}
 
-	r := c.client.newRequest("DELETE", path)
+	r := c.client.newRequest(ctx, "DELETE", path)
 	r.obj = input
 
 	_, resp, err := requireOK(c.client.doRequest(r))
@@ -208,3 +213,48 @@ func (c *CertificateServiceOp) DeleteCertificate(input *DeleteCertificateInput) 
 
 	return &DeleteCertificateOutput{}, nil
 }
+
+// region Certificate
+
+func (o *Certificate) MarshalJSON() ([]byte, error) {
+	type noMethod Certificate
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Certificate) SetId(v *string) *Certificate {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+func (o *Certificate) SetName(v *string) *Certificate {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Certificate) SetCertPEMBlock(v *string) *Certificate {
+	if o.CertPEMBlock = v; o.CertPEMBlock == nil {
+		o.nullFields = append(o.nullFields, "CertPEMBlock")
+	}
+	return o
+}
+
+func (o *Certificate) SetKeyPEMBlock(v *string) *Certificate {
+	if o.KeyPEMBlock = v; o.KeyPEMBlock == nil {
+		o.nullFields = append(o.nullFields, "KeyPEMBlock")
+	}
+	return o
+}
+
+func (o *Certificate) SetTags(v []*Tag) *Certificate {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+// endregion

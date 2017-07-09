@@ -1,6 +1,7 @@
 package spotinst
 
 import (
+	"context"
 	"net"
 	"net/http"
 	"net/http/httputil"
@@ -89,10 +90,8 @@ func defaultConfig(transportFn func() *http.Transport) *clientConfig {
 // Client provides a client to the API.
 type Client struct {
 	config              *clientConfig
-	AwsGroupService     AwsGroupService
-	DeploymentService   DeploymentService
-	CertificateService  CertificateService
-	BalancerService     BalancerService
+	GroupService        GroupService
+	MultaiService       MultaiService
 	HealthCheckService  HealthCheckService
 	SubscriptionService SubscriptionService
 }
@@ -107,28 +106,20 @@ func NewClient(opts ...ClientOptionFunc) (*Client, error) {
 
 	client := &Client{config: config}
 
-	// Elastigroup services.
-	client.AwsGroupService = &AwsGroupServiceOp{client}
-
-	// Load Balancer services.
-	client.DeploymentService = &DeploymentServiceOp{client}
-	client.CertificateService = &CertificateServiceOp{client}
-	client.BalancerService = &BalancerServiceOp{client}
-
-	// Health Check services.
+	client.GroupService = &GroupServiceOp{client}
+	client.MultaiService = &MultaiServiceOp{client}
 	client.HealthCheckService = &HealthCheckServiceOp{client}
-
-	// Subscription services.
 	client.SubscriptionService = &SubscriptionServiceOp{client}
 
 	return client, nil
 }
 
 // newRequest is used to create a new request.
-func (c *Client) newRequest(method, path string) *request {
+func (c *Client) newRequest(ctx context.Context, method, path string) *request {
 	req := &request{
-		config: c.config,
-		method: method,
+		context: ctx,
+		config:  c.config,
+		method:  method,
 		url: &url.URL{
 			Scheme: c.config.scheme,
 			Host:   c.config.address,

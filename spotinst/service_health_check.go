@@ -1,6 +1,7 @@
 package spotinst
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -12,11 +13,11 @@ import (
 // HealthCheck is an interface for interfacing with the HealthCheck
 // endpoints of the Spotinst API.
 type HealthCheckService interface {
-	List(*ListHealthCheckInput) (*ListHealthCheckOutput, error)
-	Create(*CreateHealthCheckInput) (*CreateHealthCheckOutput, error)
-	Read(*ReadHealthCheckInput) (*ReadHealthCheckOutput, error)
-	Update(*UpdateHealthCheckInput) (*UpdateHealthCheckOutput, error)
-	Delete(*DeleteHealthCheckInput) (*DeleteHealthCheckOutput, error)
+	List(context.Context, *ListHealthCheckInput) (*ListHealthCheckOutput, error)
+	Create(context.Context, *CreateHealthCheckInput) (*CreateHealthCheckOutput, error)
+	Read(context.Context, *ReadHealthCheckInput) (*ReadHealthCheckOutput, error)
+	Update(context.Context, *UpdateHealthCheckInput) (*UpdateHealthCheckOutput, error)
+	Delete(context.Context, *DeleteHealthCheckInput) (*DeleteHealthCheckOutput, error)
 }
 
 // HealthCheckServiceOp handles communication with the balancer related methods
@@ -136,8 +137,8 @@ func healthChecksFromHttpResponse(resp *http.Response) ([]*HealthCheck, error) {
 	return healthChecksFromJSON(body)
 }
 
-func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthCheckOutput, error) {
-	r := s.client.newRequest("GET", "/healthCheck")
+func (s *HealthCheckServiceOp) List(ctx context.Context, input *ListHealthCheckInput) (*ListHealthCheckOutput, error) {
+	r := s.client.newRequest(ctx, "GET", "/healthCheck")
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -152,8 +153,8 @@ func (s *HealthCheckServiceOp) List(input *ListHealthCheckInput) (*ListHealthChe
 	return &ListHealthCheckOutput{HealthChecks: hcs}, nil
 }
 
-func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHealthCheckOutput, error) {
-	r := s.client.newRequest("POST", "/healthCheck")
+func (s *HealthCheckServiceOp) Create(ctx context.Context, input *CreateHealthCheckInput) (*CreateHealthCheckOutput, error) {
+	r := s.client.newRequest(ctx, "POST", "/healthCheck")
 	r.obj = input
 
 	_, resp, err := requireOK(s.client.doRequest(r))
@@ -175,7 +176,7 @@ func (s *HealthCheckServiceOp) Create(input *CreateHealthCheckInput) (*CreateHea
 	return output, nil
 }
 
-func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthCheckOutput, error) {
+func (s *HealthCheckServiceOp) Read(ctx context.Context, input *ReadHealthCheckInput) (*ReadHealthCheckOutput, error) {
 	path, err := uritemplates.Expand("/healthCheck/{healthCheckId}", map[string]string{
 		"healthCheckId": StringValue(input.HealthCheckID),
 	})
@@ -183,7 +184,7 @@ func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthChe
 		return nil, err
 	}
 
-	r := s.client.newRequest("GET", path)
+	r := s.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -203,7 +204,7 @@ func (s *HealthCheckServiceOp) Read(input *ReadHealthCheckInput) (*ReadHealthChe
 	return output, nil
 }
 
-func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHealthCheckOutput, error) {
+func (s *HealthCheckServiceOp) Update(ctx context.Context, input *UpdateHealthCheckInput) (*UpdateHealthCheckOutput, error) {
 	path, err := uritemplates.Expand("/healthCheck/{healthCheckId}", map[string]string{
 		"healthCheckId": StringValue(input.HealthCheck.ID),
 	})
@@ -214,7 +215,7 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 	// We do not need the ID anymore so let's drop it.
 	input.HealthCheck.ID = nil
 
-	r := s.client.newRequest("PUT", path)
+	r := s.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(s.client.doRequest(r))
@@ -236,7 +237,7 @@ func (s *HealthCheckServiceOp) Update(input *UpdateHealthCheckInput) (*UpdateHea
 	return output, nil
 }
 
-func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHealthCheckOutput, error) {
+func (s *HealthCheckServiceOp) Delete(ctx context.Context, input *DeleteHealthCheckInput) (*DeleteHealthCheckOutput, error) {
 	path, err := uritemplates.Expand("/healthCheck/{healthCheckId}", map[string]string{
 		"healthCheckId": StringValue(input.HealthCheckID),
 	})
@@ -244,7 +245,7 @@ func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHea
 		return nil, err
 	}
 
-	r := s.client.newRequest("DELETE", path)
+	r := s.client.newRequest(ctx, "DELETE", path)
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -254,7 +255,7 @@ func (s *HealthCheckServiceOp) Delete(input *DeleteHealthCheckInput) (*DeleteHea
 	return &DeleteHealthCheckOutput{}, nil
 }
 
-//region HealthCheck
+// region HealthCheck
 
 func (o *HealthCheck) MarshalJSON() ([]byte, error) {
 	type noMethod HealthCheck
@@ -263,50 +264,50 @@ func (o *HealthCheck) MarshalJSON() ([]byte, error) {
 }
 
 func (o *HealthCheck) SetId(v *string) *HealthCheck {
-	if o.ID = v; v == nil {
+	if o.ID = v; o.ID == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetName(v *string) *HealthCheck {
-	if o.Name = v; v == nil {
+	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetResourceId(v *string) *HealthCheck {
-	if o.ResourceID = v; v == nil {
+	if o.ResourceID = v; o.ResourceID == nil {
 		o.nullFields = append(o.nullFields, "ResourceID")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetCheck(v *HealthCheckConfig) *HealthCheck {
-	if o.Check = v; v == nil {
+	if o.Check = v; o.Check == nil {
 		o.nullFields = append(o.nullFields, "Check")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetProxyAddr(v *string) *HealthCheck {
-	if o.ProxyAddr = v; v == nil {
+	if o.ProxyAddr = v; o.ProxyAddr == nil {
 		o.nullFields = append(o.nullFields, "ProxyAddr")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetProxyPort(v *int) *HealthCheck {
-	if o.ProxyPort = v; v == nil {
+	if o.ProxyPort = v; o.ProxyPort == nil {
 		o.nullFields = append(o.nullFields, "ProxyPort")
 	}
 	return o
 }
 
-//endregion
+// endregion
 
-//region HealthCheckConfig
+// region HealthCheckConfig
 
 func (o *HealthCheckConfig) MarshalJSON() ([]byte, error) {
 	type noMethod HealthCheckConfig
@@ -315,52 +316,52 @@ func (o *HealthCheckConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (o *HealthCheckConfig) SetProtocol(v *string) *HealthCheckConfig {
-	if o.Protocol = v; v == nil {
+	if o.Protocol = v; o.Protocol == nil {
 		o.nullFields = append(o.nullFields, "Protocol")
 	}
 	return o
 }
 
 func (o *HealthCheckConfig) SetEndpoint(v *string) *HealthCheckConfig {
-	if o.Endpoint = v; v == nil {
+	if o.Endpoint = v; o.Endpoint == nil {
 		o.nullFields = append(o.nullFields, "Endpoint")
 	}
 	return o
 }
 
 func (o *HealthCheckConfig) SetPort(v *int) *HealthCheckConfig {
-	if o.Port = v; v == nil {
+	if o.Port = v; o.Port == nil {
 		o.nullFields = append(o.nullFields, "Port")
 	}
 	return o
 }
 
 func (o *HealthCheckConfig) SetInterval(v *int) *HealthCheckConfig {
-	if o.Interval = v; v == nil {
+	if o.Interval = v; o.Interval == nil {
 		o.nullFields = append(o.nullFields, "Interval")
 	}
 	return o
 }
 
 func (o *HealthCheckConfig) SetTimeout(v *int) *HealthCheckConfig {
-	if o.Timeout = v; v == nil {
+	if o.Timeout = v; o.Timeout == nil {
 		o.nullFields = append(o.nullFields, "Timeout")
 	}
 	return o
 }
 
 func (o *HealthCheckConfig) SetHealthy(v *int) *HealthCheckConfig {
-	if o.Healthy = v; v == nil {
+	if o.Healthy = v; o.Healthy == nil {
 		o.nullFields = append(o.nullFields, "Healthy")
 	}
 	return o
 }
 
 func (o *HealthCheckConfig) SetUnhealthy(v *int) *HealthCheckConfig {
-	if o.Unhealthy = v; v == nil {
+	if o.Unhealthy = v; o.Unhealthy == nil {
 		o.nullFields = append(o.nullFields, "Unhealthy")
 	}
 	return o
 }
 
-//endregion
+// endregion

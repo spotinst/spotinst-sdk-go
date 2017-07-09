@@ -104,6 +104,9 @@ type TLSConfig struct {
 	// In this mode, TLS is susceptible to man-in-the-middle attacks.
 	// This should be used only for testing.
 	InsecureSkipVerify *bool `json:"insecureSkipVerify,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
 }
 
 func ParseTLSCipherSuite(suite string) (uint16, error) {

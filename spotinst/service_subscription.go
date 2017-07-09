@@ -1,6 +1,7 @@
 package spotinst
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -12,11 +13,11 @@ import (
 // Subscription is an interface for interfacing with the Subscription
 // endpoints of the Spotinst API.
 type SubscriptionService interface {
-	List(*ListSubscriptionInput) (*ListSubscriptionOutput, error)
-	Create(*CreateSubscriptionInput) (*CreateSubscriptionOutput, error)
-	Read(*ReadSubscriptionInput) (*ReadSubscriptionOutput, error)
-	Update(*UpdateSubscriptionInput) (*UpdateSubscriptionOutput, error)
-	Delete(*DeleteSubscriptionInput) (*DeleteSubscriptionOutput, error)
+	List(context.Context, *ListSubscriptionInput) (*ListSubscriptionOutput, error)
+	Create(context.Context, *CreateSubscriptionInput) (*CreateSubscriptionOutput, error)
+	Read(context.Context, *ReadSubscriptionInput) (*ReadSubscriptionOutput, error)
+	Update(context.Context, *UpdateSubscriptionInput) (*UpdateSubscriptionOutput, error)
+	Delete(context.Context, *DeleteSubscriptionInput) (*DeleteSubscriptionOutput, error)
 }
 
 // SubscriptionServiceOp handles communication with the balancer related methods
@@ -123,8 +124,8 @@ func subscriptionsFromHttpResponse(resp *http.Response) ([]*Subscription, error)
 	return subscriptionsFromJSON(body)
 }
 
-func (s *SubscriptionServiceOp) List(input *ListSubscriptionInput) (*ListSubscriptionOutput, error) {
-	r := s.client.newRequest("GET", "/events/subscription")
+func (s *SubscriptionServiceOp) List(ctx context.Context, input *ListSubscriptionInput) (*ListSubscriptionOutput, error) {
+	r := s.client.newRequest(ctx, "GET", "/events/subscription")
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -139,8 +140,8 @@ func (s *SubscriptionServiceOp) List(input *ListSubscriptionInput) (*ListSubscri
 	return &ListSubscriptionOutput{Subscriptions: gs}, nil
 }
 
-func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateSubscriptionOutput, error) {
-	r := s.client.newRequest("POST", "/events/subscription")
+func (s *SubscriptionServiceOp) Create(ctx context.Context, input *CreateSubscriptionInput) (*CreateSubscriptionOutput, error) {
+	r := s.client.newRequest(ctx, "POST", "/events/subscription")
 	r.obj = input
 
 	_, resp, err := requireOK(s.client.doRequest(r))
@@ -162,7 +163,7 @@ func (s *SubscriptionServiceOp) Create(input *CreateSubscriptionInput) (*CreateS
 	return output, nil
 }
 
-func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscriptionOutput, error) {
+func (s *SubscriptionServiceOp) Read(ctx context.Context, input *ReadSubscriptionInput) (*ReadSubscriptionOutput, error) {
 	path, err := uritemplates.Expand("/events/subscription/{subscriptionId}", map[string]string{
 		"subscriptionId": StringValue(input.SubscriptionID),
 	})
@@ -170,7 +171,7 @@ func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscri
 		return nil, err
 	}
 
-	r := s.client.newRequest("GET", path)
+	r := s.client.newRequest(ctx, "GET", path)
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -190,7 +191,7 @@ func (s *SubscriptionServiceOp) Read(input *ReadSubscriptionInput) (*ReadSubscri
 	return output, nil
 }
 
-func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateSubscriptionOutput, error) {
+func (s *SubscriptionServiceOp) Update(ctx context.Context, input *UpdateSubscriptionInput) (*UpdateSubscriptionOutput, error) {
 	path, err := uritemplates.Expand("/events/subscription/{subscriptionId}", map[string]string{
 		"subscriptionId": StringValue(input.Subscription.ID),
 	})
@@ -201,7 +202,7 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 	// We do not need the ID anymore so let's drop it.
 	input.Subscription.ID = nil
 
-	r := s.client.newRequest("PUT", path)
+	r := s.client.newRequest(ctx, "PUT", path)
 	r.obj = input
 
 	_, resp, err := requireOK(s.client.doRequest(r))
@@ -223,7 +224,7 @@ func (s *SubscriptionServiceOp) Update(input *UpdateSubscriptionInput) (*UpdateS
 	return output, nil
 }
 
-func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteSubscriptionOutput, error) {
+func (s *SubscriptionServiceOp) Delete(ctx context.Context, input *DeleteSubscriptionInput) (*DeleteSubscriptionOutput, error) {
 	path, err := uritemplates.Expand("/events/subscription/{subscriptionId}", map[string]string{
 		"subscriptionId": StringValue(input.SubscriptionID),
 	})
@@ -231,7 +232,7 @@ func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteS
 		return nil, err
 	}
 
-	r := s.client.newRequest("DELETE", path)
+	r := s.client.newRequest(ctx, "DELETE", path)
 	_, resp, err := requireOK(s.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -241,7 +242,7 @@ func (s *SubscriptionServiceOp) Delete(input *DeleteSubscriptionInput) (*DeleteS
 	return &DeleteSubscriptionOutput{}, nil
 }
 
-//region Subscription
+// region Subscription
 
 func (o *Subscription) MarshalJSON() ([]byte, error) {
 	type noMethod Subscription
@@ -250,45 +251,45 @@ func (o *Subscription) MarshalJSON() ([]byte, error) {
 }
 
 func (o *Subscription) SetId(v *string) *Subscription {
-	if o.ID = v; v == nil {
+	if o.ID = v; o.ID == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
 func (o *Subscription) SetResourceId(v *string) *Subscription {
-	if o.ResourceID = v; v == nil {
+	if o.ResourceID = v; o.ResourceID == nil {
 		o.nullFields = append(o.nullFields, "ResourceID")
 	}
 	return o
 }
 
 func (o *Subscription) SetEventType(v *string) *Subscription {
-	if o.EventType = v; v == nil {
+	if o.EventType = v; o.EventType == nil {
 		o.nullFields = append(o.nullFields, "EventType")
 	}
 	return o
 }
 
 func (o *Subscription) SetProtocol(v *string) *Subscription {
-	if o.Protocol = v; v == nil {
+	if o.Protocol = v; o.Protocol == nil {
 		o.nullFields = append(o.nullFields, "Protocol")
 	}
 	return o
 }
 
 func (o *Subscription) SetEndpoint(v *string) *Subscription {
-	if o.Endpoint = v; v == nil {
+	if o.Endpoint = v; o.Endpoint == nil {
 		o.nullFields = append(o.nullFields, "Endpoint")
 	}
 	return o
 }
 
 func (o *Subscription) SetFormat(v map[string]interface{}) *Subscription {
-	if o.Format = v; v == nil {
+	if o.Format = v; o.Format == nil {
 		o.nullFields = append(o.nullFields, "Format")
 	}
 	return o
 }
 
-//endregion
+// endregion
