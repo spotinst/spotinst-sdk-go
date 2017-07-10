@@ -11,6 +11,51 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
+// A AWSProduct represents the type of an operating system.
+type AWSProduct int
+
+const (
+	// AWSProductWindows represents the Windows product.
+	AWSProductWindows AWSProduct = iota
+
+	// AWSProductWindowsVPC represents the Windows (Amazon VPC) product.
+	AWSProductWindowsVPC
+
+	// AWSProductLinuxUnix represents the Linux/Unix product.
+	AWSProductLinuxUnix
+
+	// AWSProductLinuxUnixVPC represents the Linux/Unix (Amazon VPC) product.
+	AWSProductLinuxUnixVPC
+
+	// AWSProductSUSELinux represents the SUSE Linux product.
+	AWSProductSUSELinux
+
+	// AWSProductSUSELinuxVPC represents the SUSE Linux (Amazon VPC) product.
+	AWSProductSUSELinuxVPC
+)
+
+var AWSProduct_name = map[AWSProduct]string{
+	AWSProductWindows:      "Windows",
+	AWSProductWindowsVPC:   "Windows (Amazon VPC)",
+	AWSProductLinuxUnix:    "Linux/UNIX",
+	AWSProductLinuxUnixVPC: "Linux/UNIX (Amazon VPC)",
+	AWSProductSUSELinux:    "SUSE Linux",
+	AWSProductSUSELinuxVPC: "SUSE Linux (Amazon VPC)",
+}
+
+var AWSProduct_value = map[string]AWSProduct{
+	"Windows":                 AWSProductWindows,
+	"Windows (Amazon VPC)":    AWSProductWindowsVPC,
+	"Linux/UNIX":              AWSProductLinuxUnix,
+	"Linux/UNIX (Amazon VPC)": AWSProductLinuxUnixVPC,
+	"SUSE Linux":              AWSProductSUSELinux,
+	"SUSE Linux (Amazon VPC)": AWSProductSUSELinuxVPC,
+}
+
+func (p AWSProduct) String() string {
+	return AWSProduct_name[p]
+}
+
 // AWSGroupService is an interface for interfacing with the AWSGroup
 // endpoints of the Spotinst API.
 type AWSGroupService interface {
