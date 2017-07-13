@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
@@ -18,6 +19,9 @@ type AzureGroupService interface {
 	Read(context.Context, *ReadAzureGroupInput) (*ReadAzureGroupOutput, error)
 	Update(context.Context, *UpdateAzureGroupInput) (*UpdateAzureGroupOutput, error)
 	Delete(context.Context, *DeleteAzureGroupInput) (*DeleteAzureGroupOutput, error)
+	Status(context.Context, *StatusAzureGroupInput) (*StatusAzureGroupOutput, error)
+	Detach(context.Context, *DetachAzureGroupInput) (*DetachAzureGroupOutput, error)
+	Roll(context.Context, *RollAzureGroupInput) (*RollAzureGroupOutput, error)
 }
 
 // AzureGroupServiceOp handles communication with the balancer related methods
@@ -277,6 +281,24 @@ type AzureGroupComputeHealth struct {
 	nullFields      []string `json:"-"`
 }
 
+type AzureNode struct {
+	ID        *string    `json:"id,omitempty"`
+	VMSize    *string    `json:"vmSize,omitempty"`
+	State     *string    `json:"state,omitempty"`
+	LifeCycle *string    `json:"lifeCycle,omitempty"`
+	Region    *string    `json:"region,omitempty"`
+	IPAddress *string    `json:"ipAddress,omitempty"`
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+}
+
+type AzureGroupRollStrategy struct {
+	Action               *string `json:"action,omitempty"`
+	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
 type ListAzureGroupInput struct{}
 
 type ListAzureGroupOutput struct {
@@ -313,6 +335,34 @@ type DeleteAzureGroupInput struct {
 
 type DeleteAzureGroupOutput struct{}
 
+type StatusAzureGroupInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+}
+
+type StatusAzureGroupOutput struct {
+	Nodes []*AzureNode `json:"instances,omitempty"`
+}
+
+type DetachAzureGroupInput struct {
+	GroupID                       *string  `json:"groupId,omitempty"`
+	InstanceIDs                   []string `json:"instancesToDetach,omitempty"`
+	ShouldDecrementTargetCapacity *bool    `json:"shouldDecrementTargetCapacity,omitempty"`
+	ShouldTerminateInstances      *bool    `json:"shouldTerminateInstances,omitempty"`
+	DrainingTimeout               *int     `json:"drainingTimeout,omitempty"`
+}
+
+type DetachAzureGroupOutput struct{}
+
+type RollAzureGroupInput struct {
+	GroupID             *string                 `json:"groupId,omitempty"`
+	BatchSizePercentage *int                    `json:"batchSizePercentage,omitempty"`
+	GracePeriod         *int                    `json:"gracePeriod,omitempty"`
+	HealthCheckType     *string                 `json:"healthCheckType,omitempty"`
+	Strategy            *AzureGroupRollStrategy `json:"strategy,omitempty"`
+}
+
+type RollAzureGroupOutput struct{}
+
 func azureGroupFromJSON(in []byte) (*AzureGroup, error) {
 	b := new(AzureGroup)
 	if err := json.Unmarshal(in, b); err != nil {
@@ -346,6 +396,41 @@ func azureGroupsFromHttpResponse(resp *http.Response) ([]*AzureGroup, error) {
 		return nil, err
 	}
 	return azureGroupsFromJSON(body)
+}
+
+func azureNodeFromJSON(in []byte) (*AzureNode, error) {
+	b := new(AzureNode)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func azureNodesFromJSON(in []byte) ([]*AzureNode, error) {
+	var rw responseWrapper
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*AzureNode, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := azureNodeFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func azureNodesFromHttpResponse(resp *http.Response) ([]*AzureNode, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return azureNodesFromJSON(body)
 }
 
 func (s *AzureGroupServiceOp) List(ctx context.Context, input *ListAzureGroupInput) (*ListAzureGroupOutput, error) {
@@ -464,6 +549,75 @@ func (s *AzureGroupServiceOp) Delete(ctx context.Context, input *DeleteAzureGrou
 	defer resp.Body.Close()
 
 	return &DeleteAzureGroupOutput{}, nil
+}
+
+func (s *AzureGroupServiceOp) Status(ctx context.Context, input *StatusAzureGroupInput) (*StatusAzureGroupOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/status", map[string]string{
+		"groupId": StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := s.client.newRequest(ctx, "GET", path)
+	_, resp, err := requireOK(s.client.doRequest(r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	ns, err := azureNodesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &StatusAzureGroupOutput{Nodes: ns}, nil
+}
+
+func (s *AzureGroupServiceOp) Detach(ctx context.Context, input *DetachAzureGroupInput) (*DetachAzureGroupOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/detachNodes", map[string]string{
+		"groupId": StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := s.client.newRequest(ctx, "PUT", path)
+	r.obj = input
+
+	_, resp, err := requireOK(s.client.doRequest(r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DetachAzureGroupOutput{}, nil
+}
+
+func (s *AzureGroupServiceOp) Roll(ctx context.Context, input *RollAzureGroupInput) (*RollAzureGroupOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/roll", map[string]string{
+		"groupId": StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := s.client.newRequest(ctx, "PUT", path)
+	r.obj = input
+
+	_, resp, err := requireOK(s.client.doRequest(r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &RollAzureGroupOutput{}, nil
 }
 
 // region AzureGroup

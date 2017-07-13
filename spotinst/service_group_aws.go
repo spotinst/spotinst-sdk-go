@@ -434,16 +434,6 @@ type AwsInstance struct {
 	CreatedAt        *time.Time `json:"createdAt,omitempty"`
 }
 
-type AWSGroupRoll struct {
-	BatchSizePercentage *int                  `json:"batchSizePercentage,omitempty"`
-	GracePeriod         *int                  `json:"gracePeriod,omitempty"`
-	HealthCheckType     *string               `json:"healthCheckType,omitempty"`
-	Strategy            *AWSGroupRollStrategy `json:"strategy,omitempty"`
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
-}
-
 type AWSGroupRollStrategy struct {
 	Action               *string `json:"action,omitempty"`
 	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
@@ -2081,44 +2071,6 @@ func (o *AWSGroupComputeTag) SetKey(v *string) *AWSGroupComputeTag {
 func (o *AWSGroupComputeTag) SetValue(v *string) *AWSGroupComputeTag {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
-	}
-	return o
-}
-
-// endregion
-
-// region AWSGroupRoll
-
-func (o *AWSGroupRoll) MarshalJSON() ([]byte, error) {
-	type noMethod AWSGroupRoll
-	raw := noMethod(*o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *AWSGroupRoll) SetBatchSizePercentage(v *int) *AWSGroupRoll {
-	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
-		o.nullFields = append(o.nullFields, "BatchSizePercentage")
-	}
-	return o
-}
-
-func (o *AWSGroupRoll) SetGracePeriod(v *int) *AWSGroupRoll {
-	if o.GracePeriod = v; o.GracePeriod == nil {
-		o.nullFields = append(o.nullFields, "GracePeriod")
-	}
-	return o
-}
-
-func (o *AWSGroupRoll) SetHealthCheckType(v *string) *AWSGroupRoll {
-	if o.HealthCheckType = v; o.HealthCheckType == nil {
-		o.nullFields = append(o.nullFields, "HealthCheckType")
-	}
-	return o
-}
-
-func (o *AWSGroupRoll) SetStrategy(v *AWSGroupRollStrategy) *AWSGroupRoll {
-	if o.Strategy = v; o.Strategy == nil {
-		o.nullFields = append(o.nullFields, "Strategy")
 	}
 	return o
 }
