@@ -124,9 +124,7 @@ func (c *CertificateServiceOp) List(ctx context.Context, input *ListCertificates
 		return nil, err
 	}
 
-	return &ListCertificatesOutput{
-		Certificates: cs,
-	}, nil
+	return &ListCertificatesOutput{Certificates: cs}, nil
 }
 
 func (c *CertificateServiceOp) Create(ctx context.Context, input *CreateCertificateInput) (*CreateCertificateOutput, error) {
@@ -144,9 +142,12 @@ func (c *CertificateServiceOp) Create(ctx context.Context, input *CreateCertific
 		return nil, err
 	}
 
-	return &CreateCertificateOutput{
-		Certificate: cs[0],
-	}, nil
+	output := new(CreateCertificateOutput)
+	if len(cs) > 0 {
+		output.Certificate = cs[0]
+	}
+
+	return output, nil
 }
 
 func (c *CertificateServiceOp) Read(ctx context.Context, input *ReadCertificateInput) (*ReadCertificateOutput, error) {
@@ -169,9 +170,12 @@ func (c *CertificateServiceOp) Read(ctx context.Context, input *ReadCertificateI
 		return nil, err
 	}
 
-	return &ReadCertificateOutput{
-		Certificate: cs[0],
-	}, nil
+	output := new(ReadCertificateOutput)
+	if len(cs) > 0 {
+		output.Certificate = cs[0]
+	}
+
+	return output, nil
 }
 
 func (c *CertificateServiceOp) Update(ctx context.Context, input *UpdateCertificateInput) (*UpdateCertificateOutput, error) {
@@ -181,6 +185,9 @@ func (c *CertificateServiceOp) Update(ctx context.Context, input *UpdateCertific
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.Certificate.ID = nil
 
 	r := c.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -203,8 +210,6 @@ func (c *CertificateServiceOp) Delete(ctx context.Context, input *DeleteCertific
 	}
 
 	r := c.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err

@@ -122,9 +122,7 @@ func (c *DeploymentServiceOp) List(ctx context.Context, input *ListDeploymentsIn
 		return nil, err
 	}
 
-	return &ListDeploymentsOutput{
-		Deployments: ds,
-	}, nil
+	return &ListDeploymentsOutput{Deployments: ds}, nil
 }
 
 func (c *DeploymentServiceOp) Create(ctx context.Context, input *CreateDeploymentInput) (*CreateDeploymentOutput, error) {
@@ -142,9 +140,12 @@ func (c *DeploymentServiceOp) Create(ctx context.Context, input *CreateDeploymen
 		return nil, err
 	}
 
-	return &CreateDeploymentOutput{
-		Deployment: ds[0],
-	}, nil
+	output := new(CreateDeploymentOutput)
+	if len(ds) > 0 {
+		output.Deployment = ds[0]
+	}
+
+	return output, nil
 }
 
 func (c *DeploymentServiceOp) Read(ctx context.Context, input *ReadDeploymentInput) (*ReadDeploymentOutput, error) {
@@ -167,9 +168,12 @@ func (c *DeploymentServiceOp) Read(ctx context.Context, input *ReadDeploymentInp
 		return nil, err
 	}
 
-	return &ReadDeploymentOutput{
-		Deployment: ds[0],
-	}, nil
+	output := new(ReadDeploymentOutput)
+	if len(ds) > 0 {
+		output.Deployment = ds[0]
+	}
+
+	return output, nil
 }
 
 func (c *DeploymentServiceOp) Update(ctx context.Context, input *UpdateDeploymentInput) (*UpdateDeploymentOutput, error) {
@@ -179,6 +183,9 @@ func (c *DeploymentServiceOp) Update(ctx context.Context, input *UpdateDeploymen
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.Deployment.ID = nil
 
 	r := c.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -201,8 +208,6 @@ func (c *DeploymentServiceOp) Delete(ctx context.Context, input *DeleteDeploymen
 	}
 
 	r := c.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(c.client.doRequest(r))
 	if err != nil {
 		return nil, err

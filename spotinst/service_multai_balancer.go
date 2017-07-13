@@ -305,9 +305,7 @@ func (b *BalancerServiceOp) ListBalancers(ctx context.Context, input *ListBalanc
 		return nil, err
 	}
 
-	return &ListBalancersOutput{
-		Balancers: bs,
-	}, nil
+	return &ListBalancersOutput{Balancers: bs}, nil
 }
 
 func (b *BalancerServiceOp) CreateBalancer(ctx context.Context, input *CreateBalancerInput) (*CreateBalancerOutput, error) {
@@ -325,9 +323,12 @@ func (b *BalancerServiceOp) CreateBalancer(ctx context.Context, input *CreateBal
 		return nil, err
 	}
 
-	return &CreateBalancerOutput{
-		Balancer: bs[0],
-	}, nil
+	output := new(CreateBalancerOutput)
+	if len(bs) > 0 {
+		output.Balancer = bs[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) ReadBalancer(ctx context.Context, input *ReadBalancerInput) (*ReadBalancerOutput, error) {
@@ -350,9 +351,12 @@ func (b *BalancerServiceOp) ReadBalancer(ctx context.Context, input *ReadBalance
 		return nil, err
 	}
 
-	return &ReadBalancerOutput{
-		Balancer: bs[0],
-	}, nil
+	output := new(ReadBalancerOutput)
+	if len(bs) > 0 {
+		output.Balancer = bs[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) UpdateBalancer(ctx context.Context, input *UpdateBalancerInput) (*UpdateBalancerOutput, error) {
@@ -362,6 +366,9 @@ func (b *BalancerServiceOp) UpdateBalancer(ctx context.Context, input *UpdateBal
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.Balancer.ID = nil
 
 	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -384,8 +391,6 @@ func (b *BalancerServiceOp) DeleteBalancer(ctx context.Context, input *DeleteBal
 	}
 
 	r := b.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -571,9 +576,7 @@ func (b *BalancerServiceOp) ListListeners(ctx context.Context, input *ListListen
 		return nil, err
 	}
 
-	return &ListListenersOutput{
-		Listeners: ls,
-	}, nil
+	return &ListListenersOutput{Listeners: ls}, nil
 }
 
 func (b *BalancerServiceOp) CreateListener(ctx context.Context, input *CreateListenerInput) (*CreateListenerOutput, error) {
@@ -591,9 +594,12 @@ func (b *BalancerServiceOp) CreateListener(ctx context.Context, input *CreateLis
 		return nil, err
 	}
 
-	return &CreateListenerOutput{
-		Listener: ls[0],
-	}, nil
+	output := new(CreateListenerOutput)
+	if len(ls) > 0 {
+		output.Listener = ls[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) ReadListener(ctx context.Context, input *ReadListenerInput) (*ReadListenerOutput, error) {
@@ -616,9 +622,12 @@ func (b *BalancerServiceOp) ReadListener(ctx context.Context, input *ReadListene
 		return nil, err
 	}
 
-	return &ReadListenerOutput{
-		Listener: ls[0],
-	}, nil
+	output := new(ReadListenerOutput)
+	if len(ls) > 0 {
+		output.Listener = ls[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) UpdateListener(ctx context.Context, input *UpdateListenerInput) (*UpdateListenerOutput, error) {
@@ -628,6 +637,9 @@ func (b *BalancerServiceOp) UpdateListener(ctx context.Context, input *UpdateLis
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.Listener.ID = nil
 
 	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -650,8 +662,6 @@ func (b *BalancerServiceOp) DeleteListener(ctx context.Context, input *DeleteLis
 	}
 
 	r := b.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -878,9 +888,7 @@ func (b *BalancerServiceOp) ListRoutingRules(ctx context.Context, input *ListRou
 		return nil, err
 	}
 
-	return &ListRoutingRulesOutput{
-		RoutingRules: rr,
-	}, nil
+	return &ListRoutingRulesOutput{RoutingRules: rr}, nil
 }
 
 func (b *BalancerServiceOp) CreateRoutingRule(ctx context.Context, input *CreateRoutingRuleInput) (*CreateRoutingRuleOutput, error) {
@@ -898,9 +906,12 @@ func (b *BalancerServiceOp) CreateRoutingRule(ctx context.Context, input *Create
 		return nil, err
 	}
 
-	return &CreateRoutingRuleOutput{
-		RoutingRule: rr[0],
-	}, nil
+	output := new(CreateRoutingRuleOutput)
+	if len(rr) > 0 {
+		output.RoutingRule = rr[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) ReadRoutingRule(ctx context.Context, input *ReadRoutingRuleInput) (*ReadRoutingRuleOutput, error) {
@@ -923,9 +934,12 @@ func (b *BalancerServiceOp) ReadRoutingRule(ctx context.Context, input *ReadRout
 		return nil, err
 	}
 
-	return &ReadRoutingRuleOutput{
-		RoutingRule: rr[0],
-	}, nil
+	output := new(ReadRoutingRuleOutput)
+	if len(rr) > 0 {
+		output.RoutingRule = rr[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) UpdateRoutingRule(ctx context.Context, input *UpdateRoutingRuleInput) (*UpdateRoutingRuleOutput, error) {
@@ -935,6 +949,9 @@ func (b *BalancerServiceOp) UpdateRoutingRule(ctx context.Context, input *Update
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.RoutingRule.ID = nil
 
 	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -957,8 +974,6 @@ func (b *BalancerServiceOp) DeleteRoutingRule(ctx context.Context, input *Delete
 	}
 
 	r := b.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1158,9 +1173,7 @@ func (b *BalancerServiceOp) ListMiddlewares(ctx context.Context, input *ListMidd
 		return nil, err
 	}
 
-	return &ListMiddlewaresOutput{
-		Middlewares: ms,
-	}, nil
+	return &ListMiddlewaresOutput{Middlewares: ms}, nil
 }
 
 func (b *BalancerServiceOp) CreateMiddleware(ctx context.Context, input *CreateMiddlewareInput) (*CreateMiddlewareOutput, error) {
@@ -1178,9 +1191,12 @@ func (b *BalancerServiceOp) CreateMiddleware(ctx context.Context, input *CreateM
 		return nil, err
 	}
 
-	return &CreateMiddlewareOutput{
-		Middleware: ms[0],
-	}, nil
+	output := new(CreateMiddlewareOutput)
+	if len(ms) > 0 {
+		output.Middleware = ms[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) ReadMiddleware(ctx context.Context, input *ReadMiddlewareInput) (*ReadMiddlewareOutput, error) {
@@ -1203,9 +1219,12 @@ func (b *BalancerServiceOp) ReadMiddleware(ctx context.Context, input *ReadMiddl
 		return nil, err
 	}
 
-	return &ReadMiddlewareOutput{
-		Middleware: ms[0],
-	}, nil
+	output := new(ReadMiddlewareOutput)
+	if len(ms) > 0 {
+		output.Middleware = ms[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) UpdateMiddleware(ctx context.Context, input *UpdateMiddlewareInput) (*UpdateMiddlewareOutput, error) {
@@ -1215,6 +1234,9 @@ func (b *BalancerServiceOp) UpdateMiddleware(ctx context.Context, input *UpdateM
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.Middleware.ID = nil
 
 	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -1237,8 +1259,6 @@ func (b *BalancerServiceOp) DeleteMiddleware(ctx context.Context, input *DeleteM
 	}
 
 	r := b.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1419,9 +1439,7 @@ func (b *BalancerServiceOp) ListTargetSets(ctx context.Context, input *ListTarge
 		return nil, err
 	}
 
-	return &ListTargetSetsOutput{
-		TargetSets: ts,
-	}, nil
+	return &ListTargetSetsOutput{TargetSets: ts}, nil
 }
 
 func (b *BalancerServiceOp) CreateTargetSet(ctx context.Context, input *CreateTargetSetInput) (*CreateTargetSetOutput, error) {
@@ -1439,9 +1457,12 @@ func (b *BalancerServiceOp) CreateTargetSet(ctx context.Context, input *CreateTa
 		return nil, err
 	}
 
-	return &CreateTargetSetOutput{
-		TargetSet: ts[0],
-	}, nil
+	output := new(CreateTargetSetOutput)
+	if len(ts) > 0 {
+		output.TargetSet = ts[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) ReadTargetSet(ctx context.Context, input *ReadTargetSetInput) (*ReadTargetSetOutput, error) {
@@ -1464,9 +1485,12 @@ func (b *BalancerServiceOp) ReadTargetSet(ctx context.Context, input *ReadTarget
 		return nil, err
 	}
 
-	return &ReadTargetSetOutput{
-		TargetSet: ts[0],
-	}, nil
+	output := new(ReadTargetSetOutput)
+	if len(ts) > 0 {
+		output.TargetSet = ts[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) UpdateTargetSet(ctx context.Context, input *UpdateTargetSetInput) (*UpdateTargetSetOutput, error) {
@@ -1476,6 +1500,9 @@ func (b *BalancerServiceOp) UpdateTargetSet(ctx context.Context, input *UpdateTa
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.TargetSet.ID = nil
 
 	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -1498,8 +1525,6 @@ func (b *BalancerServiceOp) DeleteTargetSet(ctx context.Context, input *DeleteTa
 	}
 
 	r := b.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -1764,9 +1789,7 @@ func (b *BalancerServiceOp) ListTargets(ctx context.Context, input *ListTargetsI
 		return nil, err
 	}
 
-	return &ListTargetsOutput{
-		Targets: ts,
-	}, nil
+	return &ListTargetsOutput{Targets: ts}, nil
 }
 
 func (b *BalancerServiceOp) CreateTarget(ctx context.Context, input *CreateTargetInput) (*CreateTargetOutput, error) {
@@ -1784,9 +1807,12 @@ func (b *BalancerServiceOp) CreateTarget(ctx context.Context, input *CreateTarge
 		return nil, err
 	}
 
-	return &CreateTargetOutput{
-		Target: ts[0],
-	}, nil
+	output := new(CreateTargetOutput)
+	if len(ts) > 0 {
+		output.Target = ts[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) ReadTarget(ctx context.Context, input *ReadTargetInput) (*ReadTargetOutput, error) {
@@ -1809,9 +1835,12 @@ func (b *BalancerServiceOp) ReadTarget(ctx context.Context, input *ReadTargetInp
 		return nil, err
 	}
 
-	return &ReadTargetOutput{
-		Target: ts[0],
-	}, nil
+	output := new(ReadTargetOutput)
+	if len(ts) > 0 {
+		output.Target = ts[0]
+	}
+
+	return output, nil
 }
 
 func (b *BalancerServiceOp) UpdateTarget(ctx context.Context, input *UpdateTargetInput) (*UpdateTargetOutput, error) {
@@ -1821,6 +1850,9 @@ func (b *BalancerServiceOp) UpdateTarget(ctx context.Context, input *UpdateTarge
 	if err != nil {
 		return nil, err
 	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.Target.ID = nil
 
 	r := b.client.newRequest(ctx, "PUT", path)
 	r.obj = input
@@ -1843,8 +1875,6 @@ func (b *BalancerServiceOp) DeleteTarget(ctx context.Context, input *DeleteTarge
 	}
 
 	r := b.client.newRequest(ctx, "DELETE", path)
-	r.obj = input
-
 	_, resp, err := requireOK(b.client.doRequest(r))
 	if err != nil {
 		return nil, err
@@ -2012,9 +2042,7 @@ func (b *BalancerServiceOp) ListRuntimes(ctx context.Context, input *ListRuntime
 		return nil, err
 	}
 
-	return &ListRuntimesOutput{
-		Runtimes: rts,
-	}, nil
+	return &ListRuntimesOutput{Runtimes: rts}, nil
 }
 
 func (b *BalancerServiceOp) ReadRuntime(ctx context.Context, input *ReadRuntimeInput) (*ReadRuntimeOutput, error) {
@@ -2037,9 +2065,12 @@ func (b *BalancerServiceOp) ReadRuntime(ctx context.Context, input *ReadRuntimeI
 		return nil, err
 	}
 
-	return &ReadRuntimeOutput{
-		Runtime: rt[0],
-	}, nil
+	output := new(ReadRuntimeOutput)
+	if len(rt) > 0 {
+		output.Runtime = rt[0]
+	}
+
+	return output, nil
 }
 
 // region Runtime
