@@ -15,24 +15,21 @@ access different parts of the Spotinst API.
 
 ### Authentication
 
-Set a ChainProvider that will search for a provider which returns credentials.
+Set a `ChainProvider` that will search for a provider which returns credentials.
 
-The ChainProvider provides a way of chaining multiple providers together
+The `ChainProvider` provides a way of chaining multiple providers together
 which will pick the first available using priority order of the Providers
-in the list.
+in the list. If none of the Providers retrieve valid credentials, `ChainProvider`'s
+`Retrieve()` will return the error `ErrNoValidProvidersFoundInChain`. If a Provider 
+is found which returns valid credentials `ChainProvider` will cache that Provider 
+for all calls until `Retrieve` is called again.
 
-If none of the Providers retrieve valid credentials, ChainProvider's
-Retrieve() will return the error ErrNoValidProvidersFoundInChain.
-
-If a Provider is found which returns valid credentials ChainProvider
-will cache that Provider for all calls until Retrieve is called again.
-
-Example of ChainProvider to be used with an EnvCredentialsProvider and
-FileCredentialsProvider. In this example EnvProvider will first check if
+Example of `ChainProvider` to be used with an `EnvCredentialsProvider` and
+`FileCredentialsProvider`. In this example `EnvProvider` will first check if
 any credentials are available via the environment variables. If there are
-none ChainProvider will check the next Provider in the list, FileProvider
-in this case. If FileCredentialsProvider does not return any credentials
-ChainProvider will return the error ErrNoValidProvidersFoundInChain.
+none `ChainProvider` will check the next `Provider` in the list, `FileProvider`
+in this case. If `FileCredentialsProvider` does not return any credentials
+`ChainProvider` will return the error `ErrNoValidProvidersFoundInChain`.
 
 ```go
 creds := credentials.NewChainCredentials(

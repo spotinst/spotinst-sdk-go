@@ -32,7 +32,7 @@ var (
 // ChainProvider will return the error ErrNoValidProvidersFoundInChain.
 //
 //	creds := credentials.NewChainCredentials(
-//	    new(credentials.EnvProvider),
+//		new(credentials.EnvProvider),
 //		new(credentials.FileProvider),
 //	)
 //
