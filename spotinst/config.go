@@ -2,6 +2,7 @@ package spotinst
 
 import (
 	"fmt"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 	"net/http"
 )
 
@@ -45,15 +46,11 @@ type clientConfig struct {
 	// scheme is the URI scheme for the API server.
 	scheme string
 
-	// httpClient is the client to use. Default will be
-	// used if not provided.
+	// httpClient is the client to use. Default will be used if not provided.
 	httpClient *http.Client
 
-	// token is used to provide a per-request authorization token.
-	token string
-
-	// accountID is the target account ID.
-	accountID string
+	// credentials provides synchronous safe retrieval of Spotinst credentials.
+	credentials *credentials.Credentials
 
 	// userAgent is the user agent to use when making HTTP calls.
 	userAgent string
@@ -71,54 +68,47 @@ type clientConfig struct {
 	tracelog Logger
 }
 
-// ClientOptionFunc is a function that configures a Client.
+// ClientOption is a function that configures a Client.
 // It is used in NewClient.
-type ClientOptionFunc func(*clientConfig)
+type ClientOption func(*clientConfig)
 
 // SetAddress defines the address of the Spotinst API.
-func SetAddress(addr string) ClientOptionFunc {
+func SetAddress(addr string) ClientOption {
 	return func(c *clientConfig) {
 		c.address = addr
 	}
 }
 
 // SetScheme defines the scheme for the address of the Spotinst API.
-func SetScheme(scheme string) ClientOptionFunc {
+func SetScheme(scheme string) ClientOption {
 	return func(c *clientConfig) {
 		c.scheme = scheme
 	}
 }
 
 // SetHttpClient defines the HTTP client.
-func SetHttpClient(client *http.Client) ClientOptionFunc {
+func SetHttpClient(client *http.Client) ClientOption {
 	return func(c *clientConfig) {
 		c.httpClient = client
 	}
 }
 
-// SetToken defines the authorization token.
-func SetToken(token string) ClientOptionFunc {
+// SetCredentials defines the credentials.
+func SetCredentials(creds *credentials.Credentials) ClientOption {
 	return func(c *clientConfig) {
-		c.token = token
-	}
-}
-
-// SetAccount defines the account ID.
-func SetAccount(id string) ClientOptionFunc {
-	return func(c *clientConfig) {
-		c.accountID = id
+		c.credentials = creds
 	}
 }
 
 // SetUserAgent defines the user agent.
-func SetUserAgent(ua string) ClientOptionFunc {
+func SetUserAgent(ua string) ClientOption {
 	return func(c *clientConfig) {
 		c.userAgent = fmt.Sprintf("%s+%s", ua, c.userAgent)
 	}
 }
 
 // SetContentType defines the content type.
-func SetContentType(ct string) ClientOptionFunc {
+func SetContentType(ct string) ClientOption {
 	return func(c *clientConfig) {
 		c.contentType = ct
 	}
@@ -126,7 +116,7 @@ func SetContentType(ct string) ClientOptionFunc {
 
 // SetErrorLog sets the logger for critical messages like nodes joining
 // or leaving the cluster or failing requests. It is nil by default.
-func SetErrorLog(logger Logger) ClientOptionFunc {
+func SetErrorLog(logger Logger) ClientOption {
 	return func(c *clientConfig) {
 		c.errorlog = logger
 	}
@@ -134,7 +124,7 @@ func SetErrorLog(logger Logger) ClientOptionFunc {
 
 // SetInfoLog sets the logger for informational messages, e.g. requests
 // and their response times. It is nil by default.
-func SetInfoLog(logger Logger) ClientOptionFunc {
+func SetInfoLog(logger Logger) ClientOption {
 	return func(c *clientConfig) {
 		c.infolog = logger
 	}
@@ -142,7 +132,7 @@ func SetInfoLog(logger Logger) ClientOptionFunc {
 
 // SetTraceLog specifies the log.Logger to use for output of HTTP requests
 // and responses which is helpful during debugging. It is nil by default.
-func SetTraceLog(logger Logger) ClientOptionFunc {
+func SetTraceLog(logger Logger) ClientOption {
 	return func(c *clientConfig) {
 		c.tracelog = logger
 	}

@@ -7,22 +7,15 @@ import (
 	"net/http/httputil"
 	"net/url"
 	"time"
+
+	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 )
 
-// DefaultTransport returns a new http.Transport with the same default values
-// as http.DefaultTransport, but with idle connections and KeepAlives disabled.
-func defaultTransport() *http.Transport {
-	transport := defaultPooledTransport()
-	transport.DisableKeepAlives = true
-	transport.MaxIdleConnsPerHost = -1
-	return transport
-}
-
-// DefaultPooledTransport returns a new http.Transport with similar default
+// defaultTransport returns a new http.Transport with similar default
 // values to http.DefaultTransport. Do not use this for transient transports as
 // it can leak file descriptors over time. Only use this for transports that
 // will be re-used for the same host(s).
-func defaultPooledTransport() *http.Transport {
+func defaultTransport() *http.Transport {
 	return &http.Transport{
 		Proxy: http.ProxyFromEnvironment,
 		Dial: (&net.Dialer{
@@ -44,46 +37,21 @@ func defaultHttpClient() *http.Client {
 	}
 }
 
-// defaultHttpPooledClient returns a new http.Client with the same default values
-// as http.Client, but with a shared Transport. Do not use this function
-// for transient clients as it can leak file descriptors over time. Only use
-// this for clients that will be re-used for the same host(s).
-func defaultHttpPooledClient() *http.Client {
-	return &http.Client{
-		Transport: defaultPooledTransport(),
-	}
-}
-
-// DefaultConfig returns a default configuration for the client. By default this
+// defaultConfig returns a default configuration for the client. By default this
 // will pool and reuse idle connections to API. If you have a long-lived
 // client object, this is the desired behavior and should make the most efficient
-// use of the connections to API. If you don't reuse a client object , which
-// is not recommended, then you may notice idle connections building up over
-// time. To avoid this, use the DefaultNonPooledConfig() instead.
-func defaultPooledConfig() *clientConfig {
-	return defaultConfig(defaultPooledTransport)
-}
-
-// DefaultNonPooledConfig returns a default configuration for the client which
-// does not pool connections. This isn't a recommended configuration because it
-// will reconnect to API on every request, but this is useful to avoid the
-// accumulation of idle connections if you make many client objects during the
-// lifetime of your application.
-func defaultNonPooledConfig() *clientConfig {
-	return defaultConfig(defaultTransport)
-}
-
-// defaultConfig returns the default configuration for the client, using the
-// given function to make the transport.
-func defaultConfig(transportFn func() *http.Transport) *clientConfig {
+// use of the connections to API.
+func defaultConfig() *clientConfig {
 	return &clientConfig{
 		address:     DefaultAddress,
 		scheme:      DefaultScheme,
 		userAgent:   DefaultUserAgent,
 		contentType: DefaultContentType,
-		httpClient: &http.Client{
-			Transport: transportFn(),
-		},
+		httpClient:  defaultHttpClient(),
+		credentials: credentials.NewChainCredentials(
+			new(credentials.EnvProvider),
+			new(credentials.FileProvider),
+		),
 	}
 }
 
@@ -97,21 +65,19 @@ type Client struct {
 }
 
 // NewClient returns a new client.
-func NewClient(opts ...ClientOptionFunc) (*Client, error) {
-	config := defaultPooledConfig()
-
+func NewClient(opts ...ClientOption) *Client {
+	config := defaultConfig()
 	for _, o := range opts {
 		o(config)
 	}
 
 	client := &Client{config: config}
-
 	client.GroupService = &GroupServiceOp{client}
 	client.MultaiService = &MultaiServiceOp{client}
 	client.HealthCheckService = &HealthCheckServiceOp{client}
 	client.SubscriptionService = &SubscriptionServiceOp{client}
 
-	return client, nil
+	return client
 }
 
 // newRequest is used to create a new request.
@@ -128,17 +94,21 @@ func (c *Client) newRequest(ctx context.Context, method, path string) *request {
 		params: make(map[string][]string),
 		header: make(http.Header),
 	}
-	if token := c.config.token; token != "" {
-		req.header.Set("Authorization", "Bearer "+token)
-	}
-	if accountID := c.config.accountID; accountID != "" {
-		req.params.Set("accountId", accountID)
-	}
 	return req
 }
 
 // doRequest runs a request with our client.
 func (c *Client) doRequest(r *request) (time.Duration, *http.Response, error) {
+	creds, err := c.config.credentials.Get()
+	if err != nil {
+		return 0, nil, err
+	}
+	if creds.Token != "" {
+		r.header.Set("Authorization", "Bearer "+creds.Token)
+	}
+	if creds.Account != "" {
+		r.params.Set("accountId", creds.Account)
+	}
 	req, err := r.toHTTP()
 	if err != nil {
 		return 0, nil, err

@@ -15,40 +15,61 @@ access different parts of the Spotinst API.
 
 ### Authentication
 
+Set a ChainProvider that will search for a provider which returns credentials.
+
+The ChainProvider provides a way of chaining multiple providers together
+which will pick the first available using priority order of the Providers
+in the list.
+
+If none of the Providers retrieve valid credentials, ChainProvider's
+Retrieve() will return the error ErrNoValidProvidersFoundInChain.
+
+If a Provider is found which returns valid credentials ChainProvider
+will cache that Provider for all calls until Retrieve is called again.
+
+Example of ChainProvider to be used with an EnvCredentialsProvider and
+FileCredentialsProvider. In this example EnvProvider will first check if
+any credentials are available via the environment variables. If there are
+none ChainProvider will check the next Provider in the list, FileProvider
+in this case. If FileCredentialsProvider does not return any credentials
+ChainProvider will return the error ErrNoValidProvidersFoundInChain.
+
 ```go
-client, _ := spotinst.NewClient(
-    spotinst.SetToken("foo"),
+creds := credentials.NewChainCredentials(
+    new(credentials.FileProvider),
+    new(credentials.EnvProvider),
 )
+clientOpts := []spotinst.ClientOption{
+    spotinst.SetCredentials(creds),
+}
+client := spotinst.NewClient(clientOpts...)
 ```
 
 ## Examples
 
-To list all existing Elastigroups:
-
 ```go
-logger := log.New(os.Stderr, "", 0)
+logger := log.New(os.Stderr, "[spotinst] ", 0)
 
 clientOpts := []spotinst.ClientOptionFunc{
-    spotinst.SetToken("foo"),
-    spotinst.SetInfoLog(logger),
-    spotinst.SetErrorLog(logger),
+    spotinst.SetTraceLog(logger),
 }
 client, err := spotinst.NewClient(clientOpts...)
 if err != nil {
-    panic(err)
+    // do something with err
 }
 
-resp, err := client.AwsGroupService.List(nil)
+client := spotinst.NewClient()
+providerAWS := client.GroupService.CloudProviderAWS()
+
+input := &spotinst.ReadAWSGroupInput{
+    GroupID: spotinst.String("sig-foo"),
+}
+output, err := providerAWS.Read(context.TODO(), input)
 if err != nil {
-    panic(err)
+    // do something with err
 }
 
-if len(resp.Groups) > 0 {
-    for _, g := range resp.Groups {
-        b, _ := json.MarshalIndent(g, "", "  ")
-        log.Infof(context.TODO(), string(b))
-    }
-}
+// do something with output.Group
 ```
 
 ## Documentation
