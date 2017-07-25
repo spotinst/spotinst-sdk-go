@@ -7,8 +7,8 @@ import (
 
 var (
 	// ErrNoValidProvidersFoundInChain Is returned when there are no valid
-	// providers in the ChainProvider.
-	ErrNoValidProvidersFoundInChain = errors.New("spotinst: no valid providers in chain")
+	// credentials providers in the ChainProvider.
+	ErrNoValidProvidersFoundInChain = errors.New("spotinst: no valid credentials providers in chain")
 )
 
 // A ChainProvider will search for a provider which returns credentials

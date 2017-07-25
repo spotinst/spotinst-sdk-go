@@ -2,13 +2,14 @@ package spotinst
 
 import (
 	"fmt"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 	"net/http"
+
+	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 )
 
 const (
 	// SDKVersion is the current version of the SDK.
-	SDKVersion = "2.4.0"
+	SDKVersion = "2.4.1"
 
 	// SDKName is the name of the SDK.
 	SDKName = "spotinst-sdk-go"
