@@ -424,7 +424,7 @@ type AWSGroupComputeTag struct {
 	nullFields      []string `json:"-"`
 }
 
-type AwsInstance struct {
+type AWSInstance struct {
 	ID               *string    `json:"instanceId,omitempty"`
 	SpotRequestID    *string    `json:"spotInstanceRequestId,omitempty"`
 	InstanceType     *string    `json:"instanceType,omitempty"`
@@ -483,7 +483,7 @@ type StatusAWSGroupInput struct {
 }
 
 type StatusAWSGroupOutput struct {
-	Instances []*AwsInstance `json:"instances,omitempty"`
+	Instances []*AWSInstance `json:"instances,omitempty"`
 }
 
 type DetachAWSGroupInput struct {
@@ -541,20 +541,20 @@ func awsGroupsFromHttpResponse(resp *http.Response) ([]*AWSGroup, error) {
 	return awsGroupsFromJSON(body)
 }
 
-func awsInstanceFromJSON(in []byte) (*AwsInstance, error) {
-	b := new(AwsInstance)
+func awsInstanceFromJSON(in []byte) (*AWSInstance, error) {
+	b := new(AWSInstance)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func awsInstancesFromJSON(in []byte) ([]*AwsInstance, error) {
+func awsInstancesFromJSON(in []byte) ([]*AWSInstance, error) {
 	var rw responseWrapper
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*AwsInstance, len(rw.Response.Items))
+	out := make([]*AWSInstance, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
@@ -568,7 +568,7 @@ func awsInstancesFromJSON(in []byte) ([]*AwsInstance, error) {
 	return out, nil
 }
 
-func awsInstancesFromHttpResponse(resp *http.Response) ([]*AwsInstance, error) {
+func awsInstancesFromHttpResponse(resp *http.Response) ([]*AWSInstance, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
