@@ -153,7 +153,16 @@ type AWSGroupElasticBeanstalkIntegration struct {
 }
 
 type AWSGroupEC2ContainerServiceIntegration struct {
-	ClusterName *string `json:"clusterName,omitempty"`
+	ClusterName *string                                          `json:"clusterName,omitempty"`
+	AutoScale   *AWSGroupEC2ContainerServiceIntegrationAutoScale `json:"autoScale,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AWSGroupEC2ContainerServiceIntegrationAutoScale struct {
+	IsEnabled *bool `json:"isEnabled,omitempty"`
+	Cooldown  *int  `json:"cooldown,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1016,6 +1025,37 @@ func (o *AWSGroupEC2ContainerServiceIntegration) MarshalJSON() ([]byte, error) {
 func (o *AWSGroupEC2ContainerServiceIntegration) SetClusterName(v *string) *AWSGroupEC2ContainerServiceIntegration {
 	if o.ClusterName = v; o.ClusterName == nil {
 		o.nullFields = append(o.nullFields, "ClusterName")
+	}
+	return o
+}
+
+func (o *AWSGroupEC2ContainerServiceIntegration) SetAutoScale(v *AWSGroupEC2ContainerServiceIntegrationAutoScale) *AWSGroupEC2ContainerServiceIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+// endregion
+
+// region AWSGroupEC2ContainerServiceIntegrationAutoScale
+
+func (o *AWSGroupEC2ContainerServiceIntegrationAutoScale) MarshalJSON() ([]byte, error) {
+	type noMethod AWSGroupEC2ContainerServiceIntegrationAutoScale
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AWSGroupEC2ContainerServiceIntegrationAutoScale) SetIsEnabled(v *bool) *AWSGroupEC2ContainerServiceIntegrationAutoScale {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *AWSGroupEC2ContainerServiceIntegrationAutoScale) SetCooldown(v *int) *AWSGroupEC2ContainerServiceIntegrationAutoScale {
+	if o.Cooldown = v; o.Cooldown == nil {
+		o.nullFields = append(o.nullFields, "Cooldown")
 	}
 	return o
 }
