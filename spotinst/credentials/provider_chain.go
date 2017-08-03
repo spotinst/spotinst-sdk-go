@@ -38,7 +38,6 @@ var (
 //
 type ChainProvider struct {
 	Providers []Provider
-	Verbose   bool
 	active    Provider
 }
 
@@ -55,21 +54,32 @@ func NewChainCredentials(providers ...Provider) *Credentials {
 func (c *ChainProvider) Retrieve() (Value, error) {
 	var errs errorList
 	for _, p := range c.Providers {
-		creds, err := p.Retrieve()
+		value, err := p.Retrieve()
 		if err == nil {
 			c.active = p
-			return creds, nil
+			return value, nil
 		}
 		errs = append(errs, err)
 	}
 	c.active = nil
 
 	err := ErrNoValidProvidersFoundInChain
-	if c.Verbose {
+	if len(errs) > 0 {
 		err = errs
 	}
 
 	return Value{}, err
+}
+
+func (c *ChainProvider) String() string {
+	var out string
+	for i, provider := range c.Providers {
+		out += provider.String()
+		if i < len(c.Providers)-1 {
+			out += " "
+		}
+	}
+	return out
 }
 
 // An error list that satisfies the error interface.

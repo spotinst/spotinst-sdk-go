@@ -77,6 +77,10 @@ func (p *FileProvider) Retrieve() (Value, error) {
 	return creds, nil
 }
 
+func (p *FileProvider) String() string {
+	return FileCredentialsProviderName
+}
+
 // filename returns the filename to use to read Spotinst credentials.
 //
 // Will return an error if the user's home directory path cannot be found.

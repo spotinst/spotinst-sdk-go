@@ -101,8 +101,10 @@ func (c *Client) newRequest(ctx context.Context, method, path string) *request {
 func (c *Client) doRequest(r *request) (time.Duration, *http.Response, error) {
 	creds, err := c.config.credentials.Get()
 	if err != nil {
+		c.errorf("Failed to retrieve credentials: %s", err)
 		return 0, nil, err
 	}
+	c.tracef("Credentials retrieved from provider: %s", creds.ProviderName)
 	if creds.Token != "" {
 		r.header.Set("Authorization", "Bearer "+creds.Token)
 	}

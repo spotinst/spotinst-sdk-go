@@ -37,3 +37,7 @@ func (s *StaticProvider) Retrieve() (Value, error) {
 	}
 	return s.Value, nil
 }
+
+func (s *StaticProvider) String() string {
+	return StaticCredentialsProviderName
+}

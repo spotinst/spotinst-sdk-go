@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/log"
 )
 
 const (
@@ -60,13 +61,13 @@ type clientConfig struct {
 	contentType string
 
 	// errorf logs to the error log.
-	errorlog Logger
+	errorlog log.Logger
 
 	// infof logs informational messages.
-	infolog Logger
+	infolog log.Logger
 
 	// tracef logs to the trace log.
-	tracelog Logger
+	tracelog log.Logger
 }
 
 // ClientOption is a function that configures a Client.
@@ -117,7 +118,7 @@ func SetContentType(ct string) ClientOption {
 
 // SetErrorLog sets the logger for critical messages like nodes joining
 // or leaving the cluster or failing requests. It is nil by default.
-func SetErrorLog(logger Logger) ClientOption {
+func SetErrorLog(logger log.Logger) ClientOption {
 	return func(c *clientConfig) {
 		c.errorlog = logger
 	}
@@ -125,7 +126,7 @@ func SetErrorLog(logger Logger) ClientOption {
 
 // SetInfoLog sets the logger for informational messages, e.g. requests
 // and their response times. It is nil by default.
-func SetInfoLog(logger Logger) ClientOption {
+func SetInfoLog(logger log.Logger) ClientOption {
 	return func(c *clientConfig) {
 		c.infolog = logger
 	}
@@ -133,7 +134,7 @@ func SetInfoLog(logger Logger) ClientOption {
 
 // SetTraceLog specifies the log.Logger to use for output of HTTP requests
 // and responses which is helpful during debugging. It is nil by default.
-func SetTraceLog(logger Logger) ClientOption {
+func SetTraceLog(logger log.Logger) ClientOption {
 	return func(c *clientConfig) {
 		c.tracelog = logger
 	}

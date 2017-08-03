@@ -58,3 +58,7 @@ func (e *EnvProvider) Retrieve() (Value, error) {
 
 	return value, nil
 }
+
+func (e *EnvProvider) String() string {
+	return EnvCredentialsProviderName
+}

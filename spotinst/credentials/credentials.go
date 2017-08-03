@@ -1,6 +1,7 @@
 package credentials
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -22,6 +23,8 @@ type Value struct {
 // The Provider should not need to implement its own mutexes, because
 // that will be managed by Credentials.
 type Provider interface {
+	fmt.Stringer
+
 	// Refresh returns nil if it successfully retrieved the value.
 	// Error is returned if the value were not obtainable, or empty.
 	Retrieve() (Value, error)
