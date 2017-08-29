@@ -886,6 +886,13 @@ func (o *AWSGroupIntegration) SetMesosphere(v *AWSGroupMesosphereIntegration) *A
 	return o
 }
 
+func (o *AWSGroupIntegration) SetCodeDeploy(v *AWSGroupCodeDeployIntegration) *AWSGroupIntegration {
+	if o.CodeDeploy = v; o.CodeDeploy == nil {
+		o.nullFields = append(o.nullFields, "CodeDeploy")
+	}
+	return o
+}
+
 // endregion
 
 // region AWSGroupRancherIntegration
