@@ -109,11 +109,11 @@ type EC2ContainerServiceIntegration struct {
 }
 
 type AutoScale struct {
-	IsEnabled   *bool                 `json:"isEnabled,omitempty"`
-	Cooldown    *int                  `json:"cooldown,omitempty"`
-	Headroom    *AutoScaleHeadroom    `json:"headroom,omitempty"`
-	Down        *AutoScaleDown        `json:"down,omitempty"`
-	Constraints []AutoScaleConstraint `json:"constraints,omitempty"`
+	IsEnabled   *bool                  `json:"isEnabled,omitempty"`
+	Cooldown    *int                   `json:"cooldown,omitempty"`
+	Headroom    *AutoScaleHeadroom     `json:"headroom,omitempty"`
+	Down        *AutoScaleDown         `json:"down,omitempty"`
+	Constraints []*AutoScaleConstraint `json:"constraints,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1081,7 +1081,7 @@ func (o *AutoScale) SetDown(v *AutoScaleDown) *AutoScale {
 	return o
 }
 
-func (o *AutoScale) SetConstraints(v []AutoScaleConstraint) *AutoScale {
+func (o *AutoScale) SetConstraints(v []*AutoScaleConstraint) *AutoScale {
 	if o.Constraints = v; o.Constraints == nil {
 		o.nullFields = append(o.nullFields, "Constraints")
 	}
@@ -1230,7 +1230,7 @@ func (o *MultaiIntegration) SetDeploymentId(v *string) *MultaiIntegration {
 // region NomadIntegration
 
 func (o *NomadIntegration) MarshalJSON() ([]byte, error) {
-	type noMethod EC2ContainerServiceIntegration
+	type noMethod NomadIntegration
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
