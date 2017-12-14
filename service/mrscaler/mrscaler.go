@@ -5,13 +5,42 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
+
+// A InstanceGroupType represents the type of an instance group.
+type InstanceGroupType int
+
+const (
+	// InstanceGroupTypeMaster represents the master instance group type.
+	InstanceGroupTypeMaster InstanceGroupType = iota
+
+	// InstanceGroupTypeCore represents the core instance group type.
+	InstanceGroupTypeCore
+
+	// InstanceGroupTypeTask represents the task instance group type.
+	InstanceGroupTypeTask
+)
+
+var InstanceGroupType_name = map[InstanceGroupType]string{
+	InstanceGroupTypeMaster: "master",
+	InstanceGroupTypeCore:   "core",
+	InstanceGroupTypeTask:   "task",
+}
+
+var InstanceGroupType_value = map[string]InstanceGroupType{
+	"master": InstanceGroupTypeMaster,
+	"core":   InstanceGroupTypeCore,
+	"task":   InstanceGroupTypeTask,
+}
+
+func (p InstanceGroupType) String() string {
+	return InstanceGroupType_name[p]
+}
 
 type Scaler struct {
 	ID          *string   `json:"id,omitempty"`
@@ -50,7 +79,6 @@ type Strategy struct {
 
 type Cloning struct {
 	OriginClusterID *string `json:"originClusterId,omitempty"`
-	NumberOfRetries *string `json:"numberOfRetries,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -82,8 +110,8 @@ type AvailabilityZone struct {
 }
 
 type Tag struct {
-	TagKey   *string `json:"tagKey,omitempty"`
-	TagValue *string `json:"tagValue,omitempty"`
+	Key   *string `json:"tagKey,omitempty"`
+	Value *string `json:"tagValue,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -99,18 +127,28 @@ type InstanceGroups struct {
 }
 
 type InstanceGroup struct {
-	InstanceTypes    []*string         `json:"instanceTypes,omitempty"`
-	Target           *int              `json:"target,omitempty"`
-	LifeCycle        *string           `json:"lifeCycle,omitempty"`
-	EBSConfiguration *EBSConfiguration `json:"ebsConfiguration,omitempty"`
+	InstanceTypes    []string               `json:"instanceTypes,omitempty"`
+	Target           *int                   `json:"target,omitempty"`
+	Capacity         *InstanceGroupCapacity `json:"capacity,omitempty"`
+	LifeCycle        *string                `json:"lifeCycle,omitempty"`
+	EBSConfiguration *EBSConfiguration      `json:"ebsConfiguration,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type InstanceGroupCapacity struct {
+	Target  *int `json:"target,omitempty"`
+	Minimum *int `json:"minimum,omitempty"`
+	Maximum *int `json:"maximum,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
 }
 
 type EBSConfiguration struct {
-	EbsOptimized          *string              `json:"ebsOptimized,omitempty"`
-	EbsBlockDeviceConfigs []*BlockDeviceConfig `json:"ebsBlockDeviceConfigs,omitempty"`
+	Optimized          *bool                `json:"ebsOptimized,omitempty"`
+	BlockDeviceConfigs []*BlockDeviceConfig `json:"ebsBlockDeviceConfigs,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -126,8 +164,8 @@ type BlockDeviceConfig struct {
 
 type VolumeSpecification struct {
 	VolumeType *string `json:"volumeType,omitempty"`
-	SizeInGB   *string `json:"sizeInGB,omitempty"`
-	Iops       *string `json:"iops,omitempty"`
+	SizeInGB   *int    `json:"sizeInGB,omitempty"`
+	IOPS       *int    `json:"iops,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -149,9 +187,6 @@ type ScalingPolicy struct {
 	Statistic         *string      `json:"statistic,omitempty"`
 	Unit              *string      `json:"unit,omitempty"`
 	Threshold         *float64     `json:"threshold,omitempty"`
-	Adjustment        *int         `json:"adjustment,omitempty"`
-	MinTargetCapacity *int         `json:"minTargetCapacity,omitempty"`
-	MaxTargetCapacity *int         `json:"maxTargetCapacity,omitempty"`
 	Period            *int         `json:"period,omitempty"`
 	EvaluationPeriods *int         `json:"evaluationPeriods,omitempty"`
 	Cooldown          *int         `json:"cooldown,omitempty"`
@@ -234,26 +269,28 @@ type DeleteScalerInput struct {
 
 type DeleteScalerOutput struct{}
 
-type StatusScalerInput struct {
+type ScalerCluster struct {
+	ScalerClusterId *string `json:"id,omitempty"`
+}
+
+type ScalerClusterStatusInput struct {
 	ScalerID *string `json:"mrScalerId,omitempty"`
 }
 
-type StatusScalerOutput struct {
-	Instances []*Instance `json:"instances,omitempty"`
-}
-
-type Instance struct {
-	ID               *string    `json:"instanceId,omitempty"`
-	SpotRequestID    *string    `json:"spotInstanceRequestId,omitempty"`
-	InstanceType     *string    `json:"instanceType,omitempty"`
-	Status           *string    `json:"status,omitempty"`
-	Product          *string    `json:"product,omitempty"`
-	AvailabilityZone *string    `json:"availabilityZone,omitempty"`
-	CreatedAt        *time.Time `json:"createdAt,omitempty"`
+type ScalerClusterStatusOutput struct {
+	ScalerClusterId *string `json:"id,omitempty"`
 }
 
 func scalerFromJSON(in []byte) (*Scaler, error) {
 	b := new(Scaler)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func scalerClusterFromJSON(in []byte) (*ScalerCluster, error) {
+	b := new(ScalerCluster)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
@@ -279,12 +316,39 @@ func scalersFromJSON(in []byte) ([]*Scaler, error) {
 	return out, nil
 }
 
+func scalerClustersFromJSON(in []byte) ([]*ScalerCluster, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*ScalerCluster, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := scalerClusterFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
 func scalersFromHttpResponse(resp *http.Response) ([]*Scaler, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 	return scalersFromJSON(body)
+}
+
+func scalerClustersFromHttpResponse(resp *http.Response) ([]*ScalerCluster, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return scalerClustersFromJSON(body)
 }
 
 //region Scaler
@@ -295,7 +359,7 @@ func (o *Scaler) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Scaler) SetID(v *string) *Scaler {
+func (o *Scaler) SetId(v *string) *Scaler {
 	if o.ID = v; v == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
@@ -385,16 +449,9 @@ func (o *Cloning) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Cloning) SetOriginClusterID(v *string) *Cloning {
+func (o *Cloning) SetOriginClusterId(v *string) *Cloning {
 	if o.OriginClusterID = v; v == nil {
 		o.nullFields = append(o.nullFields, "OriginClusterID")
-	}
-	return o
-}
-
-func (o *Cloning) SetNumberOfRetries(v *string) *Cloning {
-	if o.NumberOfRetries = v; v == nil {
-		o.nullFields = append(o.nullFields, "NumberOfRetries")
 	}
 	return o
 }
@@ -409,7 +466,7 @@ func (o *Wrapping) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Wrapping) SetSourceClusterID(v *string) *Wrapping {
+func (o *Wrapping) SetSourceClusterId(v *string) *Wrapping {
 	if o.SourceClusterID = v; v == nil {
 		o.nullFields = append(o.nullFields, "SourceClusterID")
 	}
@@ -471,7 +528,7 @@ func (o *AvailabilityZone) SetName(v *string) *AvailabilityZone {
 	return o
 }
 
-func (o *AvailabilityZone) SetSubnetID(v *string) *AvailabilityZone {
+func (o *AvailabilityZone) SetSubnetId(v *string) *AvailabilityZone {
 	if o.SubnetID = v; v == nil {
 		o.nullFields = append(o.nullFields, "SubnetID")
 	}
@@ -488,16 +545,16 @@ func (o *Tag) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Tag) SetTagKey(v *string) *Tag {
-	if o.TagKey = v; v == nil {
-		o.nullFields = append(o.nullFields, "TagKey")
+func (o *Tag) SetKey(v *string) *Tag {
+	if o.Key = v; v == nil {
+		o.nullFields = append(o.nullFields, "Key")
 	}
 	return o
 }
 
-func (o *Tag) SetTagValue(v *string) *Tag {
-	if o.TagValue = v; v == nil {
-		o.nullFields = append(o.nullFields, "TagValue")
+func (o *Tag) SetValue(v *string) *Tag {
+	if o.Value = v; v == nil {
+		o.nullFields = append(o.nullFields, "Value")
 	}
 	return o
 }
@@ -543,7 +600,7 @@ func (o *InstanceGroup) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *InstanceGroup) SetInstanceTypes(v []*string) *InstanceGroup {
+func (o *InstanceGroup) SetInstanceTypes(v []string) *InstanceGroup {
 	if o.InstanceTypes = v; v == nil {
 		o.nullFields = append(o.nullFields, "InstanceTypes")
 	}
@@ -553,6 +610,13 @@ func (o *InstanceGroup) SetInstanceTypes(v []*string) *InstanceGroup {
 func (o *InstanceGroup) SetTarget(v *int) *InstanceGroup {
 	if o.Target = v; v == nil {
 		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
+func (o *InstanceGroup) SetCapacity(v *InstanceGroupCapacity) *InstanceGroup {
+	if o.Capacity = v; v == nil {
+		o.nullFields = append(o.nullFields, "Capacity")
 	}
 	return o
 }
@@ -573,6 +637,112 @@ func (o *InstanceGroup) SetEBSConfiguration(v *EBSConfiguration) *InstanceGroup 
 
 //endregion
 
+//region InstanceGroupCapacity
+func (o *InstanceGroupCapacity) MarshalJSON() ([]byte, error) {
+	type noMethod InstanceGroupCapacity
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *InstanceGroupCapacity) SetTarget(v *int) *InstanceGroupCapacity {
+	if o.Target = v; v == nil {
+		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
+func (o *InstanceGroupCapacity) SetMinimum(v *int) *InstanceGroupCapacity {
+	if o.Minimum = v; v == nil {
+		o.nullFields = append(o.nullFields, "Minimum")
+	}
+	return o
+}
+
+func (o *InstanceGroupCapacity) SetMaximum(v *int) *InstanceGroupCapacity {
+	if o.Maximum = v; v == nil {
+		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+//endregion
+
+//region EBSConfiguration
+func (o *EBSConfiguration) MarshalJSON() ([]byte, error) {
+	type noMethod EBSConfiguration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *EBSConfiguration) SetOptimized(v *bool) *EBSConfiguration {
+	if o.Optimized = v; v == nil {
+		o.nullFields = append(o.nullFields, "Optimized")
+	}
+	return o
+}
+
+func (o *EBSConfiguration) SetBlockDeviceConfigs(v []*BlockDeviceConfig) *EBSConfiguration {
+	if o.BlockDeviceConfigs = v; v == nil {
+		o.nullFields = append(o.nullFields, "BlockDeviceConfigs")
+	}
+	return o
+}
+
+//endregion
+
+//region BlockDeviceConfig
+func (o *BlockDeviceConfig) MarshalJSON() ([]byte, error) {
+	type noMethod BlockDeviceConfig
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *BlockDeviceConfig) SetVolumesPerInstance(v *int) *BlockDeviceConfig {
+	if o.VolumesPerInstance = v; v == nil {
+		o.nullFields = append(o.nullFields, "VolumesPerInstance")
+	}
+	return o
+}
+
+func (o *BlockDeviceConfig) SetVolumeSpecification(v *VolumeSpecification) *BlockDeviceConfig {
+	if o.VolumeSpecification = v; v == nil {
+		o.nullFields = append(o.nullFields, "VolumeSpecification")
+	}
+	return o
+}
+
+//endregion
+
+//region VolumeSpecification
+func (o *VolumeSpecification) MarshalJSON() ([]byte, error) {
+	type noMethod VolumeSpecification
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VolumeSpecification) SetVolumeType(v *string) *VolumeSpecification {
+	if o.VolumeType = v; v == nil {
+		o.nullFields = append(o.nullFields, "VolumeType")
+	}
+	return o
+}
+
+func (o *VolumeSpecification) SetSizeInGB(v *int) *VolumeSpecification {
+	if o.SizeInGB = v; v == nil {
+		o.nullFields = append(o.nullFields, "SizeInGB")
+	}
+	return o
+}
+
+func (o *VolumeSpecification) SetIOPS(v *int) *VolumeSpecification {
+	if o.IOPS = v; v == nil {
+		o.nullFields = append(o.nullFields, "IOPS")
+	}
+	return o
+}
+
+//endregion
+
 //region Scaling
 
 func (o *Scaling) MarshalJSON() ([]byte, error) {
@@ -584,6 +754,8 @@ func (o *Scaling) MarshalJSON() ([]byte, error) {
 func (o *Scaling) SetUp(v []*ScalingPolicy) *Scaling {
 	if o.Up = v; v == nil {
 		o.nullFields = append(o.nullFields, "Up")
+	} else if len(o.Down) == 0 {
+		o.forceSendFields = append(o.forceSendFields, "Up")
 	}
 	return o
 }
@@ -591,6 +763,8 @@ func (o *Scaling) SetUp(v []*ScalingPolicy) *Scaling {
 func (o *Scaling) SetDown(v []*ScalingPolicy) *Scaling {
 	if o.Down = v; v == nil {
 		o.nullFields = append(o.nullFields, "Down")
+	} else if len(o.Down) == 0 {
+		o.forceSendFields = append(o.forceSendFields, "Down")
 	}
 	return o
 }
@@ -650,27 +824,6 @@ func (o *ScalingPolicy) SetUnit(v *string) *ScalingPolicy {
 func (o *ScalingPolicy) SetThreshold(v *float64) *ScalingPolicy {
 	if o.Threshold = v; v == nil {
 		o.nullFields = append(o.nullFields, "Threshold")
-	}
-	return o
-}
-
-func (o *ScalingPolicy) SetAdjustment(v *int) *ScalingPolicy {
-	if o.Adjustment = v; v == nil {
-		o.nullFields = append(o.nullFields, "Adjustment")
-	}
-	return o
-}
-
-func (o *ScalingPolicy) SetMinTargetCapacity(v *int) *ScalingPolicy {
-	if o.MinTargetCapacity = v; v == nil {
-		o.nullFields = append(o.nullFields, "MinTargetCapacity")
-	}
-	return o
-}
-
-func (o *ScalingPolicy) SetMaxTargetCapacity(v *int) *ScalingPolicy {
-	if o.MaxTargetCapacity = v; v == nil {
-		o.nullFields = append(o.nullFields, "MaxTargetCapacity")
 	}
 	return o
 }
@@ -812,6 +965,29 @@ func (o *Configurations) SetFile(v *ConfigurationFile) *Configurations {
 
 //endregion
 
+//region ConfigurationFile
+func (o *ConfigurationFile) MarshalJSON() ([]byte, error) {
+	type noMethod ConfigurationFile
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ConfigurationFile) SetBucket(v *string) *ConfigurationFile {
+	if o.Bucket = v; v == nil {
+		o.nullFields = append(o.nullFields, "Bucket")
+	}
+	return o
+}
+
+func (o *ConfigurationFile) SetKey(v *string) *ConfigurationFile {
+	if o.Key = v; v == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+//endregion
+
 func (s *ServiceOp) List(ctx context.Context, input *ListScalersInput) (*ListScalersOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/aws/emr/mrScaler")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -874,6 +1050,34 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadScalerInput) (*ReadScal
 	output := new(ReadScalerOutput)
 	if len(gs) > 0 {
 		output.Scaler = gs[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ReadScalerCluster(ctx context.Context, input *ScalerClusterStatusInput) (*ScalerClusterStatusOutput, error) {
+	path, err := uritemplates.Expand("/aws/emr/mrScaler/{mrScalerId}/cluster", uritemplates.Values{
+		"mrScalerId": spotinst.StringValue(input.ScalerID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := scalerClustersFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ScalerClusterStatusOutput)
+	if len(gs) > 0 {
+		output.ScalerClusterId = gs[0].ScalerClusterId
 	}
 
 	return output, nil

@@ -93,6 +93,58 @@ type Integration struct {
 	Rancher             *RancherIntegration             `json:"rancher,omitempty"`
 	Kubernetes          *KubernetesIntegration          `json:"kubernetes,omitempty"`
 	Mesosphere          *MesosphereIntegration          `json:"mesosphere,omitempty"`
+	Multai              *MultaiIntegration              `json:"mlbRuntime,omitempty"`
+	Nomad               *NomadIntegration               `json:"nomad,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type EC2ContainerServiceIntegration struct {
+	ClusterName *string    `json:"clusterName,omitempty"`
+	AutoScale   *AutoScale `json:"autoScale,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AutoScale struct {
+	IsEnabled   *bool                 `json:"isEnabled,omitempty"`
+	Cooldown    *int                  `json:"cooldown,omitempty"`
+	Headroom    *AutoScaleHeadroom    `json:"headroom,omitempty"`
+	Down        *AutoScaleDown        `json:"down,omitempty"`
+	Constraints []AutoScaleConstraint `json:"constraints,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AutoScaleHeadroom struct {
+	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
+	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
+	NumOfUnits    *int `json:"numOfUnits,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AutoScaleDown struct {
+	EvaluationPeriods *int `json:"evaluationPeriods,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type AutoScaleConstraint struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type ElasticBeanstalkIntegration struct {
+	EnvironmentID *string `json:"environmentId,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -124,42 +176,10 @@ type RancherIntegration struct {
 	nullFields      []string `json:"-"`
 }
 
-type ElasticBeanstalkIntegration struct {
-	EnvironmentID *string `json:"environmentId,omitempty"`
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
-}
-
-type EC2ContainerServiceIntegration struct {
-	ClusterName *string    `json:"clusterName,omitempty"`
-	AutoScale   *AutoScale `json:"autoScale,omitempty"`
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
-}
-
-type AutoScale struct {
-	IsEnabled *bool     `json:"isEnabled,omitempty"`
-	Cooldown  *int      `json:"cooldown,omitempty"`
-	Headroom  *Headroom `json:"headroom,omitempty"`
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
-}
-
-type Headroom struct {
-	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
-	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
-	NumOfUnits    *int `json:"numOfUnits,omitempty"`
-
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
-}
-
 type KubernetesIntegration struct {
-	Server *string `json:"apiServer,omitempty"`
-	Token  *string `json:"token,omitempty"`
+	Server    *string    `json:"apiServer,omitempty"`
+	Token     *string    `json:"token,omitempty"`
+	AutoScale *AutoScale `json:"autoScale,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -172,23 +192,42 @@ type MesosphereIntegration struct {
 	nullFields      []string `json:"-"`
 }
 
-type Scheduling struct {
-	Tasks []*ScheduledTask `json:"tasks,omitempty"`
+type MultaiIntegration struct {
+	DeploymentID *string `json:"deploymentId,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
 }
 
-type ScheduledTask struct {
+type NomadIntegration struct {
+	MasterHost *string    `json:"masterHost,omitempty"`
+	MasterPort *int       `json:"masterPort,omitempty"`
+	AutoScale  *AutoScale `json:"autoScale,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type Scheduling struct {
+	Tasks []*Task `json:"tasks,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type Task struct {
 	IsEnabled           *bool   `json:"isEnabled,omitempty"`
+	Type                *string `json:"taskType,omitempty"`
 	Frequency           *string `json:"frequency,omitempty"`
 	CronExpression      *string `json:"cronExpression,omitempty"`
-	TaskType            *string `json:"taskType,omitempty"`
 	ScaleTargetCapacity *int    `json:"scaleTargetCapacity,omitempty"`
 	ScaleMinCapacity    *int    `json:"scaleMinCapacity,omitempty"`
 	ScaleMaxCapacity    *int    `json:"scaleMaxCapacity,omitempty"`
 	BatchSizePercentage *int    `json:"batchSizePercentage,omitempty"`
 	GracePeriod         *int    `json:"gracePeriod,omitempty"`
+	TargetCapacity      *int    `json:"targetCapacity,omitempty"`
+	MinCapacity         *int    `json:"minCapacity,omitempty"`
+	MaxCapacity         *int    `json:"maxCapacity,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -249,6 +288,7 @@ type Strategy struct {
 	OnDemandCount            *int         `json:"onDemandCount,omitempty"`
 	DrainingTimeout          *int         `json:"drainingTimeout,omitempty"`
 	AvailabilityVsCost       *string      `json:"availabilityVsCost,omitempty"`
+	LifetimePeriod           *string      `json:"lifetimePeriod,omitempty"`
 	UtilizeReservedInstances *bool        `json:"utilizeReservedInstances,omitempty"`
 	FallbackToOnDemand       *bool        `json:"fallbackToOd,omitempty"`
 	SpinUpTime               *int         `json:"spinUpTime,omitempty"`
@@ -260,9 +300,10 @@ type Strategy struct {
 }
 
 type Persistence struct {
-	ShouldPersistPrivateIp    *bool `json:"shouldPersistPrivateIp,omitempty"`
-	ShouldPersistBlockDevices *bool `json:"shouldPersistBlockDevices,omitempty"`
-	ShouldPersistRootDevice   *bool `json:"shouldPersistRootDevice,omitempty"`
+	ShouldPersistPrivateIP    *bool   `json:"shouldPersistPrivateIp,omitempty"`
+	ShouldPersistBlockDevices *bool   `json:"shouldPersistBlockDevices,omitempty"`
+	ShouldPersistRootDevice   *bool   `json:"shouldPersistRootDevice,omitempty"`
+	BlockDevicesMode          *string `json:"blockDevicesMode,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -324,8 +365,9 @@ type InstanceTypeWeight struct {
 }
 
 type AvailabilityZone struct {
-	Name     *string `json:"name,omitempty"`
-	SubnetID *string `json:"subnetId,omitempty"`
+	Name               *string `json:"name,omitempty"`
+	SubnetID           *string `json:"subnetId,omitempty"`
+	PlacementGroupName *string `json:"placementGroupName,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -362,9 +404,13 @@ type LoadBalancersConfig struct {
 }
 
 type LoadBalancer struct {
-	Name *string `json:"name,omitempty"`
-	Arn  *string `json:"arn,omitempty"`
-	Type *string `json:"type,omitempty"`
+	Name          *string `json:"name,omitempty"`
+	Arn           *string `json:"arn,omitempty"`
+	Type          *string `json:"type,omitempty"`
+	BalancerID    *string `json:"balancerId,omitempty"`
+	TargetSetID   *string `json:"targetSetId,omitempty"`
+	ZoneAwareness *bool   `json:"azAwareness,omitempty"`
+	AutoWeight    *bool   `json:"autoWeight,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -495,6 +541,15 @@ type RollGroupInput struct {
 }
 
 type RollGroupOutput struct{}
+
+type ImportBeanstalkInput struct {
+	EnvironmentName *string `json:"environmentName,omitempty"`
+	Region          *string `json:"region,omitempty"`
+}
+
+type ImportBeanstalkOutput struct {
+	Group *Group `json:"group,omitempty"`
+}
 
 func groupFromJSON(in []byte) (*Group, error) {
 	b := new(Group)
@@ -753,6 +808,32 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroup
 	return &RollGroupOutput{}, nil
 }
 
+func (s *ServiceOp) ImportBeanstalkEnv(ctx context.Context, input *ImportBeanstalkInput) (*ImportBeanstalkOutput, error) {
+	path := "/aws/ec2/group/beanstalk/import"
+	r := client.NewRequest(http.MethodGet, path)
+
+	r.Params["environmentName"] = []string{spotinst.StringValue(input.EnvironmentName)}
+	r.Params["region"] = []string{spotinst.StringValue(input.Region)}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := groupsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ImportBeanstalkOutput)
+	if len(gs) > 0 {
+		output.Group = gs[0]
+	}
+
+	return output, nil
+}
+
 // region Group
 
 func (o *Group) MarshalJSON() ([]byte, error) {
@@ -848,6 +929,13 @@ func (o *Integration) SetElasticBeanstalk(v *ElasticBeanstalkIntegration) *Integ
 	return o
 }
 
+func (o *Integration) SetCodeDeploy(v *CodeDeployIntegration) *Integration {
+	if o.CodeDeploy = v; o.CodeDeploy == nil {
+		o.nullFields = append(o.nullFields, "CodeDeploy")
+	}
+	return o
+}
+
 func (o *Integration) SetRancher(v *RancherIntegration) *Integration {
 	if o.Rancher = v; o.Rancher == nil {
 		o.nullFields = append(o.nullFields, "Rancher")
@@ -869,16 +957,23 @@ func (o *Integration) SetMesosphere(v *MesosphereIntegration) *Integration {
 	return o
 }
 
-func (o *Integration) SetCodeDeploy(v *CodeDeployIntegration) *Integration {
-	if o.CodeDeploy = v; o.CodeDeploy == nil {
-		o.nullFields = append(o.nullFields, "CodeDeploy")
+func (o *Integration) SetMultai(v *MultaiIntegration) *Integration {
+	if o.Multai = v; o.Multai == nil {
+		o.nullFields = append(o.nullFields, "Multai")
+	}
+	return o
+}
+
+func (o *Integration) SetNomad(v *NomadIntegration) *Integration {
+	if o.Nomad = v; o.Nomad == nil {
+		o.nullFields = append(o.nullFields, "Nomad")
 	}
 	return o
 }
 
 // endregion
 
-// regionRancherIntegration
+// region RancherIntegration
 
 func (o *RancherIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod RancherIntegration
@@ -909,7 +1004,7 @@ func (o *RancherIntegration) SetSecretKey(v *string) *RancherIntegration {
 
 // endregion
 
-// regionElasticBeanstalkIntegration
+// region ElasticBeanstalkIntegration
 
 func (o *ElasticBeanstalkIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod ElasticBeanstalkIntegration
@@ -926,7 +1021,7 @@ func (o *ElasticBeanstalkIntegration) SetEnvironmentId(v *string) *ElasticBeanst
 
 // endregion
 
-// regionEC2ContainerServiceIntegration
+// region EC2ContainerServiceIntegration
 
 func (o *EC2ContainerServiceIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod EC2ContainerServiceIntegration
@@ -950,7 +1045,7 @@ func (o *EC2ContainerServiceIntegration) SetAutoScale(v *AutoScale) *EC2Containe
 
 // endregion
 
-// regionAutoScale
+// region AutoScale
 
 func (o *AutoScale) MarshalJSON() ([]byte, error) {
 	type noMethod AutoScale
@@ -972,38 +1067,52 @@ func (o *AutoScale) SetCooldown(v *int) *AutoScale {
 	return o
 }
 
-func (o *AutoScale) SetHeadroom(v *Headroom) *AutoScale {
+func (o *AutoScale) SetHeadroom(v *AutoScaleHeadroom) *AutoScale {
 	if o.Headroom = v; o.Headroom == nil {
 		o.nullFields = append(o.nullFields, "Headroom")
 	}
 	return o
 }
 
+func (o *AutoScale) SetDown(v *AutoScaleDown) *AutoScale {
+	if o.Down = v; o.Down == nil {
+		o.nullFields = append(o.nullFields, "Down")
+	}
+	return o
+}
+
+func (o *AutoScale) SetConstraints(v []AutoScaleConstraint) *AutoScale {
+	if o.Constraints = v; o.Constraints == nil {
+		o.nullFields = append(o.nullFields, "Constraints")
+	}
+	return o
+}
+
 // endregion
 
-// regionHeadroom
+// region AutoScaleHeadroom
 
-func (o *Headroom) MarshalJSON() ([]byte, error) {
-	type noMethod Headroom
+func (o *AutoScaleHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleHeadroom
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Headroom) SetCPUPerUnit(v *int) *Headroom {
+func (o *AutoScaleHeadroom) SetCPUPerUnit(v *int) *AutoScaleHeadroom {
 	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "CPUPerUnit")
 	}
 	return o
 }
 
-func (o *Headroom) SetMemoryPerUnit(v *int) *Headroom {
+func (o *AutoScaleHeadroom) SetMemoryPerUnit(v *int) *AutoScaleHeadroom {
 	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
 		o.nullFields = append(o.nullFields, "MemoryPerUnit")
 	}
 	return o
 }
 
-func (o *Headroom) SetNumOfUnits(v *int) *Headroom {
+func (o *AutoScaleHeadroom) SetNumOfUnits(v *int) *AutoScaleHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
 	}
@@ -1012,7 +1121,48 @@ func (o *Headroom) SetNumOfUnits(v *int) *Headroom {
 
 // endregion
 
-// regionKubernetesIntegration
+// region AutoScaleDown
+
+func (o *AutoScaleDown) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleDown
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleDown) SetEvaluationPeriods(v *int) *AutoScaleDown {
+	if o.EvaluationPeriods = v; o.EvaluationPeriods == nil {
+		o.nullFields = append(o.nullFields, "EvaluationPeriods")
+	}
+	return o
+}
+
+// endregion
+
+// region AutoScaleConstraint
+
+func (o *AutoScaleConstraint) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleConstraint
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleConstraint) SetKey(v *string) *AutoScaleConstraint {
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+func (o *AutoScaleConstraint) SetValue(v *string) *AutoScaleConstraint {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region KubernetesIntegration
 
 func (o *KubernetesIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod KubernetesIntegration
@@ -1034,9 +1184,16 @@ func (o *KubernetesIntegration) SetToken(v *string) *KubernetesIntegration {
 	return o
 }
 
+func (o *KubernetesIntegration) SetAutoScale(v *AutoScale) *KubernetesIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
 // endregion
 
-// regionMesosphereIntegration
+// region MesosphereIntegration
 
 func (o *MesosphereIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod MesosphereIntegration
@@ -1053,6 +1210,54 @@ func (o *MesosphereIntegration) SetServer(v *string) *MesosphereIntegration {
 
 // endregion
 
+// region MultaiIntegration
+
+func (o *MultaiIntegration) MarshalJSON() ([]byte, error) {
+	type noMethod MultaiIntegration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *MultaiIntegration) SetDeploymentId(v *string) *MultaiIntegration {
+	if o.DeploymentID = v; o.DeploymentID == nil {
+		o.nullFields = append(o.nullFields, "DeploymentID")
+	}
+	return o
+}
+
+// endregion
+
+// region NomadIntegration
+
+func (o *NomadIntegration) MarshalJSON() ([]byte, error) {
+	type noMethod EC2ContainerServiceIntegration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NomadIntegration) SetMasterHost(v *string) *NomadIntegration {
+	if o.MasterHost = v; o.MasterHost == nil {
+		o.nullFields = append(o.nullFields, "MasterHost")
+	}
+	return o
+}
+
+func (o *NomadIntegration) SetMasterPort(v *int) *NomadIntegration {
+	if o.MasterPort = v; o.MasterPort == nil {
+		o.nullFields = append(o.nullFields, "MasterPort")
+	}
+	return o
+}
+
+func (o *NomadIntegration) SetAutoScale(v *AutoScale) *NomadIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+// endregion
+
 // region Scheduling
 
 func (o *Scheduling) MarshalJSON() ([]byte, error) {
@@ -1061,7 +1266,7 @@ func (o *Scheduling) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Scheduling) SetTasks(v []*ScheduledTask) *Scheduling {
+func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
 	if o.Tasks = v; o.Tasks == nil {
 		o.nullFields = append(o.nullFields, "Tasks")
 	}
@@ -1070,73 +1275,94 @@ func (o *Scheduling) SetTasks(v []*ScheduledTask) *Scheduling {
 
 // endregion
 
-// regionScheduledTask
+// region Task
 
-func (o *ScheduledTask) MarshalJSON() ([]byte, error) {
-	type noMethod ScheduledTask
+func (o *Task) MarshalJSON() ([]byte, error) {
+	type noMethod Task
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ScheduledTask) SetIsEnabled(v *bool) *ScheduledTask {
+func (o *Task) SetIsEnabled(v *bool) *Task {
 	if o.IsEnabled = v; o.IsEnabled == nil {
 		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetFrequency(v *string) *ScheduledTask {
+func (o *Task) SetType(v *string) *Task {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Task) SetFrequency(v *string) *Task {
 	if o.Frequency = v; o.Frequency == nil {
 		o.nullFields = append(o.nullFields, "Frequency")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetCronExpression(v *string) *ScheduledTask {
+func (o *Task) SetCronExpression(v *string) *Task {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetTaskType(v *string) *ScheduledTask {
-	if o.TaskType = v; o.TaskType == nil {
-		o.nullFields = append(o.nullFields, "TaskType")
-	}
-	return o
-}
-
-func (o *ScheduledTask) SetScaleTargetCapacity(v *int) *ScheduledTask {
+func (o *Task) SetScaleTargetCapacity(v *int) *Task {
 	if o.ScaleTargetCapacity = v; o.ScaleTargetCapacity == nil {
 		o.nullFields = append(o.nullFields, "ScaleTargetCapacity")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetScaleMinCapacity(v *int) *ScheduledTask {
+func (o *Task) SetScaleMinCapacity(v *int) *Task {
 	if o.ScaleMinCapacity = v; o.ScaleMinCapacity == nil {
 		o.nullFields = append(o.nullFields, "ScaleMinCapacity")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetScaleMaxCapacity(v *int) *ScheduledTask {
+func (o *Task) SetScaleMaxCapacity(v *int) *Task {
 	if o.ScaleMaxCapacity = v; o.ScaleMaxCapacity == nil {
 		o.nullFields = append(o.nullFields, "ScaleMaxCapacity")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetBatchSizePercentage(v *int) *ScheduledTask {
+func (o *Task) SetBatchSizePercentage(v *int) *Task {
 	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
 		o.nullFields = append(o.nullFields, "BatchSizePercentage")
 	}
 	return o
 }
 
-func (o *ScheduledTask) SetGracePeriod(v *int) *ScheduledTask {
+func (o *Task) SetGracePeriod(v *int) *Task {
 	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o *Task) SetTargetCapacity(v *int) *Task {
+	if o.TargetCapacity = v; o.TargetCapacity == nil {
+		o.nullFields = append(o.nullFields, "TargetCapacity")
+	}
+	return o
+}
+
+func (o *Task) SetMinCapacity(v *int) *Task {
+	if o.MinCapacity = v; o.MinCapacity == nil {
+		o.nullFields = append(o.nullFields, "MinCapacity")
+	}
+	return o
+}
+
+func (o *Task) SetMaxCapacity(v *int) *Task {
+	if o.MaxCapacity = v; o.MaxCapacity == nil {
+		o.nullFields = append(o.nullFields, "MaxCapacity")
 	}
 	return o
 }
@@ -1401,6 +1627,13 @@ func (o *Strategy) SetAvailabilityVsCost(v *string) *Strategy {
 	return o
 }
 
+func (o *Strategy) SetLifetimePeriod(v *string) *Strategy {
+	if o.LifetimePeriod = v; o.LifetimePeriod == nil {
+		o.nullFields = append(o.nullFields, "LifetimePeriod")
+	}
+	return o
+}
+
 func (o *Strategy) SetUtilizeReservedInstances(v *bool) *Strategy {
 	if o.UtilizeReservedInstances = v; o.UtilizeReservedInstances == nil {
 		o.nullFields = append(o.nullFields, "UtilizeReservedInstances")
@@ -1438,7 +1671,7 @@ func (o *Strategy) SetPersistence(v *Persistence) *Strategy {
 
 // endregion
 
-// regionPersistence
+// region Persistence
 
 func (o *Persistence) MarshalJSON() ([]byte, error) {
 	type noMethod Persistence
@@ -1446,9 +1679,9 @@ func (o *Persistence) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Persistence) SetShouldPersistPrivateIp(v *bool) *Persistence {
-	if o.ShouldPersistPrivateIp = v; o.ShouldPersistPrivateIp == nil {
-		o.nullFields = append(o.nullFields, "ShouldPersistPrivateIp")
+func (o *Persistence) SetShouldPersistPrivateIP(v *bool) *Persistence {
+	if o.ShouldPersistPrivateIP = v; o.ShouldPersistPrivateIP == nil {
+		o.nullFields = append(o.nullFields, "ShouldPersistPrivateIP")
 	}
 	return o
 }
@@ -1463,6 +1696,13 @@ func (o *Persistence) SetShouldPersistBlockDevices(v *bool) *Persistence {
 func (o *Persistence) SetShouldPersistRootDevice(v *bool) *Persistence {
 	if o.ShouldPersistRootDevice = v; o.ShouldPersistRootDevice == nil {
 		o.nullFields = append(o.nullFields, "ShouldPersistRootDevice")
+	}
+	return o
+}
+
+func (o *Persistence) SetBlockDevicesMode(v *string) *Persistence {
+	if o.BlockDevicesMode = v; o.BlockDevicesMode == nil {
+		o.nullFields = append(o.nullFields, "BlockDevicesMode")
 	}
 	return o
 }
@@ -1684,6 +1924,13 @@ func (o *AvailabilityZone) SetSubnetId(v *string) *AvailabilityZone {
 	return o
 }
 
+func (o *AvailabilityZone) SetPlacementGroupName(v *string) *AvailabilityZone {
+	if o.PlacementGroupName = v; o.PlacementGroupName == nil {
+		o.nullFields = append(o.nullFields, "PlacementGroupName")
+	}
+	return o
+}
+
 // endregion
 
 // region LaunchSpecification
@@ -1857,6 +2104,34 @@ func (o *LoadBalancer) SetArn(v *string) *LoadBalancer {
 func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
 	if o.Type = v; o.Type == nil {
 		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetBalancerId(v *string) *LoadBalancer {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetTargetSetId(v *string) *LoadBalancer {
+	if o.TargetSetID = v; o.TargetSetID == nil {
+		o.nullFields = append(o.nullFields, "TargetSetID")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetZoneAwareness(v *bool) *LoadBalancer {
+	if o.ZoneAwareness = v; o.ZoneAwareness == nil {
+		o.nullFields = append(o.nullFields, "ZoneAwareness")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetAutoWeight(v *bool) *LoadBalancer {
+	if o.AutoWeight = v; o.AutoWeight == nil {
+		o.nullFields = append(o.nullFields, "AutoWeight")
 	}
 	return o
 }
@@ -2043,7 +2318,7 @@ func (o *IAMInstanceProfile) SetArn(v *string) *IAMInstanceProfile {
 
 // endregion
 
-// regionRollStrategy
+// region RollStrategy
 
 func (o *RollStrategy) MarshalJSON() ([]byte, error) {
 	type noMethod RollStrategy
@@ -2067,7 +2342,7 @@ func (o *RollStrategy) SetShouldDrainInstances(v *bool) *RollStrategy {
 
 // endregion
 
-// regionCodeDeployIntegration
+// region CodeDeployIntegration
 
 func (o *CodeDeployIntegration) MarshalJSON() ([]byte, error) {
 	type noMethod CodeDeployIntegration
@@ -2098,7 +2373,7 @@ func (o *CodeDeployIntegration) SetTerminateInstanceOnFailure(v *bool) *CodeDepl
 
 // endregion
 
-// regionDeploymentGroup
+// region DeploymentGroup
 
 func (o *DeploymentGroup) MarshalJSON() ([]byte, error) {
 	type noMethod DeploymentGroup
