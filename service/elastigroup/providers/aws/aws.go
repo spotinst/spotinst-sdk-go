@@ -259,6 +259,7 @@ type ScalingPolicy struct {
 	Operator          *string      `json:"operator,omitempty"`
 	Dimensions        []*Dimension `json:"dimensions,omitempty"`
 	Action            *Action      `json:"action,omitempty"`
+	Target            *float64     `json:"target,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -267,11 +268,11 @@ type ScalingPolicy struct {
 type Action struct {
 	Type              *string `json:"type,omitempty"`
 	Adjustment        *string `json:"adjustment,omitempty"`
-	MinTargetCapacity *string `json:"minTargetCapacity,omitempty"`
-	MaxTargetCapacity *string `json:"maxTargetCapacity,omitempty"`
-	Maximum           *string `json:"maximum,omitempty"`
-	Minimum           *string `json:"minimum,omitempty"`
-	Target            *string `json:"target,omitempty"`
+	MinTargetCapacity *int    `json:"minTargetCapacity,omitempty"`
+	MaxTargetCapacity *int    `json:"maxTargetCapacity,omitempty"`
+	Maximum           *int    `json:"maximum,omitempty"`
+	Minimum           *int    `json:"minimum,omitempty"`
+	Target            *int    `json:"target,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1522,6 +1523,13 @@ func (o *ScalingPolicy) SetAction(v *Action) *ScalingPolicy {
 	return o
 }
 
+func (o *ScalingPolicy) SetTarget(v *float64) *ScalingPolicy {
+	if o.Target = v; o.Target == nil {
+		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
 // endregion
 
 // region Action
@@ -1546,35 +1554,35 @@ func (o *Action) SetAdjustment(v *string) *Action {
 	return o
 }
 
-func (o *Action) SetMinTargetCapacity(v *string) *Action {
+func (o *Action) SetMinTargetCapacity(v *int) *Action {
 	if o.MinTargetCapacity = v; o.MinTargetCapacity == nil {
 		o.nullFields = append(o.nullFields, "MinTargetCapacity")
 	}
 	return o
 }
 
-func (o *Action) SetMaxTargetCapacity(v *string) *Action {
+func (o *Action) SetMaxTargetCapacity(v *int) *Action {
 	if o.MaxTargetCapacity = v; o.MaxTargetCapacity == nil {
 		o.nullFields = append(o.nullFields, "MaxTargetCapacity")
 	}
 	return o
 }
 
-func (o *Action) SetMaximum(v *string) *Action {
+func (o *Action) SetMaximum(v *int) *Action {
 	if o.Maximum = v; o.Maximum == nil {
 		o.nullFields = append(o.nullFields, "Maximum")
 	}
 	return o
 }
 
-func (o *Action) SetMinimum(v *string) *Action {
+func (o *Action) SetMinimum(v *int) *Action {
 	if o.Minimum = v; o.Minimum == nil {
 		o.nullFields = append(o.nullFields, "Minimum")
 	}
 	return o
 }
 
-func (o *Action) SetTarget(v *string) *Action {
+func (o *Action) SetTarget(v *int) *Action {
 	if o.Target = v; o.Target == nil {
 		o.nullFields = append(o.nullFields, "Target")
 	}
