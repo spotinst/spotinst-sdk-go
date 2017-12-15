@@ -234,8 +234,9 @@ type Task struct {
 }
 
 type Scaling struct {
-	Up   []*ScalingPolicy `json:"up,omitempty"`
-	Down []*ScalingPolicy `json:"down,omitempty"`
+	Up     []*ScalingPolicy `json:"up,omitempty"`
+	Down   []*ScalingPolicy `json:"down,omitempty"`
+	Target []*ScalingPolicy `json:"target,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -244,13 +245,14 @@ type Scaling struct {
 type ScalingPolicy struct {
 	PolicyName        *string      `json:"policyName,omitempty"`
 	MetricName        *string      `json:"metricName,omitempty"`
+	Namespace         *string      `json:"namespace,omitempty"`
+	Source            *string      `json:"source,omitempty"`
 	Statistic         *string      `json:"statistic,omitempty"`
 	Unit              *string      `json:"unit,omitempty"`
 	Threshold         *float64     `json:"threshold,omitempty"`
 	Adjustment        *int         `json:"adjustment,omitempty"`
 	MinTargetCapacity *int         `json:"minTargetCapacity,omitempty"`
 	MaxTargetCapacity *int         `json:"maxTargetCapacity,omitempty"`
-	Namespace         *string      `json:"namespace,omitempty"`
 	EvaluationPeriods *int         `json:"evaluationPeriods,omitempty"`
 	Period            *int         `json:"period,omitempty"`
 	Cooldown          *int         `json:"cooldown,omitempty"`
@@ -1391,6 +1393,13 @@ func (o *Scaling) SetDown(v []*ScalingPolicy) *Scaling {
 	return o
 }
 
+func (o *Scaling) SetTarget(v []*ScalingPolicy) *Scaling {
+	if o.Target = v; o.Target == nil {
+		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
 // endregion
 
 // region ScalingPolicy
@@ -1411,6 +1420,20 @@ func (o *ScalingPolicy) SetPolicyName(v *string) *ScalingPolicy {
 func (o *ScalingPolicy) SetMetricName(v *string) *ScalingPolicy {
 	if o.MetricName = v; o.MetricName == nil {
 		o.nullFields = append(o.nullFields, "MetricName")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetNamespace(v *string) *ScalingPolicy {
+	if o.Namespace = v; o.Namespace == nil {
+		o.nullFields = append(o.nullFields, "Namespace")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetSource(v *string) *ScalingPolicy {
+	if o.Source = v; o.Source == nil {
+		o.nullFields = append(o.nullFields, "Source")
 	}
 	return o
 }
@@ -1453,13 +1476,6 @@ func (o *ScalingPolicy) SetMinTargetCapacity(v *int) *ScalingPolicy {
 func (o *ScalingPolicy) SetMaxTargetCapacity(v *int) *ScalingPolicy {
 	if o.MaxTargetCapacity = v; o.MaxTargetCapacity == nil {
 		o.nullFields = append(o.nullFields, "MaxTargetCapacity")
-	}
-	return o
-}
-
-func (o *ScalingPolicy) SetNamespace(v *string) *ScalingPolicy {
-	if o.Namespace = v; o.Namespace == nil {
-		o.nullFields = append(o.nullFields, "Namespace")
 	}
 	return o
 }
