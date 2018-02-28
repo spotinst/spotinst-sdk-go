@@ -36,7 +36,7 @@ for all calls until `Retrieve` is called again.
 
 Example of `ChainProvider` to be used with an `EnvCredentialsProvider` and
 `FileCredentialsProvider`. In this example `EnvProvider` will first check if
-any credentials are available via the environment variables. If there are
+any credentials are available via the SPOTINST_TOKEN and SPOTINST_ACCOUNT environment variables. If there are
 none `ChainProvider` will check the next `Provider` in the list, `FileProvider`
 in this case. If `FileCredentialsProvider` does not return any credentials
 `ChainProvider` will return the error `ErrNoValidProvidersFoundInChain`.
