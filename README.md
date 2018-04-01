@@ -121,7 +121,7 @@ func main() {
 
 ## Documentation
 
-For a comprehensive list of examples, check out the [API documentation](http://help.spotinst.com/api/).
+For a comprehensive list of examples, check out the [API documentation](http://api.spotinst.com/).
 
 ## Contributing
 
