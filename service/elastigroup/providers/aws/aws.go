@@ -76,7 +76,7 @@ type Group struct {
 	// non-interface field appearing in ForceSendFields will be sent to the
 	// server regardless of whether the field is empty or not. This may be
 	// used to include empty fields in Patch requests.
-	forceSendFields []string `json:"-"`
+	forceSendFields []string
 
 	// nullFields is a list of field names (e.g. "Keys") to include in API
 	// requests with the JSON null value. By default, fields with empty
@@ -84,7 +84,7 @@ type Group struct {
 	// empty value appearing in NullFields will be sent to the server as
 	// null. It is an error if a field in this list has a non-empty value.
 	// This may be used to include null fields in Patch requests.
-	nullFields []string `json:"-"`
+	nullFields []string
 }
 
 type Integration struct {
@@ -99,16 +99,16 @@ type Integration struct {
 	Nomad               *NomadIntegration               `json:"nomad,omitempty"`
 	Chef                *ChefIntegration                `json:"chef,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type EC2ContainerServiceIntegration struct {
 	ClusterName *string    `json:"clusterName,omitempty"`
 	AutoScale   *AutoScale `json:"autoScale,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type AutoScale struct {
@@ -118,8 +118,8 @@ type AutoScale struct {
 	Down        *AutoScaleDown         `json:"down,omitempty"`
 	Constraints []*AutoScaleConstraint `json:"constraints,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type AutoScaleHeadroom struct {
@@ -127,30 +127,30 @@ type AutoScaleHeadroom struct {
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type AutoScaleDown struct {
 	EvaluationPeriods *int `json:"evaluationPeriods,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type AutoScaleConstraint struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type ElasticBeanstalkIntegration struct {
 	EnvironmentID *string `json:"environmentId,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type CodeDeployIntegration struct {
@@ -158,24 +158,24 @@ type CodeDeployIntegration struct {
 	CleanUpOnFailure           *bool              `json:"cleanUpOnFailure,omitempty"`
 	TerminateInstanceOnFailure *bool              `json:"terminateInstanceOnFailure,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type DeploymentGroup struct {
 	ApplicationName     *string `json:"applicationName,omitempty"`
 	DeploymentGroupName *string `json:"deploymentGroupName,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type OpsWorksIntegration struct {
 	LayerID   *string `json:"layerId,omitempty"`
 	StackType *string `json:"stackType,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type RancherIntegration struct {
@@ -183,8 +183,8 @@ type RancherIntegration struct {
 	AccessKey  *string `json:"accessKey,omitempty"`
 	SecretKey  *string `json:"secretKey,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type KubernetesIntegration struct {
@@ -194,22 +194,22 @@ type KubernetesIntegration struct {
 	Token             *string    `json:"token,omitempty"`
 	AutoScale         *AutoScale `json:"autoScale,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type MesosphereIntegration struct {
 	Server *string `json:"apiServer,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type MultaiIntegration struct {
 	DeploymentID *string `json:"deploymentId,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type NomadIntegration struct {
@@ -218,8 +218,8 @@ type NomadIntegration struct {
 	AutoScale  *AutoScale `json:"autoScale,omitempty"`
 	ACLToken   *string    `json:"aclToken,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type ChefIntegration struct {
@@ -229,15 +229,15 @@ type ChefIntegration struct {
 	PEMKey       *string `json:"pemKey,omitempty"`
 	Version      *string `json:"chefVersion,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Scheduling struct {
 	Tasks []*Task `json:"tasks,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Task struct {
@@ -254,8 +254,8 @@ type Task struct {
 	MinCapacity         *int    `json:"minCapacity,omitempty"`
 	MaxCapacity         *int    `json:"maxCapacity,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Scaling struct {
@@ -263,8 +263,8 @@ type Scaling struct {
 	Down   []*ScalingPolicy `json:"down,omitempty"`
 	Target []*ScalingPolicy `json:"target,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type ScalingPolicy struct {
@@ -286,8 +286,8 @@ type ScalingPolicy struct {
 	Action            *Action      `json:"action,omitempty"`
 	Target            *float64     `json:"target,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Action struct {
@@ -299,16 +299,16 @@ type Action struct {
 	Minimum           *int    `json:"minimum,omitempty"`
 	Target            *int    `json:"target,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Dimension struct {
 	Name  *string `json:"name,omitempty"`
 	Value *string `json:"value,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Strategy struct {
@@ -323,8 +323,8 @@ type Strategy struct {
 	Signals                  []*Signal    `json:"signals,omitempty"`
 	Persistence              *Persistence `json:"persistence,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Persistence struct {
@@ -333,16 +333,16 @@ type Persistence struct {
 	ShouldPersistRootDevice   *bool   `json:"shouldPersistRootDevice,omitempty"`
 	BlockDevicesMode          *string `json:"blockDevicesMode,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Signal struct {
 	Name    *string `json:"name,omitempty"`
 	Timeout *int    `json:"timeout,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Capacity struct {
@@ -351,8 +351,8 @@ type Capacity struct {
 	Target  *int    `json:"target,omitempty"`
 	Unit    *string `json:"unit,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Compute struct {
@@ -364,16 +364,16 @@ type Compute struct {
 	EBSVolumePool       []*EBSVolume         `json:"ebsVolumePool,omitempty"`
 	PrivateIPs          []string             `json:"privateIps,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type EBSVolume struct {
 	DeviceName *string  `json:"deviceName,omitempty"`
 	VolumeIDs  []string `json:"volumeIds,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type InstanceTypes struct {
@@ -381,16 +381,16 @@ type InstanceTypes struct {
 	Spot     []string              `json:"spot,omitempty"`
 	Weights  []*InstanceTypeWeight `json:"weights,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type InstanceTypeWeight struct {
 	InstanceType *string `json:"instanceType,omitempty"`
 	Weight       *int    `json:"weightedCapacity,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type AvailabilityZone struct {
@@ -398,8 +398,8 @@ type AvailabilityZone struct {
 	SubnetID           *string `json:"subnetId,omitempty"`
 	PlacementGroupName *string `json:"placementGroupName,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type LaunchSpecification struct {
@@ -421,15 +421,15 @@ type LaunchSpecification struct {
 	NetworkInterfaces                             []*NetworkInterface   `json:"networkInterfaces,omitempty"`
 	Tags                                          []*Tag                `json:"tags,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type LoadBalancersConfig struct {
 	LoadBalancers []*LoadBalancer `json:"loadBalancers,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type LoadBalancer struct {
@@ -441,8 +441,8 @@ type LoadBalancer struct {
 	ZoneAwareness *bool   `json:"azAwareness,omitempty"`
 	AutoWeight    *bool   `json:"autoWeight,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type NetworkInterface struct {
@@ -456,8 +456,8 @@ type NetworkInterface struct {
 	PrivateIPAddress               *string  `json:"privateIpAddress,omitempty"`
 	SubnetID                       *string  `json:"subnetId,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type BlockDeviceMapping struct {
@@ -465,8 +465,8 @@ type BlockDeviceMapping struct {
 	VirtualName *string `json:"virtualName,omitempty"`
 	EBS         *EBS    `json:"ebs,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type EBS struct {
@@ -477,16 +477,16 @@ type EBS struct {
 	VolumeSize          *int    `json:"volumeSize,omitempty"`
 	IOPS                *int    `json:"iops,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type IAMInstanceProfile struct {
 	Name *string `json:"name,omitempty"`
 	Arn  *string `json:"arn,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Instance struct {
@@ -503,8 +503,8 @@ type RollStrategy struct {
 	Action               *string `json:"action,omitempty"`
 	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
 
-	forceSendFields []string `json:"-"`
-	nullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type ListGroupsInput struct{}
