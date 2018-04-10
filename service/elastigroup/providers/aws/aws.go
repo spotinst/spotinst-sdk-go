@@ -91,6 +91,7 @@ type Integration struct {
 	EC2ContainerService *EC2ContainerServiceIntegration `json:"ecs,omitempty"`
 	ElasticBeanstalk    *ElasticBeanstalkIntegration    `json:"elasticBeanstalk,omitempty"`
 	CodeDeploy          *CodeDeployIntegration          `json:"codeDeploy,omitempty"`
+	OpsWorks            *OpsWorksIntegration            `json:"opsWorks,omitempty"`
 	Rancher             *RancherIntegration             `json:"rancher,omitempty"`
 	Kubernetes          *KubernetesIntegration          `json:"kubernetes,omitempty"`
 	Mesosphere          *MesosphereIntegration          `json:"mesosphere,omitempty"`
@@ -163,6 +164,14 @@ type CodeDeployIntegration struct {
 type DeploymentGroup struct {
 	ApplicationName     *string `json:"applicationName,omitempty"`
 	DeploymentGroupName *string `json:"deploymentGroupName,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type OpsWorksIntegration struct {
+	LayerID   *string `json:"layerId,omitempty"`
+	StackType *string `json:"stackType,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -946,6 +955,13 @@ func (o *Integration) SetElasticBeanstalk(v *ElasticBeanstalkIntegration) *Integ
 func (o *Integration) SetCodeDeploy(v *CodeDeployIntegration) *Integration {
 	if o.CodeDeploy = v; o.CodeDeploy == nil {
 		o.nullFields = append(o.nullFields, "CodeDeploy")
+	}
+	return o
+}
+
+func (o *Integration) SetOpsWorks(v *OpsWorksIntegration) *Integration {
+	if o.OpsWorks = v; o.OpsWorks == nil {
+		o.nullFields = append(o.nullFields, "OpsWorks")
 	}
 	return o
 }
@@ -2456,6 +2472,30 @@ func (o *DeploymentGroup) SetApplicationName(v *string) *DeploymentGroup {
 func (o *DeploymentGroup) SetDeploymentGroupName(v *string) *DeploymentGroup {
 	if o.DeploymentGroupName = v; o.DeploymentGroupName == nil {
 		o.nullFields = append(o.nullFields, "DeploymentGroupName")
+	}
+	return o
+}
+
+// endregion
+
+// region OpsWorksIntegration
+
+func (o *OpsWorksIntegration) MarshalJSON() ([]byte, error) {
+	type noMethod OpsWorksIntegration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *OpsWorksIntegration) SetLayerId(v *string) *OpsWorksIntegration {
+	if o.LayerID = v; o.LayerID == nil {
+		o.nullFields = append(o.nullFields, "LayerID")
+	}
+	return o
+}
+
+func (o *OpsWorksIntegration) SetStackType(v *string) *OpsWorksIntegration {
+	if o.StackType = v; o.StackType == nil {
+		o.nullFields = append(o.nullFields, "StackType")
 	}
 	return o
 }
