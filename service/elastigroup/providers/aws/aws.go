@@ -97,6 +97,7 @@ type Integration struct {
 	Mesosphere          *MesosphereIntegration          `json:"mesosphere,omitempty"`
 	Multai              *MultaiIntegration              `json:"mlbRuntime,omitempty"`
 	Nomad               *NomadIntegration               `json:"nomad,omitempty"`
+	Chef                *ChefIntegration                `json:"chef,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -216,6 +217,17 @@ type NomadIntegration struct {
 	MasterPort *int       `json:"masterPort,omitempty"`
 	AutoScale  *AutoScale `json:"autoScale,omitempty"`
 	ACLToken   *string    `json:"aclToken,omitempty"`
+
+	forceSendFields []string `json:"-"`
+	nullFields      []string `json:"-"`
+}
+
+type ChefIntegration struct {
+	Server       *string `json:"chefServer,omitempty"`
+	Organization *string `json:"organization,omitempty"`
+	User         *string `json:"user,omitempty"`
+	PEMKey       *string `json:"pemKey,omitempty"`
+	Version      *string `json:"chefVersion,omitempty"`
 
 	forceSendFields []string `json:"-"`
 	nullFields      []string `json:"-"`
@@ -1001,6 +1013,13 @@ func (o *Integration) SetNomad(v *NomadIntegration) *Integration {
 	return o
 }
 
+func (o *Integration) SetChef(v *ChefIntegration) *Integration {
+	if o.Chef = v; o.Chef == nil {
+		o.nullFields = append(o.nullFields, "Chef")
+	}
+	return o
+}
+
 // endregion
 
 // region RancherIntegration
@@ -1303,6 +1322,51 @@ func (o *NomadIntegration) SetAclToken(v *string) *NomadIntegration {
 func (o *NomadIntegration) SetAutoScale(v *AutoScale) *NomadIntegration {
 	if o.AutoScale = v; o.AutoScale == nil {
 		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+// endregion
+
+// region ChefIntegration
+
+func (o *ChefIntegration) MarshalJSON() ([]byte, error) {
+	type noMethod ChefIntegration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ChefIntegration) SetServer(v *string) *ChefIntegration {
+	if o.Server = v; o.Server == nil {
+		o.nullFields = append(o.nullFields, "Server")
+	}
+	return o
+}
+
+func (o *ChefIntegration) SetOrganization(v *string) *ChefIntegration {
+	if o.Organization = v; o.Organization == nil {
+		o.nullFields = append(o.nullFields, "Organization")
+	}
+	return o
+}
+
+func (o *ChefIntegration) SetUser(v *string) *ChefIntegration {
+	if o.User = v; o.User == nil {
+		o.nullFields = append(o.nullFields, "User")
+	}
+	return o
+}
+
+func (o *ChefIntegration) SetPEMKey(v *string) *ChefIntegration {
+	if o.PEMKey = v; o.PEMKey == nil {
+		o.nullFields = append(o.nullFields, "PEMKey")
+	}
+	return o
+}
+
+func (o *ChefIntegration) SetVersion(v *string) *ChefIntegration {
+	if o.Version = v; o.Version == nil {
+		o.nullFields = append(o.nullFields, "Version")
 	}
 	return o
 }
