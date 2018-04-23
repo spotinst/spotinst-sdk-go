@@ -63,6 +63,7 @@ type Group struct {
 	ID          *string      `json:"id,omitempty"`
 	Name        *string      `json:"name,omitempty"`
 	Description *string      `json:"description,omitempty"`
+	Region      *string      `json:"region,omitempty"`
 	Capacity    *Capacity    `json:"capacity,omitempty"`
 	Compute     *Compute     `json:"compute,omitempty"`
 	Strategy    *Strategy    `json:"strategy,omitempty"`
@@ -363,6 +364,7 @@ type Compute struct {
 	ElasticIPs          []string             `json:"elasticIps,omitempty"`
 	EBSVolumePool       []*EBSVolume         `json:"ebsVolumePool,omitempty"`
 	PrivateIPs          []string             `json:"privateIps,omitempty"`
+	SubnetIDs           []string             `json:"subnetIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -936,6 +938,13 @@ func (o *Group) SetScheduling(v *Scheduling) *Group {
 func (o *Group) SetIntegration(v *Integration) *Group {
 	if o.Integration = v; o.Integration == nil {
 		o.nullFields = append(o.nullFields, "Integration")
+	}
+	return o
+}
+
+func (o *Group) SetRegion(v *string) *Group {
+	if o.Region = v; o.Region == nil {
+		o.nullFields = append(o.nullFields, "Region")
 	}
 	return o
 }
@@ -1962,6 +1971,13 @@ func (o *Compute) SetElasticIPs(v []string) *Compute {
 func (o *Compute) SetEBSVolumePool(v []*EBSVolume) *Compute {
 	if o.EBSVolumePool = v; o.EBSVolumePool == nil {
 		o.nullFields = append(o.nullFields, "EBSVolumePool")
+	}
+	return o
+}
+
+func (o *Compute) SetSubnetIDs(v []string) *Compute {
+	if o.SubnetIDs = v; o.SubnetIDs == nil {
+		o.nullFields = append(o.nullFields, "SubnetIDs")
 	}
 	return o
 }
