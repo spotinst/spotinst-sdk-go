@@ -118,6 +118,7 @@ type AutoScale struct {
 	Headroom    *AutoScaleHeadroom     `json:"headroom,omitempty"`
 	Down        *AutoScaleDown         `json:"down,omitempty"`
 	Constraints []*AutoScaleConstraint `json:"constraints,omitempty"`
+	Labels      []*AutoScaleLabel      `json:"labels,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -140,6 +141,14 @@ type AutoScaleDown struct {
 }
 
 type AutoScaleConstraint struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleLabel struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
 
@@ -1146,6 +1155,13 @@ func (o *AutoScale) SetConstraints(v []*AutoScaleConstraint) *AutoScale {
 	return o
 }
 
+func (o *AutoScale) SetLabels(v []*AutoScaleLabel) *AutoScale {
+	if o.Labels = v; o.Labels == nil {
+		o.nullFields = append(o.nullFields, "Labels")
+	}
+	return o
+}
+
 // endregion
 
 // region AutoScaleHeadroom
@@ -1212,6 +1228,30 @@ func (o *AutoScaleConstraint) SetKey(v *string) *AutoScaleConstraint {
 }
 
 func (o *AutoScaleConstraint) SetValue(v *string) *AutoScaleConstraint {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region AutoScaleLabel
+
+func (o *AutoScaleLabel) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleLabel
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleLabel) SetKey(v *string) *AutoScaleLabel {
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+func (o *AutoScaleLabel) SetValue(v *string) *AutoScaleLabel {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
 	}
