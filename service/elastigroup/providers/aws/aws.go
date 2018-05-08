@@ -2621,3 +2621,112 @@ func (o *OpsWorksIntegration) SetStackType(v *string) *OpsWorksIntegration {
 }
 
 // endregion
+
+// region Scale Request
+
+type ScaleUpSpotItem struct {
+	SpotInstanceRequestID *string `json:"spotInstanceRequestId,omitempty"`
+	AvailabilityZone      *string `json:"availabilityZone,omitempty"`
+	InstanceType          *string `json:"instanceType,omitempty"`
+}
+
+type ScaleUpOnDemandItem struct {
+	InstanceID       *string `json:"instanceId,omitempty"`
+	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+	InstanceType     *string `json:"instanceType,omitempty"`
+}
+
+type ScaleDownSpotItem struct {
+	SpotInstanceRequestID *string `json:"spotInstanceRequestId,omitempty"`
+}
+
+type ScaleDownOnDemandItem struct {
+	InstanceID *string `json:"instanceId,omitempty"`
+}
+
+type ScaleItem struct {
+	NewSpotRequests    []*ScaleUpSpotItem       `json:"newSpotRequests,omitempty"`
+	NewInstances       []*ScaleUpOnDemandItem   `json:"newInstances,omitempty"`
+	VictimSpotRequests []*ScaleDownSpotItem     `json:"victimSpotRequests,omitempty"`
+	VictimInstances    []*ScaleDownOnDemandItem `json:"victimInstances,omitempty"`
+}
+
+type ScaleGroupInput struct {
+	GroupID    *string `json:"groupId,omitempty"`
+	ScaleType  *string `json:"type,omitempty"`
+	Adjustment *int    `json:"adjustment,omitempty"`
+}
+
+type ScaleGroupOutput struct {
+	Items []*ScaleItem `json:"items"`
+}
+
+func scaleUpResponseFromJSON(in []byte) (*ScaleGroupOutput, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+
+	var retVal ScaleGroupOutput
+	retVal.Items = make([]*ScaleItem, len(rw.Response.Items))
+	for i, rb := range rw.Response.Items {
+		b, err := scaleUpItemFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		retVal.Items[i] = b
+	}
+
+	return &retVal, nil
+}
+
+func scaleUpItemFromJSON(in []byte) (*ScaleItem, error) {
+	var rw *ScaleItem
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	return rw, nil
+}
+
+func scaleFromHttpResponse(resp *http.Response) (*ScaleGroupOutput, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return scaleUpResponseFromJSON(body)
+}
+
+func (s *ServiceOp) Scale(ctx context.Context, input *ScaleGroupInput) (*ScaleGroupOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/scale/{type}", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"type":    spotinst.StringValue(input.ScaleType),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+
+	if input.Adjustment != nil {
+		r.Params.Set("adjustment", strconv.Itoa(*input.Adjustment))
+	}
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := scaleFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, err
+}
+
+//endregion
