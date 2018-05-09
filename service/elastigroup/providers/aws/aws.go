@@ -63,13 +63,13 @@ type Group struct {
 	ID          *string      `json:"id,omitempty"`
 	Name        *string      `json:"name,omitempty"`
 	Description *string      `json:"description,omitempty"`
+	Region      *string      `json:"region,omitempty"`
 	Capacity    *Capacity    `json:"capacity,omitempty"`
 	Compute     *Compute     `json:"compute,omitempty"`
 	Strategy    *Strategy    `json:"strategy,omitempty"`
 	Scaling     *Scaling     `json:"scaling,omitempty"`
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
-	Region      *string      `json:"region,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -118,6 +118,7 @@ type AutoScale struct {
 	Headroom    *AutoScaleHeadroom     `json:"headroom,omitempty"`
 	Down        *AutoScaleDown         `json:"down,omitempty"`
 	Constraints []*AutoScaleConstraint `json:"constraints,omitempty"`
+	Labels      []*AutoScaleLabel      `json:"labels,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -140,6 +141,14 @@ type AutoScaleDown struct {
 }
 
 type AutoScaleConstraint struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleLabel struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
 
@@ -364,7 +373,7 @@ type Compute struct {
 	ElasticIPs          []string             `json:"elasticIps,omitempty"`
 	EBSVolumePool       []*EBSVolume         `json:"ebsVolumePool,omitempty"`
 	PrivateIPs          []string             `json:"privateIps,omitempty"`
-	SubnetIds			[]string             `json:"subnetIds,omitempty"`
+	SubnetIDs           []string             `json:"subnetIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -948,6 +957,7 @@ func (o *Group) SetRegion(v *string) *Group {
 	}
 	return o
 }
+
 // endregion
 
 // region Integration
@@ -1145,6 +1155,13 @@ func (o *AutoScale) SetConstraints(v []*AutoScaleConstraint) *AutoScale {
 	return o
 }
 
+func (o *AutoScale) SetLabels(v []*AutoScaleLabel) *AutoScale {
+	if o.Labels = v; o.Labels == nil {
+		o.nullFields = append(o.nullFields, "Labels")
+	}
+	return o
+}
+
 // endregion
 
 // region AutoScaleHeadroom
@@ -1211,6 +1228,30 @@ func (o *AutoScaleConstraint) SetKey(v *string) *AutoScaleConstraint {
 }
 
 func (o *AutoScaleConstraint) SetValue(v *string) *AutoScaleConstraint {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region AutoScaleLabel
+
+func (o *AutoScaleLabel) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleLabel
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleLabel) SetKey(v *string) *AutoScaleLabel {
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+func (o *AutoScaleLabel) SetValue(v *string) *AutoScaleLabel {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
 	}
@@ -1974,9 +2015,9 @@ func (o *Compute) SetEBSVolumePool(v []*EBSVolume) *Compute {
 	return o
 }
 
-func (o *Compute) SetSubnetIds(v []string) *Compute {
-	if o.SubnetIds = v; o.SubnetIds == nil {
-		o.nullFields = append(o.nullFields, "SubnetIds")
+func (o *Compute) SetSubnetIDs(v []string) *Compute {
+	if o.SubnetIDs = v; o.SubnetIDs == nil {
+		o.nullFields = append(o.nullFields, "SubnetIDs")
 	}
 	return o
 }
@@ -2580,3 +2621,112 @@ func (o *OpsWorksIntegration) SetStackType(v *string) *OpsWorksIntegration {
 }
 
 // endregion
+
+// region Scale Request
+
+type ScaleUpSpotItem struct {
+	SpotInstanceRequestID *string `json:"spotInstanceRequestId,omitempty"`
+	AvailabilityZone      *string `json:"availabilityZone,omitempty"`
+	InstanceType          *string `json:"instanceType,omitempty"`
+}
+
+type ScaleUpOnDemandItem struct {
+	InstanceID       *string `json:"instanceId,omitempty"`
+	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+	InstanceType     *string `json:"instanceType,omitempty"`
+}
+
+type ScaleDownSpotItem struct {
+	SpotInstanceRequestID *string `json:"spotInstanceRequestId,omitempty"`
+}
+
+type ScaleDownOnDemandItem struct {
+	InstanceID *string `json:"instanceId,omitempty"`
+}
+
+type ScaleItem struct {
+	NewSpotRequests    []*ScaleUpSpotItem       `json:"newSpotRequests,omitempty"`
+	NewInstances       []*ScaleUpOnDemandItem   `json:"newInstances,omitempty"`
+	VictimSpotRequests []*ScaleDownSpotItem     `json:"victimSpotRequests,omitempty"`
+	VictimInstances    []*ScaleDownOnDemandItem `json:"victimInstances,omitempty"`
+}
+
+type ScaleGroupInput struct {
+	GroupID    *string `json:"groupId,omitempty"`
+	ScaleType  *string `json:"type,omitempty"`
+	Adjustment *int    `json:"adjustment,omitempty"`
+}
+
+type ScaleGroupOutput struct {
+	Items []*ScaleItem `json:"items"`
+}
+
+func scaleUpResponseFromJSON(in []byte) (*ScaleGroupOutput, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+
+	var retVal ScaleGroupOutput
+	retVal.Items = make([]*ScaleItem, len(rw.Response.Items))
+	for i, rb := range rw.Response.Items {
+		b, err := scaleUpItemFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		retVal.Items[i] = b
+	}
+
+	return &retVal, nil
+}
+
+func scaleUpItemFromJSON(in []byte) (*ScaleItem, error) {
+	var rw *ScaleItem
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	return rw, nil
+}
+
+func scaleFromHttpResponse(resp *http.Response) (*ScaleGroupOutput, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return scaleUpResponseFromJSON(body)
+}
+
+func (s *ServiceOp) Scale(ctx context.Context, input *ScaleGroupInput) (*ScaleGroupOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/scale/{type}", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"type":    spotinst.StringValue(input.ScaleType),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+
+	if input.Adjustment != nil {
+		r.Params.Set("adjustment", strconv.Itoa(*input.Adjustment))
+	}
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	output, err := scaleFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, err
+}
+
+//endregion
