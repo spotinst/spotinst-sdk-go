@@ -322,16 +322,17 @@ type Dimension struct {
 }
 
 type Strategy struct {
-	Risk                     *float64     `json:"risk,omitempty"`
-	OnDemandCount            *int         `json:"onDemandCount,omitempty"`
-	DrainingTimeout          *int         `json:"drainingTimeout,omitempty"`
-	AvailabilityVsCost       *string      `json:"availabilityVsCost,omitempty"`
-	LifetimePeriod           *string      `json:"lifetimePeriod,omitempty"`
-	UtilizeReservedInstances *bool        `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool        `json:"fallbackToOd,omitempty"`
-	SpinUpTime               *int         `json:"spinUpTime,omitempty"`
-	Signals                  []*Signal    `json:"signals,omitempty"`
-	Persistence              *Persistence `json:"persistence,omitempty"`
+	Risk                     *float64      `json:"risk,omitempty"`
+	OnDemandCount            *int          `json:"onDemandCount,omitempty"`
+	DrainingTimeout          *int          `json:"drainingTimeout,omitempty"`
+	AvailabilityVsCost       *string       `json:"availabilityVsCost,omitempty"`
+	LifetimePeriod           *string       `json:"lifetimePeriod,omitempty"`
+	UtilizeReservedInstances *bool         `json:"utilizeReservedInstances,omitempty"`
+	FallbackToOnDemand       *bool         `json:"fallbackToOd,omitempty"`
+	SpinUpTime               *int          `json:"spinUpTime,omitempty"`
+	Signals                  []*Signal     `json:"signals,omitempty"`
+	Persistence              *Persistence  `json:"persistence,omitempty"`
+	RevertToSpot             *RevertToSpot `json:"revertToSpot,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -342,6 +343,14 @@ type Persistence struct {
 	ShouldPersistBlockDevices *bool   `json:"shouldPersistBlockDevices,omitempty"`
 	ShouldPersistRootDevice   *bool   `json:"shouldPersistRootDevice,omitempty"`
 	BlockDevicesMode          *string `json:"blockDevicesMode,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RevertToSpot struct {
+	PerformAt   *string  `json:"performAt,omitempty"`
+	TimeWindows []string `json:"timeWindows,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1854,6 +1863,13 @@ func (o *Strategy) SetPersistence(v *Persistence) *Strategy {
 	return o
 }
 
+func (o *Strategy) SetRevertToSpot(v *RevertToSpot) *Strategy {
+	if o.RevertToSpot = v; o.RevertToSpot == nil {
+		o.nullFields = append(o.nullFields, "RevertToSpot")
+	}
+	return o
+}
+
 // endregion
 
 // region Persistence
@@ -1888,6 +1904,30 @@ func (o *Persistence) SetShouldPersistRootDevice(v *bool) *Persistence {
 func (o *Persistence) SetBlockDevicesMode(v *string) *Persistence {
 	if o.BlockDevicesMode = v; o.BlockDevicesMode == nil {
 		o.nullFields = append(o.nullFields, "BlockDevicesMode")
+	}
+	return o
+}
+
+// endregion
+
+// region RevertToSpot
+
+func (o *RevertToSpot) MarshalJSON() ([]byte, error) {
+	type noMethod RevertToSpot
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
+	if o.PerformAt = v; o.PerformAt == nil {
+		o.nullFields = append(o.nullFields, "PerformAt")
+	}
+	return o
+}
+
+func (o *RevertToSpot) SetTimeWindows(v []string) *RevertToSpot {
+	if o.TimeWindows = v; o.TimeWindows == nil {
+		o.nullFields = append(o.nullFields, "TimeWindows")
 	}
 	return o
 }
