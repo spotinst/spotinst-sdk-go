@@ -516,6 +516,8 @@ type Instance struct {
 	Status           *string    `json:"status,omitempty"`
 	Product          *string    `json:"product,omitempty"`
 	AvailabilityZone *string    `json:"availabilityZone,omitempty"`
+	PrivateIP        *string    `json:"privateIp,omitempty"`
+	PublicIP         *string    `json:"publicIp,omitempty"`
 	CreatedAt        *time.Time `json:"createdAt,omitempty"`
 }
 
