@@ -113,12 +113,13 @@ type EC2ContainerServiceIntegration struct {
 }
 
 type AutoScale struct {
-	IsEnabled   *bool                  `json:"isEnabled,omitempty"`
-	Cooldown    *int                   `json:"cooldown,omitempty"`
-	Headroom    *AutoScaleHeadroom     `json:"headroom,omitempty"`
-	Down        *AutoScaleDown         `json:"down,omitempty"`
-	Constraints []*AutoScaleConstraint `json:"constraints,omitempty"`
-	Labels      []*AutoScaleLabel      `json:"labels,omitempty"`
+	IsEnabled    *bool                  `json:"isEnabled,omitempty"`
+	IsAutoConfig *bool                  `json:"isAutoConfig,omitempty"`
+	Cooldown     *int                   `json:"cooldown,omitempty"`
+	Headroom     *AutoScaleHeadroom     `json:"headroom,omitempty"`
+	Down         *AutoScaleDown         `json:"down,omitempty"`
+	Constraints  []*AutoScaleConstraint `json:"constraints,omitempty"`
+	Labels       []*AutoScaleLabel      `json:"labels,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -255,6 +256,7 @@ type Task struct {
 	Type                *string `json:"taskType,omitempty"`
 	Frequency           *string `json:"frequency,omitempty"`
 	CronExpression      *string `json:"cronExpression,omitempty"`
+	StartTime           *string `json:"startTime,omitempty"`
 	ScaleTargetCapacity *int    `json:"scaleTargetCapacity,omitempty"`
 	ScaleMinCapacity    *int    `json:"scaleMinCapacity,omitempty"`
 	ScaleMaxCapacity    *int    `json:"scaleMaxCapacity,omitempty"`
@@ -1138,6 +1140,13 @@ func (o *AutoScale) SetIsEnabled(v *bool) *AutoScale {
 	return o
 }
 
+func (o *AutoScale) SetIsAutoConfig(v *bool) *AutoScale {
+	if o.IsAutoConfig = v; o.IsAutoConfig == nil {
+		o.nullFields = append(o.nullFields, "IsAutoConfig")
+	}
+	return o
+}
+
 func (o *AutoScale) SetCooldown(v *int) *AutoScale {
 	if o.Cooldown = v; o.Cooldown == nil {
 		o.nullFields = append(o.nullFields, "Cooldown")
@@ -1482,6 +1491,13 @@ func (o *Task) SetFrequency(v *string) *Task {
 func (o *Task) SetCronExpression(v *string) *Task {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+func (o *Task) SetStartTime(v *string) *Task {
+	if o.StartTime = v; o.StartTime== nil {
+		o.nullFields = append(o.nullFields, "StartTime")
 	}
 	return o
 }
