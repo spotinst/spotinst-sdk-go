@@ -30,8 +30,8 @@ Set a `ChainProvider` that will search for a provider which returns credentials.
 The `ChainProvider` provides a way of chaining multiple providers together
 which will pick the first available using priority order of the Providers
 in the list. If none of the Providers retrieve valid credentials, `ChainProvider`'s
-`Retrieve()` will return the error `ErrNoValidProvidersFoundInChain`. If a Provider 
-is found which returns valid credentials `ChainProvider` will cache that Provider 
+`Retrieve()` will return the error `ErrNoValidProvidersFoundInChain`. If a Provider
+is found which returns valid credentials `ChainProvider` will cache that Provider
 for all calls until `Retrieve` is called again.
 
 Example of `ChainProvider` to be used with an `EnvCredentialsProvider` and
@@ -103,7 +103,11 @@ func main() {
 	}
 	// Ensure the context is canceled to prevent leaking.
 	// See context package for more information, https://golang.org/pkg/context/
-	defer cancelFn()
+	defer func() {
+		if cancelFn != nil {
+			cancelFn()
+		}
+	}()
 
 	// Read group configuration. The Context will interrupt the request if the
 	// timeout expires.
@@ -121,7 +125,7 @@ func main() {
 
 ## Documentation
 
-For a comprehensive list of examples, check out the [API documentation](http://help.spotinst.com/api/).
+For a comprehensive list of examples, check out the [API documentation](http://api.spotinst.com/).
 
 ## Contributing
 
