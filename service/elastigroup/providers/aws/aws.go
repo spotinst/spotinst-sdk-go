@@ -183,10 +183,26 @@ type AutoScaleAttributes struct {
 }
 
 type ElasticBeanstalkIntegration struct {
-	EnvironmentID *string `json:"environmentId,omitempty"`
+	EnvironmentID         *string 				`json:"environmentId,omitempty"`
+	DeploymentPreferences *DeploymentPreference `json:"deploymentPreferences,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
+}
+
+type DeploymentPreference struct {
+	AutomaticRoll 	    *bool 			   `json:"automaticRoll,omitempty"`
+	BatchSizePercentage *int  			   `json:"batchSizePercentage,omitempty"`
+	GracePeriod			*int  			   `json:"gracePeriod,omitempty"`
+	Strategy 			*BeanstalkStrategy `json:"strategy,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type BeanstalkStrategy struct {
+	Action 			     *string `json:"actions,omitempty"`
+	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
 }
 
 type CodeDeployIntegration struct {
