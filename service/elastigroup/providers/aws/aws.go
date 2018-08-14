@@ -183,26 +183,29 @@ type AutoScaleAttributes struct {
 }
 
 type ElasticBeanstalkIntegration struct {
-	EnvironmentID         *string 				`json:"environmentId,omitempty"`
-	DeploymentPreferences *DeploymentPreference `json:"deploymentPreferences,omitempty"`
+	EnvironmentID         *string                `json:"environmentId,omitempty"`
+	DeploymentPreferences *DeploymentPreferences `json:"deploymentPreferences,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type DeploymentPreference struct {
-	AutomaticRoll 	    *bool 			   `json:"automaticRoll,omitempty"`
-	BatchSizePercentage *int  			   `json:"batchSizePercentage,omitempty"`
-	GracePeriod			*int  			   `json:"gracePeriod,omitempty"`
-	Strategy 			*BeanstalkStrategy `json:"strategy,omitempty"`
+type DeploymentPreferences struct {
+	AutomaticRoll       *bool              `json:"automaticRoll,omitempty"`
+	BatchSizePercentage *int               `json:"batchSizePercentage,omitempty"`
+	GracePeriod         *int               `json:"gracePeriod,omitempty"`
+	Strategy            *BeanstalkStrategy `json:"strategy,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type BeanstalkStrategy struct {
-	Action 			     *string `json:"actions,omitempty"`
+	Action               *string `json:"action,omitempty"`
 	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type CodeDeployIntegration struct {
@@ -1210,9 +1213,78 @@ func (o *ElasticBeanstalkIntegration) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ElasticBeanstalkIntegration) SetEnvironmentId(v *string) *ElasticBeanstalkIntegration {
+func (o *ElasticBeanstalkIntegration) SetEnvironmentID(v *string) *ElasticBeanstalkIntegration {
 	if o.EnvironmentID = v; o.EnvironmentID == nil {
 		o.nullFields = append(o.nullFields, "EnvironmentID")
+	}
+	return o
+}
+
+func (o *ElasticBeanstalkIntegration) SetDeploymentPreferences(v *DeploymentPreferences) *ElasticBeanstalkIntegration {
+	if o.DeploymentPreferences = v; o.DeploymentPreferences == nil {
+		o.nullFields = append(o.nullFields, "DeploymentPreferences")
+	}
+	return o
+}
+
+// endregion
+
+// region DeploymentPreferences
+
+func (o *DeploymentPreferences) MarshalJSON() ([]byte, error) {
+	type noMethod DeploymentPreferences
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *DeploymentPreferences) SetAutomaticRoll(v *bool) *DeploymentPreferences {
+	if o.AutomaticRoll = v; o.AutomaticRoll == nil {
+		o.nullFields = append(o.nullFields, "AutomaticRoll")
+	}
+	return o
+}
+
+func (o *DeploymentPreferences) SetBatchSizePercentage(v *int) *DeploymentPreferences {
+	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
+		o.nullFields = append(o.nullFields, "BatchSizePercentage")
+	}
+	return o
+}
+
+func (o *DeploymentPreferences) SetGracePeriod(v *int) *DeploymentPreferences {
+	if o.GracePeriod = v; o.GracePeriod == nil {
+		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o *DeploymentPreferences) SetBeanstalkStrategy(v *BeanstalkStrategy) *DeploymentPreferences {
+	if o.Strategy = v; o.Strategy == nil {
+		o.nullFields = append(o.nullFields, "Strategy")
+	}
+	return o
+}
+
+// endregion
+
+// region BeanstalkStrategy
+
+func (o *BeanstalkStrategy) MarshalJSON() ([]byte, error) {
+	type noMethod BeanstalkStrategy
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *BeanstalkStrategy) SetAction(v *string) *BeanstalkStrategy {
+	if o.Action = v; o.Action == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+func (o *BeanstalkStrategy) SetShouldDrainInstances(v *bool) *BeanstalkStrategy {
+	if o.ShouldDrainInstances = v; o.ShouldDrainInstances == nil {
+		o.nullFields = append(o.nullFields, "ShouldDrainInstances")
 	}
 	return o
 }
