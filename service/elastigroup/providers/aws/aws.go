@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"fmt"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
@@ -234,19 +235,19 @@ type RancherIntegration struct {
 }
 
 type EC2ContainerServiceIntegration struct {
-	ClusterName  *string       `json:"clusterName,omitempty"`
-	AutoScaleECS *AutoScaleECS `json:"autoScale,omitempty"`
+	ClusterName *string       `json:"clusterName,omitempty"`
+	AutoScale   *AutoScaleECS `json:"autoScale,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type KubernetesIntegration struct {
-	IntegrationMode     *string              `json:"integrationMode,omitempty"`
-	ClusterIdentifier   *string              `json:"clusterIdentifier,omitempty"`
-	Server              *string              `json:"apiServer,omitempty"`
-	Token               *string              `json:"token,omitempty"`
-	AutoScaleKubernetes *AutoScaleKubernetes `json:"autoScale,omitempty"`
+	IntegrationMode   *string              `json:"integrationMode,omitempty"`
+	ClusterIdentifier *string              `json:"clusterIdentifier,omitempty"`
+	Server            *string              `json:"apiServer,omitempty"`
+	Token             *string              `json:"token,omitempty"`
+	AutoScale         *AutoScaleKubernetes `json:"autoScale,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -267,10 +268,10 @@ type MultaiIntegration struct {
 }
 
 type NomadIntegration struct {
-	MasterHost     *string         `json:"masterHost,omitempty"`
-	MasterPort     *int            `json:"masterPort,omitempty"`
-	ACLToken       *string         `json:"aclToken,omitempty"`
-	AutoScaleNomad *AutoScaleNomad `json:"autoScale,omitempty"`
+	MasterHost *string         `json:"masterHost,omitempty"`
+	MasterPort *int            `json:"masterPort,omitempty"`
+	ACLToken   *string         `json:"aclToken,omitempty"`
+	AutoScale  *AutoScaleNomad `json:"autoScale,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -288,9 +289,9 @@ type ChefIntegration struct {
 }
 
 type DockerSwarmIntegration struct {
-	MasterHost           *string               `json:"masterHost,omitempty"`
-	MasterPort           *int                  `json:"masterPort,omitempty"`
-	AutoScaleDockerSwarm *AutoScaleDockerSwarm `json:"autoScale,omitempty"`
+	MasterHost *string               `json:"masterHost,omitempty"`
+	MasterPort *int                  `json:"masterPort,omitempty"`
+	AutoScale  *AutoScaleDockerSwarm `json:"autoScale,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1373,9 +1374,9 @@ func (o *AutoScaleECS) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *EC2ContainerServiceIntegration) SetAutoScaleECS(v *AutoScaleECS) *EC2ContainerServiceIntegration {
-	if o.AutoScaleECS = v; o.AutoScaleECS == nil {
-		o.nullFields = append(o.nullFields, "AutoScaleECS")
+func (o *EC2ContainerServiceIntegration) SetAutoScale(v *AutoScaleECS) *EC2ContainerServiceIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
 	}
 	return o
 }
@@ -1418,9 +1419,9 @@ func (o *DockerSwarmIntegration) SetMasterPort(v *int) *DockerSwarmIntegration {
 	return o
 }
 
-func (o *DockerSwarmIntegration) SetAutoScaleDockerSwarm(v *AutoScaleDockerSwarm) *DockerSwarmIntegration {
-	if o.AutoScaleDockerSwarm = v; o.AutoScaleDockerSwarm == nil {
-		o.nullFields = append(o.nullFields, "AutoScaleDockerSwarm")
+func (o *DockerSwarmIntegration) SetAutoScale(v *AutoScaleDockerSwarm) *DockerSwarmIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
 	}
 	return o
 }
@@ -1675,9 +1676,9 @@ func (o *KubernetesIntegration) SetToken(v *string) *KubernetesIntegration {
 	return o
 }
 
-func (o *KubernetesIntegration) SetAutoScaleKubernetes(v *AutoScaleKubernetes) *KubernetesIntegration {
-	if o.AutoScaleKubernetes = v; o.AutoScaleKubernetes == nil {
-		o.nullFields = append(o.nullFields, "AutoScaleKubernetes")
+func (o *KubernetesIntegration) SetAutoScale(v *AutoScaleKubernetes) *KubernetesIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
 	}
 	return o
 }
@@ -1760,9 +1761,9 @@ func (o *NomadIntegration) SetAclToken(v *string) *NomadIntegration {
 	return o
 }
 
-func (o *NomadIntegration) SetAutoScaleNomad(v *AutoScaleNomad) *NomadIntegration {
-	if o.AutoScaleNomad = v; o.AutoScaleNomad == nil {
-		o.nullFields = append(o.nullFields, "AutoScaleNomad")
+func (o *NomadIntegration) SetAutoScale(v *AutoScaleNomad) *NomadIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
 	}
 	return o
 }
