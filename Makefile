@@ -1,17 +1,6 @@
-.PHONY: all
-all: test
-
 .PHONY: test
 test: fmtcheck ## Run all tests
 	go test -i $$(go list ./... | grep -v 'vendor') $(TESTARGS) -race -timeout=30s -parallel=4
-
-.PHONY: depinit
-depinit: ## Initialize a new dep manifest and lock files
-	dep init
-
-.PHONY: depensure
-depensure: ## Ensure all dependencies are safely vendored in the project
-	dep ensure
 
 .PHONY: fmtcheck
 fmtcheck: ## Run gofmt on all .go files (dry run)
