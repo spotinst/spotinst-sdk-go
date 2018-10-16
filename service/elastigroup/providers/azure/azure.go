@@ -344,6 +344,92 @@ type RollGroupInput struct {
 
 type RollGroupOutput struct{}
 
+type NodeSignal struct {
+	NodeID *string `json:"nodeId,omitempty"`
+	PoolID *string `json:"poolId,omitempty"`
+	Signal *string `json:"signal,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type NodeSignalInput struct {
+	NodeID *string `json:"nodeId,omitempty"`
+	PoolID *string `json:"poolId,omitempty"`
+	Signal *string `json:"signal,omitempty"`
+}
+
+type NodeSignalOutput struct{}
+
+type Task struct {
+	TaskID		*string		    `json:"id,omitempty"`
+	Name 		*string         `json:"name,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Policies 	[]*TaskPolicy   `json:"policies,omitempty"`
+	Instances   []*TaskInstance `json:"instance,omitempty"`
+	State 		*string         `json:"state,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TaskPolicy struct {
+	Cron   *string `json:"cron,omitempty"`
+	Action *string `json:"action,omitempty"`
+}
+
+type TaskInstance struct {
+	VmName *string `json:"vmName,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+}
+
+type ListTasksInput struct{
+}
+
+type ListTasksOutput struct {
+	Tasks []*Task `json:"tasks,omitempty"`
+}
+
+type CreateTaskInput struct {
+	TaskID	    *string		    `json:"id,omitempty"`
+	Name 		*string         `json:"name,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Policies 	[]*TaskPolicy   `json:"policies,omitempty"`
+	Instances   []*TaskInstance `json:"instance,omitempty"`
+	State 		*string         `json:"state,omitempty"`
+}
+
+type CreateTaskOutput struct {
+	Task *Task `json:"task,omitempty"`
+}
+
+type ReadTaskInput struct {
+	TaskID *string `json:"taskId,omitempty"`
+}
+
+type ReadTaskOutput struct {
+	Task *Task `json:"task,omitempty"`
+}
+
+type UpdateTaskInput struct {
+	TaskID		*string		    `json:"id,omitempty"`
+	Name 		*string         `json:"name,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Policies 	[]*TaskPolicy   `json:"policies,omitempty"`
+	Instances   []*TaskInstance `json:"instance,omitempty"`
+	State 		*string         `json:"state,omitempty"`
+}
+
+type UpdateTaskOutput struct {
+	Task *Task `json:"task,omitempty"`
+}
+
+type DeleteTaskInput struct {
+	TaskID *string `json:"id,omitempty"`
+}
+
+type DeleteTaskOutput struct{}
+
 func groupFromJSON(in []byte) (*Group, error) {
 	b := new(Group)
 	if err := json.Unmarshal(in, b); err != nil {
@@ -412,6 +498,22 @@ func nodesFromHttpResponse(resp *http.Response) ([]*Node, error) {
 		return nil, err
 	}
 	return nodesFromJSON(body)
+}
+
+func nodeSignalFromJSON(in []byte) (*NodeSignal, error) {
+	b := new(NodeSignal)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func nodeSignalFromHttpResponse(resp *http.Response) (*NodeSignal, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return nodeSignalFromJSON(body)
 }
 
 func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGroupsOutput, error) {
@@ -599,6 +701,29 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroup
 	defer resp.Body.Close()
 
 	return &RollGroupOutput{}, nil
+}
+
+func (s *ServiceOp) CreateNodeSignal(ctx context.Context, input *NodeSignalInput) (*NodeSignalOutput, error) {
+	r := client.NewRequest(http.MethodPost, "compute/azure/node/signal")
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	ns, err := nodeSignalFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	// todo double check the output
+	output := new(NodeSignalOutput)
+	if ns != nil {
+	}
+
+	return output, nil
 }
 
 // region Group
@@ -1481,6 +1606,194 @@ func (o *Health) SetGracePeriod(v *int) *Health {
 		o.nullFields = append(o.nullFields, "GracePeriod")
 	}
 	return o
+}
+
+// endregion
+
+// region NodeSignal
+
+func (o *NodeSignal) MarshalJSON() ([]byte, error) {
+	type noMethod NodeSignal
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NodeSignal) SetNodeID(v *string) *NodeSignal {
+	if o.NodeID = v; o.NodeID == nil {
+		o.nullFields = append(o.nullFields, "NodeID")
+	}
+	return o
+}
+
+func (o *NodeSignal) SetPoolID(v *string) *NodeSignal {
+	if o.PoolID = v; o.PoolID == nil {
+		o.nullFields = append(o.nullFields, "PoolID")
+	}
+	return o
+}
+
+func (o *NodeSignal) SetSignal(v *string) *NodeSignal {
+	if o.Signal = v; o.Signal == nil {
+		o.nullFields = append(o.nullFields, "Signal")
+	}
+	return o
+}
+
+// endregion
+
+// region Tasks
+
+func tasksFromHttpResponse(resp *http.Response) ([]*Task, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return tasksFromJSON(body)
+}
+
+func taskFromJSON(in []byte) (*Task, error) {
+	b := new(Task)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func tasksFromJSON(in []byte) ([]*Task, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*Task, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := taskFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func (s *ServiceOp) ListTasks(ctx context.Context, input *ListTasksInput) (*ListTasksOutput, error) {
+	r := client.NewRequest(http.MethodGet, "/azure/compute/task")
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ListTasksOutput{Tasks: tasks}, nil
+}
+
+func (s *ServiceOp) CreateTask(ctx context.Context, input *CreateTaskInput) (*CreateTaskOutput, error) {
+	r := client.NewRequest(http.MethodPost, "/azure/compute/task")
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(CreateTaskOutput)
+	if len(tasks) > 0 {
+		output.Task = tasks[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ReadTask(ctx context.Context, input *ReadTaskInput) (*ReadTaskOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
+		"taskId": spotinst.StringValue(input.TaskID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ReadTaskOutput)
+	if len(tasks) > 0 {
+		output.Task = tasks[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) UpdateTask(ctx context.Context, input *UpdateTaskInput) (*UpdateTaskOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
+		"taskId": spotinst.StringValue(input.TaskID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.TaskID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(UpdateTaskOutput)
+	if len(tasks) > 0 {
+		output.Task = tasks[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) DeleteTask(ctx context.Context, input *DeleteTaskInput) (*DeleteTaskOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
+		"taskId": spotinst.StringValue(input.TaskID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodDelete, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DeleteTaskOutput{}, nil
 }
 
 // endregion

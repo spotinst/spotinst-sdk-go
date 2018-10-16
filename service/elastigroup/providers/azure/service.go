@@ -20,6 +20,13 @@ type Service interface {
 	Status(context.Context, *StatusGroupInput) (*StatusGroupOutput, error)
 	Detach(context.Context, *DetachGroupInput) (*DetachGroupOutput, error)
 	Roll(context.Context, *RollGroupInput) (*RollGroupOutput, error)
+	CreateNodeSignal(context.Context, *NodeSignalInput) (*NodeSignalOutput, error)
+
+	ListTasks(context.Context, *ListTasksInput) (*ListTasksOutput, error)
+	CreateTask(context.Context, *CreateTaskInput) (*CreateTaskOutput, error)
+	ReadTask(context.Context, *ReadTaskInput) (*ReadTaskOutput, error)
+	UpdateTask(context.Context, *UpdateTaskInput) (*UpdateTaskOutput, error)
+	DeleteTask(context.Context, *DeleteTaskInput) (*DeleteTaskOutput, error)
 }
 
 type ServiceOp struct {
