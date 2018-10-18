@@ -19,8 +19,13 @@ type Service interface {
 	Delete(context.Context, *DeleteGroupInput) (*DeleteGroupOutput, error)
 	Status(context.Context, *StatusGroupInput) (*StatusGroupOutput, error)
 	Detach(context.Context, *DetachGroupInput) (*DetachGroupOutput, error)
-	Roll(context.Context, *RollGroupInput) (*RollGroupOutput, error)
+	Scale(context.Context, *ScaleGroupInput) (*ScaleGroupOutput, error)
 	CreateNodeSignal(context.Context, *NodeSignalInput) (*NodeSignalOutput, error)
+
+	Roll(context.Context, *RollGroupInput) (*RollGroupOutput, error)
+	GetRollStatus(context.Context, *RollStatusInput) (*RollStatusOutput, error)
+	ListRollStatus(context.Context, *ListRollStatusInput) (*ListRollStatusOutput, error)
+	StopRoll(context.Context, *StopRollInput) (*StopRollOutput, error)
 
 	ListTasks(context.Context, *ListTasksInput) (*ListTasksOutput, error)
 	CreateTask(context.Context, *CreateTaskInput) (*CreateTaskOutput, error)
