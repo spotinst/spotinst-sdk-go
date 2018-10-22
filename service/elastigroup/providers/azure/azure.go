@@ -11,6 +11,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
+	"strconv"
 )
 
 type Group struct {
@@ -324,6 +325,14 @@ type StatusGroupOutput struct {
 	Nodes []*Node `json:"nodes,omitempty"`
 }
 
+type ScaleGroupInput struct {
+	GroupID    *string `json:"groupId,omitempty"`
+	ScaleType  *string `json:"type,omitempty"`
+	Adjustment *int    `json:"adjustment,omitempty"`
+}
+
+type ScaleGroupOutput struct{}
+
 type DetachGroupInput struct {
 	GroupID                       *string  `json:"groupId,omitempty"`
 	InstanceIDs                   []string `json:"instancesToDetach,omitempty"`
@@ -342,7 +351,164 @@ type RollGroupInput struct {
 	Strategy            *RollStrategy `json:"strategy,omitempty"`
 }
 
-type RollGroupOutput struct{}
+type RollGroupOutput struct {
+	Items []*RollItem `json:"items"`
+}
+
+type Roll struct {
+	Status *string `json:"status,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RollItem struct {
+	GroupID      *string       `json:"groupId,omitempty"`
+	RollID       *string       `json:"id,omitempty"`
+	Status       *string       `json:"status,omitempty"`
+	CurrentBatch *int          `json:"currentBatch,omitempty"`
+	NumBatches   *int          `json:"numOfBatches,omitempty"`
+	Progress     *RollProgress `json:"progress,omitempty"`
+}
+
+type RollStatus struct {
+	GroupID   *string       `json:"groupId,omitempty"`
+	RollID    *string       `json:"id,omitempty"`
+	Status    *string       `json:"status,omitempty"`
+	Progress  *RollProgress `json:"progress,omitempty"`
+	CreatedAt *string       `json:"createdAt,omitempty"`
+	UpdatedAt *string       `json:"updatedAt,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RollProgress struct {
+	Unit  *string `json:"unit,omitempty"`
+	Value *int    `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type StopRollInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+	RollID  *string `json:"rollId,omitempty"`
+	Roll    *Roll   `json:"roll,omitempty"`
+}
+
+type StopRollOutput struct{}
+
+type RollStatusInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+	RollID  *string `json:"rollId,omitempty"`
+}
+
+type RollStatusOutput struct {
+	RollStatus *RollStatus `json:"rollStatus,omitempty"`
+}
+
+type ListRollStatusInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+}
+
+type ListRollStatusOutput struct {
+	Items []*RollStatus `json:"items"`
+}
+
+type NodeSignal struct {
+	NodeID *string `json:"nodeId,omitempty"`
+	PoolID *string `json:"poolId,omitempty"`
+	Signal *string `json:"signal,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type NodeSignalInput struct {
+	NodeID *string `json:"nodeId,omitempty"`
+	PoolID *string `json:"poolId,omitempty"`
+	Signal *string `json:"signal,omitempty"`
+}
+
+type NodeSignalOutput struct{}
+
+type Task struct {
+	TaskID      *string         `json:"id,omitempty"`
+	Name        *string         `json:"name,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Policies    []*TaskPolicy   `json:"policies,omitempty"`
+	Instances   []*TaskInstance `json:"instance,omitempty"`
+	State       *string         `json:"state,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TaskPolicy struct {
+	Cron   *string `json:"cron,omitempty"`
+	Action *string `json:"action,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TaskInstance struct {
+	VmName            *string `json:"vmName,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ListTasksInput struct {
+}
+
+type ListTasksOutput struct {
+	Tasks []*Task `json:"tasks,omitempty"`
+}
+
+type CreateTaskInput struct {
+	TaskID      *string         `json:"id,omitempty"`
+	Name        *string         `json:"name,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Policies    []*TaskPolicy   `json:"policies,omitempty"`
+	Instances   []*TaskInstance `json:"instance,omitempty"`
+	State       *string         `json:"state,omitempty"`
+}
+
+type CreateTaskOutput struct {
+	Task *Task `json:"task,omitempty"`
+}
+
+type ReadTaskInput struct {
+	TaskID *string `json:"taskId,omitempty"`
+}
+
+type ReadTaskOutput struct {
+	Task *Task `json:"task,omitempty"`
+}
+
+type UpdateTaskInput struct {
+	TaskID      *string         `json:"id,omitempty"`
+	Name        *string         `json:"name,omitempty"`
+	Description *string         `json:"description,omitempty"`
+	Policies    []*TaskPolicy   `json:"policies,omitempty"`
+	Instances   []*TaskInstance `json:"instance,omitempty"`
+	State       *string         `json:"state,omitempty"`
+}
+
+type UpdateTaskOutput struct {
+	Task *Task `json:"task,omitempty"`
+}
+
+type DeleteTaskInput struct {
+	TaskID *string `json:"id,omitempty"`
+}
+
+type DeleteTaskOutput struct{}
+
+// region Unmarshallers
 
 func groupFromJSON(in []byte) (*Group, error) {
 	b := new(Group)
@@ -413,6 +579,131 @@ func nodesFromHttpResponse(resp *http.Response) ([]*Node, error) {
 	}
 	return nodesFromJSON(body)
 }
+
+func tasksFromHttpResponse(resp *http.Response) ([]*Task, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return tasksFromJSON(body)
+}
+
+func taskFromJSON(in []byte) (*Task, error) {
+	b := new(Task)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func tasksFromJSON(in []byte) ([]*Task, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*Task, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := taskFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func rollResponseFromJSON(in []byte) (*RollGroupOutput, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+
+	var retVal RollGroupOutput
+	retVal.Items = make([]*RollItem, len(rw.Response.Items))
+	for i, rb := range rw.Response.Items {
+		b, err := rollItemFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		retVal.Items[i] = b
+	}
+
+	return &retVal, nil
+}
+
+func rollItemFromJSON(in []byte) (*RollItem, error) {
+	var rw *RollItem
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	return rw, nil
+}
+
+func rollStatusFromJSON(in []byte) (*RollStatus, error) {
+	b := new(RollStatus)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func rollStatusesFromJSON(in []byte) ([]*RollStatus, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*RollStatus, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := rollStatusFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func rollFromHttpResponse(resp *http.Response) (*RollGroupOutput, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return rollResponseFromJSON(body)
+}
+
+func rollStatusesFromHttpResponse(resp *http.Response) ([]*RollStatus, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return rollStatusesFromJSON(body)
+}
+
+func nodeSignalFromJSON(in []byte) (*NodeSignal, error) {
+	b := new(NodeSignal)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func nodeSignalFromHttpResponse(resp *http.Response) (*NodeSignal, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return nodeSignalFromJSON(body)
+}
+
+// endregion
+
+// region API requests
 
 func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGroupsOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/compute/azure/group")
@@ -578,6 +869,124 @@ func (s *ServiceOp) Detach(ctx context.Context, input *DetachGroupInput) (*Detac
 	return &DetachGroupOutput{}, nil
 }
 
+func (s *ServiceOp) ListTasks(ctx context.Context, input *ListTasksInput) (*ListTasksOutput, error) {
+	r := client.NewRequest(http.MethodGet, "/azure/compute/task")
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ListTasksOutput{Tasks: tasks}, nil
+}
+
+func (s *ServiceOp) CreateTask(ctx context.Context, input *CreateTaskInput) (*CreateTaskOutput, error) {
+	r := client.NewRequest(http.MethodPost, "/azure/compute/task")
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(CreateTaskOutput)
+	if len(tasks) > 0 {
+		output.Task = tasks[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ReadTask(ctx context.Context, input *ReadTaskInput) (*ReadTaskOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
+		"taskId": spotinst.StringValue(input.TaskID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ReadTaskOutput)
+	if len(tasks) > 0 {
+		output.Task = tasks[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) UpdateTask(ctx context.Context, input *UpdateTaskInput) (*UpdateTaskOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
+		"taskId": spotinst.StringValue(input.TaskID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.TaskID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	tasks, err := tasksFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(UpdateTaskOutput)
+	if len(tasks) > 0 {
+		output.Task = tasks[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) DeleteTask(ctx context.Context, input *DeleteTaskInput) (*DeleteTaskOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
+		"taskId": spotinst.StringValue(input.TaskID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodDelete, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DeleteTaskOutput{}, nil
+}
+
 func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroupOutput, error) {
 	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/roll", uritemplates.Values{
 		"groupId": spotinst.StringValue(input.GroupID),
@@ -598,8 +1007,152 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroup
 	}
 	defer resp.Body.Close()
 
-	return &RollGroupOutput{}, nil
+	output, err := rollFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }
+
+func (s *ServiceOp) GetRollStatus(ctx context.Context, input *RollStatusInput) (*RollStatusOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/roll/{rollId}", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"rollId":  spotinst.StringValue(input.RollID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodGet, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	rolls, err := rollStatusesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(RollStatusOutput)
+	if len(rolls) > 0 {
+		output.RollStatus = rolls[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ListRollStatus(ctx context.Context, input *ListRollStatusInput) (*ListRollStatusOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/roll", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodGet, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	rolls, err := rollStatusesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ListRollStatusOutput{Items: rolls}, nil
+}
+
+func (s *ServiceOp) StopRoll(ctx context.Context, input *StopRollInput) (*StopRollOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/roll/{rollId}", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"rollId":  spotinst.StringValue(input.RollID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the IDs anymore so let's drop them.
+	input.GroupID = nil
+	input.RollID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &StopRollOutput{}, nil
+}
+
+func (s *ServiceOp) CreateNodeSignal(ctx context.Context, input *NodeSignalInput) (*NodeSignalOutput, error) {
+	r := client.NewRequest(http.MethodPost, "compute/azure/node/signal")
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	ns, err := nodeSignalFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(NodeSignalOutput)
+	if ns != nil {
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) Scale(ctx context.Context, input *ScaleGroupInput) (*ScaleGroupOutput, error) {
+	path, err := uritemplates.Expand("/compute/azure/group/{groupId}/scale/{type}", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"type":    spotinst.StringValue(input.ScaleType),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+
+	if input.Adjustment != nil {
+		r.Params.Set("adjustment", strconv.Itoa(*input.Adjustment))
+	}
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &ScaleGroupOutput{}, err
+}
+
+// endregion
 
 // region Group
 
@@ -1479,6 +2032,223 @@ func (o *Health) SetAutoHealing(v *bool) *Health {
 func (o *Health) SetGracePeriod(v *int) *Health {
 	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+// endregion
+
+// region NodeSignal
+
+func (o *NodeSignal) MarshalJSON() ([]byte, error) {
+	type noMethod NodeSignal
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NodeSignal) SetNodeID(v *string) *NodeSignal {
+	if o.NodeID = v; o.NodeID == nil {
+		o.nullFields = append(o.nullFields, "NodeID")
+	}
+	return o
+}
+
+func (o *NodeSignal) SetPoolID(v *string) *NodeSignal {
+	if o.PoolID = v; o.PoolID == nil {
+		o.nullFields = append(o.nullFields, "PoolID")
+	}
+	return o
+}
+
+func (o *NodeSignal) SetSignal(v *string) *NodeSignal {
+	if o.Signal = v; o.Signal == nil {
+		o.nullFields = append(o.nullFields, "Signal")
+	}
+	return o
+}
+
+// endregion
+
+// region Roll Group
+
+func (o *RollStatus) MarshalJSON() ([]byte, error) {
+	type noMethod RollStatus
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RollStatus) SetGroupID(v *string) *RollStatus {
+	if o.GroupID = v; o.GroupID == nil {
+		o.nullFields = append(o.nullFields, "GroupID")
+	}
+	return o
+}
+
+func (o *RollStatus) SetRollID(v *string) *RollStatus {
+	if o.RollID = v; o.RollID == nil {
+		o.nullFields = append(o.nullFields, "RollID")
+	}
+	return o
+}
+
+func (o *RollStatus) SetStatus(v *string) *RollStatus {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
+	}
+	return o
+}
+
+func (o *RollStatus) SetCreatedAt(v *string) *RollStatus {
+	if o.CreatedAt = v; o.CreatedAt == nil {
+		o.nullFields = append(o.nullFields, "CreatedAt")
+	}
+	return o
+}
+
+func (o *RollStatus) SetUpdatedAt(v *string) *RollStatus {
+	if o.UpdatedAt = v; o.UpdatedAt == nil {
+		o.nullFields = append(o.nullFields, "UpdatedAt")
+	}
+	return o
+}
+
+func (o *RollStatus) SetProgress(v *RollProgress) *RollStatus {
+	if o.Progress = v; o.Progress == nil {
+		o.nullFields = append(o.nullFields, "Progress")
+	}
+	return o
+}
+
+// endregion
+
+// region RollProgress
+
+func (o *RollProgress) MarshalJSON() ([]byte, error) {
+	type noMethod RollProgress
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RollProgress) SetUnit(v *string) *RollProgress {
+	if o.Unit = v; o.Unit == nil {
+		o.nullFields = append(o.nullFields, "Unit")
+	}
+	return o
+}
+
+func (o *RollProgress) SetValue(v *int) *RollProgress {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region Roll
+
+func (o *Roll) MarshalJSON() ([]byte, error) {
+	type noMethod Roll
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Roll) SetStatus(v *string) *Roll {
+	if o.Status = v; o.Status == nil {
+		o.nullFields = append(o.nullFields, "Status")
+	}
+	return o
+}
+
+// endregion
+
+// region Tasks
+
+func (o *Task) MarshalJSON() ([]byte, error) {
+	type noMethod Task
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Task) SetTaskID(v *string) *Task {
+	if o.TaskID = v; o.TaskID == nil {
+		o.nullFields = append(o.nullFields, "TaskID")
+	}
+	return o
+}
+
+func (o *Task) SetName(v *string) *Task {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Task) SetDescription(v *string) *Task {
+	if o.Description = v; o.Description == nil {
+		o.nullFields = append(o.nullFields, "Description")
+	}
+	return o
+}
+
+func (o *Task) SetState(v *string) *Task {
+	if o.State = v; o.State == nil {
+		o.nullFields = append(o.nullFields, "State")
+	}
+	return o
+}
+
+func (o *Task) SetPolicies(v []*TaskPolicy) *Task {
+	if o.Policies = v; o.Policies == nil {
+		o.nullFields = append(o.nullFields, "Policies")
+	}
+	return o
+}
+
+// endregion
+
+// region TaskPolicy
+
+func (o *TaskPolicy) MarshalJSON() ([]byte, error) {
+	type noMethod TaskPolicy
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TaskPolicy) SetCron(v *string) *TaskPolicy {
+	if o.Cron = v; o.Cron == nil {
+		o.nullFields = append(o.nullFields, "Cron")
+	}
+	return o
+}
+
+func (o *TaskPolicy) SetAction(v *string) *TaskPolicy {
+	if o.Action = v; o.Action == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+// endregion
+
+// region TaskInstance
+
+func (o *TaskInstance) MarshalJSON() ([]byte, error) {
+	type noMethod TaskInstance
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TaskInstance) SetVmName(v *string) *TaskInstance {
+	if o.VmName = v; o.VmName == nil {
+		o.nullFields = append(o.nullFields, "VmName")
+	}
+	return o
+}
+
+func (o *TaskInstance) SetResourceGroupName(v *string) *TaskInstance {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
 	}
 	return o
 }
