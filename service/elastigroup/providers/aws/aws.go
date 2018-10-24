@@ -108,6 +108,15 @@ type Integration struct {
 	nullFields      []string
 }
 
+type InstanceHealth struct {
+	InstanceID       *string `json:"instanceId,omitempty"`
+	SpotRequestID    *string `json:"spotRequestId,omitempty"`
+	GroupID          *string `json:"groupId,omitempty"`
+	AvailabilityZone *string `json:"availabilityZone,omitempty"`
+	LifeCycle        *string `json:"lifeCycle,omitempty"`
+	HealthStatus     *string `json:"healthStatus,omitempty"`
+}
+
 type AutoScale struct {
 	IsEnabled    *bool              `json:"isEnabled,omitempty"`
 	IsAutoConfig *bool              `json:"isAutoConfig,omitempty"`
@@ -623,6 +632,21 @@ type RollStrategy struct {
 	nullFields      []string
 }
 
+type StatefulDeallocation struct {
+	ShouldDeleteImages            *bool `json:"shouldDeleteImages,omitempty"`
+	ShouldDeleteNetworkInterfaces *bool `json:"shouldDeleteNetworkInterfaces,omitempty"`
+	ShouldDeleteVolumes           *bool `json:"shouldDeleteVolumes,omitempty"`
+	ShouldDeleteSnapshots         *bool `json:"shouldDeleteSnapshots,omitempty"`
+}
+
+type GetInstanceHealthinessInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+}
+
+type GetInstanceHealthinessOutput struct {
+	Instances []*InstanceHealth `json:"instances,omitempty"`
+}
+
 type ListGroupsInput struct{}
 
 type ListGroupsOutput struct {
@@ -657,13 +681,6 @@ type UpdateGroupOutput struct {
 type DeleteGroupInput struct {
 	GroupID              *string               `json:"groupId,omitempty"`
 	StatefulDeallocation *StatefulDeallocation `json:"statefulDeallocation,omitempty"`
-}
-
-type StatefulDeallocation struct {
-	ShouldDeleteImages            *bool `json:"shouldDeleteImages,omitempty"`
-	ShouldDeleteNetworkInterfaces *bool `json:"shouldDeleteNetworkInterfaces,omitempty"`
-	ShouldDeleteVolumes           *bool `json:"shouldDeleteVolumes,omitempty"`
-	ShouldDeleteSnapshots         *bool `json:"shouldDeleteSnapshots,omitempty"`
 }
 
 type DeleteGroupOutput struct{}
@@ -764,6 +781,41 @@ func instancesFromHttpResponse(resp *http.Response) ([]*Instance, error) {
 		return nil, err
 	}
 	return instancesFromJSON(body)
+}
+
+func instanceHealthFromJSON(in []byte) (*InstanceHealth, error) {
+	b := new(InstanceHealth)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func listOfInstanceHealthFromJSON(in []byte) ([]*InstanceHealth, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*InstanceHealth, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := instanceHealthFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func listOfInstanceHealthFromHttp(resp *http.Response) ([]*InstanceHealth, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return listOfInstanceHealthFromJSON(body)
 }
 
 func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGroupsOutput, error) {
@@ -963,6 +1015,30 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroup
 	defer resp.Body.Close()
 
 	return &RollGroupOutput{}, nil
+}
+
+func (s *ServiceOp) GetInstanceHealthiness(ctx context.Context, input *GetInstanceHealthinessInput) (*GetInstanceHealthinessOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/instanceHealthiness", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	instances, err := listOfInstanceHealthFromHttp(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetInstanceHealthinessOutput{Instances: instances}, nil
 }
 
 // region: Elastic Beanstalk

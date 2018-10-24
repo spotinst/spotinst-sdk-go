@@ -24,7 +24,7 @@ type Group struct {
 	Scaling     *Scaling     `json:"scaling,omitempty"`
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
-	Region      *string		 `json:"thirdPartiesIntegration,omitempty"`
+	Region      *string      `json:"thirdPartiesIntegration,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
