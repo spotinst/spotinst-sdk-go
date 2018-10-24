@@ -24,6 +24,7 @@ type Group struct {
 	Scaling     *Scaling     `json:"scaling,omitempty"`
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
+	Region      *string		 `json:"thirdPartiesIntegration,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -133,7 +134,7 @@ type Dimension struct {
 }
 
 type Strategy struct {
-	LowPriorityPercentage *int      `json:"lowPriorityPercentage,omitempty"`
+	LowPriorityPercentage *float64  `json:"lowPriorityPercentage,omitempty"`
 	DedicatedCount        *int      `json:"dedicatedCount,omitempty"`
 	DrainingTimeout       *int      `json:"drainingTimeout,omitempty"`
 	Signals               []*Signal `json:"signals,omitempty"`
@@ -163,7 +164,7 @@ type Compute struct {
 	Region              *string              `json:"region,omitempty"`
 	Product             *string              `json:"product,omitempty"`
 	ResourceGroupName   *string              `json:"resourceGroupName,omitempty"`
-	VMSize              *VMSize              `json:"vmSizes,omitempty"`
+	VMSizes             *VMSizes             `json:"vmSizes,omitempty"`
 	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
 	Health              *Health              `json:"health,omitempty"`
 
@@ -171,7 +172,7 @@ type Compute struct {
 	nullFields      []string
 }
 
-type VMSize struct {
+type VMSizes struct {
 	Dedicated   []string `json:"dedicatedSizes,omitempty"`
 	LowPriority []string `json:"lowPrioritySizes,omitempty"`
 
@@ -185,7 +186,7 @@ type LaunchSpecification struct {
 	UserData            *UserData            `json:"userData,omitempty"`
 	Storage             *Storage             `json:"storage,omitempty"`
 	Network             *Network             `json:"network,omitempty"`
-	SSHPublicKey        *string              `json:"sshPublicKey,omitempty"`
+	Login               *Login               `json:"login,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -207,17 +208,25 @@ type LoadBalancer struct {
 }
 
 type Image struct {
-	Custom    *CustomImage `json:"customImage,omitempty"`
-	Publisher *string      `json:"publisher,omitempty"`
-	Offer     *string      `json:"offer,omitempty"`
-	SKU       *string      `json:"sku,omitempty"`
+	MarketPlace *MarketPlaceImage `json:"marketplace,omitepty"`
+	Custom      *CustomImage      `json:"custom,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type MarketPlaceImage struct {
+	Publisher *string `json:"publisher,omitempty"`
+	Offer     *string `json:"offer,omitempty"`
+	SKU       *string `json:"sku,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type CustomImage struct {
-	ImageURIs []string `json:"imageUris,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+	ImageName         *string `json:"imageName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -249,6 +258,15 @@ type Storage struct {
 type Network struct {
 	VirtualNetworkName *string `json:"virtualNetworkName,omitempty"`
 	SubnetID           *string `json:"subnetId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Login struct {
+	UserName     *string `json:"userName,omitempty"`
+	SSHPublicKey *string `json:"sshPublicKey,omitempty"`
+	Password     *string `json:"password,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1225,6 +1243,13 @@ func (o *Group) SetIntegration(v *Integration) *Group {
 	return o
 }
 
+func (o *Group) SetRegion(v *string) *Group {
+	if o.Region = v; o.Region == nil {
+		o.nullFields = append(o.nullFields, "Region")
+	}
+	return o
+}
+
 // endregion
 
 // region Scheduling
@@ -1609,7 +1634,7 @@ func (o *Strategy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Strategy) SetLowPriorityPercentage(v *int) *Strategy {
+func (o *Strategy) SetLowPriorityPercentage(v *float64) *Strategy {
 	if o.LowPriorityPercentage = v; o.LowPriorityPercentage == nil {
 		o.nullFields = append(o.nullFields, "LowPriorityPercentage")
 	}
@@ -1723,9 +1748,9 @@ func (o *Compute) SetResourceGroupName(v *string) *Compute {
 	return o
 }
 
-func (o *Compute) SetVMSize(v *VMSize) *Compute {
-	if o.VMSize = v; o.VMSize == nil {
-		o.nullFields = append(o.nullFields, "VMSize")
+func (o *Compute) SetVMSizes(v *VMSizes) *Compute {
+	if o.VMSizes = v; o.VMSizes == nil {
+		o.nullFields = append(o.nullFields, "VMSizes")
 	}
 	return o
 }
@@ -1748,20 +1773,20 @@ func (o *Compute) SetHealth(v *Health) *Compute {
 
 // region VMSize
 
-func (o *VMSize) MarshalJSON() ([]byte, error) {
-	type noMethod VMSize
+func (o *VMSizes) MarshalJSON() ([]byte, error) {
+	type noMethod VMSizes
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VMSize) SetDedicated(v []string) *VMSize {
+func (o *VMSizes) SetDedicated(v []string) *VMSizes {
 	if o.Dedicated = v; o.Dedicated == nil {
 		o.nullFields = append(o.nullFields, "Dedicated")
 	}
 	return o
 }
 
-func (o *VMSize) SetLowPriority(v []string) *VMSize {
+func (o *VMSizes) SetLowPriority(v []string) *VMSizes {
 	if o.LowPriority = v; o.LowPriority == nil {
 		o.nullFields = append(o.nullFields, "LowPriority")
 	}
@@ -1813,9 +1838,9 @@ func (o *LaunchSpecification) SetNetwork(v *Network) *LaunchSpecification {
 	return o
 }
 
-func (o *LaunchSpecification) SetSSHPublicKey(v *string) *LaunchSpecification {
-	if o.SSHPublicKey = v; o.SSHPublicKey == nil {
-		o.nullFields = append(o.nullFields, "SSHPublicKey")
+func (o *LaunchSpecification) SetLogin(v *Login) *LaunchSpecification {
+	if o.Login = v; o.Login == nil {
+		o.nullFields = append(o.nullFields, "Login")
 	}
 	return o
 }
@@ -1871,6 +1896,13 @@ func (o *Image) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+func (o *Image) SetMarketPlaceImage(v *MarketPlaceImage) *Image {
+	if o.MarketPlace = v; o.MarketPlace == nil {
+		o.nullFields = append(o.nullFields, "MarketPlace")
+	}
+	return o
+}
+
 func (o *Image) SetCustom(v *CustomImage) *Image {
 	if o.Custom = v; o.Custom == nil {
 		o.nullFields = append(o.nullFields, "Custom")
@@ -1878,21 +1910,31 @@ func (o *Image) SetCustom(v *CustomImage) *Image {
 	return o
 }
 
-func (o *Image) SetPublisher(v *string) *Image {
+// endregion
+
+// region MarketPlaceImage
+
+func (o *MarketPlaceImage) MarshalJSON() ([]byte, error) {
+	type noMethod MarketPlaceImage
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *MarketPlaceImage) SetPublisher(v *string) *MarketPlaceImage {
 	if o.Publisher = v; o.Publisher == nil {
 		o.nullFields = append(o.nullFields, "Publisher")
 	}
 	return o
 }
 
-func (o *Image) SetOffer(v *string) *Image {
+func (o *MarketPlaceImage) SetOffer(v *string) *MarketPlaceImage {
 	if o.Offer = v; o.Offer == nil {
 		o.nullFields = append(o.nullFields, "Offer")
 	}
 	return o
 }
 
-func (o *Image) SetSKU(v *string) *Image {
+func (o *MarketPlaceImage) SetSKU(v *string) *MarketPlaceImage {
 	if o.SKU = v; o.SKU == nil {
 		o.nullFields = append(o.nullFields, "SKU")
 	}
@@ -1909,9 +1951,16 @@ func (o *CustomImage) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *CustomImage) SetImageURIs(v []string) *CustomImage {
-	if o.ImageURIs = v; o.ImageURIs == nil {
-		o.nullFields = append(o.nullFields, "ImageURIs")
+func (o *CustomImage) SetResourceGroupName(v *string) *CustomImage {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *CustomImage) SetImageName(v *string) *CustomImage {
+	if o.ImageName = v; o.ImageName == nil {
+		o.nullFields = append(o.nullFields, "ImageName")
 	}
 	return o
 }
@@ -2001,6 +2050,37 @@ func (o *Network) SetVirtualNetworkName(v *string) *Network {
 func (o *Network) SetSubnetId(v *string) *Network {
 	if o.SubnetID = v; o.SubnetID == nil {
 		o.nullFields = append(o.nullFields, "SubnetID")
+	}
+	return o
+}
+
+// endregion
+
+// region Login
+
+func (o *Login) MarshalJSON() ([]byte, error) {
+	type noMethod Login
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Login) SetUserName(v *string) *Login {
+	if o.UserName = v; o.UserName == nil {
+		o.nullFields = append(o.nullFields, "UserName")
+	}
+	return o
+}
+
+func (o *Login) SetSSHPublicKey(v *string) *Login {
+	if o.SSHPublicKey = v; o.SSHPublicKey == nil {
+		o.nullFields = append(o.nullFields, "SSHPublicKey")
+	}
+	return o
+}
+
+func (o *Login) SetPassword(v *string) *Login {
+	if o.Password = v; o.Password == nil {
+		o.nullFields = append(o.nullFields, "Password")
 	}
 	return o
 }
