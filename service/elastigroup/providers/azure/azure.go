@@ -15,16 +15,17 @@ import (
 )
 
 type Group struct {
-	ID          *string      `json:"id,omitempty"`
-	Name        *string      `json:"name,omitempty"`
-	Description *string      `json:"description,omitempty"`
-	Capacity    *Capacity    `json:"capacity,omitempty"`
-	Compute     *Compute     `json:"compute,omitempty"`
-	Strategy    *Strategy    `json:"strategy,omitempty"`
-	Scaling     *Scaling     `json:"scaling,omitempty"`
-	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
-	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
-	Region      *string      `json:"thirdPartiesIntegration,omitempty"`
+	ID                *string      `json:"id,omitempty"`
+	Name              *string      `json:"name,omitempty"`
+	ResourceGroupName *string      `json:"resourceGroupName,omitempty"`
+	Description       *string      `json:"description,omitempty"`
+	Capacity          *Capacity    `json:"capacity,omitempty"`
+	Compute           *Compute     `json:"compute,omitempty"`
+	Strategy          *Strategy    `json:"strategy,omitempty"`
+	Scaling           *Scaling     `json:"scaling,omitempty"`
+	Scheduling        *Scheduling  `json:"scheduling,omitempty"`
+	Integration       *Integration `json:"thirdPartiesIntegration,omitempty"`
+	Region            *string      `json:"region,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -135,7 +136,7 @@ type Dimension struct {
 
 type Strategy struct {
 	LowPriorityPercentage *float64  `json:"lowPriorityPercentage,omitempty"`
-	DedicatedCount        *int      `json:"dedicatedCount,omitempty"`
+	OnDemandCount         *int      `json:"OnDemandCount,omitempty"`
 	DrainingTimeout       *int      `json:"drainingTimeout,omitempty"`
 	Signals               []*Signal `json:"signals,omitempty"`
 
@@ -173,7 +174,7 @@ type Compute struct {
 }
 
 type VMSizes struct {
-	Dedicated   []string `json:"dedicatedSizes,omitempty"`
+	OnDemand    []string `json:"odSizes,omitempty"`
 	LowPriority []string `json:"lowPrioritySizes,omitempty"`
 
 	forceSendFields []string
@@ -200,15 +201,17 @@ type LoadBalancersConfig struct {
 }
 
 type LoadBalancer struct {
+	Type        *string `json:"type,omitempty"`
 	BalancerID  *string `json:"balancerId,omitempty"`
 	TargetSetID *string `json:"targetSetId,omitempty"`
+	AutoWeight  *bool   `json:"autoWeight"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type Image struct {
-	MarketPlace *MarketPlaceImage `json:"marketplace,omitepty"`
+	MarketPlace *MarketPlaceImage `json:"marketplace,omitempty"`
 	Custom      *CustomImage      `json:"custom,omitempty"`
 
 	forceSendFields []string
@@ -257,7 +260,9 @@ type Storage struct {
 
 type Network struct {
 	VirtualNetworkName *string `json:"virtualNetworkName,omitempty"`
-	SubnetID           *string `json:"subnetId,omitempty"`
+	SubnetName         *string `json:"subnetName,omitempty"`
+	ResourceGroupName  *string `json:"resourceGroupName,omitempty"`
+	AssignPublicIP     *bool   `json:"assignPublicIp,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1194,6 +1199,13 @@ func (o *Group) SetName(v *string) *Group {
 	return o
 }
 
+func (o *Group) SetResourceGroupName(v *string) *Group {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
 func (o *Group) SetDescription(v *string) *Group {
 	if o.Description = v; o.Description == nil {
 		o.nullFields = append(o.nullFields, "Description")
@@ -1641,9 +1653,9 @@ func (o *Strategy) SetLowPriorityPercentage(v *float64) *Strategy {
 	return o
 }
 
-func (o *Strategy) SetDedicatedCount(v *int) *Strategy {
-	if o.DedicatedCount = v; o.DedicatedCount == nil {
-		o.nullFields = append(o.nullFields, "DedicatedCount")
+func (o *Strategy) SetOnDemandCount(v *int) *Strategy {
+	if o.OnDemandCount = v; o.OnDemandCount == nil {
+		o.nullFields = append(o.nullFields, "OnDemandCount")
 	}
 	return o
 }
@@ -1779,9 +1791,9 @@ func (o *VMSizes) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VMSizes) SetDedicated(v []string) *VMSizes {
-	if o.Dedicated = v; o.Dedicated == nil {
-		o.nullFields = append(o.nullFields, "Dedicated")
+func (o *VMSizes) SetOnDemand(v []string) *VMSizes {
+	if o.OnDemand = v; o.OnDemand == nil {
+		o.nullFields = append(o.nullFields, "OnDemand")
 	}
 	return o
 }
@@ -1872,6 +1884,13 @@ func (o *LoadBalancer) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
 func (o *LoadBalancer) SetBalancerId(v *string) *LoadBalancer {
 	if o.BalancerID = v; o.BalancerID == nil {
 		o.nullFields = append(o.nullFields, "BalancerID")
@@ -1882,6 +1901,13 @@ func (o *LoadBalancer) SetBalancerId(v *string) *LoadBalancer {
 func (o *LoadBalancer) SetTargetSetId(v *string) *LoadBalancer {
 	if o.TargetSetID = v; o.TargetSetID == nil {
 		o.nullFields = append(o.nullFields, "TargetSetID")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetAutoWeight(v *bool) *LoadBalancer {
+	if o.AutoWeight = v; o.AutoWeight == nil {
+		o.nullFields = append(o.nullFields, "AutoWeight")
 	}
 	return o
 }
@@ -2047,9 +2073,23 @@ func (o *Network) SetVirtualNetworkName(v *string) *Network {
 	return o
 }
 
-func (o *Network) SetSubnetId(v *string) *Network {
-	if o.SubnetID = v; o.SubnetID == nil {
-		o.nullFields = append(o.nullFields, "SubnetID")
+func (o *Network) SetSubnetName(v *string) *Network {
+	if o.SubnetName = v; o.SubnetName == nil {
+		o.nullFields = append(o.nullFields, "SubnetName")
+	}
+	return o
+}
+
+func (o *Network) SetResourceGroupName(v *string) *Network {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *Network) SetAssignPublicIP(v *bool) *Network {
+	if o.AssignPublicIP = v; o.AssignPublicIP == nil {
+		o.nullFields = append(o.nullFields, "AssignPublicIP")
 	}
 	return o
 }

@@ -33,11 +33,12 @@ func HttpTestClient(fn RoundTripFunc) *http.Client {
 }
 
 func TestReadTask(t *testing.T) {
+	os.Setenv("SPOTINST_TOKEN", "FAKE")
 	httpClient := HttpTestClient(func(req *http.Request) *http.Response {
 		assert.Equal(t, req.URL.String(), BaseURL+TaskURL+"/sat-e7db7386")
 		return &http.Response{
 			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(respBody)),
+			Body:       ioutil.NopCloser(bytes.NewBufferString(listTaskResp)),
 		}
 	})
 
@@ -54,22 +55,18 @@ func TestReadTask(t *testing.T) {
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "failed: %v\n", err)
-		os.Exit(1)
 	}
 
-	assert.Equal(t, *out.Task.TaskID, "sat-e7db7386")
+	assert.Equal(t, *out.Task.TaskID, *input.TaskID)
 }
 
 func TestCreateTask(t *testing.T) {
 	httpClient := HttpTestClient(func(req *http.Request) *http.Response {
-		reqBody := ioutil.NopCloser(req.Body)
-		fmt.Println(reqBody)
-
 		assert.Equal(t, req.URL.String(), BaseURL+TaskURL)
 		//assert.Equal(t, req.Body.Read("name"), "test")
 		return &http.Response{
 			StatusCode: 200,
-			Body:       ioutil.NopCloser(bytes.NewBufferString(respBody)),
+			Body:       ioutil.NopCloser(bytes.NewBufferString(createTaskResp)),
 		}
 	})
 
@@ -79,13 +76,19 @@ func TestCreateTask(t *testing.T) {
 	svc := New(sess)
 
 	input := &azure.CreateTaskInput{
-		Name:        spotinst.String("test"),
-		Description: spotinst.String("tests create task action"),
+		Name:        spotinst.String("create-task"),
+		Description: spotinst.String("create example description"),
 		State:       spotinst.String("DISABLED"),
 		Policies: []*azure.TaskPolicy{
 			{
 				Cron:   spotinst.String("00 20 * * FRI"),
 				Action: spotinst.String("START"),
+			},
+		},
+		Instances: []*azure.TaskInstance{
+			{
+				VmName:            spotinst.String("CreateVm"),
+				ResourceGroupName: spotinst.String("CreateGroup"),
 			},
 		},
 	}
@@ -97,11 +100,72 @@ func TestCreateTask(t *testing.T) {
 		os.Exit(1)
 	}
 
-	//assert.Equal(t,*out,"")
-	fmt.Println(*out)
+	assert.Equal(t, *out.Task.Name, *input.Name)
+	assert.Equal(t, *out.Task.Description, *input.Description)
+	assert.Equal(t, *out.Task.State, *input.State)
+	assert.Equal(t, *out.Task.Policies[0].Action, *input.Policies[0].Action)
+	assert.Equal(t, *out.Task.Policies[0].Cron, *input.Policies[0].Cron)
+	assert.Equal(t, *out.Task.Instances[0].VmName, *input.Instances[0].VmName)
+	assert.Equal(t, *out.Task.Instances[0].ResourceGroupName, *input.Instances[0].ResourceGroupName)
 }
 
-const respBody = `
+const createTaskResp = `
+{
+	"response": {
+		"status": {
+			"code": 200,
+			"message": "OK"
+		},
+		"kind": "spotinst:azure:compute:task",
+		"items": [{
+			"createdAt": "2018-10-16T18:33:22.000Z",
+			"updatedAt": "2018-10-16T19:55:02.000Z",
+			"deletedAt": null,
+			"id": "sat-e7db7386",
+			"name": "create-task",
+			"description": "create example description",
+			"state": "DISABLED",
+			"policies": [{
+				"cron": "00 20 * * FRI",
+				"action": "START"
+			}],
+			"instances": [{
+				"vmName": "CreateVm",
+				"resourceGroupName": "CreateGroup"
+			}]
+		}],
+		"count": 1
+	}
+}
+`
+
+const updateTaskResp = `
+{
+	"response": {
+		"status": {
+			"code": 200,
+			"message": "OK"
+		},
+		"kind": "spotinst:azure:compute:task",
+		"items": [{
+			"createdAt": "2018-10-16T18:33:22.000Z",
+			"updatedAt": "2018-10-16T19:55:02.000Z",
+			"deletedAt": null,
+			"id": "sat-e7db7386",
+			"name": "update-task",
+			"description": "update example description",
+			"state": "ENABLED",
+			"policies": [{
+				"cron": "01 30 * * TUES",
+				"action": "STOP"
+			}]
+		}],
+		"count": 1
+	}
+}
+`
+
+const listTaskResp = `
 {
 	"response": {
 		"status": {

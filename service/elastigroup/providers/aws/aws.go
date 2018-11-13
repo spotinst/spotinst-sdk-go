@@ -363,6 +363,7 @@ type Task struct {
 	TargetCapacity      *int    `json:"targetCapacity,omitempty"`
 	MinCapacity         *int    `json:"minCapacity,omitempty"`
 	MaxCapacity         *int    `json:"maxCapacity,omitempty"`
+	Adjustment          *int    `json:"adjustment,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -395,6 +396,7 @@ type ScalingPolicy struct {
 	Dimensions        []*Dimension `json:"dimensions,omitempty"`
 	Action            *Action      `json:"action,omitempty"`
 	Target            *float64     `json:"target,omitempty"`
+	IsEnabled         *bool        `json:"isEnabled,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2048,6 +2050,13 @@ func (o *Task) SetMaxCapacity(v *int) *Task {
 	return o
 }
 
+func (o *Task) SetAdjustment(v *int) *Task {
+	if o.Adjustment = v; o.Adjustment == nil {
+		o.nullFields = append(o.nullFields, "Adjustment")
+	}
+	return o
+}
+
 // endregion
 
 // region Scaling
@@ -2204,6 +2213,13 @@ func (o *ScalingPolicy) SetAction(v *Action) *ScalingPolicy {
 func (o *ScalingPolicy) SetTarget(v *float64) *ScalingPolicy {
 	if o.Target = v; o.Target == nil {
 		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetIsEnabled(v *bool) *ScalingPolicy {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
 	return o
 }
