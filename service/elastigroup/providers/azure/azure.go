@@ -135,8 +135,8 @@ type Dimension struct {
 }
 
 type Strategy struct {
-	LowPriorityPercentage *float64  `json:"lowPriorityPercentage,omitempty"`
-	OnDemandCount         *int      `json:"OnDemandCount,omitempty"`
+	LowPriorityPercentage *int      `json:"lowPriorityPercentage,omitempty"`
+	OnDemandCount         *int      `json:"onDemandCount,omitempty"`
 	DrainingTimeout       *int      `json:"drainingTimeout,omitempty"`
 	Signals               []*Signal `json:"signals,omitempty"`
 
@@ -1646,7 +1646,7 @@ func (o *Strategy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Strategy) SetLowPriorityPercentage(v *float64) *Strategy {
+func (o *Strategy) SetLowPriorityPercentage(v *int) *Strategy {
 	if o.LowPriorityPercentage = v; o.LowPriorityPercentage == nil {
 		o.nullFields = append(o.nullFields, "LowPriorityPercentage")
 	}
