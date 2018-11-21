@@ -5,13 +5,13 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
-	"strconv"
 )
 
 type Group struct {
@@ -457,11 +457,11 @@ type NodeSignalInput struct {
 type NodeSignalOutput struct{}
 
 type Task struct {
-	TaskID      *string         `json:"id,omitempty"`
+	ID          *string         `json:"id,omitempty"`
 	Name        *string         `json:"name,omitempty"`
 	Description *string         `json:"description,omitempty"`
 	Policies    []*TaskPolicy   `json:"policies,omitempty"`
-	Instances   []*TaskInstance `json:"instance,omitempty"`
+	Instances   []*TaskInstance `json:"instances,omitempty"`
 	State       *string         `json:"state,omitempty"`
 
 	forceSendFields []string
@@ -477,27 +477,21 @@ type TaskPolicy struct {
 }
 
 type TaskInstance struct {
-	VmName            *string `json:"vmName,omitempty"`
+	VMName            *string `json:"vmName,omitempty"`
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type ListTasksInput struct {
-}
+type ListTasksInput struct{}
 
 type ListTasksOutput struct {
 	Tasks []*Task `json:"tasks,omitempty"`
 }
 
 type CreateTaskInput struct {
-	TaskID      *string         `json:"id,omitempty"`
-	Name        *string         `json:"name,omitempty"`
-	Description *string         `json:"description,omitempty"`
-	Policies    []*TaskPolicy   `json:"policies,omitempty"`
-	Instances   []*TaskInstance `json:"instance,omitempty"`
-	State       *string         `json:"state,omitempty"`
+	Task *Task `json:"task,omitempty"`
 }
 
 type CreateTaskOutput struct {
@@ -513,12 +507,7 @@ type ReadTaskOutput struct {
 }
 
 type UpdateTaskInput struct {
-	TaskID      *string         `json:"id,omitempty"`
-	Name        *string         `json:"name,omitempty"`
-	Description *string         `json:"description,omitempty"`
-	Policies    []*TaskPolicy   `json:"policies,omitempty"`
-	Instances   []*TaskInstance `json:"instance,omitempty"`
-	State       *string         `json:"state,omitempty"`
+	Task *Task `json:"task,omitempty"`
 }
 
 type UpdateTaskOutput struct {
@@ -910,7 +899,7 @@ func (s *ServiceOp) ListTasks(ctx context.Context, input *ListTasksInput) (*List
 
 func (s *ServiceOp) CreateTask(ctx context.Context, input *CreateTaskInput) (*CreateTaskOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/azure/compute/task")
-	r.Obj = input
+	r.Obj = input.Task
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -961,17 +950,17 @@ func (s *ServiceOp) ReadTask(ctx context.Context, input *ReadTaskInput) (*ReadTa
 
 func (s *ServiceOp) UpdateTask(ctx context.Context, input *UpdateTaskInput) (*UpdateTaskOutput, error) {
 	path, err := uritemplates.Expand("/azure/compute/task/{taskId}", uritemplates.Values{
-		"taskId": spotinst.StringValue(input.TaskID),
+		"taskId": spotinst.StringValue(input.Task.ID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do not need the ID anymore so let's drop it.
-	input.TaskID = nil
+	input.Task.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
-	r.Obj = input
+	r.Obj = input.Task
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -2290,9 +2279,9 @@ func (o *Task) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Task) SetTaskID(v *string) *Task {
-	if o.TaskID = v; o.TaskID == nil {
-		o.nullFields = append(o.nullFields, "TaskID")
+func (o *Task) SetId(v *string) *Task {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
@@ -2321,6 +2310,13 @@ func (o *Task) SetState(v *string) *Task {
 func (o *Task) SetPolicies(v []*TaskPolicy) *Task {
 	if o.Policies = v; o.Policies == nil {
 		o.nullFields = append(o.nullFields, "Policies")
+	}
+	return o
+}
+
+func (o *Task) SetInstances(v []*TaskInstance) *Task {
+	if o.Instances = v; o.Instances == nil {
+		o.nullFields = append(o.nullFields, "Instances")
 	}
 	return o
 }
@@ -2359,9 +2355,9 @@ func (o *TaskInstance) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *TaskInstance) SetVmName(v *string) *TaskInstance {
-	if o.VmName = v; o.VmName == nil {
-		o.nullFields = append(o.nullFields, "VmName")
+func (o *TaskInstance) SetVMName(v *string) *TaskInstance {
+	if o.VMName = v; o.VMName == nil {
+		o.nullFields = append(o.nullFields, "VMName")
 	}
 	return o
 }
