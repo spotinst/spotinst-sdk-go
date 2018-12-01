@@ -1,4 +1,4 @@
-package gce
+package gcp
 
 import "github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 

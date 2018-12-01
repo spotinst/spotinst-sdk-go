@@ -1,4 +1,4 @@
-package gce
+package gcp
 
 import (
 	"context"
