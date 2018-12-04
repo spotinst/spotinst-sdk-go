@@ -2,8 +2,8 @@ package gcp
 
 import (
 	"context"
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
@@ -41,6 +41,54 @@ type Group struct {
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
 }
+
+// region Autoscale structs
+
+type AutoScale struct {
+	IsEnabled    *bool              `json:"isEnabled,omitempty"`
+	IsAutoConfig *bool              `json:"isAutoConfig,omitempty"`
+	Cooldown     *int               `json:"cooldown,omitempty"`
+	Headroom     *AutoScaleHeadroom `json:"headroom,omitempty"`
+	Down         *AutoScaleDown     `json:"down,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleDown struct {
+	EvaluationPeriods *int `json:"evaluationPeriods,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleGKE struct {
+	AutoScale // embedding
+
+	Labels []*AutoScaleLabel `json:"labels,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleHeadroom struct {
+	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
+	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
+	NumOfUnits    *int `json:"numOfUnits,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleLabel struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// endregion
 
 // region Capacity structs
 
@@ -968,14 +1016,6 @@ func (o *LaunchSpecification) SetStartupScript(v *string) *LaunchSpecification {
 	}
 	return o
 }
-
-// SetTags sets the tags for the group
-//func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
-//	if o.Tags = v; o.Tags == nil {
-//		o.nullFields = append(o.nullFields, "Tags")
-//	}
-//	return o
-//}
 
 // SetTags sets the list of tags
 func (o *LaunchSpecification) SetTags(v []string) *LaunchSpecification {
