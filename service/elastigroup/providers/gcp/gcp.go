@@ -42,7 +42,7 @@ type Group struct {
 	nullFields []string
 }
 
-// region Autoscale structs
+// region AutoScale structs
 
 type AutoScale struct {
 	IsEnabled    *bool              `json:"isEnabled,omitempty"`
@@ -57,15 +57,6 @@ type AutoScale struct {
 
 type AutoScaleDown struct {
 	EvaluationPeriods *int `json:"evaluationPeriods,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type AutoScaleGKE struct {
-	AutoScale // embedding
-
-	Labels []*AutoScaleLabel `json:"labels,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -119,6 +110,23 @@ type AccessConfig struct {
 type AliasIPRange struct {
 	IPCIDRRange         *string `json:"ipCidrRange,omitempty"`
 	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// BackendServiceConfig constains a list of backend service configurations.
+type BackendServiceConfig struct {
+	BackendServices []*BackendService `json:"backendServices,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// BackendService defines the configuration for a single backend service.
+type BackendService struct {
+	BackendServiceName *string     `json:"backendServiceName,omitempty"`
+	NamedPorts         *NamedPorts `json:"namedPorts,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -209,16 +217,15 @@ type Label struct {
 
 // LaunchSpecification defines launch attributes for the Group. LaunchSpecification is an element of Compute.
 type LaunchSpecification struct {
-	BackendServices   []string            `json:"backendServices,omitempty"`
-	Disks             []*Disk             `json:"disks,omitempty"`
-	Labels            []*Label            `json:"labels,omitempty"`
-	IPForwarding      *bool               `json:"ipForwarding,omitempty"`
-	NetworkInterfaces []*NetworkInterface `json:"networkInterfaces,omitempty"`
-	Metadata          []*Metadata         `json:"metadata,omitempty"`
-	ServiceAccount    *string             `json:"serviceAccount,omitempty"`
-	StartupScript     *string             `json:"startupScript,omitempty"`
-	//Tags              []*Tag              `json:"tags,omitempty"`
-	Tags []string `json:"tags,omitempty"`
+	BackendServiceConfig *BackendServiceConfig `json:"backendServiceConfig,omitempty"`
+	Disks                []*Disk               `json:"disks,omitempty"`
+	Labels               []*Label              `json:"labels,omitempty"`
+	IPForwarding         *bool                 `json:"ipForwarding,omitempty"`
+	NetworkInterfaces    []*NetworkInterface   `json:"networkInterfaces,omitempty"`
+	Metadata             []*Metadata           `json:"metadata,omitempty"`
+	ServiceAccount       *string               `json:"serviceAccount,omitempty"`
+	StartupScript        *string               `json:"startupScript,omitempty"`
+	Tags                 []string              `json:"tags,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -228,6 +235,15 @@ type LaunchSpecification struct {
 type Metadata struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// NamedPorts describes the name and list of ports to use with the backend service
+type NamedPorts struct {
+	Name  *string `json:"name,omitempty"`
+	Ports []int   `json:"ports,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -247,6 +263,38 @@ type NetworkInterface struct {
 type Subnet struct {
 	Region      *string  `json:"region,omitempty"`
 	SubnetNames []string `json:"subnetNames,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// endregion
+
+// region GKE structs
+
+// ImportGKEGroup contains a modified group struct used for overriding cluster parameters on import
+type ImportGKEGroup struct {
+	AvailabilityZones     []string          `json:"availabilityZones,omitempty"`
+	Capacity              *CapacityGKE      `json:"capacity,omitempty"`
+	Name                  *string           `json:"name,omitempty"`
+	InstanceTypes         *InstanceTypesGKE `json:"instanceTypes,omitempty"`
+	PreemptiblePercentage *int              `json:"preemptiblePercentage,omitempty"`
+	NodeImage             *string           `json:"nodeImage,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CapacityGKE struct {
+	Capacity //embedding
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type InstanceTypesGKE struct {
+	OnDemand    *string  `json:"ondemand,omitempty"`
+	Preemptible []string `json:"preemptible,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -332,8 +380,17 @@ type Integration struct {
 // region GKEIntegration structs
 
 type GKEIntegration struct {
-	ClusterID       *string `json:"clusterID,omitempty"`
-	ClusterZoneName *string `json:"clusterZoneName,omitempty"`
+	ClusterID       *string       `json:"clusterID,omitempty"`
+	ClusterZoneName *string       `json:"clusterZoneName,omitempty"`
+	AutoScale       *AutoScaleGKE `json:"autoScale,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScaleGKE struct {
+	AutoScale                   // embedding
+	Labels    []*AutoScaleLabel `json:"labels,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -365,8 +422,9 @@ type DeleteGroupOutput struct{}
 
 // ImportGKEClusterInput describes the input required when importing an existing GKE cluster into Elastigroup, if it exists.
 type ImportGKEClusterInput struct {
-	ClusterID       *string `json:"clusterID,omitempty"`
-	ClusterZoneName *string `json:"clusterZoneName,omitempty"`
+	ClusterID       *string         `json:"clusterID,omitempty"`
+	ClusterZoneName *string         `json:"clusterZoneName,omitempty"`
+	Group           *ImportGKEGroup `json:"group,omitempty"`
 }
 
 // ImportGKEClusterOutput contains a description of the Elastigroup and the imported GKE cluster.
@@ -561,6 +619,9 @@ func (s *ServiceOp) ImportGKECluster(ctx context.Context, input *ImportGKECluste
 	r.Params["clusterId"] = []string{spotinst.StringValue(input.ClusterID)}
 	r.Params["zone"] = []string{spotinst.StringValue(input.ClusterZoneName)}
 
+	body := &ImportGKEClusterInput{Group: input.Group}
+	r.Obj = body
+
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
@@ -726,6 +787,14 @@ func (o *Group) SetID(v *string) *Group {
 	return o
 }
 
+// SetIntegration sets the integrations for the group
+func (o *Group) SetIntegration(v *Integration) *Group {
+	if o.Integration = v; o.Integration == nil {
+		o.nullFields = append(o.nullFields, "Integration")
+	}
+	return o
+}
+
 // SetName sets the group name
 func (o *Group) SetName(v *string) *Group {
 	if o.Name = v; o.Name == nil {
@@ -757,6 +826,123 @@ func (o *Group) SetStrategy(v *Strategy) *Group {
 	}
 	return o
 }
+
+// endregion
+
+// region AutoScale setters
+
+func (o *AutoScale) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScale
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScale) SetIsEnabled(v *bool) *AutoScale {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *AutoScale) SetIsAutoConfig(v *bool) *AutoScale {
+	if o.IsAutoConfig = v; o.IsAutoConfig == nil {
+		o.nullFields = append(o.nullFields, "IsAutoConfig")
+	}
+	return o
+}
+
+func (o *AutoScale) SetCooldown(v *int) *AutoScale {
+	if o.Cooldown = v; o.Cooldown == nil {
+		o.nullFields = append(o.nullFields, "Cooldown")
+	}
+	return o
+}
+
+func (o *AutoScale) SetHeadroom(v *AutoScaleHeadroom) *AutoScale {
+	if o.Headroom = v; o.Headroom == nil {
+		o.nullFields = append(o.nullFields, "Headroom")
+	}
+	return o
+}
+
+func (o *AutoScale) SetDown(v *AutoScaleDown) *AutoScale {
+	if o.Down = v; o.Down == nil {
+		o.nullFields = append(o.nullFields, "Down")
+	}
+	return o
+}
+
+// region AutoScaleDown
+
+func (o *AutoScaleDown) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleDown
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleDown) SetEvaluationPeriods(v *int) *AutoScaleDown {
+	if o.EvaluationPeriods = v; o.EvaluationPeriods == nil {
+		o.nullFields = append(o.nullFields, "EvaluationPeriods")
+	}
+	return o
+}
+
+// endregion
+
+// region AutoScaleHeadroom
+
+func (o *AutoScaleHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleHeadroom
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleHeadroom) SetCPUPerUnit(v *int) *AutoScaleHeadroom {
+	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
+		o.nullFields = append(o.nullFields, "CPUPerUnit")
+	}
+	return o
+}
+
+func (o *AutoScaleHeadroom) SetMemoryPerUnit(v *int) *AutoScaleHeadroom {
+	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
+		o.nullFields = append(o.nullFields, "MemoryPerUnit")
+	}
+	return o
+}
+
+func (o *AutoScaleHeadroom) SetNumOfUnits(v *int) *AutoScaleHeadroom {
+	if o.NumOfUnits = v; o.NumOfUnits == nil {
+		o.nullFields = append(o.nullFields, "NumOfUnits")
+	}
+	return o
+}
+
+// endregion
+
+// region AutoScaleLabel
+
+func (o *AutoScaleLabel) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleLabel
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScaleLabel) SetKey(v *string) *AutoScaleLabel {
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+func (o *AutoScaleLabel) SetValue(v *string) *AutoScaleLabel {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
 
 // endregion
 
@@ -954,9 +1140,9 @@ func (o *LaunchSpecification) MarshalJSON() ([]byte, error) {
 }
 
 // SetBackendServices sets the backend services to use with the group.
-func (o *LaunchSpecification) SetBackendServices(v []string) *LaunchSpecification {
-	if o.BackendServices = v; o.BackendServices == nil {
-		o.nullFields = append(o.nullFields, "BackendServices")
+func (o *LaunchSpecification) SetBackendServiceConfig(v *BackendServiceConfig) *LaunchSpecification {
+	if o.BackendServiceConfig = v; o.BackendServiceConfig == nil {
+		o.nullFields = append(o.nullFields, "BackendServiceConfig")
 	}
 	return o
 }
@@ -1024,6 +1210,76 @@ func (o *LaunchSpecification) SetTags(v []string) *LaunchSpecification {
 	}
 	return o
 }
+
+// region BackendServiceConfig setters
+
+func (o *BackendServiceConfig) MarshalJSON() ([]byte, error) {
+	type noMethod BackendServiceConfig
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetBackendServices sets the backend service list
+func (o *BackendServiceConfig) SetBackendServices(v []*BackendService) *BackendServiceConfig {
+	if o.BackendServices = v; o.BackendServices == nil {
+		o.nullFields = append(o.nullFields, "BackendServices")
+	}
+	return o
+}
+
+// region Backend Service setters
+
+func (o *BackendService) MarshalJSON() ([]byte, error) {
+	type noMethod BackendService
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetBackendServiceName sets the name of the backend service.
+func (o *BackendService) SetBackendServiceName(v *string) *BackendService {
+	if o.BackendServiceName = v; o.BackendServiceName == nil {
+		o.nullFields = append(o.nullFields, "BackendServiceName")
+	}
+	return o
+}
+
+// SetNamedPorts sets the named port object
+func (o *BackendService) SetNamedPorts(v *NamedPorts) *BackendService {
+	if o.NamedPorts = v; o.NamedPorts == nil {
+		o.nullFields = append(o.nullFields, "NamedPort")
+	}
+	return o
+}
+
+// region NamedPort setters
+
+func (o *NamedPorts) MarshalJSON() ([]byte, error) {
+	type noMethod NamedPorts
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetNamedPorts sets the name of the NamedPorts
+func (o *NamedPorts) SetName(v *string) *NamedPorts {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+// SetPorts sets the list of ports in the NamedPorts
+func (o *NamedPorts) SetPorts(v []int) *NamedPorts {
+	if o.Ports = v; o.Ports == nil {
+		o.nullFields = append(o.nullFields, "Ports")
+	}
+	return o
+}
+
+// endregion
+
+// endregion
+
+// endregion
 
 // region Disk setters
 
@@ -1301,7 +1557,133 @@ func (o *Subnet) SetSubnetNames(v []string) *Subnet {
 
 // endregion
 
-// region Scaling setters
+// region ImportGKE setters
+
+func (o *ImportGKEGroup) MarshalJSON() ([]byte, error) {
+	type noMethod ImportGKEGroup
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetAvailabilityZones sets the availability zones for the gke group
+func (o *ImportGKEGroup) SetAvailabilityZones(v []string) *ImportGKEGroup {
+	if o.AvailabilityZones = v; o.AvailabilityZones == nil {
+		o.nullFields = append(o.nullFields, "AvailabilityZones")
+	}
+	return o
+}
+
+// SetCapacity sets the capacity for a gke group
+func (o *ImportGKEGroup) SetCapacity(v *CapacityGKE) *ImportGKEGroup {
+	if o.Capacity = v; o.Capacity == nil {
+		o.nullFields = append(o.nullFields, "Capacity")
+	}
+	return o
+}
+
+// SetInstanceTypes sets the instance types for the group.
+func (o *ImportGKEGroup) SetInstanceTypes(v *InstanceTypesGKE) *ImportGKEGroup {
+	if o.InstanceTypes = v; o.InstanceTypes == nil {
+		o.nullFields = append(o.nullFields, "InstanceTypes")
+	}
+	return o
+}
+
+// SetName sets the group name
+func (o *ImportGKEGroup) SetName(v *string) *ImportGKEGroup {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+// SetPreemptiblePercentage sets the preemptible percentage when importing a gke cluster into Elastigroup.
+func (o *ImportGKEGroup) SetPreemptiblePercentage(v *int) *ImportGKEGroup {
+	if o.PreemptiblePercentage = v; o.PreemptiblePercentage == nil {
+		o.nullFields = append(o.nullFields, "PreemptiblePercentage")
+	}
+	return o
+}
+
+func (o *InstanceTypesGKE) MarshalJSON() ([]byte, error) {
+	type noMethod InstanceTypesGKE
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetOnDemand sets the instance types when importing a gke group
+func (o *InstanceTypesGKE) SetOnDemand(v *string) *InstanceTypesGKE {
+	if o.OnDemand = v; o.OnDemand == nil {
+		o.nullFields = append(o.nullFields, "OnDemand")
+	}
+	return o
+}
+
+// SetPreemptible sets the list of preemptible instance types
+func (o *InstanceTypesGKE) SetPreemptible(v []string) *InstanceTypesGKE {
+	if o.Preemptible = v; o.Preemptible == nil {
+		o.nullFields = append(o.nullFields, "Preemptible")
+	}
+	return o
+}
+
+// endregion
+
+// region Integration setters
+
+func (o *Integration) MarshalJSON() ([]byte, error) {
+	type noMethod Integration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetGKEIntegration sets the GKE integration
+func (o *Integration) SetGKE(v *GKEIntegration) *Integration {
+	if o.GKE = v; o.GKE == nil {
+		o.nullFields = append(o.nullFields, "GKE")
+	}
+	return o
+}
+
+// region GKE integration setters
+
+func (o *GKEIntegration) MarshalJSON() ([]byte, error) {
+	type noMethod GKEIntegration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetAutoScale sets the AutoScale configuration used with the GKE integration
+func (o *GKEIntegration) SetAutoScale(v *AutoScaleGKE) *GKEIntegration {
+	if o.AutoScale = v; o.AutoScale == nil {
+		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+// region GKE AutoScaling setters
+
+func (o *AutoScaleGKE) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScaleGKE
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetLabels sets the AutoScale labels for the GKE integration
+func (o *AutoScaleGKE) SetLabels(v []*AutoScaleLabel) *AutoScaleGKE {
+	if o.Labels = v; o.Labels == nil {
+		o.nullFields = append(o.nullFields, "Labels")
+	}
+	return o
+}
+
+// endregion
+
+// endregion
+
+// endregion
+
+// region Scaling Policy setters
 
 func (o *Scaling) MarshalJSON() ([]byte, error) {
 	type noMethod Scaling
