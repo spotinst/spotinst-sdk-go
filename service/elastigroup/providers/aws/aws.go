@@ -1044,7 +1044,7 @@ func (s *ServiceOp) GetInstanceHealthiness(ctx context.Context, input *GetInstan
 	return &GetInstanceHealthinessOutput{Instances: instances}, nil
 }
 
-// region: Elastic Beanstalk
+// region Elastic Beanstalk
 
 type ImportBeanstalkInput struct {
 	EnvironmentName *string `json:"environmentName,omitempty"`

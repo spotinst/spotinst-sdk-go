@@ -135,8 +135,8 @@ type Dimension struct {
 }
 
 type Strategy struct {
-	LowPriorityPercentage *float64  `json:"lowPriorityPercentage,omitempty"`
-	OnDemandCount         *int      `json:"OnDemandCount,omitempty"`
+	LowPriorityPercentage *int      `json:"lowPriorityPercentage,omitempty"`
+	OnDemandCount         *int      `json:"onDemandCount,omitempty"`
 	DrainingTimeout       *int      `json:"drainingTimeout,omitempty"`
 	Signals               []*Signal `json:"signals,omitempty"`
 
@@ -184,7 +184,7 @@ type VMSizes struct {
 type LaunchSpecification struct {
 	LoadBalancersConfig *LoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
 	Image               *Image               `json:"image,omitempty"`
-	UserData            *UserData            `json:"userData,omitempty"`
+	UserData            *string              `json:"userData,omitempty"`
 	Storage             *Storage             `json:"storage,omitempty"`
 	Network             *Network             `json:"network,omitempty"`
 	Login               *Login               `json:"login,omitempty"`
@@ -230,14 +230,6 @@ type MarketPlaceImage struct {
 type CustomImage struct {
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 	ImageName         *string `json:"imageName,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type UserData struct {
-	CommandLine   *string         `json:"commandLine,omitempty"`
-	ResourceFiles []*ResourceFile `json:"resourceFiles,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1635,7 +1627,7 @@ func (o *Strategy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Strategy) SetLowPriorityPercentage(v *float64) *Strategy {
+func (o *Strategy) SetLowPriorityPercentage(v *int) *Strategy {
 	if o.LowPriorityPercentage = v; o.LowPriorityPercentage == nil {
 		o.nullFields = append(o.nullFields, "LowPriorityPercentage")
 	}
@@ -1818,7 +1810,7 @@ func (o *LaunchSpecification) SetImage(v *Image) *LaunchSpecification {
 	return o
 }
 
-func (o *LaunchSpecification) SetUserData(v *UserData) *LaunchSpecification {
+func (o *LaunchSpecification) SetUserData(v *string) *LaunchSpecification {
 	if o.UserData = v; o.UserData == nil {
 		o.nullFields = append(o.nullFields, "UserData")
 	}
@@ -1976,30 +1968,6 @@ func (o *CustomImage) SetResourceGroupName(v *string) *CustomImage {
 func (o *CustomImage) SetImageName(v *string) *CustomImage {
 	if o.ImageName = v; o.ImageName == nil {
 		o.nullFields = append(o.nullFields, "ImageName")
-	}
-	return o
-}
-
-// endregion
-
-// region UserData
-
-func (o *UserData) MarshalJSON() ([]byte, error) {
-	type noMethod UserData
-	raw := noMethod(*o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *UserData) SetCommandLine(v *string) *UserData {
-	if o.CommandLine = v; o.CommandLine == nil {
-		o.nullFields = append(o.nullFields, "CommandLine")
-	}
-	return o
-}
-
-func (o *UserData) SetResourceFiles(v []*ResourceFile) *UserData {
-	if o.ResourceFiles = v; o.ResourceFiles == nil {
-		o.nullFields = append(o.nullFields, "ResourceFiles")
 	}
 	return o
 }
