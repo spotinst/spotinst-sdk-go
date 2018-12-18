@@ -4,23 +4,24 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"time"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
-// Group defines a GCP Elastigroup
+// Group defines a GCP Elastigroup.
 type Group struct {
-	Capacity    *Capacity    `json:"capacity,omitempty"`
-	Compute     *Compute     `json:"compute,omitempty"`
-	Description *string      `json:"description,omitempty"`
 	ID          *string      `json:"id,omitempty"`
 	Name        *string      `json:"name,omitempty"`
+	Description *string      `json:"description,omitempty"`
 	NodeImage   *string      `json:"nodeImage,omitempty"`
+	Capacity    *Capacity    `json:"capacity,omitempty"`
+	Compute     *Compute     `json:"compute,omitempty"`
 	Scaling     *Scaling     `json:"scaling,omitempty"`
 	Strategy    *Strategy    `json:"strategy,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
@@ -613,8 +614,7 @@ func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGrou
 
 // ImportGKECluster imports an existing GKE cluster into Elastigroup.
 func (s *ServiceOp) ImportGKECluster(ctx context.Context, input *ImportGKEClusterInput) (*ImportGKEClusterOutput, error) {
-	path := "/gcp/gce/group/gke/import"
-	r := client.NewRequest(http.MethodPost, path)
+	r := client.NewRequest(http.MethodPost, "/gcp/gce/group/gke/import")
 
 	r.Params["clusterId"] = []string{spotinst.StringValue(input.ClusterID)}
 	r.Params["zone"] = []string{spotinst.StringValue(input.ClusterZoneName)}
@@ -755,6 +755,38 @@ func (o *Group) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+// SetID sets the group ID attribute
+func (o *Group) SetID(v *string) *Group {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
+// SetName sets the group name
+func (o *Group) SetName(v *string) *Group {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+// SetDescription sets the description for the group
+func (o *Group) SetDescription(v *string) *Group {
+	if o.Description = v; o.Description == nil {
+		o.nullFields = append(o.nullFields, "Description")
+	}
+	return o
+}
+
+// SetNodeImage sets image that will be used for the node VMs
+func (o *Group) SetNodeImage(v *string) *Group {
+	if o.NodeImage = v; o.NodeImage == nil {
+		o.nullFields = append(o.nullFields, "NodeImage")
+	}
+	return o
+}
+
 // SetCapacity sets the Capacity object
 func (o *Group) SetCapacity(v *Capacity) *Group {
 	if o.Capacity = v; o.Capacity == nil {
@@ -771,46 +803,6 @@ func (o *Group) SetCompute(v *Compute) *Group {
 	return o
 }
 
-// SetDescription sets the description for the group
-func (o *Group) SetDescription(v *string) *Group {
-	if o.Description = v; o.Description == nil {
-		o.nullFields = append(o.nullFields, "Description")
-	}
-	return o
-}
-
-// SetID sets the group ID attribute
-func (o *Group) SetID(v *string) *Group {
-	if o.ID = v; o.ID == nil {
-		o.nullFields = append(o.nullFields, "ID")
-	}
-	return o
-}
-
-// SetIntegration sets the integrations for the group
-func (o *Group) SetIntegration(v *Integration) *Group {
-	if o.Integration = v; o.Integration == nil {
-		o.nullFields = append(o.nullFields, "Integration")
-	}
-	return o
-}
-
-// SetName sets the group name
-func (o *Group) SetName(v *string) *Group {
-	if o.Name = v; o.Name == nil {
-		o.nullFields = append(o.nullFields, "Name")
-	}
-	return o
-}
-
-// SetNodeImage sets image that will be used for the node VMs. (COS, UBUNTU)
-func (o *Group) SetNodeImage(v *string) *Group {
-	if o.NodeImage = v; o.NodeImage == nil {
-		o.nullFields = append(o.nullFields, "NodeImage")
-	}
-	return o
-}
-
 // SetScaling sets the Scaling object
 func (o *Group) SetScaling(v *Scaling) *Group {
 	if o.Scaling = v; o.Scaling == nil {
@@ -823,6 +815,14 @@ func (o *Group) SetScaling(v *Scaling) *Group {
 func (o *Group) SetStrategy(v *Strategy) *Group {
 	if o.Strategy = v; o.Strategy == nil {
 		o.nullFields = append(o.nullFields, "Strategy")
+	}
+	return o
+}
+
+// SetIntegration sets the integrations for the group
+func (o *Group) SetIntegration(v *Integration) *Group {
+	if o.Integration = v; o.Integration == nil {
+		o.nullFields = append(o.nullFields, "Integration")
 	}
 	return o
 }
