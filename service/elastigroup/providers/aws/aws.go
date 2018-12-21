@@ -351,20 +351,21 @@ type Scheduling struct {
 }
 
 type Task struct {
-	IsEnabled           *bool   `json:"isEnabled,omitempty"`
-	Type                *string `json:"taskType,omitempty"`
-	Frequency           *string `json:"frequency,omitempty"`
-	CronExpression      *string `json:"cronExpression,omitempty"`
-	StartTime           *string `json:"startTime,omitempty"`
-	ScaleTargetCapacity *int    `json:"scaleTargetCapacity,omitempty"`
-	ScaleMinCapacity    *int    `json:"scaleMinCapacity,omitempty"`
-	ScaleMaxCapacity    *int    `json:"scaleMaxCapacity,omitempty"`
-	BatchSizePercentage *int    `json:"batchSizePercentage,omitempty"`
-	GracePeriod         *int    `json:"gracePeriod,omitempty"`
-	TargetCapacity      *int    `json:"targetCapacity,omitempty"`
-	MinCapacity         *int    `json:"minCapacity,omitempty"`
-	MaxCapacity         *int    `json:"maxCapacity,omitempty"`
-	Adjustment          *int    `json:"adjustment,omitempty"`
+	IsEnabled            *bool   `json:"isEnabled,omitempty"`
+	Type                 *string `json:"taskType,omitempty"`
+	Frequency            *string `json:"frequency,omitempty"`
+	CronExpression       *string `json:"cronExpression,omitempty"`
+	StartTime            *string `json:"startTime,omitempty"`
+	ScaleTargetCapacity  *int    `json:"scaleTargetCapacity,omitempty"`
+	ScaleMinCapacity     *int    `json:"scaleMinCapacity,omitempty"`
+	ScaleMaxCapacity     *int    `json:"scaleMaxCapacity,omitempty"`
+	BatchSizePercentage  *int    `json:"batchSizePercentage,omitempty"`
+	GracePeriod          *int    `json:"gracePeriod,omitempty"`
+	TargetCapacity       *int    `json:"targetCapacity,omitempty"`
+	MinCapacity          *int    `json:"minCapacity,omitempty"`
+	MaxCapacity          *int    `json:"maxCapacity,omitempty"`
+	Adjustment           *int    `json:"adjustment,omitempty"`
+	AdjustmentPercentage *int    `json:"adjustmentPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -542,6 +543,7 @@ type LaunchSpecification struct {
 	Monitoring                                    *bool                 `json:"monitoring,omitempty"`
 	EBSOptimized                                  *bool                 `json:"ebsOptimized,omitempty"`
 	IAMInstanceProfile                            *IAMInstanceProfile   `json:"iamRole,omitempty"`
+	CreditSpecification                           *CreditSpecification  `json:"creditSpecification,omitempty"`
 	BlockDeviceMappings                           []*BlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
 	NetworkInterfaces                             []*NetworkInterface   `json:"networkInterfaces,omitempty"`
 	Tags                                          []*Tag                `json:"tags,omitempty"`
@@ -576,6 +578,7 @@ type NetworkInterface struct {
 	DeviceIndex                    *int     `json:"deviceIndex,omitempty"`
 	SecondaryPrivateIPAddressCount *int     `json:"secondaryPrivateIpAddressCount,omitempty"`
 	AssociatePublicIPAddress       *bool    `json:"associatePublicIpAddress,omitempty"`
+	AssociateIPV6Address           *bool    `json:"associateIpv6Address,omitempty"`
 	DeleteOnTermination            *bool    `json:"deleteOnTermination,omitempty"`
 	SecurityGroupsIDs              []string `json:"groups,omitempty"`
 	PrivateIPAddress               *string  `json:"privateIpAddress,omitempty"`
@@ -610,6 +613,13 @@ type EBS struct {
 type IAMInstanceProfile struct {
 	Name *string `json:"name,omitempty"`
 	Arn  *string `json:"arn,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CreditSpecification struct {
+	CPUCredits *string `json:"cpuCredits,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -675,6 +685,7 @@ type ReadGroupOutput struct {
 type UpdateGroupInput struct {
 	Group                *Group `json:"group,omitempty"`
 	ShouldResumeStateful *bool  `json:"-"`
+	AutoApplyTags        *bool  `json:"-"`
 }
 
 type UpdateGroupOutput struct {
@@ -905,6 +916,11 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateGroupInput) (*Updat
 	if input.ShouldResumeStateful != nil {
 		r.Params.Set("shouldResumeStateful",
 			strconv.FormatBool(spotinst.BoolValue(input.ShouldResumeStateful)))
+	}
+
+	if input.AutoApplyTags != nil {
+		r.Params.Set("autoApplyTags",
+			strconv.FormatBool(spotinst.BoolValue(input.AutoApplyTags)))
 	}
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -2058,6 +2074,14 @@ func (o *Task) SetAdjustment(v *int) *Task {
 	return o
 }
 
+// SetAdjustmentPercentage sets the value for adjustmentPercentage
+func (o *Task) SetAdjustmentPercentage(v *int) *Task {
+	if o.AdjustmentPercentage = v; o.AdjustmentPercentage == nil {
+		o.nullFields = append(o.nullFields, "AdjustmentPercentage")
+	}
+	return o
+}
+
 // endregion
 
 // region Scaling
@@ -2819,6 +2843,14 @@ func (o *LaunchSpecification) SetIAMInstanceProfile(v *IAMInstanceProfile) *Laun
 	return o
 }
 
+// SetCreditSpecification sets the creditSpecification object for the group's launch configuration
+func (o *LaunchSpecification) SetCreditSpecification(v *CreditSpecification) *LaunchSpecification {
+	if o.CreditSpecification = v; o.CreditSpecification == nil {
+		o.nullFields = append(o.nullFields, "CreditSpecification")
+	}
+	return o
+}
+
 func (o *LaunchSpecification) SetBlockDeviceMappings(v []*BlockDeviceMapping) *LaunchSpecification {
 	if o.BlockDeviceMappings = v; o.BlockDeviceMappings == nil {
 		o.nullFields = append(o.nullFields, "BlockDeviceMappings")
@@ -2961,6 +2993,14 @@ func (o *NetworkInterface) SetAssociatePublicIPAddress(v *bool) *NetworkInterfac
 	return o
 }
 
+// SetAssociateIPV6Address sets the associite IPV6 value
+func (o *NetworkInterface) SetAssociateIPV6Address(v *bool) *NetworkInterface {
+	if o.AssociateIPV6Address = v; o.AssociateIPV6Address == nil {
+		o.nullFields = append(o.nullFields, "AssociateIPV6Address")
+	}
+	return o
+}
+
 func (o *NetworkInterface) SetDeleteOnTermination(v *bool) *NetworkInterface {
 	if o.DeleteOnTermination = v; o.DeleteOnTermination == nil {
 		o.nullFields = append(o.nullFields, "DeleteOnTermination")
@@ -3099,6 +3139,24 @@ func (o *IAMInstanceProfile) SetName(v *string) *IAMInstanceProfile {
 func (o *IAMInstanceProfile) SetArn(v *string) *IAMInstanceProfile {
 	if o.Arn = v; o.Arn == nil {
 		o.nullFields = append(o.nullFields, "Arn")
+	}
+	return o
+}
+
+// endregion
+
+// region CreditSpecification
+
+func (o *CreditSpecification) MarshalJSON() ([]byte, error) {
+	type noMethod CreditSpecification
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetCPUCredits sets the cpu credits for the group. Valid values: STANDARD, UNLIMITED
+func (o *CreditSpecification) SetCPUCredits(v *string) *CreditSpecification {
+	if o.CPUCredits = v; o.CPUCredits == nil {
+		o.nullFields = append(o.nullFields, "CPUCredits")
 	}
 	return o
 }
