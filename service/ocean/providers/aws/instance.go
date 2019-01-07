@@ -32,6 +32,15 @@ type ListClusterInstancesOutput struct {
 	Instances []*Instance `json:"instances,omitempty"`
 }
 
+type DetachClusterInstancesInput struct {
+	ClusterID                     *string  `json:"clusterId,omitempty"`
+	InstanceIDs                   []string `json:"instancesToDetach,omitempty"`
+	ShouldDecrementTargetCapacity *bool    `json:"shouldDecrementTargetCapacity,omitempty"`
+	ShouldTerminateInstances      *bool    `json:"shouldTerminateInstances,omitempty"`
+}
+
+type DetachClusterInstancesOutput struct{}
+
 func instanceFromJSON(in []byte) (*Instance, error) {
 	b := new(Instance)
 	if err := json.Unmarshal(in, b); err != nil {
@@ -88,4 +97,27 @@ func (s *ServiceOp) ListClusterInstances(ctx context.Context, input *ListCluster
 	}
 
 	return &ListClusterInstancesOutput{Instances: instances}, nil
+}
+
+func (s *ServiceOp) DetachClusterInstances(ctx context.Context, input *DetachClusterInstancesInput) (*DetachClusterInstancesOutput, error) {
+	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}/detachInstances", uritemplates.Values{
+		"clusterId": spotinst.StringValue(input.ClusterID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.ClusterID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DetachClusterInstancesOutput{}, nil
 }
