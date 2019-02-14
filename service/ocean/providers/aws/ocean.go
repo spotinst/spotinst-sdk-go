@@ -110,6 +110,7 @@ type AutoScalerHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
+	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -658,6 +659,14 @@ func (o *AutoScalerHeadroom) SetMemoryPerUnit(v *int) *AutoScalerHeadroom {
 func (o *AutoScalerHeadroom) SetNumOfUnits(v *int) *AutoScalerHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
+	}
+	return o
+}
+
+// SetGPUPerUnit sets the gpu per unit
+func (o *AutoScalerHeadroom) SetGPUPerUnit(v *int) *AutoScalerHeadroom {
+	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
+		o.nullFields = append(o.nullFields, "GPUPerUnit")
 	}
 	return o
 }
