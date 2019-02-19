@@ -577,6 +577,7 @@ func (o *LaunchSpecification) SetLoadBalancers(v []*LoadBalancer) *LaunchSpecifi
 	}
 	return o
 }
+
 // endregion
 
 // region LoadBalancer
@@ -600,6 +601,7 @@ func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
 	}
 	return o
 }
+
 // endregion
 
 // region IAMInstanceProfile
