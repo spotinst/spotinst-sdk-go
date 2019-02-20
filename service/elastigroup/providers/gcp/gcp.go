@@ -372,7 +372,8 @@ type Strategy struct {
 // region Integration structs
 
 type Integration struct {
-	GKE *GKEIntegration `json:"gke,omitempty"`
+	GKE         *GKEIntegration         `json:"gke,omitempty"`
+	DockerSwarm *DockerSwarmIntegration `json:"dockerSwarm,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -392,6 +393,18 @@ type GKEIntegration struct {
 type AutoScaleGKE struct {
 	AutoScale                   // embedding
 	Labels    []*AutoScaleLabel `json:"labels,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// endregion
+
+// region DockerSwarmIntegration structs
+
+type DockerSwarmIntegration struct {
+	MasterHost *string `json:"masterHost,omitempty"`
+	MasterPort *int    `json:"masterPort,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1653,6 +1666,14 @@ func (o *Integration) SetGKE(v *GKEIntegration) *Integration {
 	return o
 }
 
+// SetDockerSwarm sets the DockerSwarm integration
+func (o *Integration) SetDockerSwarm(v *DockerSwarmIntegration) *Integration {
+	if o.DockerSwarm = v; o.DockerSwarm == nil {
+		o.nullFields = append(o.nullFields, "DockerSwarm")
+	}
+	return o
+}
+
 // region GKE integration setters
 
 func (o *GKEIntegration) MarshalJSON() ([]byte, error) {
@@ -1686,6 +1707,32 @@ func (o *AutoScaleGKE) SetLabels(v []*AutoScaleLabel) *AutoScaleGKE {
 }
 
 // endregion
+
+// endregion
+
+// region DockerSwarm integration setters
+
+func (o *DockerSwarmIntegration) MarshalJSON() ([]byte, error) {
+	type noMethod DockerSwarmIntegration
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetMasterPort sets the master port
+func (o *DockerSwarmIntegration) SetMasterPort(v *int) *DockerSwarmIntegration {
+	if o.MasterPort = v; o.MasterPort == nil {
+		o.nullFields = append(o.nullFields, "MasterPort")
+	}
+	return o
+}
+
+// SetMasterHost sets the master host
+func (o *DockerSwarmIntegration) SetMasterHost(v *string) *DockerSwarmIntegration {
+	if o.MasterHost = v; o.MasterHost == nil {
+		o.nullFields = append(o.nullFields, "MasterHost")
+	}
+	return o
+}
 
 // endregion
 
