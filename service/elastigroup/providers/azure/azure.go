@@ -185,6 +185,7 @@ type LaunchSpecification struct {
 	LoadBalancersConfig *LoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
 	Image               *Image               `json:"image,omitempty"`
 	UserData            *string              `json:"userData,omitempty"`
+	ShutdownScript      *string              `json:"shutdownScript,omitempty"`
 	Storage             *Storage             `json:"storage,omitempty"`
 	Network             *Network             `json:"network,omitempty"`
 	Login               *Login               `json:"login,omitempty"`
@@ -1813,6 +1814,14 @@ func (o *LaunchSpecification) SetImage(v *Image) *LaunchSpecification {
 func (o *LaunchSpecification) SetUserData(v *string) *LaunchSpecification {
 	if o.UserData = v; o.UserData == nil {
 		o.nullFields = append(o.nullFields, "UserData")
+	}
+	return o
+}
+
+// SetShutdownScript sets the shutdown script used when draining instances
+func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification {
+	if o.ShutdownScript = v; o.ShutdownScript == nil {
+		o.nullFields = append(o.nullFields, "ShutdownScript")
 	}
 	return o
 }
