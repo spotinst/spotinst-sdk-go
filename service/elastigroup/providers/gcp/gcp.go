@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
@@ -386,6 +387,7 @@ type GKEIntegration struct {
 	ClusterID       *string       `json:"clusterID,omitempty"`
 	ClusterZoneName *string       `json:"clusterZoneName,omitempty"`
 	AutoScale       *AutoScaleGKE `json:"autoScale,omitempty"`
+	Location        *string       `json:"location"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -439,6 +441,7 @@ type DeleteGroupOutput struct{}
 type ImportGKEClusterInput struct {
 	ClusterID       *string         `json:"clusterID,omitempty"`
 	ClusterZoneName *string         `json:"clusterZoneName,omitempty"`
+	DryRun          *bool           `json:"dryRun,omitempty"`
 	Group           *ImportGKEGroup `json:"group,omitempty"`
 }
 
@@ -632,6 +635,7 @@ func (s *ServiceOp) ImportGKECluster(ctx context.Context, input *ImportGKECluste
 
 	r.Params["clusterId"] = []string{spotinst.StringValue(input.ClusterID)}
 	r.Params["zone"] = []string{spotinst.StringValue(input.ClusterZoneName)}
+	r.Params["dryRun"] = []string{strconv.FormatBool(spotinst.BoolValue(input.DryRun))}
 
 	body := &ImportGKEClusterInput{Group: input.Group}
 	r.Obj = body
