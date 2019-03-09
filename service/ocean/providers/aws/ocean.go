@@ -581,6 +581,7 @@ func (o *LaunchSpecification) SetLoadBalancers(v []*LoadBalancer) *LaunchSpecifi
 // endregion
 
 // region LoadBalancer
+
 func (o *LoadBalancer) SetArn(v *string) *LoadBalancer {
 	if o.Arn = v; o.Arn == nil {
 		o.nullFields = append(o.nullFields, "Arn")
