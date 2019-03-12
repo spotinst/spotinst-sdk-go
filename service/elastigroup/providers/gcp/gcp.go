@@ -384,10 +384,11 @@ type Integration struct {
 // region GKEIntegration structs
 
 type GKEIntegration struct {
-	ClusterID       *string       `json:"clusterID,omitempty"`
+	ClusterID       *string       `json:"clusterIdentifier,omitempty"`
 	ClusterZoneName *string       `json:"clusterZoneName,omitempty"`
+	AutoUpdate      *bool         `json:"autoUpdate,omitempty"`
 	AutoScale       *AutoScaleGKE `json:"autoScale,omitempty"`
-	Location        *string       `json:"location"`
+	Location        *string       `json:"location,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1703,10 +1704,34 @@ func (o *GKEIntegration) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+// SetAutoUpdate sets the autoupdate flag
+func (o *GKEIntegration) SetAutoUpdate(v *bool) *GKEIntegration {
+	if o.AutoUpdate = v; o.AutoUpdate == nil {
+		o.nullFields = append(o.nullFields, "AutoUpdate")
+	}
+	return o
+}
+
 // SetAutoScale sets the AutoScale configuration used with the GKE integration
 func (o *GKEIntegration) SetAutoScale(v *AutoScaleGKE) *GKEIntegration {
 	if o.AutoScale = v; o.AutoScale == nil {
 		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+// SetLocation sets the location that the cluster is located in
+func (o *GKEIntegration) SetLocation(v *string) *GKEIntegration {
+	if o.Location = v; o.Location == nil {
+		o.nullFields = append(o.nullFields, "Location")
+	}
+	return o
+}
+
+// SetClusterID sets the cluster ID
+func (o *GKEIntegration) SetClusterID(v *string) *GKEIntegration {
+	if o.ClusterID = v; o.ClusterID == nil {
+		o.nullFields = append(o.nullFields, "ClusterID")
 	}
 	return o
 }
