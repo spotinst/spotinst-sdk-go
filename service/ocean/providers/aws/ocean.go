@@ -75,7 +75,7 @@ type InstanceTypes struct {
 }
 
 type LaunchSpecification struct {
-	AssociatePublicIPAddress *bool               `json:"associatePublicIpAddress,omitempty"`
+	AssociatePublicIpAddress *bool               `json:"associatePublicIpAddress,omitempty"`
 	SecurityGroupIDs         []string            `json:"securityGroupIds,omitempty"`
 	ImageID                  *string             `json:"imageId,omitempty"`
 	KeyPair                  *string             `json:"keyPair,omitempty"`
@@ -523,9 +523,9 @@ func (o *LaunchSpecification) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecification) SetAssociatePublicIPAddress(v *bool) *LaunchSpecification {
-	if o.AssociatePublicIPAddress = v; o.AssociatePublicIPAddress == nil {
-		o.nullFields = append(o.nullFields, "AssociatePublicIPAddress")
+func (o *LaunchSpecification) SetAssociatePublicIpAddress(v *bool) *LaunchSpecification {
+	if o.AssociatePublicIpAddress = v; o.AssociatePublicIpAddress == nil {
+		o.nullFields = append(o.nullFields, "AssociatePublicIpAddress")
 	}
 	return o
 }
@@ -536,7 +536,6 @@ func (o *LaunchSpecification) SetSecurityGroupIDs(v []string) *LaunchSpecificati
 	}
 	return o
 }
-
 func (o *LaunchSpecification) SetImageId(v *string) *LaunchSpecification {
 	if o.ImageID = v; o.ImageID == nil {
 		o.nullFields = append(o.nullFields, "ImageID")
