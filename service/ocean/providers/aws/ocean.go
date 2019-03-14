@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
@@ -21,6 +22,10 @@ type Cluster struct {
 	Capacity            *Capacity   `json:"capacity,omitempty"`
 	Compute             *Compute    `json:"compute,omitempty"`
 	AutoScaler          *AutoScaler `json:"autoScaler,omitempty"`
+
+	// Read-only fields.
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -288,7 +293,7 @@ func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput
 		return nil, err
 	}
 
-	// We do not need the ID anymore so let's drop it.
+	// We do NOT need the ID anymore, so let's drop it.
 	input.Cluster.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
