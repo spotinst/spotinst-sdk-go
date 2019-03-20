@@ -1043,7 +1043,7 @@ func (o *Compute) SetInstanceTypes(v *InstanceTypes) *Compute {
 	return o
 }
 
-// SetLaunchSpecification sets the launch configuration of the group.
+// SetLaunchConfiguration sets the launch configuration of the group.
 func (o *Compute) SetLaunchConfiguration(v *LaunchSpecification) *Compute {
 	if o.LaunchSpecification = v; o.LaunchSpecification == nil {
 		o.nullFields = append(o.nullFields, "LaunchSpecification")
@@ -1162,7 +1162,7 @@ func (o *LaunchSpecification) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-// SetBackendServices sets the backend services to use with the group.
+// SetBackendServiceConfig sets the backend services to use with the group.
 func (o *LaunchSpecification) SetBackendServiceConfig(v *BackendServiceConfig) *LaunchSpecification {
 	if o.BackendServiceConfig = v; o.BackendServiceConfig == nil {
 		o.nullFields = append(o.nullFields, "BackendServiceConfig")
@@ -1298,7 +1298,7 @@ func (o *NamedPorts) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-// SetNamedPorts sets the name of the NamedPorts
+// SetName sets the name of the NamedPorts
 func (o *NamedPorts) SetName(v *string) *NamedPorts {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
@@ -1684,7 +1684,7 @@ func (o *Integration) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-// SetGKEIntegration sets the GKE integration
+// SetGKE sets the GKE integration
 func (o *Integration) SetGKE(v *GKEIntegration) *Integration {
 	if o.GKE = v; o.GKE == nil {
 		o.nullFields = append(o.nullFields, "GKE")
