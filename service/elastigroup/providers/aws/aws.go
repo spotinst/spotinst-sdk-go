@@ -73,6 +73,10 @@ type Group struct {
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
 
+	// Read-only fields.
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
 	// empty values are omitted from API requests. However, any non-pointer,
@@ -1000,7 +1004,7 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateGroupInput) (*Updat
 		return nil, err
 	}
 
-	// We do not need the ID anymore so let's drop it.
+	// We do NOT need the ID anymore, so let's drop it.
 	input.Group.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
