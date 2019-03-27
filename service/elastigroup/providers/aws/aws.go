@@ -468,17 +468,18 @@ type Dimension struct {
 }
 
 type Strategy struct {
-	Risk                     *float64      `json:"risk,omitempty"`
-	OnDemandCount            *int          `json:"onDemandCount,omitempty"`
-	DrainingTimeout          *int          `json:"drainingTimeout,omitempty"`
-	AvailabilityVsCost       *string       `json:"availabilityVsCost,omitempty"`
-	LifetimePeriod           *string       `json:"lifetimePeriod,omitempty"`
-	UtilizeReservedInstances *bool         `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool         `json:"fallbackToOd,omitempty"`
-	SpinUpTime               *int          `json:"spinUpTime,omitempty"`
-	Signals                  []*Signal     `json:"signals,omitempty"`
-	Persistence              *Persistence  `json:"persistence,omitempty"`
-	RevertToSpot             *RevertToSpot `json:"revertToSpot,omitempty"`
+	Risk                     *float64         `json:"risk,omitempty"`
+	OnDemandCount            *int             `json:"onDemandCount,omitempty"`
+	DrainingTimeout          *int             `json:"drainingTimeout,omitempty"`
+	AvailabilityVsCost       *string          `json:"availabilityVsCost,omitempty"`
+	LifetimePeriod           *string          `json:"lifetimePeriod,omitempty"`
+	UtilizeReservedInstances *bool            `json:"utilizeReservedInstances,omitempty"`
+	FallbackToOnDemand       *bool            `json:"fallbackToOd,omitempty"`
+	SpinUpTime               *int             `json:"spinUpTime,omitempty"`
+	Signals                  []*Signal        `json:"signals,omitempty"`
+	Persistence              *Persistence     `json:"persistence,omitempty"`
+	RevertToSpot             *RevertToSpot    `json:"revertToSpot,omitempty"`
+	ScalingStrategy          *ScalingStrategy `json:"scalingStrategy,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -497,6 +498,14 @@ type Persistence struct {
 type RevertToSpot struct {
 	PerformAt   *string  `json:"performAt,omitempty"`
 	TimeWindows []string `json:"timeWindows,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ScalingStrategy struct {
+	TerminateAtEndOfBillingHour *bool   `json:"terminateAtEndOfBillingHour,omitempty"`
+	TerminationPolicy           *string `json:"terminationPolicy,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2812,6 +2821,37 @@ func (o *Strategy) SetPersistence(v *Persistence) *Strategy {
 func (o *Strategy) SetRevertToSpot(v *RevertToSpot) *Strategy {
 	if o.RevertToSpot = v; o.RevertToSpot == nil {
 		o.nullFields = append(o.nullFields, "RevertToSpot")
+	}
+	return o
+}
+
+func (o *Strategy) SetScalingStrategy(v *ScalingStrategy) *Strategy {
+	if o.ScalingStrategy = v; o.ScalingStrategy == nil {
+		o.nullFields = append(o.nullFields, "ScalingStrategy")
+	}
+	return o
+}
+
+// endregion
+
+// region ScalingStrategy
+
+func (o *ScalingStrategy) MarshalJSON() ([]byte, error) {
+	type noMethod ScalingStrategy
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ScalingStrategy) SetTerminationPolicy(v *string) *ScalingStrategy {
+	if o.TerminationPolicy = v; o.TerminationPolicy == nil {
+		o.nullFields = append(o.nullFields, "TerminationPolicy")
+	}
+	return o
+}
+
+func (o *ScalingStrategy) SetTerminateAtEndOfBillingHour(v *bool) *ScalingStrategy {
+	if o.TerminateAtEndOfBillingHour = v; o.TerminateAtEndOfBillingHour == nil {
+		o.nullFields = append(o.nullFields, "TerminateAtEndOfBillingHour")
 	}
 	return o
 }
