@@ -73,6 +73,10 @@ type Group struct {
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
 
+	// Read-only fields.
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
 	// empty values are omitted from API requests. However, any non-pointer,
@@ -210,14 +214,14 @@ type ElasticBeanstalkIntegration struct {
 	nullFields      []string
 }
 
-type BeanstalkManagedActions struct{
+type BeanstalkManagedActions struct {
 	PlatformUpdate *BeanstalkPlatformUpdate `json:"platformUpdate,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type BeanstalkPlatformUpdate struct{
+type BeanstalkPlatformUpdate struct {
 	PerformAt   *string `json:"performAt,omitempty"`
 	TimeWindow  *string `json:"timeWindow,omitempty"`
 	UpdateLevel *string `json:"updateLevel,omitempty"`
@@ -226,7 +230,7 @@ type BeanstalkPlatformUpdate struct{
 	nullFields      []string
 }
 
-type BeanstalkDeploymentPreferences struct{
+type BeanstalkDeploymentPreferences struct {
 	AutomaticRoll       *bool                        `json:"automaticRoll,omitempty"`
 	BatchSizePercentage *int                         `json:"batchSizePercentage,omitempty"`
 	GracePeriod         *int                         `json:"gracePeriod,omitempty"`
@@ -236,7 +240,7 @@ type BeanstalkDeploymentPreferences struct{
 	nullFields      []string
 }
 
-type BeanstalkDeploymentStrategy struct{
+type BeanstalkDeploymentStrategy struct {
 	Action               *string `json:"action,omitempty"`
 	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
 
@@ -350,8 +354,9 @@ type Route53Integration struct {
 }
 
 type Domain struct {
-	HostedZoneID *string      `json:"hostedZoneId,omitempty"`
-	RecordSets   []*RecordSet `json:"recordSets,omitempty"`
+	HostedZoneID      *string      `json:"hostedZoneId,omitempty"`
+	SpotinstAccountID *string      `json:"spotinstAccountId,omitempty"`
+	RecordSets        []*RecordSet `json:"recordSets,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -674,8 +679,9 @@ type Instance struct {
 }
 
 type RollStrategy struct {
-	Action               *string `json:"action,omitempty"`
-	ShouldDrainInstances *bool   `json:"shouldDrainInstances,omitempty"`
+	Action                    *string `json:"action,omitempty"`
+	ShouldDrainInstances      *bool   `json:"shouldDrainInstances,omitempty"`
+	BatchMinHealthyPercentage *int    `json:"batchMinHealthyPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -694,6 +700,72 @@ type GetInstanceHealthinessInput struct {
 
 type GetInstanceHealthinessOutput struct {
 	Instances []*InstanceHealth `json:"instances,omitempty"`
+}
+
+type GetGroupEventsInput struct {
+	GroupID  *string `json:"groupId,omitempty"`
+	FromDate *string `json:"fromDate,omitempty"`
+}
+
+type GetGroupEventsOutput struct {
+	GroupEvents []*GroupEvent `json:"groupEvents,omitempty"`
+}
+
+type GroupEvent struct {
+	GroupID   *string     `json:"groupId,omitempty"`
+	EventType *string     `json:"eventType,omitempty"`
+	CreatedAt *string     `json:"createdAt,omitempty"`
+	SubEvents []*SubEvent `json:"subEvents,omitempty"`
+}
+
+type SubEvent struct {
+	// common fields
+	Type *string `json:"type,omitempty"`
+
+	// type scaleUp
+	NewSpots     []*Spot        `json:"newSpots,omitempty"`
+	NewInstances []*NewInstance `json:"newInstances,omitempty"`
+
+	// type scaleDown
+	TerminatedSpots     []*Spot               `json:"terminatedSpots,omitempty"`
+	TerminatedInstances []*TerminatedInstance `json:"terminatedInstances,omitempty"`
+
+	// type scaleReason
+	ScalingPolicyName *string `json:"scalingPolicyName,omitempty"`
+	Value             *int    `json:"value,omitempty"`
+	Unit              *string `json:"unit,omitempty"`
+	Threshold         *int    `json:"threshold,omitempty"`
+
+	// type detachedInstance
+	InstanceID *string `json:"instanceId,omitempty"`
+
+	// type unhealthyInstances
+	InstanceIDs []*string `json:"instanceIds,omitempty"`
+
+	// type rollInfo
+	ID              *string `json:"id,omitempty"`
+	GroupID         *string `json:"groupId,omitempty"`
+	CurrentBatch    *int    `json:"currentBatch,omitempty"`
+	Status          *string `json:"status,omitempty"`
+	CreatedAt       *string `json:"createdAt,omitempty"`
+	NumberOfBatches *int    `json:"numOfBatches,omitempty"`
+	GracePeriod     *int    `json:"gracePeriod,omitempty"`
+
+	// type recoverInstances
+	OldSpotRequestIDs []*string `json:"oldSpotRequestIDs,omitempty"`
+	NewSpotRequestIDs []*string `json:"newSpotRequestIDs,omitempty"`
+	OldInstanceIDs    []*string `json:"oldInstanceIDs,omitempty"`
+	NewInstanceIDs    []*string `json:"newInstanceIDs,omitempty"`
+}
+
+type Spot struct {
+	SpotInstanceRequestID *string `json:"spotInstanceRequestId,omitempty"`
+}
+
+type NewInstance struct {
+}
+
+type TerminatedInstance struct {
 }
 
 type ListGroupsInput struct{}
@@ -923,6 +995,41 @@ func listOfInstanceHealthFromHttp(resp *http.Response) ([]*InstanceHealth, error
 	return listOfInstanceHealthFromJSON(body)
 }
 
+func groupEventFromJSON(in []byte) (*GroupEvent, error) {
+	b := new(GroupEvent)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func groupEventsFromJSON(in []byte) ([]*GroupEvent, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*GroupEvent, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := groupEventFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func groupEventsFromHttpResponse(resp *http.Response) ([]*GroupEvent, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return groupEventsFromJSON(body)
+}
+
 func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGroupsOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/aws/ec2/group")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -998,7 +1105,7 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateGroupInput) (*Updat
 		return nil, err
 	}
 
-	// We do not need the ID anymore so let's drop it.
+	// We do NOT need the ID anymore, so let's drop it.
 	input.Group.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
@@ -1181,6 +1288,33 @@ func (s *ServiceOp) GetInstanceHealthiness(ctx context.Context, input *GetInstan
 	return &GetInstanceHealthinessOutput{Instances: instances}, nil
 }
 
+func (s *ServiceOp) GetGroupEvents(ctx context.Context, input *GetGroupEventsInput) (*GetGroupEventsOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/events", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	if input.FromDate != nil {
+		r.Params.Set("fromDate", *input.FromDate)
+	}
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	events, err := groupEventsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+	return &GetGroupEventsOutput{GroupEvents: events}, nil
+}
+
 // region Elastic Beanstalk
 
 type ImportBeanstalkInput struct {
@@ -1245,9 +1379,9 @@ func (s *ServiceOp) ImportBeanstalkEnv(ctx context.Context, input *ImportBeansta
 	path := "/aws/ec2/group/beanstalk/import"
 	r := client.NewRequest(http.MethodGet, path)
 
-	if input.EnvironmentId != nil{
+	if input.EnvironmentId != nil {
 		r.Params["environmentId"] = []string{spotinst.StringValue(input.EnvironmentId)}
-	}else if input.EnvironmentName != nil{
+	} else if input.EnvironmentName != nil {
 		r.Params["environmentName"] = []string{spotinst.StringValue(input.EnvironmentName)}
 	}
 
@@ -1573,14 +1707,14 @@ func (o *ElasticBeanstalkIntegration) SetEnvironmentID(v *string) *ElasticBeanst
 }
 
 func (o *ElasticBeanstalkIntegration) SetManagedActions(v *BeanstalkManagedActions) *ElasticBeanstalkIntegration {
-	if o.ManagedActions = v; o.ManagedActions == nil{
+	if o.ManagedActions = v; o.ManagedActions == nil {
 		o.nullFields = append(o.nullFields, "ManagedActions")
 	}
 	return o
 }
 
 func (o *ElasticBeanstalkIntegration) SetDeploymentPreferences(v *BeanstalkDeploymentPreferences) *ElasticBeanstalkIntegration {
-	if o.DeploymentPreferences = v; o.DeploymentPreferences == nil{
+	if o.DeploymentPreferences = v; o.DeploymentPreferences == nil {
 		o.nullFields = append(o.nullFields, "DeploymentPreferences")
 	}
 	return o
@@ -1596,11 +1730,12 @@ func (o *BeanstalkManagedActions) MarshalJSON() ([]byte, error) {
 }
 
 func (o *BeanstalkManagedActions) SetPlatformUpdate(v *BeanstalkPlatformUpdate) *BeanstalkManagedActions {
-	if o.PlatformUpdate = v; o.PlatformUpdate == nil{
+	if o.PlatformUpdate = v; o.PlatformUpdate == nil {
 		o.nullFields = append(o.nullFields, "PlatformUpdate")
 	}
 	return o
 }
+
 // endregion
 
 // region BeanstalkPlatformUpdate
@@ -1611,21 +1746,21 @@ func (o *BeanstalkPlatformUpdate) MarshalJSON() ([]byte, error) {
 }
 
 func (o *BeanstalkPlatformUpdate) SetPerformAt(v *string) *BeanstalkPlatformUpdate {
-	if o.PerformAt = v; o.PerformAt == nil{
+	if o.PerformAt = v; o.PerformAt == nil {
 		o.nullFields = append(o.nullFields, "PerformAt")
 	}
 	return o
 }
 
 func (o *BeanstalkPlatformUpdate) SetTimeWindow(v *string) *BeanstalkPlatformUpdate {
-	if o.TimeWindow = v; o.TimeWindow == nil{
+	if o.TimeWindow = v; o.TimeWindow == nil {
 		o.nullFields = append(o.nullFields, "TimeWindow")
 	}
 	return o
 }
 
 func (o *BeanstalkPlatformUpdate) SetUpdateLevel(v *string) *BeanstalkPlatformUpdate {
-	if o.UpdateLevel = v; o.UpdateLevel == nil{
+	if o.UpdateLevel = v; o.UpdateLevel == nil {
 		o.nullFields = append(o.nullFields, "UpdateLevel")
 	}
 	return o
@@ -1641,32 +1776,33 @@ func (o *BeanstalkDeploymentPreferences) MarshalJSON() ([]byte, error) {
 }
 
 func (o *BeanstalkDeploymentPreferences) SetAutomaticRoll(v *bool) *BeanstalkDeploymentPreferences {
-	if o.AutomaticRoll = v; o.AutomaticRoll == nil{
+	if o.AutomaticRoll = v; o.AutomaticRoll == nil {
 		o.nullFields = append(o.nullFields, "AutomaticRoll")
 	}
 	return o
 }
 
 func (o *BeanstalkDeploymentPreferences) SetBatchSizePercentage(v *int) *BeanstalkDeploymentPreferences {
-	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil{
+	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
 		o.nullFields = append(o.nullFields, "BatchSizePercentage")
 	}
 	return o
 }
 
 func (o *BeanstalkDeploymentPreferences) SetGracePeriod(v *int) *BeanstalkDeploymentPreferences {
-	if o.GracePeriod = v; o.GracePeriod == nil{
+	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
 	}
 	return o
 }
 
 func (o *BeanstalkDeploymentPreferences) SetStrategy(v *BeanstalkDeploymentStrategy) *BeanstalkDeploymentPreferences {
-	if o.Strategy = v; o.Strategy == nil{
+	if o.Strategy = v; o.Strategy == nil {
 		o.nullFields = append(o.nullFields, "Strategy")
 	}
 	return o
 }
+
 // endregion
 
 // region BeanstalkDeploymentStrategy
@@ -1677,18 +1813,19 @@ func (o *BeanstalkDeploymentStrategy) MarshalJSON() ([]byte, error) {
 }
 
 func (o *BeanstalkDeploymentStrategy) SetAction(v *string) *BeanstalkDeploymentStrategy {
-	if o.Action = v; o.Action == nil{
+	if o.Action = v; o.Action == nil {
 		o.nullFields = append(o.nullFields, "Action")
 	}
 	return o
 }
 
 func (o *BeanstalkDeploymentStrategy) SetShouldDrainInstances(v *bool) *BeanstalkDeploymentStrategy {
-	if o.ShouldDrainInstances = v; o.ShouldDrainInstances == nil{
+	if o.ShouldDrainInstances = v; o.ShouldDrainInstances == nil {
 		o.nullFields = append(o.nullFields, "ShouldDrainInstances")
 	}
 	return o
 }
+
 // endregion
 
 // region EC2ContainerServiceIntegration
@@ -1800,6 +1937,14 @@ func (o *Domain) MarshalJSON() ([]byte, error) {
 func (o *Domain) SetHostedZoneID(v *string) *Domain {
 	if o.HostedZoneID = v; o.HostedZoneID == nil {
 		o.nullFields = append(o.nullFields, "HostedZoneID")
+	}
+	return o
+}
+
+// SetSpotinstAccountID sets the spotinst account ID for us in cross-account linking
+func (o *Domain) SetSpotinstAccountID(v *string) *Domain {
+	if o.SpotinstAccountID = v; o.SpotinstAccountID == nil {
+		o.nullFields = append(o.nullFields, "SpotinstAccountID")
 	}
 	return o
 }
