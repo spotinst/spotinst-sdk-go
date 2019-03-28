@@ -702,6 +702,72 @@ type GetInstanceHealthinessOutput struct {
 	Instances []*InstanceHealth `json:"instances,omitempty"`
 }
 
+type GetGroupEventsInput struct {
+	GroupID  *string `json:"groupId,omitempty"`
+	FromDate *string `json:"fromDate,omitempty"`
+}
+
+type GetGroupEventsOutput struct {
+	GroupEvents []*GroupEvent `json:"groupEvents,omitempty"`
+}
+
+type GroupEvent struct {
+	GroupID   *string     `json:"groupId,omitempty"`
+	EventType *string     `json:"eventType,omitempty"`
+	CreatedAt *string     `json:"createdAt,omitempty"`
+	SubEvents []*SubEvent `json:"subEvents,omitempty"`
+}
+
+type SubEvent struct {
+	// common fields
+	Type *string `json:"type,omitempty"`
+
+	// type scaleUp
+	NewSpots     []*Spot        `json:"newSpots,omitempty"`
+	NewInstances []*NewInstance `json:"newInstances,omitempty"`
+
+	// type scaleDown
+	TerminatedSpots     []*Spot               `json:"terminatedSpots,omitempty"`
+	TerminatedInstances []*TerminatedInstance `json:"terminatedInstances,omitempty"`
+
+	// type scaleReason
+	ScalingPolicyName *string `json:"scalingPolicyName,omitempty"`
+	Value             *int    `json:"value,omitempty"`
+	Unit              *string `json:"unit,omitempty"`
+	Threshold         *int    `json:"threshold,omitempty"`
+
+	// type detachedInstance
+	InstanceID *string `json:"instanceId,omitempty"`
+
+	// type unhealthyInstances
+	InstanceIDs []*string `json:"instanceIds,omitempty"`
+
+	// type rollInfo
+	ID              *string `json:"id,omitempty"`
+	GroupID         *string `json:"groupId,omitempty"`
+	CurrentBatch    *int    `json:"currentBatch,omitempty"`
+	Status          *string `json:"status,omitempty"`
+	CreatedAt       *string `json:"createdAt,omitempty"`
+	NumberOfBatches *int    `json:"numOfBatches,omitempty"`
+	GracePeriod     *int    `json:"gracePeriod,omitempty"`
+
+	// type recoverInstances
+	OldSpotRequestIDs []*string `json:"oldSpotRequestIDs,omitempty"`
+	NewSpotRequestIDs []*string `json:"newSpotRequestIDs,omitempty"`
+	OldInstanceIDs    []*string `json:"oldInstanceIDs,omitempty"`
+	NewInstanceIDs    []*string `json:"newInstanceIDs,omitempty"`
+}
+
+type Spot struct {
+	SpotInstanceRequestID *string `json:"spotInstanceRequestId,omitempty"`
+}
+
+type NewInstance struct {
+}
+
+type TerminatedInstance struct {
+}
+
 type ListGroupsInput struct{}
 
 type ListGroupsOutput struct {
@@ -927,6 +993,41 @@ func listOfInstanceHealthFromHttp(resp *http.Response) ([]*InstanceHealth, error
 		return nil, err
 	}
 	return listOfInstanceHealthFromJSON(body)
+}
+
+func groupEventFromJSON(in []byte) (*GroupEvent, error) {
+	b := new(GroupEvent)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func groupEventsFromJSON(in []byte) ([]*GroupEvent, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*GroupEvent, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := groupEventFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func groupEventsFromHttpResponse(resp *http.Response) ([]*GroupEvent, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return groupEventsFromJSON(body)
 }
 
 func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGroupsOutput, error) {
@@ -1185,6 +1286,33 @@ func (s *ServiceOp) GetInstanceHealthiness(ctx context.Context, input *GetInstan
 	}
 
 	return &GetInstanceHealthinessOutput{Instances: instances}, nil
+}
+
+func (s *ServiceOp) GetGroupEvents(ctx context.Context, input *GetGroupEventsInput) (*GetGroupEventsOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/events", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	if input.FromDate != nil {
+		r.Params.Set("fromDate", *input.FromDate)
+	}
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	events, err := groupEventsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+	return &GetGroupEventsOutput{GroupEvents: events}, nil
 }
 
 // region Elastic Beanstalk
