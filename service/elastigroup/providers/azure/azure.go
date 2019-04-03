@@ -209,6 +209,7 @@ type LaunchSpecification struct {
 	Storage             *Storage             `json:"storage,omitempty"`
 	Network             *Network             `json:"network,omitempty"`
 	Login               *Login               `json:"login,omitempty"`
+	CustomData          *string              `json:"customData,omitempty""`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1891,6 +1892,13 @@ func (o *LaunchSpecification) SetImage(v *Image) *LaunchSpecification {
 func (o *LaunchSpecification) SetUserData(v *string) *LaunchSpecification {
 	if o.UserData = v; o.UserData == nil {
 		o.nullFields = append(o.nullFields, "UserData")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetCustomData(v *string) *LaunchSpecification {
+	if o.CustomData = v; o.CustomData == nil {
+		o.nullFields = append(o.nullFields, "CustomData")
 	}
 	return o
 }
