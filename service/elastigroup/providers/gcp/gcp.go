@@ -232,6 +232,7 @@ type LaunchSpecification struct {
 	Metadata             []*Metadata           `json:"metadata,omitempty"`
 	ServiceAccount       *string               `json:"serviceAccount,omitempty"`
 	StartupScript        *string               `json:"startupScript,omitempty"`
+	ShutdownScript       *string               `json:"shutdownScript,omitempty"`
 	Tags                 []string              `json:"tags,omitempty"`
 
 	forceSendFields []string
@@ -1222,6 +1223,14 @@ func (o *LaunchSpecification) SetServiceAccount(v *string) *LaunchSpecification 
 func (o *LaunchSpecification) SetStartupScript(v *string) *LaunchSpecification {
 	if o.StartupScript = v; o.StartupScript == nil {
 		o.nullFields = append(o.nullFields, "StartupScript")
+	}
+	return o
+}
+
+// SetShutdownScript sets the script that will run when draining instances before termination
+func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification {
+	if o.ShutdownScript = v; o.ShutdownScript == nil {
+		o.nullFields = append(o.nullFields, "ShutdownScript")
 	}
 	return o
 }
