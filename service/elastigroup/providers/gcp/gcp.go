@@ -187,7 +187,10 @@ type GPU struct {
 
 // Health defines the healthcheck attributes for the group. Health is an element of Compute.
 type Health struct {
-	GracePeriod *int `json:"gracePeriod,omitempty"`
+	AutoHealing       *bool   `json:"autoHealing,omitempty"`
+	GracePeriod       *int    `json:"gracePeriod,omitempty"`
+	HealthCheckType   *string `json:"healthCheckType,omitempty"`
+	UnhealthyDuration *int    `json:"unhealthyDuration,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1099,6 +1102,29 @@ func (o *Health) SetGracePeriod(v *int) *Health {
 	fmt.Printf("o: %v\n", o)
 	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+// SetHealthCheckType sets the type of helath check to perform
+func (o *Health) SetHealthCheckType(v *string) *Health {
+	if o.HealthCheckType = v; o.HealthCheckType == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckType")
+	}
+	return o
+}
+
+// SetAutoHealing sets autohealing to true or false
+func (o *Health) SetAutoHealing(v *bool) *Health {
+	if o.AutoHealing = v; o.AutoHealing == nil {
+		o.nullFields = append(o.nullFields, "AutoHealing")
+	}
+	return o
+}
+
+func (o *Health) SetUnhealthyDuration(v *int) *Health {
+	if o.UnhealthyDuration = v; o.UnhealthyDuration == nil {
+		o.nullFields = append(o.nullFields, "UnhealthyDuration")
 	}
 	return o
 }
