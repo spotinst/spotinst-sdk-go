@@ -1,4 +1,4 @@
-package aws
+package gcp
 
 import (
 	"context"
@@ -13,12 +13,12 @@ import (
 )
 
 type LaunchSpec struct {
-	ID       *string  `json:"id,omitempty"`
-	OceanID  *string  `json:"oceanId,omitempty"`
-	ImageID  *string  `json:"imageId,omitempty"`
-	UserData *string  `json:"userData,omitempty"`
-	Labels   []*Label `json:"labels,omitempty"`
-	Taints   []*Taint `json:"taints,omitempty"`
+	ID          *string     `json:"id,omitempty"`
+	OceanID     *string     `json:"oceanId,omitempty"`
+	SourceImage *string     `json:"sourceImage,omitempty"`
+	Metadata    []*Metadata `json:"metadata,omitempty"`
+	Labels      []*Label    `json:"labels,omitempty"`
+	Taints      []*Taint    `json:"taints,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -128,7 +128,7 @@ func launchSpecsFromHttpResponse(resp *http.Response) ([]*LaunchSpec, error) {
 }
 
 func (s *ServiceOp) ListLaunchSpecs(ctx context.Context, input *ListLaunchSpecsInput) (*ListLaunchSpecsOutput, error) {
-	r := client.NewRequest(http.MethodGet, "/ocean/aws/k8s/launchSpec")
+	r := client.NewRequest(http.MethodGet, "/ocean/gcp/k8s/launchSpec")
 
 	if input.OceanID != nil {
 		r.Params.Set("oceanId", spotinst.StringValue(input.OceanID))
@@ -149,7 +149,7 @@ func (s *ServiceOp) ListLaunchSpecs(ctx context.Context, input *ListLaunchSpecsI
 }
 
 func (s *ServiceOp) CreateLaunchSpec(ctx context.Context, input *CreateLaunchSpecInput) (*CreateLaunchSpecOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/ocean/aws/k8s/launchSpec")
+	r := client.NewRequest(http.MethodPost, "/ocean/gcp/k8s/launchSpec")
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -172,7 +172,7 @@ func (s *ServiceOp) CreateLaunchSpec(ctx context.Context, input *CreateLaunchSpe
 }
 
 func (s *ServiceOp) ReadLaunchSpec(ctx context.Context, input *ReadLaunchSpecInput) (*ReadLaunchSpecOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/launchSpec/{launchSpecId}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/gcp/k8s/launchSpec/{launchSpecId}", uritemplates.Values{
 		"launchSpecId": spotinst.StringValue(input.LaunchSpecID),
 	})
 	if err != nil {
@@ -200,7 +200,7 @@ func (s *ServiceOp) ReadLaunchSpec(ctx context.Context, input *ReadLaunchSpecInp
 }
 
 func (s *ServiceOp) UpdateLaunchSpec(ctx context.Context, input *UpdateLaunchSpecInput) (*UpdateLaunchSpecOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/launchSpec/{launchSpecId}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/gcp/k8s/launchSpec/{launchSpecId}", uritemplates.Values{
 		"launchSpecId": spotinst.StringValue(input.LaunchSpec.ID),
 	})
 	if err != nil {
@@ -233,7 +233,7 @@ func (s *ServiceOp) UpdateLaunchSpec(ctx context.Context, input *UpdateLaunchSpe
 }
 
 func (s *ServiceOp) DeleteLaunchSpec(ctx context.Context, input *DeleteLaunchSpecInput) (*DeleteLaunchSpecOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/launchSpec/{launchSpecId}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/gcp/k8s/launchSpec/{launchSpecId}", uritemplates.Values{
 		"launchSpecId": spotinst.StringValue(input.LaunchSpecID),
 	})
 	if err != nil {
@@ -275,16 +275,16 @@ func (o *LaunchSpec) SetOceanId(v *string) *LaunchSpec {
 	return o
 }
 
-func (o *LaunchSpec) SetImageId(v *string) *LaunchSpec {
-	if o.ImageID = v; o.ImageID == nil {
-		o.nullFields = append(o.nullFields, "ImageID")
+func (o *LaunchSpec) SetSourceImage(v *string) *LaunchSpec {
+	if o.SourceImage = v; o.SourceImage == nil {
+		o.nullFields = append(o.nullFields, "SourceImage")
 	}
 	return o
 }
 
-func (o *LaunchSpec) SetUserData(v *string) *LaunchSpec {
-	if o.UserData = v; o.UserData == nil {
-		o.nullFields = append(o.nullFields, "UserData")
+func (o *LaunchSpec) SetMetadata(v []*Metadata) *LaunchSpec {
+	if o.Metadata = v; o.Metadata == nil {
+		o.nullFields = append(o.nullFields, "Metadata")
 	}
 	return o
 }

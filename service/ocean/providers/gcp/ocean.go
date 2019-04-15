@@ -1,27 +1,25 @@
-package aws
+package gcp
 
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
-	"time"
-
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
+	"io/ioutil"
+	"net/http"
+	"time"
 )
 
 type Cluster struct {
-	ID                  *string     `json:"id,omitempty"`
-	ControllerClusterID *string     `json:"controllerClusterId,omitempty"`
-	Name                *string     `json:"name,omitempty"`
-	Region              *string     `json:"region,omitempty"`
-	Strategy            *Strategy   `json:"strategy,omitempty"`
+	AutoScaler          *AutoScaler `json:"autoScaler,omitempty"`
 	Capacity            *Capacity   `json:"capacity,omitempty"`
 	Compute             *Compute    `json:"compute,omitempty"`
-	AutoScaler          *AutoScaler `json:"autoScaler,omitempty"`
+	ControllerClusterID *string     `json:"controllerClusterId,omitempty"`
+	GKE                 *GKE        `json:"gke,omitempty"`
+	ID                  *string     `json:"id,omitempty"`
+	Name                *string     `json:"name,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -44,73 +42,6 @@ type Cluster struct {
 	nullFields []string
 }
 
-type Strategy struct {
-	SpotPercentage           *float64 `json:"spotPercentage,omitempty"`
-	UtilizeReservedInstances *bool    `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool    `json:"fallbackToOd,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type Capacity struct {
-	Minimum *int `json:"minimum,omitempty"`
-	Maximum *int `json:"maximum,omitempty"`
-	Target  *int `json:"target,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type Compute struct {
-	InstanceTypes       *InstanceTypes       `json:"instanceTypes,omitempty"`
-	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
-	SubnetIDs           []string             `json:"subnetIds,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type InstanceTypes struct {
-	Whitelist []string `json:"whitelist,omitempty"`
-	Blacklist []string `json:"blacklist,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type LaunchSpecification struct {
-	AssociatePublicIPAddress *bool               `json:"associatePublicIpAddress,omitempty"`
-	SecurityGroupIDs         []string            `json:"securityGroupIds,omitempty"`
-	ImageID                  *string             `json:"imageId,omitempty"`
-	KeyPair                  *string             `json:"keyPair,omitempty"`
-	UserData                 *string             `json:"userData,omitempty"`
-	IAMInstanceProfile       *IAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
-	Tags                     []*Tag              `json:"tags,omitempty"`
-	LoadBalancers            []*LoadBalancer     `json:"loadBalancers,omitempty"`
-	RootVolumeSize           *int                `json:"rootVolumeSize,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type IAMInstanceProfile struct {
-	ARN  *string `json:"arn,omitempty"`
-	Name *string `json:"name,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type LoadBalancer struct {
-	Name *string `json:"name,omitempty"`
-	Arn  *string `json:"arn,omitempty"`
-	Type *string `json:"type,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
 type AutoScaler struct {
 	IsEnabled      *bool                     `json:"isEnabled,omitempty"`
 	IsAutoConfig   *bool                     `json:"isAutoConfig,omitempty"`
@@ -118,6 +49,14 @@ type AutoScaler struct {
 	Headroom       *AutoScalerHeadroom       `json:"headroom,omitempty"`
 	ResourceLimits *AutoScalerResourceLimits `json:"resourceLimits,omitempty"`
 	Down           *AutoScalerDown           `json:"down,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoScalerDown struct {
+	EvaluationPeriods      *int `json:"evaluationPeriods,omitempty"`
+	MaxScaleDownPercentage *int `json:"maxScaleDownPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -141,8 +80,107 @@ type AutoScalerResourceLimits struct {
 	nullFields      []string
 }
 
-type AutoScalerDown struct {
-	EvaluationPeriods *int `json:"evaluationPeriods,omitempty"`
+type BackendService struct {
+	BackendServiceName *string     `json:"backendServiceName,omitempty"`
+	LocationType       *string     `json:"locationType,omitempty"`
+	Scheme             *string     `json:"scheme,omitempty"`
+	NamedPorts         *NamedPorts `json:"namedPorts,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type BackendServiceConfig struct {
+	BackendServices []*BackendService `json:"backendServices,omitempty"`
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Capacity struct {
+	Minimum *int `json:"minimum,omitempty"`
+	Maximum *int `json:"maximum,omitempty"`
+	Target  *int `json:"target,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Compute struct {
+	AvailabilityZones   []string             `json:"availabilityZones,omitempty"`
+	InstanceTypes       *InstanceTypes       `json:"instanceTypes,omitempty"`
+	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
+	NetworkInterfaces   []*NetworkInterface  `json:"networkInterfaces,omitempty"`
+	SubnetName          *string              `json:"subnetName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GKE struct {
+	ClusterName    *string `json:"clusterName,omitempty"`
+	MasterLocation *string `json:"masterLocation,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type InstanceTypes struct {
+	Whitelist []string `json:"whitelist,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LaunchSpecification struct {
+	BackendServiceConfig *BackendServiceConfig `json:"backendServiceConfig,omitempty"`
+	Labels               []*Label              `json:"labels,omitempty"`
+	IPForwarding         *bool                 `json:"ipForwarding,omitempty"`
+	Metadata             []*Metadata           `json:"metadata,omitempty"`
+	RootVolumeSizeInGB   *int                  `json:"rootVolumeSizeInGb,omitempty"`
+	ServiceAccount       *string               `json:"serviceAccount,omitempty"`
+	SourceImage          *string               `json:"sourceImage,omitempty"`
+	Tags                 []string              `json:"tags,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Metadata struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type NamedPorts struct {
+	Name  *string `json:"name,omitempty"`
+	Ports []int   `json:"ports,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type NetworkInterface struct {
+	AccessConfigs []*AccessConfig `json:"accessConfigs,omitempty"`
+	AliasIPRanges []*AliasIPRange `json:"aliasIpRanges,omitempty"`
+	Network       *string         `json:"network,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AccessConfig struct {
+	Name *string `json:"name,omitempty"`
+	Type *string `json:"type,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AliasIPRange struct {
+	IPCIDRRange         *string `json:"ipCidrRange,omitempty"`
+	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -220,7 +258,7 @@ func clustersFromHttpResponse(resp *http.Response) ([]*Cluster, error) {
 }
 
 func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) (*ListClustersOutput, error) {
-	r := client.NewRequest(http.MethodGet, "/ocean/aws/k8s/cluster")
+	r := client.NewRequest(http.MethodGet, "/ocean/gcp/k8s/cluster")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
@@ -236,7 +274,7 @@ func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) 
 }
 
 func (s *ServiceOp) CreateCluster(ctx context.Context, input *CreateClusterInput) (*CreateClusterOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/ocean/aws/k8s/cluster")
+	r := client.NewRequest(http.MethodPost, "/ocean/gcp/k8s/cluster")
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -259,7 +297,7 @@ func (s *ServiceOp) CreateCluster(ctx context.Context, input *CreateClusterInput
 }
 
 func (s *ServiceOp) ReadCluster(ctx context.Context, input *ReadClusterInput) (*ReadClusterOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/gcp/k8s/cluster/{clusterId}", uritemplates.Values{
 		"clusterId": spotinst.StringValue(input.ClusterID),
 	})
 	if err != nil {
@@ -287,7 +325,7 @@ func (s *ServiceOp) ReadCluster(ctx context.Context, input *ReadClusterInput) (*
 }
 
 func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput) (*UpdateClusterOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/gcp/k8s/cluster/{clusterId}", uritemplates.Values{
 		"clusterId": spotinst.StringValue(input.Cluster.ID),
 	})
 	if err != nil {
@@ -320,7 +358,7 @@ func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput
 }
 
 func (s *ServiceOp) DeleteCluster(ctx context.Context, input *DeleteClusterInput) (*DeleteClusterOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/gcp/k8s/cluster/{clusterId}", uritemplates.Values{
 		"clusterId": spotinst.StringValue(input.ClusterID),
 	})
 	if err != nil {
@@ -367,20 +405,6 @@ func (o *Cluster) SetName(v *string) *Cluster {
 	return o
 }
 
-func (o *Cluster) SetRegion(v *string) *Cluster {
-	if o.Region = v; o.Region == nil {
-		o.nullFields = append(o.nullFields, "Region")
-	}
-	return o
-}
-
-func (o *Cluster) SetStrategy(v *Strategy) *Cluster {
-	if o.Strategy = v; o.Strategy == nil {
-		o.nullFields = append(o.nullFields, "Strategy")
-	}
-	return o
-}
-
 func (o *Cluster) SetCapacity(v *Capacity) *Cluster {
 	if o.Capacity = v; o.Capacity == nil {
 		o.nullFields = append(o.nullFields, "Capacity")
@@ -402,33 +426,33 @@ func (o *Cluster) SetAutoScaler(v *AutoScaler) *Cluster {
 	return o
 }
 
+func (o *Cluster) SetGKE(v *GKE) *Cluster {
+	if o.GKE = v; o.GKE == nil {
+		o.nullFields = append(o.nullFields, "GKE")
+	}
+	return o
+}
+
 // endregion
 
-// region Strategy
+// region GKE
 
-func (o *Strategy) MarshalJSON() ([]byte, error) {
-	type noMethod Strategy
+func (o *GKE) MarshalJSON() ([]byte, error) {
+	type noMethod GKE
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Strategy) SetSpotPercentage(v *float64) *Strategy {
-	if o.SpotPercentage = v; o.SpotPercentage == nil {
-		o.nullFields = append(o.nullFields, "SpotPercentage")
+func (o *GKE) SetClusterName(v *string) *GKE {
+	if o.ClusterName = v; o.ClusterName == nil {
+		o.nullFields = append(o.nullFields, "ClusterName")
 	}
 	return o
 }
 
-func (o *Strategy) SetUtilizeReservedInstances(v *bool) *Strategy {
-	if o.UtilizeReservedInstances = v; o.UtilizeReservedInstances == nil {
-		o.nullFields = append(o.nullFields, "UtilizeReservedInstances")
-	}
-	return o
-}
-
-func (o *Strategy) SetFallbackToOnDemand(v *bool) *Strategy {
-	if o.FallbackToOnDemand = v; o.FallbackToOnDemand == nil {
-		o.nullFields = append(o.nullFields, "FallbackToOnDemand")
+func (o *GKE) SetMasterLocation(v *string) *GKE {
+	if o.MasterLocation = v; o.MasterLocation == nil {
+		o.nullFields = append(o.nullFields, "MasterLocation")
 	}
 	return o
 }
@@ -481,6 +505,13 @@ func (o *Compute) SetInstanceTypes(v *InstanceTypes) *Compute {
 	return o
 }
 
+func (o *Compute) SetAvailabilityZones(v []string) *Compute {
+	if o.AvailabilityZones = v; o.AvailabilityZones == nil {
+		o.nullFields = append(o.nullFields, "AvailabilityZones")
+	}
+	return o
+}
+
 func (o *Compute) SetLaunchSpecification(v *LaunchSpecification) *Compute {
 	if o.LaunchSpecification = v; o.LaunchSpecification == nil {
 		o.nullFields = append(o.nullFields, "LaunchSpecification")
@@ -488,9 +519,16 @@ func (o *Compute) SetLaunchSpecification(v *LaunchSpecification) *Compute {
 	return o
 }
 
-func (o *Compute) SetSubnetIDs(v []string) *Compute {
-	if o.SubnetIDs = v; o.SubnetIDs == nil {
-		o.nullFields = append(o.nullFields, "SubnetIDs")
+func (o *Compute) SetNetworkInterfaces(v []*NetworkInterface) *Compute {
+	if o.NetworkInterfaces = v; o.NetworkInterfaces == nil {
+		o.nullFields = append(o.nullFields, "NetworkInterfaces")
+	}
+	return o
+}
+
+func (o *Compute) SetSubnetName(v *string) *Compute {
+	if o.SubnetName = v; o.SubnetName == nil {
+		o.nullFields = append(o.nullFields, "SubnetName")
 	}
 	return o
 }
@@ -512,13 +550,6 @@ func (o *InstanceTypes) SetWhitelist(v []string) *InstanceTypes {
 	return o
 }
 
-func (o *InstanceTypes) SetBlacklist(v []string) *InstanceTypes {
-	if o.Blacklist = v; o.Blacklist == nil {
-		o.nullFields = append(o.nullFields, "Blacklist")
-	}
-	return o
-}
-
 // endregion
 
 // region LaunchSpecification
@@ -529,113 +560,241 @@ func (o *LaunchSpecification) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecification) SetAssociatePublicIPAddress(v *bool) *LaunchSpecification {
-	if o.AssociatePublicIPAddress = v; o.AssociatePublicIPAddress == nil {
-		o.nullFields = append(o.nullFields, "AssociatePublicIPAddress")
+func (o *LaunchSpecification) SetBackendServiceConfig(v *BackendServiceConfig) *LaunchSpecification {
+	if o.BackendServiceConfig = v; o.BackendServiceConfig == nil {
+		o.nullFields = append(o.nullFields, "BackendServiceConfig")
 	}
 	return o
 }
 
-func (o *LaunchSpecification) SetSecurityGroupIDs(v []string) *LaunchSpecification {
-	if o.SecurityGroupIDs = v; o.SecurityGroupIDs == nil {
-		o.nullFields = append(o.nullFields, "SecurityGroupIDs")
-	}
-	return o
-}
-func (o *LaunchSpecification) SetImageId(v *string) *LaunchSpecification {
-	if o.ImageID = v; o.ImageID == nil {
-		o.nullFields = append(o.nullFields, "ImageID")
+func (o *LaunchSpecification) SetLabels(v []*Label) *LaunchSpecification {
+	if o.Labels = v; o.Labels == nil {
+		o.nullFields = append(o.nullFields, "Labels")
 	}
 	return o
 }
 
-func (o *LaunchSpecification) SetKeyPair(v *string) *LaunchSpecification {
-	if o.KeyPair = v; o.KeyPair == nil {
-		o.nullFields = append(o.nullFields, "KeyPair")
+func (o *LaunchSpecification) SetIPForwarding(v *bool) *LaunchSpecification {
+	if o.IPForwarding = v; o.IPForwarding == nil {
+		o.nullFields = append(o.nullFields, "IPForwarding")
 	}
 	return o
 }
 
-func (o *LaunchSpecification) SetUserData(v *string) *LaunchSpecification {
-	if o.UserData = v; o.UserData == nil {
-		o.nullFields = append(o.nullFields, "UserData")
+func (o *LaunchSpecification) SetMetadata(v []*Metadata) *LaunchSpecification {
+	if o.Metadata = v; o.Metadata == nil {
+		o.nullFields = append(o.nullFields, "Metadata")
 	}
 	return o
 }
 
-func (o *LaunchSpecification) SetIAMInstanceProfile(v *IAMInstanceProfile) *LaunchSpecification {
-	if o.IAMInstanceProfile = v; o.IAMInstanceProfile == nil {
-		o.nullFields = append(o.nullFields, "IAMInstanceProfile")
+func (o *LaunchSpecification) SetRootVolumeSizeInGB(v *int) *LaunchSpecification {
+	if o.RootVolumeSizeInGB = v; o.RootVolumeSizeInGB == nil {
+		o.nullFields = append(o.nullFields, "RootVolumeSizeInGB")
 	}
 	return o
 }
 
-func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
+func (o *LaunchSpecification) SetServiceAccount(v *string) *LaunchSpecification {
+	if o.ServiceAccount = v; o.ServiceAccount == nil {
+		o.nullFields = append(o.nullFields, "ServiceAccount")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetSourceImage(v *string) *LaunchSpecification {
+	if o.SourceImage = v; o.SourceImage == nil {
+		o.nullFields = append(o.nullFields, "SourceImage")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetTags(v []string) *LaunchSpecification {
 	if o.Tags = v; o.Tags == nil {
 		o.nullFields = append(o.nullFields, "Tags")
 	}
 	return o
 }
 
-func (o *LaunchSpecification) SetLoadBalancers(v []*LoadBalancer) *LaunchSpecification {
-	if o.LoadBalancers = v; o.LoadBalancers == nil {
-		o.nullFields = append(o.nullFields, "LoadBalancers")
-	}
-	return o
-}
-
-func (o *LaunchSpecification) SetRootVolumeSize(v *int) *LaunchSpecification {
-	if o.RootVolumeSize = v; o.RootVolumeSize == nil {
-		o.nullFields = append(o.nullFields, "RootVolumeSize")
-	}
-	return o
-}
-
 // endregion
 
-// region LoadBalancer
+// region BackendServiceConfig
 
-func (o *LoadBalancer) SetArn(v *string) *LoadBalancer {
-	if o.Arn = v; o.Arn == nil {
-		o.nullFields = append(o.nullFields, "Arn")
-	}
-	return o
-}
-
-func (o *LoadBalancer) SetName(v *string) *LoadBalancer {
-	if o.Name = v; o.Name == nil {
-		o.nullFields = append(o.nullFields, "Name")
-	}
-	return o
-}
-
-func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
-	if o.Type = v; o.Type == nil {
-		o.nullFields = append(o.nullFields, "Type")
-	}
-	return o
-}
-
-// endregion
-
-// region IAMInstanceProfile
-
-func (o *IAMInstanceProfile) MarshalJSON() ([]byte, error) {
-	type noMethod IAMInstanceProfile
+func (o *BackendServiceConfig) MarshalJSON() ([]byte, error) {
+	type noMethod BackendServiceConfig
 	raw := noMethod(*o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *IAMInstanceProfile) SetArn(v *string) *IAMInstanceProfile {
-	if o.ARN = v; o.ARN == nil {
-		o.nullFields = append(o.nullFields, "ARN")
+func (o *BackendServiceConfig) SetBackendServices(v []*BackendService) *BackendServiceConfig {
+	if o.BackendServices = v; o.BackendServices == nil {
+		o.nullFields = append(o.nullFields, "BackendServices")
 	}
 	return o
 }
 
-func (o *IAMInstanceProfile) SetName(v *string) *IAMInstanceProfile {
+// endregion
+
+// region BackendService
+
+func (o *BackendService) MarshalJSON() ([]byte, error) {
+	type noMethod BackendService
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *BackendService) SetBackendServiceName(v *string) *BackendService {
+	if o.BackendServiceName = v; o.BackendServiceName == nil {
+		o.nullFields = append(o.nullFields, "BackendServiceName")
+	}
+	return o
+}
+
+func (o *BackendService) SetLocationType(v *string) *BackendService {
+	if o.LocationType = v; o.LocationType == nil {
+		o.nullFields = append(o.nullFields, "LocationType")
+	}
+	return o
+}
+
+func (o *BackendService) SetScheme(v *string) *BackendService {
+	if o.Scheme = v; o.Scheme == nil {
+		o.nullFields = append(o.nullFields, "Scheme")
+	}
+	return o
+}
+
+func (o *BackendService) SetNamedPorts(v *NamedPorts) *BackendService {
+	if o.NamedPorts = v; o.NamedPorts == nil {
+		o.nullFields = append(o.nullFields, "NamedPort")
+	}
+	return o
+}
+
+// endregion
+
+// region NamedPort setters
+
+func (o *NamedPorts) MarshalJSON() ([]byte, error) {
+	type noMethod NamedPorts
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// SetNamedPorts sets the name of the NamedPorts
+func (o *NamedPorts) SetName(v *string) *NamedPorts {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *NamedPorts) SetPorts(v []int) *NamedPorts {
+	if o.Ports = v; o.Ports == nil {
+		o.nullFields = append(o.nullFields, "Ports")
+	}
+	return o
+}
+
+// endregion
+
+// region Metadata
+
+func (o *Metadata) MarshalJSON() ([]byte, error) {
+	type noMethod Metadata
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Metadata) SetKey(v *string) *Metadata {
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+func (o *Metadata) SetValue(v *string) *Metadata {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region NetworkInterface
+
+func (o *NetworkInterface) MarshalJSON() ([]byte, error) {
+	type noMethod NetworkInterface
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NetworkInterface) SetAccessConfigs(v []*AccessConfig) *NetworkInterface {
+	if o.AccessConfigs = v; o.AccessConfigs == nil {
+		o.nullFields = append(o.nullFields, "AccessConfigs")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetAliasIPRanges(v []*AliasIPRange) *NetworkInterface {
+	if o.AliasIPRanges = v; o.AliasIPRanges == nil {
+		o.nullFields = append(o.nullFields, "AliasIPRanges")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetNetwork(v *string) *NetworkInterface {
+	if o.Network = v; o.Network == nil {
+		o.nullFields = append(o.nullFields, "Network")
+	}
+	return o
+}
+
+// endregion
+
+// region AliasIPRange
+
+func (o *AliasIPRange) MarshalJSON() ([]byte, error) {
+	type noMethod AliasIPRange
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AliasIPRange) SetIPCIDRRange(v *string) *AliasIPRange {
+	if o.IPCIDRRange = v; o.IPCIDRRange == nil {
+		o.nullFields = append(o.nullFields, "IPCIDRRange")
+	}
+	return o
+}
+
+func (o *AliasIPRange) SetSubnetworkRangeName(v *string) *AliasIPRange {
+	if o.SubnetworkRangeName = v; o.SubnetworkRangeName == nil {
+		o.nullFields = append(o.nullFields, "SubnetworkRangeName")
+	}
+	return o
+}
+
+// endregion
+
+// region AccessConfig
+
+func (o *AccessConfig) MarshalJSON() ([]byte, error) {
+	type noMethod AccessConfig
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AccessConfig) SetName(v *string) *AccessConfig {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *AccessConfig) SetType(v *string) *AccessConfig {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
 	}
 	return o
 }
