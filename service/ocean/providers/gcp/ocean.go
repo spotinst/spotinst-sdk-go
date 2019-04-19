@@ -90,12 +90,6 @@ type BackendService struct {
 	nullFields      []string
 }
 
-type BackendServiceConfig struct {
-	BackendServices []*BackendService `json:"backendServices,omitempty"`
-	forceSendFields []string
-	nullFields      []string
-}
-
 type Capacity struct {
 	Minimum *int `json:"minimum,omitempty"`
 	Maximum *int `json:"maximum,omitempty"`
@@ -132,14 +126,14 @@ type InstanceTypes struct {
 }
 
 type LaunchSpecification struct {
-	BackendServiceConfig *BackendServiceConfig `json:"backendServiceConfig,omitempty"`
-	Labels               []*Label              `json:"labels,omitempty"`
-	IPForwarding         *bool                 `json:"ipForwarding,omitempty"`
-	Metadata             []*Metadata           `json:"metadata,omitempty"`
-	RootVolumeSizeInGB   *int                  `json:"rootVolumeSizeInGb,omitempty"`
-	ServiceAccount       *string               `json:"serviceAccount,omitempty"`
-	SourceImage          *string               `json:"sourceImage,omitempty"`
-	Tags                 []string              `json:"tags,omitempty"`
+	BackendServices    []*BackendService `json:"backendServices,omitempty"`
+	Labels             []*Label          `json:"labels,omitempty"`
+	IPForwarding       *bool             `json:"ipForwarding,omitempty"`
+	Metadata           []*Metadata       `json:"metadata,omitempty"`
+	RootVolumeSizeInGB *int              `json:"rootVolumeSizeInGb,omitempty"`
+	ServiceAccount     *string           `json:"serviceAccount,omitempty"`
+	SourceImage        *string           `json:"sourceImage,omitempty"`
+	Tags               []string          `json:"tags,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -560,9 +554,9 @@ func (o *LaunchSpecification) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecification) SetBackendServiceConfig(v *BackendServiceConfig) *LaunchSpecification {
-	if o.BackendServiceConfig = v; o.BackendServiceConfig == nil {
-		o.nullFields = append(o.nullFields, "BackendServiceConfig")
+func (o *LaunchSpecification) SetBackendServices(v []*BackendService) *LaunchSpecification {
+	if o.BackendServices = v; o.BackendServices == nil {
+		o.nullFields = append(o.nullFields, "BackendServices")
 	}
 	return o
 }
@@ -612,23 +606,6 @@ func (o *LaunchSpecification) SetSourceImage(v *string) *LaunchSpecification {
 func (o *LaunchSpecification) SetTags(v []string) *LaunchSpecification {
 	if o.Tags = v; o.Tags == nil {
 		o.nullFields = append(o.nullFields, "Tags")
-	}
-	return o
-}
-
-// endregion
-
-// region BackendServiceConfig
-
-func (o *BackendServiceConfig) MarshalJSON() ([]byte, error) {
-	type noMethod BackendServiceConfig
-	raw := noMethod(*o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *BackendServiceConfig) SetBackendServices(v []*BackendService) *BackendServiceConfig {
-	if o.BackendServices = v; o.BackendServices == nil {
-		o.nullFields = append(o.nullFields, "BackendServices")
 	}
 	return o
 }
