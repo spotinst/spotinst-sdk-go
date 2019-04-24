@@ -89,6 +89,8 @@ type LaunchSpecification struct {
 	Tags                     []*Tag              `json:"tags,omitempty"`
 	LoadBalancers            []*LoadBalancer     `json:"loadBalancers,omitempty"`
 	RootVolumeSize           *int                `json:"rootVolumeSize,omitempty"`
+	Monitoring               *bool               `json:"monitoring,omitempty"`
+	EBSOptimized             *bool               `json:"ebsOptimized,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -587,6 +589,20 @@ func (o *LaunchSpecification) SetLoadBalancers(v []*LoadBalancer) *LaunchSpecifi
 func (o *LaunchSpecification) SetRootVolumeSize(v *int) *LaunchSpecification {
 	if o.RootVolumeSize = v; o.RootVolumeSize == nil {
 		o.nullFields = append(o.nullFields, "RootVolumeSize")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetMonitoring(v *bool) *LaunchSpecification {
+	if o.Monitoring = v; o.Monitoring == nil {
+		o.nullFields = append(o.nullFields, "Monitoring")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetEBSOptimized(v *bool) *LaunchSpecification {
+	if o.EBSOptimized = v; o.EBSOptimized == nil {
+		o.nullFields = append(o.nullFields, "EBSOptimized")
 	}
 	return o
 }
