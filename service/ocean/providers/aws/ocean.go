@@ -544,6 +544,7 @@ func (o *LaunchSpecification) SetSecurityGroupIDs(v []string) *LaunchSpecificati
 	}
 	return o
 }
+
 func (o *LaunchSpecification) SetImageId(v *string) *LaunchSpecification {
 	if o.ImageID = v; o.ImageID == nil {
 		o.nullFields = append(o.nullFields, "ImageID")
