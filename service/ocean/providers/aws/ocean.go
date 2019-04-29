@@ -89,6 +89,8 @@ type LaunchSpecification struct {
 	Tags                     []*Tag              `json:"tags,omitempty"`
 	LoadBalancers            []*LoadBalancer     `json:"loadBalancers,omitempty"`
 	RootVolumeSize           *int                `json:"rootVolumeSize,omitempty"`
+	Monitoring               *bool               `json:"monitoring,omitempty"`
+	EBSOptimized             *bool               `json:"ebsOptimized,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -125,9 +127,9 @@ type AutoScaler struct {
 
 type AutoScalerHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
+	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
-	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -634,6 +636,7 @@ func (o *LaunchSpecification) SetSecurityGroupIDs(v []string) *LaunchSpecificati
 	}
 	return o
 }
+
 func (o *LaunchSpecification) SetImageId(v *string) *LaunchSpecification {
 	if o.ImageID = v; o.ImageID == nil {
 		o.nullFields = append(o.nullFields, "ImageID")
@@ -679,6 +682,20 @@ func (o *LaunchSpecification) SetLoadBalancers(v []*LoadBalancer) *LaunchSpecifi
 func (o *LaunchSpecification) SetRootVolumeSize(v *int) *LaunchSpecification {
 	if o.RootVolumeSize = v; o.RootVolumeSize == nil {
 		o.nullFields = append(o.nullFields, "RootVolumeSize")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetMonitoring(v *bool) *LaunchSpecification {
+	if o.Monitoring = v; o.Monitoring == nil {
+		o.nullFields = append(o.nullFields, "Monitoring")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetEBSOptimized(v *bool) *LaunchSpecification {
+	if o.EBSOptimized = v; o.EBSOptimized == nil {
+		o.nullFields = append(o.nullFields, "EBSOptimized")
 	}
 	return o
 }
@@ -801,6 +818,13 @@ func (o *AutoScalerHeadroom) SetCPUPerUnit(v *int) *AutoScalerHeadroom {
 	return o
 }
 
+func (o *AutoScalerHeadroom) SetGPUPerUnit(v *int) *AutoScalerHeadroom {
+	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
+		o.nullFields = append(o.nullFields, "GPUPerUnit")
+	}
+	return o
+}
+
 func (o *AutoScalerHeadroom) SetMemoryPerUnit(v *int) *AutoScalerHeadroom {
 	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
 		o.nullFields = append(o.nullFields, "MemoryPerUnit")
@@ -811,14 +835,6 @@ func (o *AutoScalerHeadroom) SetMemoryPerUnit(v *int) *AutoScalerHeadroom {
 func (o *AutoScalerHeadroom) SetNumOfUnits(v *int) *AutoScalerHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
-	}
-	return o
-}
-
-// SetGPUPerUnit sets the gpu per unit
-func (o *AutoScalerHeadroom) SetGPUPerUnit(v *int) *AutoScalerHeadroom {
-	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
-		o.nullFields = append(o.nullFields, "GPUPerUnit")
 	}
 	return o
 }
