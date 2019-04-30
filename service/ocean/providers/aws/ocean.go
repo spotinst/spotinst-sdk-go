@@ -190,13 +190,13 @@ type RollClusterInput struct {
 	Roll *Roll `json:"roll,omitempty"`
 }
 
+type RollClusterOutput struct {
+	RollClusterStatus *RollClusterStatus `json:"clusterDeploymentStatus,omitempty"`
+}
+
 type Roll struct {
 	ClusterID           *string `json:"clusterId,omitempty"`
 	BatchSizePercentage *int    `json:"batchSizePercentage,omitempty"`
-}
-
-type RollClusterOutput struct {
-	RollClusterStatus []*RollClusterStatus `json:"groupDeploymentStatus,omitempty"`
 }
 
 type RollClusterStatus struct {
@@ -252,37 +252,19 @@ func clustersFromHttpResponse(resp *http.Response) ([]*Cluster, error) {
 
 func rollStatusFromJSON(in []byte) (*RollClusterStatus, error) {
 	b := new(RollClusterStatus)
+
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func rollStatusesFromJSON(in []byte) ([]*RollClusterStatus, error) {
-	var rw client.Response
-	if err := json.Unmarshal(in, &rw); err != nil {
-		return nil, err
-	}
-	out := make([]*RollClusterStatus, len(rw.Response.Items))
-	if len(out) == 0 {
-		return out, nil
-	}
-	for i, rb := range rw.Response.Items {
-		b, err := rollStatusFromJSON(rb)
-		if err != nil {
-			return nil, err
-		}
-		out[i] = b
-	}
-	return out, nil
-}
-
-func rollStatusFromHttpResponse(resp *http.Response) ([]*RollClusterStatus, error) {
+func rollStatusFromHttpResponse(resp *http.Response) (*RollClusterStatus, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return rollStatusesFromJSON(body)
+	return rollStatusFromJSON(body)
 }
 
 func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) (*ListClustersOutput, error) {
@@ -405,7 +387,7 @@ func (s *ServiceOp) DeleteCluster(ctx context.Context, input *DeleteClusterInput
 }
 
 func (s *ServiceOp) Roll(ctx context.Context, input *RollClusterInput) (*RollClusterOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{groupId}/roll", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}/roll", uritemplates.Values{
 		"clusterId": spotinst.StringValue(input.Roll.ClusterID),
 	})
 	if err != nil {
@@ -415,7 +397,7 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollClusterInput) (*RollClu
 	// We do not need the ID anymore so let's drop it.
 	input.Roll.ClusterID = nil
 
-	r := client.NewRequest(http.MethodPut, path)
+	r := client.NewRequest(http.MethodPost, path)
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -424,12 +406,12 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollClusterInput) (*RollClu
 	}
 	defer resp.Body.Close()
 
-	rolls, err := rollStatusFromHttpResponse(resp)
+	_, err = rollStatusFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &RollClusterOutput{rolls}, nil
+	return &RollClusterOutput{}, nil
 }
 
 // region Cluster
