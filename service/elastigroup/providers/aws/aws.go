@@ -8,8 +8,6 @@ import (
 	"strconv"
 	"time"
 
-	"fmt"
-
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
@@ -1432,7 +1430,6 @@ func (s *ServiceOp) StartBeanstalkMaintenance(ctx context.Context, input *Beanst
 		return nil, err
 	}
 	defer resp.Body.Close()
-	fmt.Printf("Status: %v\n", resp.Status)
 
 	return &BeanstalkMaintenanceOutput{}, nil
 }
@@ -1476,7 +1473,6 @@ func (s *ServiceOp) FinishBeanstalkMaintenance(ctx context.Context, input *Beans
 		return nil, err
 	}
 	defer resp.Body.Close()
-	fmt.Printf("Status: %v\n", resp.Status)
 
 	return &BeanstalkMaintenanceOutput{}, nil
 }
