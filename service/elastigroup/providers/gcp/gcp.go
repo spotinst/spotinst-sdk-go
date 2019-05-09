@@ -24,6 +24,7 @@ type Group struct {
 	Capacity    *Capacity    `json:"capacity,omitempty"`
 	Compute     *Compute     `json:"compute,omitempty"`
 	Scaling     *Scaling     `json:"scaling,omitempty"`
+	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Strategy    *Strategy    `json:"strategy,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
 
@@ -372,6 +373,29 @@ type Strategy struct {
 	FallbackToOnDemand    *bool `json:"fallbackToOd,omitempty"`
 	PreemptiblePercentage *int  `json:"preemptiblePercentage,omitempty"`
 	OnDemandCount         *int  `json:"onDemandCount,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// endregion
+
+// region Scheduling
+
+type Scheduling struct {
+	Tasks []*Task `json:"tasks,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Task struct {
+	IsEnabled           *bool   `json:"isEnabled,omitempty"`
+	Type                *string `json:"taskType,omitempty"`
+	CronExpression      *string `json:"cronExpression,omitempty"`
+	ScaleTargetCapacity *int    `json:"targetCapacity,omitempty"`
+	ScaleMinCapacity    *int    `json:"minCapacity,omitempty"`
+	ScaleMaxCapacity    *int    `json:"maxCapacity,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -834,6 +858,13 @@ func (o *Group) SetCompute(v *Compute) *Group {
 func (o *Group) SetScaling(v *Scaling) *Group {
 	if o.Scaling = v; o.Scaling == nil {
 		o.nullFields = append(o.nullFields, "Scaling")
+	}
+	return o
+}
+
+func (o *Group) SetScheduling(v *Scheduling) *Group {
+	if o.Scheduling = v; o.Scheduling == nil {
+		o.nullFields = append(o.nullFields, "Scheduling")
 	}
 	return o
 }
@@ -2012,6 +2043,75 @@ func (o *Dimension) SetValue(v *string) *Dimension {
 // endregion
 
 // endregion
+
+// endregion
+
+// region Scheduling
+
+func (o Scheduling) MarshalJSON() ([]byte, error) {
+	type noMethod Scheduling
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
+	if o.Tasks = v; o.Tasks == nil {
+		o.nullFields = append(o.nullFields, "Tasks")
+	}
+	return o
+}
+
+// endregion
+
+// region Task
+
+func (o Task) MarshalJSON() ([]byte, error) {
+	type noMethod Task
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Task) SetIsEnabled(v *bool) *Task {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *Task) SetType(v *string) *Task {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Task) SetCronExpression(v *string) *Task {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+func (o *Task) SetScaleTargetCapacity(v *int) *Task {
+	if o.ScaleTargetCapacity = v; o.ScaleTargetCapacity == nil {
+		o.nullFields = append(o.nullFields, "ScaleTargetCapacity")
+	}
+	return o
+}
+
+func (o *Task) SetScaleMinCapacity(v *int) *Task {
+	if o.ScaleMinCapacity = v; o.ScaleMinCapacity == nil {
+		o.nullFields = append(o.nullFields, "ScaleMinCapacity")
+	}
+	return o
+}
+
+func (o *Task) SetScaleMaxCapacity(v *int) *Task {
+	if o.ScaleMaxCapacity = v; o.ScaleMaxCapacity == nil {
+		o.nullFields = append(o.nullFields, "ScaleMaxCapacity")
+	}
+	return o
+}
 
 // endregion
 
