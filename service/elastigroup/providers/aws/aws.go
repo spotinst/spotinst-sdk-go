@@ -440,6 +440,7 @@ type ScalingPolicy struct {
 	Action            *Action      `json:"action,omitempty"`
 	Target            *float64     `json:"target,omitempty"`
 	IsEnabled         *bool        `json:"isEnabled,omitempty"`
+	Predictive        *Predictive  `json:"predictive,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -461,6 +462,13 @@ type Action struct {
 type Dimension struct {
 	Name  *string `json:"name,omitempty"`
 	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Predictive struct {
+	Mode *string `json:"mode,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2641,6 +2649,13 @@ func (o *ScalingPolicy) SetDimensions(v []*Dimension) *ScalingPolicy {
 	return o
 }
 
+func (o *ScalingPolicy) SetPredictive(v *Predictive) *ScalingPolicy {
+	if o.Predictive = v; o.Predictive == nil {
+		o.nullFields = append(o.nullFields, "Predictive")
+	}
+	return o
+}
+
 func (o *ScalingPolicy) SetAction(v *Action) *ScalingPolicy {
 	if o.Action = v; o.Action == nil {
 		o.nullFields = append(o.nullFields, "Action")
@@ -2741,6 +2756,23 @@ func (o *Dimension) SetName(v *string) *Dimension {
 func (o *Dimension) SetValue(v *string) *Dimension {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region Predictive
+
+func (o *Predictive) MarshalJSON() ([]byte, error) {
+	type noMethod Predictive
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Predictive) SetMode(v *string) *Predictive {
+	if o.Mode = v; o.Mode == nil {
+		o.nullFields = append(o.nullFields, "Mode")
 	}
 	return o
 }
