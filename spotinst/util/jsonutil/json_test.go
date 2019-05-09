@@ -31,13 +31,21 @@ type schema struct {
 	Any           interface{}              `json:"any,omitempty"`
 	Child         *child                   `json:"child,omitempty"`
 	MapToAnyArray map[string][]interface{} `json:"maptoanyarray,omitempty"`
+	Embedded
 
-	ForceSendFields []string `json:"-"`
-	NullFields      []string `json:"-"`
+	forceSendFields []string
+	nullFields      []string
 }
 
 type child struct {
 	B bool `json:"childbool,omitempty"`
+}
+
+type Embedded struct {
+	E bool `json:"embeddedbool,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type testCase struct {
@@ -53,13 +61,13 @@ func TestBasics(t *testing.T) {
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
+				forceSendFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
 			},
 			want: `{"b":false,"f":0.0,"i":0,"istr":"0","str":""}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
+				nullFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
 			},
 			want: `{"b":null,"f":null,"i":null,"istr":null,"str":null,"pb":null,"pf":null,"pi":null,"pistr":null,"pstr":null}`,
 		},
@@ -105,7 +113,7 @@ func TestBasics(t *testing.T) {
 				PI:              int64Ptr(int64(0)),
 				PIStr:           int64Ptr(int64(0)),
 				PStr:            stringPtr(""),
-				ForceSendFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
+				forceSendFields: []string{"B", "F", "I", "Istr", "Str", "PB", "PF", "PI", "PIStr", "PStr"},
 			},
 			want: `{"b":false,"f":0.0,"i":0,"istr":"0","str":"","pb":false,"pf":0.0,"pi":0,"pistr":"0","pstr":""}`,
 		},
@@ -121,7 +129,7 @@ func TestBasics(t *testing.T) {
 				PI:         int64Ptr(int64(0)),
 				PIStr:      int64Ptr(int64(0)),
 				PStr:       stringPtr(""),
-				NullFields: []string{"B", "F", "I", "Istr", "Str"},
+				nullFields: []string{"B", "F", "I", "Istr", "Str"},
 			},
 			want: `{"b":null,"f":null,"i":null,"istr":null,"str":null,"pb":false,"pf":0.0,"pi":0,"pistr":"0","pstr":""}`,
 		},
@@ -142,27 +150,27 @@ func TestSliceFields(t *testing.T) {
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"S"},
+				forceSendFields: []string{"S"},
 			},
 			want: `{"s":[]}`,
 		},
 		{
 			s: schema{
 				S:               []int{},
-				ForceSendFields: []string{"S"},
+				forceSendFields: []string{"S"},
 			},
 			want: `{"s":[]}`,
 		},
 		{
 			s: schema{
 				S:               []int{1},
-				ForceSendFields: []string{"S"},
+				forceSendFields: []string{"S"},
 			},
 			want: `{"s":[1]}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"S"},
+				nullFields: []string{"S"},
 			},
 			want: `{"s":null}`,
 		},
@@ -187,34 +195,34 @@ func TestMapField(t *testing.T) {
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"M"},
+				forceSendFields: []string{"M"},
 			},
 			want: `{"m":{}}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"M"},
+				nullFields: []string{"M"},
 			},
 			want: `{"m":null}`,
 		},
 		{
 			s: schema{
 				M:               make(map[string]string),
-				ForceSendFields: []string{"M"},
+				forceSendFields: []string{"M"},
 			},
 			want: `{"m":{}}`,
 		},
 		{
 			s: schema{
 				M:          make(map[string]string),
-				NullFields: []string{"M"},
+				nullFields: []string{"M"},
 			},
 			want: `{"m":null}`,
 		},
 		{
 			s: schema{
 				M:               map[string]string{"a": "b"},
-				ForceSendFields: []string{"M"},
+				forceSendFields: []string{"M"},
 			},
 			want: `{"m":{"a":"b"}}`,
 		},
@@ -259,20 +267,20 @@ func TestMapToAnyArray(t *testing.T) {
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"MapToAnyArray"},
+				forceSendFields: []string{"MapToAnyArray"},
 			},
 			want: `{"maptoanyarray":{}}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"MapToAnyArray"},
+				nullFields: []string{"MapToAnyArray"},
 			},
 			want: `{"maptoanyarray":null}`,
 		},
 		{
 			s: schema{
 				MapToAnyArray:   make(map[string][]interface{}),
-				ForceSendFields: []string{"MapToAnyArray"},
+				forceSendFields: []string{"MapToAnyArray"},
 			},
 			want: `{"maptoanyarray":{}}`,
 		},
@@ -281,7 +289,7 @@ func TestMapToAnyArray(t *testing.T) {
 				MapToAnyArray: map[string][]interface{}{
 					"a": {2, "b"},
 				},
-				ForceSendFields: []string{"MapToAnyArray"},
+				forceSendFields: []string{"MapToAnyArray"},
 			},
 			want: `{"maptoanyarray":{"a":[2, "b"]}}`,
 		},
@@ -299,7 +307,7 @@ func (a anyType) MarshalJSON() ([]byte, error) {
 }
 
 func TestAnyField(t *testing.T) {
-	// ForceSendFields has no effect on nil interfaces and interfaces that contain nil pointers.
+	// forceSendFields has no effect on nil interfaces and interfaces that contain nil pointers.
 	var nilAny *anyType
 	for _, tc := range []testCase{
 		{
@@ -320,34 +328,34 @@ func TestAnyField(t *testing.T) {
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"Any"},
+				forceSendFields: []string{"Any"},
 			},
 			want: `{}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"Any"},
+				nullFields: []string{"Any"},
 			},
 			want: `{"any":null}`,
 		},
 		{
 			s: schema{
 				Any:             nilAny,
-				ForceSendFields: []string{"Any"},
+				forceSendFields: []string{"Any"},
 			},
 			want: `{"any": null}`,
 		},
 		{
 			s: schema{
 				Any:             &anyType{},
-				ForceSendFields: []string{"Any"},
+				forceSendFields: []string{"Any"},
 			},
 			want: `{"any":"anyType value"}`,
 		},
 		{
 			s: schema{
 				Any:             anyType{},
-				ForceSendFields: []string{"Any"},
+				forceSendFields: []string{"Any"},
 			},
 			want: `{"any":"anyType value"}`,
 		},
@@ -357,7 +365,7 @@ func TestAnyField(t *testing.T) {
 }
 
 func TestSubschema(t *testing.T) {
-	// Subschemas are always stored as pointers, so ForceSendFields has no effect on them.
+	// Subschemas are always stored as pointers, so forceSendFields has no effect on them.
 	for _, tc := range []testCase{
 		{
 			s:    schema{},
@@ -365,13 +373,13 @@ func TestSubschema(t *testing.T) {
 		},
 		{
 			s: schema{
-				ForceSendFields: []string{"Child"},
+				forceSendFields: []string{"Child"},
 			},
 			want: `{}`,
 		},
 		{
 			s: schema{
-				NullFields: []string{"Child"},
+				nullFields: []string{"Child"},
 			},
 			want: `{"child":null}`,
 		},
@@ -382,7 +390,7 @@ func TestSubschema(t *testing.T) {
 		{
 			s: schema{
 				Child:           &child{},
-				ForceSendFields: []string{"Child"},
+				forceSendFields: []string{"Child"},
 			},
 			want: `{"child":{}}`,
 		},
@@ -390,11 +398,10 @@ func TestSubschema(t *testing.T) {
 			s:    schema{Child: &child{B: true}},
 			want: `{"child":{"childbool":true}}`,
 		},
-
 		{
 			s: schema{
 				Child:           &child{B: true},
-				ForceSendFields: []string{"Child"},
+				forceSendFields: []string{"Child"},
 			},
 			want: `{"child":{"childbool":true}}`,
 		},
@@ -403,11 +410,57 @@ func TestSubschema(t *testing.T) {
 	}
 }
 
+func TestEmbeddedSchema(t *testing.T) {
+	// Subschemas are always stored as pointers, so forceSendFields has no effect on them.
+	for _, tc := range []testCase{
+		{
+			s:    schema{},
+			want: `{}`,
+		},
+		{
+			s: schema{
+				forceSendFields: []string{"Embedded"},
+			},
+			want: `{}`,
+		},
+		{
+			s: schema{
+				nullFields: []string{"Embedded"},
+			},
+			want: `{}`,
+		},
+		{
+			s:    schema{Embedded: Embedded{}},
+			want: `{}`,
+		},
+		{
+			s: schema{
+				Embedded:        Embedded{},
+				forceSendFields: []string{"Embedded"},
+			},
+			want: `{}`,
+		},
+		{
+			s:    schema{Embedded: Embedded{E: true}},
+			want: `{"embeddedbool":true}`,
+		},
+		{
+			s: schema{
+				Embedded:        Embedded{E: false, forceSendFields: []string{"E"}},
+				forceSendFields: []string{"Embedded"},
+			},
+			want: `{"embeddedbool":false}`,
+		},
+	} {
+		checkMarshalJSON(t, tc)
+	}
+}
+
 // checkMarshalJSON verifies that calling schemaToMap on tc.s yields a result which is equivalent to tc.want.
 func checkMarshalJSON(t *testing.T, tc testCase) {
-	doCheckMarshalJSON(t, tc.s, tc.s.ForceSendFields, tc.s.NullFields, tc.want)
-	if len(tc.s.ForceSendFields) == 0 && len(tc.s.NullFields) == 0 {
-		// verify that the code path used when ForceSendFields and NullFields
+	doCheckMarshalJSON(t, tc.s, tc.s.forceSendFields, tc.s.nullFields, tc.want)
+	if len(tc.s.forceSendFields) == 0 && len(tc.s.nullFields) == 0 {
+		// verify that the code path used when forceSendFields and nullFields
 		// are non-empty produces the same output as the fast path that is used
 		// when they are empty.
 		doCheckMarshalJSON(t, tc.s, []string{"dummy"}, []string{"dummy"}, tc.want)
@@ -439,17 +492,17 @@ func doCheckMarshalJSON(t *testing.T, s schema, forceSendFields, nullFields []st
 func TestParseJSONTag(t *testing.T) {
 	for _, tc := range []struct {
 		tag  string
-		want jsonTag
+		want *jsonTag
 	}{
 		{
 			tag:  "-",
-			want: jsonTag{ignore: true},
+			want: &jsonTag{ignore: true},
 		}, {
 			tag:  "name,omitempty",
-			want: jsonTag{apiName: "name"},
+			want: &jsonTag{apiName: "name"},
 		}, {
 			tag:  "name,omitempty,string",
-			want: jsonTag{apiName: "name", stringFormat: true},
+			want: &jsonTag{apiName: "name", stringFormat: true},
 		},
 	} {
 		got, err := parseJSONTag(tc.tag)
