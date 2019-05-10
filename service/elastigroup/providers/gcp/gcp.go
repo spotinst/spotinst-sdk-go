@@ -390,12 +390,12 @@ type Scheduling struct {
 }
 
 type Task struct {
-	IsEnabled           *bool   `json:"isEnabled,omitempty"`
-	Type                *string `json:"taskType,omitempty"`
-	CronExpression      *string `json:"cronExpression,omitempty"`
-	ScaleTargetCapacity *int    `json:"targetCapacity,omitempty"`
-	ScaleMinCapacity    *int    `json:"minCapacity,omitempty"`
-	ScaleMaxCapacity    *int    `json:"maxCapacity,omitempty"`
+	IsEnabled      *bool   `json:"isEnabled,omitempty"`
+	Type           *string `json:"taskType,omitempty"`
+	CronExpression *string `json:"cronExpression,omitempty"`
+	TargetCapacity *int    `json:"targetCapacity,omitempty"`
+	MinCapacity    *int    `json:"minCapacity,omitempty"`
+	MaxCapacity    *int    `json:"maxCapacity,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2092,23 +2092,23 @@ func (o *Task) SetCronExpression(v *string) *Task {
 	return o
 }
 
-func (o *Task) SetScaleTargetCapacity(v *int) *Task {
-	if o.ScaleTargetCapacity = v; o.ScaleTargetCapacity == nil {
-		o.nullFields = append(o.nullFields, "ScaleTargetCapacity")
+func (o *Task) SetTargetCapacity(v *int) *Task {
+	if o.TargetCapacity = v; o.TargetCapacity == nil {
+		o.nullFields = append(o.nullFields, "TargetCapacity")
 	}
 	return o
 }
 
-func (o *Task) SetScaleMinCapacity(v *int) *Task {
-	if o.ScaleMinCapacity = v; o.ScaleMinCapacity == nil {
-		o.nullFields = append(o.nullFields, "ScaleMinCapacity")
+func (o *Task) SetMinCapacity(v *int) *Task {
+	if o.MinCapacity = v; o.MinCapacity == nil {
+		o.nullFields = append(o.nullFields, "MinCapacity")
 	}
 	return o
 }
 
-func (o *Task) SetScaleMaxCapacity(v *int) *Task {
-	if o.ScaleMaxCapacity = v; o.ScaleMaxCapacity == nil {
-		o.nullFields = append(o.nullFields, "ScaleMaxCapacity")
+func (o *Task) SetMaxCapacity(v *int) *Task {
+	if o.MaxCapacity = v; o.MaxCapacity == nil {
+		o.nullFields = append(o.nullFields, "MaxCapacity")
 	}
 	return o
 }
