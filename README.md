@@ -64,23 +64,16 @@ package main
 
 import (
 	"context"
-	"flag"
-	"fmt"
-	"os"
-	"time"
+	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/service/elastigroup"
 	"github.com/spotinst/spotinst-sdk-go/service/elastigroup/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
-	var timeout time.Duration
-
-	flag.DurationVar(&timeout, "d", 0, "Operation timeout.")
-	flag.Parse()
-
 	// All clients require a Session. The Session provides the client with
 	// shared configuration such as account and credentials.
 	// A Session should be shared where possible to take advantage of
@@ -94,38 +87,33 @@ func main() {
 	// service specific configuration.
 	svc := elastigroup.New(sess)
 
-	// Create a context with a timeout that will abort the upload if it takes
-	// more than the passed in timeout.
+	// Create a new context.
 	ctx := context.Background()
-	var cancelFn func()
-	if timeout > 0 {
-		ctx, cancelFn = context.WithTimeout(ctx, timeout)
-	}
-	// Ensure the context is canceled to prevent leaking.
-	// See context package for more information, https://golang.org/pkg/context/
-	defer func() {
-		if cancelFn != nil {
-			cancelFn()
-		}
-	}()
 
-	// Read group configuration. The Context will interrupt the request if the
-	// timeout expires.
+	// Read group configuration.
 	out, err := svc.CloudProviderAWS().Read(ctx, &aws.ReadGroupInput{
 		GroupID: spotinst.String("sig-12345"),
 	})
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "failed to read group, %v\n", err)
-		os.Exit(1)
+		log.Fatalf("spotinst: failed to read group: %v", err)
 	}
 
-	fmt.Printf("successfully read group %#v\n", out.Group)
+	// Output.
+	if out.Group != nil {
+		log.Printf("Group %q: %s",
+			spotinst.StringValue(out.Group.ID),
+			stringutil.Stringify(out.Group))
+	}
 }
 ```
 
 ## Documentation
 
-For a comprehensive list of examples, check out the [API documentation](http://api.spotinst.com/).
+For a comprehensive documentation, check out the [API documentation](http://api.spotinst.com/).
+
+## Examples
+
+For a list of examples, check out the [examples](https://github.com/spotinst/spotinst-sdk-go/tree/master/examples) directory.
 
 ## Contributing
 
