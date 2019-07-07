@@ -103,6 +103,7 @@ type Compute struct {
 	AvailabilityZones   []string             `json:"availabilityZones,omitempty"`
 	InstanceTypes       *InstanceTypes       `json:"instanceTypes,omitempty"`
 	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
+	BackendServices     []*BackendService    `json:"backendServices,omitempty"`
 	NetworkInterfaces   []*NetworkInterface  `json:"networkInterfaces,omitempty"`
 	SubnetName          *string              `json:"subnetName,omitempty"`
 
@@ -126,14 +127,13 @@ type InstanceTypes struct {
 }
 
 type LaunchSpecification struct {
-	BackendServices    []*BackendService `json:"backendServices,omitempty"`
-	Labels             []*Label          `json:"labels,omitempty"`
-	IPForwarding       *bool             `json:"ipForwarding,omitempty"`
-	Metadata           []*Metadata       `json:"metadata,omitempty"`
-	RootVolumeSizeInGB *int              `json:"rootVolumeSizeInGb,omitempty"`
-	ServiceAccount     *string           `json:"serviceAccount,omitempty"`
-	SourceImage        *string           `json:"sourceImage,omitempty"`
-	Tags               []string          `json:"tags,omitempty"`
+	Labels             []*Label    `json:"labels,omitempty"`
+	IPForwarding       *bool       `json:"ipForwarding,omitempty"`
+	Metadata           []*Metadata `json:"metadata,omitempty"`
+	RootVolumeSizeInGB *int        `json:"rootVolumeSizeInGb,omitempty"`
+	ServiceAccount     *string     `json:"serviceAccount,omitempty"`
+	SourceImage        *string     `json:"sourceImage,omitempty"`
+	Tags               []string    `json:"tags,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -554,11 +554,11 @@ func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecification) SetBackendServices(v []*BackendService) *LaunchSpecification {
-	if o.BackendServices = v; o.BackendServices == nil {
-		o.nullFields = append(o.nullFields, "BackendServices")
+func (c *Compute) SetBackendServices(v []*BackendService) *Compute {
+	if c.BackendServices = v; c.BackendServices == nil {
+		c.nullFields = append(c.nullFields, "BackendServices")
 	}
-	return o
+	return c
 }
 
 func (o *LaunchSpecification) SetLabels(v []*Label) *LaunchSpecification {
