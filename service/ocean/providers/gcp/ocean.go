@@ -251,6 +251,41 @@ func clustersFromHttpResponse(resp *http.Response) ([]*Cluster, error) {
 	return clustersFromJSON(body)
 }
 
+func clusterImportFromJSON(in []byte) (*ImportOceanGKEClusterOutput, error) {
+	b := new(ImportOceanGKEClusterOutput)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func clustersImportFromJSON(in []byte) ([]*ImportOceanGKEClusterOutput, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*ImportOceanGKEClusterOutput, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := clusterImportFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func clustersImportFromHttpResponse(resp *http.Response) ([]*ImportOceanGKEClusterOutput, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return clustersImportFromJSON(body)
+}
+
 func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) (*ListClustersOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/ocean/gcp/k8s/cluster")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -370,6 +405,35 @@ func (s *ServiceOp) DeleteCluster(ctx context.Context, input *DeleteClusterInput
 	return &DeleteClusterOutput{}, nil
 }
 
+// ImportOceanGKECluster imports an existing Ocean GKE cluster into Elastigroup.
+func (s *ServiceOp) ImportOceanGKECluster(ctx context.Context, input *ImportOceanGKEClusterInput) (*ImportOceanGKEClusterOutput, error) {
+	r := client.NewRequest(http.MethodPost, "/ocean/gcp/k8s/cluster/gke/import")
+
+	r.Params["location"] = []string{spotinst.StringValue(input.Location)}
+	r.Params["clusterName"] = []string{spotinst.StringValue(input.ClusterName)}
+
+	body := &ImportOceanGKEClusterInput{Cluster: input.Cluster}
+	r.Obj = body
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := clustersImportFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ImportOceanGKEClusterOutput)
+	if len(gs) > 0 {
+		output = gs[0]
+	}
+
+	return output, nil
+}
+
 // region Cluster
 
 func (o Cluster) MarshalJSON() ([]byte, error) {
@@ -449,6 +513,30 @@ func (o *GKE) SetMasterLocation(v *string) *GKE {
 		o.nullFields = append(o.nullFields, "MasterLocation")
 	}
 	return o
+}
+
+// endregion
+
+// region Import
+
+type ImportOceanGKECluster struct {
+	InstanceTypes   *InstanceTypes    `json:"instanceTypes,omitempty"`
+	BackendServices []*BackendService `json:"backendServices,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ImportOceanGKEClusterInput struct {
+	ClusterName        *string                `json:"clusterName,omitempty"`
+	Location           *string                `json:"location,omitempty"`
+	NodePoolName       *string                `json:"nodePoolName,omitempty"`
+	IncludeLaunchSpecs *string                `json:"includeLaunchSpecs,omitempty"`
+	Cluster            *ImportOceanGKECluster `json:"cluster,omitempty"`
+}
+
+type ImportOceanGKEClusterOutput struct {
+	Cluster *Cluster `json:"cluster,omitempty"`
 }
 
 // endregion
