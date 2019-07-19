@@ -847,6 +847,10 @@ type DeploymentStatusInput struct {
 	RollID  *string `json:"id,omitempty"`
 }
 
+type Roll struct {
+	Status *string `json:"status,omitempty"`
+}
+
 type RollGroupInput struct {
 	GroupID             *string       `json:"groupId,omitempty"`
 	BatchSizePercentage *int          `json:"batchSizePercentage,omitempty"`
@@ -871,6 +875,14 @@ type Progress struct {
 	Unit  *string `json:"unit,omitempty"`
 	Value *int    `json:"value,omitempty"`
 }
+
+type StopDeploymentInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+	RollID  *string `json:"id,omitempty"`
+	Roll    *Roll   `json:"roll,omitempty"`
+}
+
+type StopDeploymentOutput struct{}
 
 func deploymentStatusFromJSON(in []byte) (*RollGroupStatus, error) {
 	b := new(RollGroupStatus)
@@ -1228,6 +1240,34 @@ func (s *ServiceOp) DeploymentStatus(ctx context.Context, input *DeploymentStatu
 	}
 
 	return &RollGroupOutput{deployments}, nil
+}
+
+func (s *ServiceOp) StopDeployment(ctx context.Context, input *StopDeploymentInput) (*StopDeploymentOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/roll/{rollId}", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"rollId":  spotinst.StringValue(input.RollID),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	input.GroupID = nil
+	input.RollID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	input.Roll = &Roll{
+		Status: spotinst.String("STOPPED"),
+	}
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &StopDeploymentOutput{}, nil
 }
 
 func (s *ServiceOp) Detach(ctx context.Context, input *DetachGroupInput) (*DetachGroupOutput, error) {
