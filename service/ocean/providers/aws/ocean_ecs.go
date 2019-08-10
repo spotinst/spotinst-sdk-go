@@ -21,6 +21,7 @@ type ECSCluster struct {
 	Capacity    *ECSCapacity   `json:"capacity,omitempty"`
 	Compute     *ECSCompute    `json:"compute,omitempty"`
 	AutoScaler  *ECSAutoScaler `json:"autoScaler,omitempty"`
+	Strategy    *ECSStrategy   `json:"strategy,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -41,6 +42,13 @@ type ECSCluster struct {
 	// null. It is an error if a field in this list has a non-empty value.
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
+}
+
+type ECSStrategy struct {
+	DrainingTimeout *int `json:"drainingTimeout,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type ECSCapacity struct {
@@ -427,6 +435,13 @@ func (o *ECSCluster) SetRegion(v *string) *ECSCluster {
 	return o
 }
 
+func (o *ECSCluster) SetECSStrategy(v *ECSStrategy) *ECSCluster {
+	if o.Strategy = v; o.Strategy == nil {
+		o.nullFields = append(o.nullFields, "Strategy")
+	}
+	return o
+}
+
 func (o ECSCapacity) MarshalJSON() ([]byte, error) {
 	type noMethod ECSCapacity
 	raw := noMethod(o)
@@ -502,6 +517,23 @@ func (o *ECSCompute) SetLaunchSpecification(v *ECSLaunchSpecification) *ECSCompu
 func (o *ECSCompute) SetSubnetIDs(v []string) *ECSCompute {
 	if o.SubnetIDs = v; o.SubnetIDs == nil {
 		o.nullFields = append(o.nullFields, "SubnetIDs")
+	}
+	return o
+}
+
+// endregion
+
+// region Strategy
+
+func (o ECSStrategy) MarshalJSON() ([]byte, error) {
+	type noMethod ECSStrategy
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSStrategy) SetDrainingTimeout(v *int) *ECSStrategy {
+	if o.DrainingTimeout = v; o.DrainingTimeout == nil {
+		o.nullFields = append(o.nullFields, "DrainingTimeout")
 	}
 	return o
 }
