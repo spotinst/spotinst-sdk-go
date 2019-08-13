@@ -866,7 +866,7 @@ type RollECSGroupInput struct {
 
 type RollECSWrapper struct {
 	BatchSizePercentage *int    `json:"batchSizePercentage,omitempty"`
-	Comment             *string `json:"batchSizePercentage,omitempty"`
+	Comment             *string `json:"comment,omitempty"`
 }
 
 type RollGroupOutput struct {

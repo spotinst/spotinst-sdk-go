@@ -45,7 +45,8 @@ type ECSCluster struct {
 }
 
 type ECSStrategy struct {
-	DrainingTimeout *int `json:"drainingTimeout,omitempty"`
+	DrainingTimeout          *int  `json:"drainingTimeout,omitempty"`
+	UtilizeReservedInstances *bool `json:"utilizeReservedInstances,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -71,7 +72,6 @@ type ECSCompute struct {
 
 type ECSInstanceTypes struct {
 	Whitelist []string `json:"whitelist,omitempty"`
-	Blacklist []string `json:"blacklist,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -84,6 +84,9 @@ type ECSLaunchSpecification struct {
 	KeyPair                  *string                `json:"keyPair,omitempty"`
 	UserData                 *string                `json:"userData,omitempty"`
 	IAMInstanceProfile       *ECSIAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
+	Tags                     []*Tag                 `json:"tags,omitempty"`
+	Monitoring               *bool                  `json:"monitoring,omitempty"`
+	EBSOptimized             *bool                  `json:"ebsOptimized,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -111,7 +114,6 @@ type ECSAutoScaler struct {
 
 type ECSAutoScalerHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
-	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
 
@@ -128,8 +130,7 @@ type ECSAutoScalerResourceLimits struct {
 }
 
 type ECSAutoScalerDown struct {
-	EvaluationPeriods      *int `json:"evaluationPeriods,omitempty"`
-	MaxScaleDownPercentage *int `json:"evaluationPeriods,omitempty"`
+	MaxScaleDownPercentage *int `json:"maxScaleDownPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -538,6 +539,13 @@ func (o *ECSStrategy) SetDrainingTimeout(v *int) *ECSStrategy {
 	return o
 }
 
+func (o *ECSStrategy) SetUtilizeReservedInstances(v *bool) *ECSStrategy {
+	if o.UtilizeReservedInstances = v; o.UtilizeReservedInstances == nil {
+		o.nullFields = append(o.nullFields, "UtilizeReservedInstances")
+	}
+	return o
+}
+
 // endregion
 
 // region InstanceTypes
@@ -551,13 +559,6 @@ func (o ECSInstanceTypes) MarshalJSON() ([]byte, error) {
 func (o *ECSInstanceTypes) SetWhitelist(v []string) *ECSInstanceTypes {
 	if o.Whitelist = v; o.Whitelist == nil {
 		o.nullFields = append(o.nullFields, "Whitelist")
-	}
-	return o
-}
-
-func (o *ECSInstanceTypes) SetBlacklist(v []string) *ECSInstanceTypes {
-	if o.Blacklist = v; o.Blacklist == nil {
-		o.nullFields = append(o.nullFields, "Blacklist")
 	}
 	return o
 }
@@ -610,6 +611,27 @@ func (o *ECSLaunchSpecification) SetUserData(v *string) *ECSLaunchSpecification 
 func (o *ECSLaunchSpecification) SetIAMInstanceProfile(v *ECSIAMInstanceProfile) *ECSLaunchSpecification {
 	if o.IAMInstanceProfile = v; o.IAMInstanceProfile == nil {
 		o.nullFields = append(o.nullFields, "IAMInstanceProfile")
+	}
+	return o
+}
+
+func (o *ECSLaunchSpecification) SetTags(v []*Tag) *ECSLaunchSpecification {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+func (o *ECSLaunchSpecification) SetMonitoring(v *bool) *ECSLaunchSpecification {
+	if o.Monitoring = v; o.Monitoring == nil {
+		o.nullFields = append(o.nullFields, "Monitoring")
+	}
+	return o
+}
+
+func (o *ECSLaunchSpecification) SetEBSOptimized(v *bool) *ECSLaunchSpecification {
+	if o.EBSOptimized = v; o.EBSOptimized == nil {
+		o.nullFields = append(o.nullFields, "EBSOptimized")
 	}
 	return o
 }
@@ -753,13 +775,6 @@ func (o ECSAutoScalerDown) MarshalJSON() ([]byte, error) {
 	type noMethod ECSAutoScalerDown
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *ECSAutoScalerDown) SetEvaluationPeriods(v *int) *ECSAutoScalerDown {
-	if o.EvaluationPeriods = v; o.EvaluationPeriods == nil {
-		o.nullFields = append(o.nullFields, "EvaluationPeriods")
-	}
-	return o
 }
 
 func (o *ECSAutoScalerDown) SetMaxScaleDownPercentage(v *int) *ECSAutoScalerDown {

@@ -44,7 +44,7 @@ type Cluster struct {
 }
 
 type Strategy struct {
-	DrainingTimeout *int `json:"fallbackToOd,omitempty"`
+	DrainingTimeout *int `json:"drainingTimeout,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
