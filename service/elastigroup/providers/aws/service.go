@@ -22,6 +22,7 @@ type Service interface {
 	StopDeployment(context.Context, *StopDeploymentInput) (*StopDeploymentOutput, error)
 	Detach(context.Context, *DetachGroupInput) (*DetachGroupOutput, error)
 	Roll(context.Context, *RollGroupInput) (*RollGroupOutput, error)
+	RollECS(context.Context, *RollECSGroupInput) (*RollGroupOutput, error)
 	Scale(context.Context, *ScaleGroupInput) (*ScaleGroupOutput, error)
 	GetInstanceHealthiness(context.Context, *GetInstanceHealthinessInput) (*GetInstanceHealthinessOutput, error)
 	GetGroupEvents(context.Context, *GetGroupEventsInput) (*GetGroupEventsOutput, error)

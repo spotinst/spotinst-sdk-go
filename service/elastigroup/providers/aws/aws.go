@@ -859,6 +859,16 @@ type RollGroupInput struct {
 	Strategy            *RollStrategy `json:"strategy,omitempty"`
 }
 
+type RollECSGroupInput struct {
+	GroupID *string         `json:"groupId,omitempty"`
+	Roll    *RollECSWrapper `json:"roll,omitempty"`
+}
+
+type RollECSWrapper struct {
+	BatchSizePercentage *int    `json:"batchSizePercentage,omitempty"`
+	Comment             *string `json:"comment,omitempty"`
+}
+
 type RollGroupOutput struct {
 	RollGroupStatus []*RollGroupStatus `json:"groupDeploymentStatus,omitempty"`
 }
@@ -1305,6 +1315,34 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroup
 	input.GroupID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	deployments, err := deploymentStatusFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &RollGroupOutput{deployments}, nil
+}
+
+func (s *ServiceOp) RollECS(ctx context.Context, input *RollECSGroupInput) (*RollGroupOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/clusterRoll", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodPost, path)
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
