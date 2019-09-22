@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 const (
@@ -18,8 +19,8 @@ const (
 )
 
 var (
-	// ErrFileCredentialsHomeNotFound is emitted when the user directory
-	// cannot be found.
+	// ErrFileCredentialsHomeNotFound is emitted when the user directory cannot
+	// be found.
 	ErrFileCredentialsHomeNotFound = errors.New("spotinst: user home directory not found")
 
 	// ErrFileCredentialsLoadFailed is emitted when the provider is unable to
@@ -31,8 +32,7 @@ var (
 	ErrFileCredentialsTokenNotFound = errors.New("spotinst: credentials did not contain token")
 )
 
-// A FileProvider retrieves credentials from the current user's home
-// directory.
+// A FileProvider retrieves credentials from the current user's home directory.
 type FileProvider struct {
 	// Path to the credentials file.
 	//
@@ -91,10 +91,7 @@ func (p *FileProvider) filename() (string, error) {
 			return p.Filename, nil
 		}
 
-		homeDir := os.Getenv("HOME") // *nix
-		if homeDir == "" {           // Windows
-			homeDir = os.Getenv("USERPROFILE")
-		}
+		homeDir := userHomeDir()
 		if homeDir == "" {
 			return "", ErrFileCredentialsHomeNotFound
 		}
@@ -127,4 +124,13 @@ func (p *FileProvider) loadCredentials(filename string) (Value, error) {
 	}
 
 	return value, nil
+}
+
+func userHomeDir() string {
+	if runtime.GOOS == "windows" { // Windows
+		return os.Getenv("USERPROFILE")
+	}
+
+	// *nix
+	return os.Getenv("HOME")
 }

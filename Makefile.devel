@@ -1,0 +1,38 @@
+GO := GO111MODULE=on go
+
+##@ Development
+
+.PHONY: test
+test: fmt ## Run all tests
+	@mkdir -p dist/ && \
+	$(GO) test \
+		-v $$($(GO) list ./... | grep -v vendor) $(TESTARGS) \
+		-covermode=atomic \
+		-coverprofile=dist/coverage.txt \
+		-race \
+		-timeout=30s \
+		-parallel=4
+
+.PHONY: cover
+cover: test ## Run all tests and open the coverage report
+	@$(GO) tool cover -html=dist/coverage.txt
+
+.PHONY: tidy
+tidy: ## Add missing and remove unused modules
+	@$(GO) mod tidy
+
+.PHONY: vendor
+vendor: ## Make vendored copy of all dependencies
+	@$(GO) mod vendor
+
+.PHONY: fmt
+fmt: ## Format all .go files
+	@$(GO) fmt ./...
+
+.PHONY: vet
+vet: ## Analyze all .go files
+	@$(GO) vet ./...
+
+.PHONY: clean
+clean: ## Clean all generated artifacts
+	@rm -rf dist
