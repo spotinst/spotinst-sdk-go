@@ -19,7 +19,7 @@ type LaunchSpec struct {
 	OceanID            *string             `json:"oceanId,omitempty"`
 	ImageID            *string             `json:"imageId,omitempty"`
 	UserData           *string             `json:"userData,omitempty"`
-	SecurityGroupIDs   []string            `json:"securityGroupIds,omitempty"`
+	SecurityGroupIDs   []*string           `json:"securityGroupIds,omitempty"`
 	IAMInstanceProfile *IAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
 	Labels             []*Label            `json:"labels,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
@@ -304,7 +304,7 @@ func (o *LaunchSpec) SetUserData(v *string) *LaunchSpec {
 	return o
 }
 
-func (o *LaunchSpec) SetSecurityGroupIDs(v []string) *LaunchSpec {
+func (o *LaunchSpec) SetSecurityGroupIDs(v []*string) *LaunchSpec {
 	if o.SecurityGroupIDs = v; o.SecurityGroupIDs == nil {
 		o.nullFields = append(o.nullFields, "SecurityGroupIDs")
 	}
