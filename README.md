@@ -2,28 +2,31 @@
 
 The official Spotinst SDK for the Go programming language.
 
-You can view Spotinst API docs [here](http://help.spotinst.com/api/).
+* [Installation](https://github.com/spotinst/spotinst-sdk-go#installation)
+* [Authentication](https://github.com/spotinst/spotinst-sdk-go#authentication)
+* [Complete SDK Example](https://github.com/spotinst/spotinst-sdk-go#complete-sdk-example)
+* [Documentation](https://github.com/spotinst/spotinst-sdk-go#documentation)
+* [Examples](https://github.com/spotinst/spotinst-sdk-go#examples)
+* [Getting Help](https://github.com/spotinst/spotinst-sdk-go#getting-help)
+* [Community](https://github.com/spotinst/spotinst-sdk-go#community)
+* [Contributing](https://github.com/spotinst/spotinst-sdk-go#contributing)
+* [License](https://github.com/spotinst/spotinst-sdk-go#license)
 
-## Installing
+## Installation
 
-If you are using Go 1.5 with the `GO15VENDOREXPERIMENT=1` vendoring flag, or 1.6 and higher you can use the following command to retrieve the SDK. The SDK's non-testing dependencies will be included and are vendored in the `vendor` folder.
+The best way to get started working with the SDK is to use go get to add the SDK to your Go Workspace or application using Go modules.
 
-    go get -u github.com/spotinst/spotinst-sdk-go
+```
+go get -u github.com/spotinst/spotinst-sdk-go
+```
 
-Otherwise if your Go environment does not have vendoring support enabled, or you do not want to include the vendored SDK's dependencies you can use the following command to retrieve the SDK and its non-testing dependencies using `go get`.
+Without Go Modules, or in a GOPATH with Go 1.11 or 1.12 use the /... suffix on the go get to retrieve all of the SDK's dependencies.
 
-    go get -u github.com/spotinst/spotinst-sdk-go/spotinst/...
-    go get -u github.com/spotinst/spotinst-sdk-go/service/...
+```
+go get -u github.com/spotinst/spotinst-sdk-go/...
+```
 
-If you're looking to retrieve just the SDK without any dependencies use the following command.
-
-    go get -d github.com/spotinst/spotinst-sdk-go/
-
-These two processes will still include the `vendor` folder and it should be deleted if its not going to be used by your environment.
-
-    rm -rf $GOPATH/src/github.com/spotinst/spotinst-sdk-go/vendor
-
-### Authentication
+## Authentication
 
 Set a `ChainProvider` that will search for a provider which returns credentials.
 
@@ -115,6 +118,22 @@ For a comprehensive documentation, check out the [API documentation](http://api.
 
 For a list of examples, check out the [examples](https://github.com/spotinst/spotinst-sdk-go/tree/master/examples) directory.
 
+## Getting Help
+
+We use GitHub issues for tracking bugs and feature requests. Please use these community resources for getting help:
+
+* Ask a question on [Stack Overflow](https://stackoverflow.com/) and tag it with [spotinst-sdk-go](https://stackoverflow.com/questions/tagged/spotinst-sdk-go/).
+* Join our Spotinst community on [Slack](http://slack.spotinst.com/).
+* Open an [issue](https://github.com/spotinst/spotinst-sdk-go/issues/new/choose/).
+
+## Community
+
+* [Slack](http://slack.spotinst.com/)
+* [Twitter](https://twitter.com/spotinst/)
+
 ## Contributing
 
-We love pull requests! Please see the [contribution guidelines](CONTRIBUTING.md).
+Please see the [contribution guidelines](.github/CONTRIBUTING.md).
+
+## License
+Code is licensed under the [Apache License 2.0](LICENSE).
