@@ -63,10 +63,10 @@ type MangedInstance struct {
 	Name        *string      `json:"name,omitempty"`
 	Description *string      `json:"description,omitempty"`
 	Region      *string      `json:"region,omitempty"`
+	Strategy    *Strategy    `json:"strategy,omitempty"`
 	Persistence *Persistence `json:"persistence,omitempty"`
 	HealthCheck *healthCheck `json:"healthCheck,omitempty"`
 	Compute     *Compute     `json:"compute,omitempty"`
-	Strategy    *Strategy    `json:"strategy,omitempty"`
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
 
@@ -155,13 +155,13 @@ type InstanceTypes struct {
 }
 
 type Strategy struct {
-	DrainingTimeout          *int          `json:"drainingTimeout,omitempty"`
 	lifeCycle                *string       `json:"lifeCycle,omitempty"`
-	UtilizeReservedInstances *bool         `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool         `json:"fallbackToOd,omitempty"`
-	RevertToSpot             *RevertToSpot `json:"revertToSpot,omitempty"`
 	Orientation              *string       `json:"orientation,omitempty"`
+	DrainingTimeout          *int          `json:"drainingTimeout,omitempty"`
+	FallbackToOnDemand       *bool         `json:"fallbackToOd,omitempty"`
+	UtilizeReservedInstances *bool         `json:"utilizeReservedInstances,omitempty"`
 	OptimizationWindows      []string      `json:"optimizationWindows,omitempty"`
+	RevertToSpot             *RevertToSpot `json:"revertToSpot,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -193,9 +193,9 @@ type Task struct {
 }
 
 type Persistence struct {
-	PersistBlockDevices *bool   `json:"shouldPersistPrivateIp,omitempty"`
-	PersistRootDevice   *bool   `json:"shouldPersistBlockDevices,omitempty"`
-	PersistPrivateIp    *bool   `json:"shouldPersistRootDevice,omitempty"`
+	PersistBlockDevices *bool   `json:"shouldPersistBlockDevices,omitempty"`
+	PersistRootDevice   *bool   `json:"shouldPersistRootDevice,omitempty"`
+	PersistPrivateIp    *bool   `json:"shouldPersistPrivateIp,omitempty"`
 	BlockDevicesMode    *string `json:"blockDevicesMode,omitempty"`
 
 	forceSendFields []string
@@ -265,55 +265,53 @@ type LoadBalancer struct {
 }
 
 ///////////
-type ListGroupsInput struct{}
+type ListMangedInstancesInput struct{}
 
-type ListGroupsOutput struct {
-	Groups []*MangedInstance `json:"groups,omitempty"`
+type ListMangedInstancesOutput struct {
+	MangedInstances []*MangedInstance `json:"mangedInstances,omitempty"`
 }
-type CreateGroupInput struct {
-	Group *MangedInstance `json:"group,omitempty"`
+type CreateMangedInstanceInput struct {
+	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
 }
-type CreateGroupOutput struct {
-	Group *MangedInstance `json:"group,omitempty"`
+type CreateMangedInstanceOutput struct {
+	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
 }
-type ReadGroupInput struct {
-	GroupID *string `json:"groupId,omitempty"`
+type ReadMangedInstanceInput struct {
+	MangedInstanceID *string `json:"mangedInstanceId,omitempty"`
 }
-type ReadGroupOutput struct {
-	Group *MangedInstance `json:"group,omitempty"`
+type ReadMangedInstanceOutput struct {
+	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
 }
-type UpdateGroupInput struct {
-	Group                *MangedInstance `json:"group,omitempty"`
+type UpdateMangedInstanceInput struct {
+	MangedInstance       *MangedInstance `json:"mangedInstance,omitempty"`
 	ShouldResumeStateful *bool           `json:"-"`
 	AutoApplyTags        *bool           `json:"-"`
 }
-type UpdateGroupOutput struct {
-	Group *MangedInstance `json:"group,omitempty"`
+type UpdateMangedInstanceOutput struct {
+	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
 }
-type DeleteGroupInput struct {
-	GroupID *string `json:"groupId,omitempty"`
+type DeleteMangedInstanceInput struct {
+	MangedInstanceID *string `json:"mangedInstanceId,omitempty"`
 }
 
-type DeleteGroupOutput struct{}
+type DeleteMangedInstanceOutput struct{}
 
-/// todo need to add func
-
-func groupsFromHttpResponse(resp *http.Response) ([]*MangedInstance, error) {
+func MangedInstancesFromHttpResponse(resp *http.Response) ([]*MangedInstance, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return groupsFromJSON(body)
+	return MangedInstancesFromJSON(body)
 }
 
-func groupFromJSON(in []byte) (*MangedInstance, error) {
+func MangedInstanceFromJSON(in []byte) (*MangedInstance, error) {
 	b := new(MangedInstance)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
-func groupsFromJSON(in []byte) ([]*MangedInstance, error) {
+func MangedInstancesFromJSON(in []byte) ([]*MangedInstance, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
@@ -323,7 +321,7 @@ func groupsFromJSON(in []byte) ([]*MangedInstance, error) {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := groupFromJSON(rb)
+		b, err := MangedInstanceFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -332,7 +330,7 @@ func groupsFromJSON(in []byte) ([]*MangedInstance, error) {
 	return out, nil
 }
 
-func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGroupsOutput, error) {
+func (s *ServiceOp) List(ctx context.Context, input *ListMangedInstancesInput) (*ListMangedInstancesOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/aws/ec2/managedInstance") //todo change the path
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -340,15 +338,15 @@ func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGrou
 	}
 	defer resp.Body.Close()
 
-	gs, err := groupsFromHttpResponse(resp)
+	gs, err := MangedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ListGroupsOutput{Groups: gs}, nil
+	return &ListMangedInstancesOutput{MangedInstances: gs}, nil
 }
 
-func (s *ServiceOp) Create(ctx context.Context, input *CreateGroupInput) (*CreateGroupOutput, error) {
+func (s *ServiceOp) Create(ctx context.Context, input *CreateMangedInstanceInput) (*CreateMangedInstanceOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/aws/ec2/managedInstance") //todo change the path
 	r.Obj = input
 
@@ -358,22 +356,22 @@ func (s *ServiceOp) Create(ctx context.Context, input *CreateGroupInput) (*Creat
 	}
 	defer resp.Body.Close()
 
-	gs, err := groupsFromHttpResponse(resp)
+	gs, err := MangedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(CreateGroupOutput)
+	output := new(CreateMangedInstanceOutput)
 	if len(gs) > 0 {
-		output.Group = gs[0]
+		output.MangedInstance = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) Read(ctx context.Context, input *ReadGroupInput) (*ReadGroupOutput, error) {
+func (s *ServiceOp) Read(ctx context.Context, input *ReadMangedInstanceInput) (*ReadMangedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance{managedInstance}", uritemplates.Values{ ///todo change the path
-		"managedInstance": spotinst.StringValue(input.GroupID),
+		"managedInstance": spotinst.StringValue(input.MangedInstanceID),
 	})
 	if err != nil {
 		return nil, err
@@ -386,29 +384,29 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadGroupInput) (*ReadGroup
 	}
 	defer resp.Body.Close()
 
-	gs, err := groupsFromHttpResponse(resp)
+	gs, err := MangedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(ReadGroupOutput)
+	output := new(ReadMangedInstanceOutput)
 	if len(gs) > 0 {
-		output.Group = gs[0]
+		output.MangedInstance = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) Update(ctx context.Context, input *UpdateGroupInput) (*UpdateGroupOutput, error) {
+func (s *ServiceOp) Update(ctx context.Context, input *UpdateMangedInstanceInput) (*UpdateMangedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstance}", uritemplates.Values{ //todo change the path
-		"managedInstance": spotinst.StringValue(input.Group.ID),
+		"managedInstance": spotinst.StringValue(input.MangedInstance.ID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do NOT need the ID anymore, so let's drop it.
-	input.Group.ID = nil
+	input.MangedInstance.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
@@ -424,21 +422,21 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateGroupInput) (*Updat
 	}
 	defer resp.Body.Close()
 
-	gs, err := groupsFromHttpResponse(resp)
+	gs, err := MangedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(UpdateGroupOutput)
+	output := new(UpdateMangedInstanceOutput)
 	if len(gs) > 0 {
-		output.Group = gs[0]
+		output.MangedInstance = gs[0]
 	}
 
 	return output, nil
 }
-func (s *ServiceOp) Delete(ctx context.Context, input *DeleteGroupInput) (*DeleteGroupOutput, error) {
+func (s *ServiceOp) Delete(ctx context.Context, input *DeleteMangedInstanceInput) (*DeleteMangedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstance}", uritemplates.Values{ // todo need to change the path
-		"managedInstance": spotinst.StringValue(input.GroupID),
+		"managedInstance": spotinst.StringValue(input.MangedInstanceID),
 	})
 	if err != nil {
 		return nil, err
@@ -452,7 +450,7 @@ func (s *ServiceOp) Delete(ctx context.Context, input *DeleteGroupInput) (*Delet
 	}
 	defer resp.Body.Close()
 
-	return &DeleteGroupOutput{}, nil
+	return &DeleteMangedInstanceOutput{}, nil
 }
 
 ///////////
