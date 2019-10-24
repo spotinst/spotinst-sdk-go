@@ -1065,8 +1065,8 @@ func (o *Persistence) SetShouldPersistRootDevice(v *bool) *Persistence {
 	return o
 }
 
-func (o *Persistence) SetShouldPersistBlockDevices(v *string) *Persistence {
-	if o.BlockDevicesMode = v; o.BlockDevicesMode == nil {
+func (o *Persistence) SetShouldPersistBlockDevices(v *bool) *Persistence {
+	if o.PersistBlockDevices = v; o.PersistBlockDevices == nil {
 		o.nullFields = append(o.nullFields, "persistBlockDevices")
 	}
 	return o
