@@ -65,7 +65,7 @@ type MangedInstance struct {
 	Region      *string      `json:"region,omitempty"`
 	Strategy    *Strategy    `json:"strategy,omitempty"`
 	Persistence *Persistence `json:"persistence,omitempty"`
-	HealthCheck *healthCheck `json:"healthCheck,omitempty"`
+	HealthCheck *HealthCheck `json:"healthCheck,omitempty"`
 	Compute     *Compute     `json:"compute,omitempty"`
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
 	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
@@ -96,7 +96,7 @@ type Compute struct {
 	ElasticIP           *string              `json:"elasticIps,omitempty"`
 	PrivateIP           *string              `json:"privateIps,omitempty"`
 	SubnetIDs           []string             `json:"subnetIds,omitempty"`
-	vpcId               *string              `json:"vpcId,omitempty"`
+	VpcId               *string              `json:"vpcId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -155,7 +155,7 @@ type InstanceTypes struct {
 }
 
 type Strategy struct {
-	lifeCycle                *string       `json:"lifeCycle,omitempty"`
+	LifeCycle                *string       `json:"lifeCycle,omitempty"`
 	Orientation              *string       `json:"orientation,omitempty"`
 	DrainingTimeout          *int          `json:"drainingTimeout,omitempty"`
 	FallbackToOnDemand       *bool         `json:"fallbackToOd,omitempty"`
@@ -202,7 +202,7 @@ type Persistence struct {
 	nullFields      []string
 }
 
-type healthCheck struct {
+type HealthCheck struct {
 	HealthCheckType                               *string `json:"healthCheckType,omitempty"`
 	HealthCheckGracePeriod                        *int    `json:"healthCheckGracePeriod,omitempty"`
 	HealthCheckUnhealthyDurationBeforeReplacement *int    `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
@@ -331,7 +331,7 @@ func MangedInstancesFromJSON(in []byte) ([]*MangedInstance, error) {
 }
 
 func (s *ServiceOp) List(ctx context.Context, input *ListMangedInstancesInput) (*ListMangedInstancesOutput, error) {
-	r := client.NewRequest(http.MethodGet, "/aws/ec2/managedInstance") //todo change the path
+	r := client.NewRequest(http.MethodGet, "/aws/ec2/managedInstance")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
@@ -347,7 +347,7 @@ func (s *ServiceOp) List(ctx context.Context, input *ListMangedInstancesInput) (
 }
 
 func (s *ServiceOp) Create(ctx context.Context, input *CreateMangedInstanceInput) (*CreateMangedInstanceOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/aws/ec2/managedInstance") //todo change the path
+	r := client.NewRequest(http.MethodPost, "/aws/ec2/managedInstance")
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -370,7 +370,7 @@ func (s *ServiceOp) Create(ctx context.Context, input *CreateMangedInstanceInput
 }
 
 func (s *ServiceOp) Read(ctx context.Context, input *ReadMangedInstanceInput) (*ReadMangedInstanceOutput, error) {
-	path, err := uritemplates.Expand("/aws/ec2/managedInstance{managedInstance}", uritemplates.Values{ ///todo change the path
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance{managedInstance}", uritemplates.Values{
 		"managedInstance": spotinst.StringValue(input.MangedInstanceID),
 	})
 	if err != nil {
@@ -398,7 +398,7 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadMangedInstanceInput) (*
 }
 
 func (s *ServiceOp) Update(ctx context.Context, input *UpdateMangedInstanceInput) (*UpdateMangedInstanceOutput, error) {
-	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstance}", uritemplates.Values{ //todo change the path
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstance}", uritemplates.Values{
 		"managedInstance": spotinst.StringValue(input.MangedInstance.ID),
 	})
 	if err != nil {
@@ -524,7 +524,7 @@ func (o *MangedInstance) SetPersistence(v *Persistence) *MangedInstance {
 	return o
 }
 
-func (o *MangedInstance) SetHealthCheck(v *healthCheck) *MangedInstance {
+func (o *MangedInstance) SetHealthCheck(v *HealthCheck) *MangedInstance {
 	if o.HealthCheck = v; o.HealthCheck == nil {
 		o.nullFields = append(o.nullFields, "healthCheck")
 	}
@@ -1002,34 +1002,34 @@ func (o *InstanceTypes) SetTypesn(v []string) *InstanceTypes {
 // endregion
 // region healthCheck
 
-func (o healthCheck) MarshalJSON() ([]byte, error) {
-	type noMethod healthCheck
+func (o HealthCheck) MarshalJSON() ([]byte, error) {
+	type noMethod HealthCheck
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *healthCheck) SetGracePeriod(v *int) *healthCheck {
+func (o *HealthCheck) SetGracePeriod(v *int) *HealthCheck {
 	if o.HealthCheckGracePeriod = v; o.HealthCheckGracePeriod == nil {
 		o.nullFields = append(o.nullFields, "gracePeriod")
 	}
 	return o
 }
 
-func (o *healthCheck) SetunhealthyDuration(v *int) *healthCheck {
+func (o *HealthCheck) SetunhealthyDuration(v *int) *HealthCheck {
 	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
 		o.nullFields = append(o.nullFields, "unhealthyDuration")
 	}
 	return o
 }
 
-func (o *healthCheck) SetType(v *string) *healthCheck {
+func (o *HealthCheck) SetType(v *string) *HealthCheck {
 	if o.HealthCheckType = v; o.HealthCheckType == nil {
 		o.nullFields = append(o.nullFields, "type")
 	}
 	return o
 }
 
-func (o *healthCheck) SetAutoHealing(v *bool) *healthCheck {
+func (o *HealthCheck) SetAutoHealing(v *bool) *HealthCheck {
 	if o.AutoHealing = v; o.AutoHealing == nil {
 		o.nullFields = append(o.nullFields, "autoHealing")
 	}
@@ -1125,7 +1125,7 @@ func (o *Strategy) SetOrientation(v *string) *Strategy {
 }
 
 func (o *Strategy) SetLifeCycle(v *string) *Strategy {
-	if o.lifeCycle = v; o.lifeCycle == nil {
+	if o.LifeCycle = v; o.LifeCycle == nil {
 		o.nullFields = append(o.nullFields, "lifeCycle")
 	}
 	return o
