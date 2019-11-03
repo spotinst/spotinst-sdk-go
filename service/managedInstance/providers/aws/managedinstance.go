@@ -204,10 +204,10 @@ type Persistence struct {
 }
 
 type HealthCheck struct {
-	HealthCheckType                               *string `json:"healthCheckType,omitempty"`
-	HealthCheckGracePeriod                        *int    `json:"healthCheckGracePeriod,omitempty"`
-	HealthCheckUnhealthyDurationBeforeReplacement *int    `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
-	AutoHealing                                   *bool   `json:"autoHealing,omitempty"`
+	HealthCheckType   *string `json:"healthCheckType,omitempty"`
+	GracePeriod       *int    `json:"healthCheckGracePeriod,omitempty"`
+	UnhealthyDuration *int    `json:"unhealthyDuration,omitempty"`
+	AutoHealing       *bool   `json:"autoHealing,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -435,7 +435,7 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInpu
 }
 
 func (s *ServiceOp) Delete(ctx context.Context, input *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error) {
-	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{ // todo need to change the path
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
 		"managedInstance": spotinst.StringValue(input.ManagedInstanceID),
 	})
 	if err != nil {
@@ -1034,15 +1034,15 @@ func (o HealthCheck) MarshalJSON() ([]byte, error) {
 }
 
 func (o *HealthCheck) SetGracePeriod(v *int) *HealthCheck {
-	if o.HealthCheckGracePeriod = v; o.HealthCheckGracePeriod == nil {
-		o.nullFields = append(o.nullFields, "HealthCheckGracePeriod")
+	if o.GracePeriod = v; o.GracePeriod == nil {
+		o.nullFields = append(o.nullFields, "GracePeriod")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetUnhealthyDuration(v *int) *HealthCheck {
-	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
-		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
+	if o.UnhealthyDuration = v; o.UnhealthyDuration == nil {
+		o.nullFields = append(o.nullFields, "UnhealthyDuration")
 	}
 	return o
 }
