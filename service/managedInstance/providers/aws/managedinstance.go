@@ -370,7 +370,7 @@ func (s *ServiceOp) Create(ctx context.Context, input *CreateManagedInstanceInpu
 
 func (s *ServiceOp) Read(ctx context.Context, input *ReadManagedInstanceInput) (*ReadManagedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
-		"managedInstance": spotinst.StringValue(input.ManagedInstanceID),
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
 	})
 	if err != nil {
 		return nil, err
@@ -398,7 +398,7 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadManagedInstanceInput) (
 
 func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInput) (*UpdateMangedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
-		"managedInstance": spotinst.StringValue(input.ManagedInstance.ID),
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstance.ID),
 	})
 	if err != nil {
 		return nil, err
@@ -436,7 +436,7 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInpu
 
 func (s *ServiceOp) Delete(ctx context.Context, input *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
-		"managedInstance": spotinst.StringValue(input.ManagedInstanceID),
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
 	})
 	if err != nil {
 		return nil, err
