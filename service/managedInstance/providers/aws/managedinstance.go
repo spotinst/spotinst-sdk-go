@@ -54,21 +54,21 @@ var ProductValue = map[string]Product{
 	"SUSE Linux (Amazon VPC)": ProductSUSELinuxVPC,
 }
 
-//func (p Product) String() string {
-//	return ProductName[p]
-//}
+func (p Product) String() string {
+	return ProductName[p]
+}
 
-type MangedInstance struct {
+type ManagedInstance struct {
 	ID          *string      `json:"id,omitempty"`
 	Name        *string      `json:"name,omitempty"`
 	Description *string      `json:"description,omitempty"`
 	Region      *string      `json:"region,omitempty"`
 	Strategy    *Strategy    `json:"strategy,omitempty"`
+	Compute     *Compute     `json:"compute,omitempty"`
 	Persistence *Persistence `json:"persistence,omitempty"`
 	HealthCheck *HealthCheck `json:"healthCheck,omitempty"`
-	Compute     *Compute     `json:"compute,omitempty"`
 	Scheduling  *Scheduling  `json:"scheduling,omitempty"`
-	Integration *Integration `json:"thirdPartiesIntegration,omitempty"`
+	Integration *Integration `json:"integrations,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -92,6 +92,7 @@ type MangedInstance struct {
 }
 
 type Compute struct {
+	Product             *string              `json:"product,omitempty"`
 	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
 	ElasticIP           *string              `json:"elasticIps,omitempty"`
 	PrivateIP           *string              `json:"privateIps,omitempty"`
@@ -147,8 +148,8 @@ type IAMInstanceProfile struct {
 }
 
 type InstanceTypes struct {
-	preferredType *string  `json:"preferredType,omitempty"`
-	types         []string `json:"types,omitempty"`
+	PreferredType *string  `json:"preferredType,omitempty"`
+	Types         []string `json:"types,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -193,9 +194,9 @@ type Task struct {
 }
 
 type Persistence struct {
-	PersistBlockDevices *bool   `json:"shouldPersistBlockDevices,omitempty"`
-	PersistRootDevice   *bool   `json:"shouldPersistRootDevice,omitempty"`
-	PersistPrivateIp    *bool   `json:"shouldPersistPrivateIp,omitempty"`
+	PersistBlockDevices *bool   `json:"persistBlockDevices,omitempty"`
+	PersistRootDevice   *bool   `json:"persistRootDevice,omitempty"`
+	PersistPrivateIp    *bool   `json:"persistPrivateIp,omitempty"`
 	BlockDevicesMode    *string `json:"blockDevicesMode,omitempty"`
 
 	forceSendFields []string
@@ -264,64 +265,62 @@ type LoadBalancer struct {
 	nullFields      []string
 }
 
-///////////
 type ListMangedInstancesInput struct{}
 
 type ListMangedInstancesOutput struct {
-	MangedInstances []*MangedInstance `json:"mangedInstances,omitempty"`
+	MangedInstances []*ManagedInstance `json:"managedInstances,omitempty"`
 }
-type CreateMangedInstanceInput struct {
-	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
+type CreateManagedInstanceInput struct {
+	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
-type CreateMangedInstanceOutput struct {
-	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
+type CreateManagedInstanceOutput struct {
+	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
-type ReadMangedInstanceInput struct {
-	MangedInstanceID *string `json:"mangedInstanceId,omitempty"`
+type ReadManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
 }
-type ReadMangedInstanceOutput struct {
-	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
+type ReadManagedInstanceOutput struct {
+	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
-type UpdateMangedInstanceInput struct {
-	MangedInstance       *MangedInstance `json:"mangedInstance,omitempty"`
-	ShouldResumeStateful *bool           `json:"-"`
-	AutoApplyTags        *bool           `json:"-"`
+type UpdateManagedInstanceInput struct {
+	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
+	AutoApplyTags   *bool            `json:"-"`
 }
 type UpdateMangedInstanceOutput struct {
-	MangedInstance *MangedInstance `json:"mangedInstance,omitempty"`
+	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
-type DeleteMangedInstanceInput struct {
-	MangedInstanceID *string `json:"mangedInstanceId,omitempty"`
+type DeleteManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
 }
 
-type DeleteMangedInstanceOutput struct{}
+type DeleteManagedInstanceOutput struct{}
 
-func MangedInstancesFromHttpResponse(resp *http.Response) ([]*MangedInstance, error) {
+func MangedInstancesFromHttpResponse(resp *http.Response) ([]*ManagedInstance, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return MangedInstancesFromJSON(body)
+	return ManagedInstancesFromJSON(body)
 }
 
-func MangedInstanceFromJSON(in []byte) (*MangedInstance, error) {
-	b := new(MangedInstance)
+func ManagedInstanceFromJSON(in []byte) (*ManagedInstance, error) {
+	b := new(ManagedInstance)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
-func MangedInstancesFromJSON(in []byte) ([]*MangedInstance, error) {
+func ManagedInstancesFromJSON(in []byte) ([]*ManagedInstance, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*MangedInstance, len(rw.Response.Items))
+	out := make([]*ManagedInstance, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := MangedInstanceFromJSON(rb)
+		b, err := ManagedInstanceFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -346,7 +345,7 @@ func (s *ServiceOp) List(ctx context.Context, input *ListMangedInstancesInput) (
 	return &ListMangedInstancesOutput{MangedInstances: gs}, nil
 }
 
-func (s *ServiceOp) Create(ctx context.Context, input *CreateMangedInstanceInput) (*CreateMangedInstanceOutput, error) {
+func (s *ServiceOp) Create(ctx context.Context, input *CreateManagedInstanceInput) (*CreateManagedInstanceOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/aws/ec2/managedInstance")
 	r.Obj = input
 
@@ -361,17 +360,17 @@ func (s *ServiceOp) Create(ctx context.Context, input *CreateMangedInstanceInput
 		return nil, err
 	}
 
-	output := new(CreateMangedInstanceOutput)
+	output := new(CreateManagedInstanceOutput)
 	if len(gs) > 0 {
-		output.MangedInstance = gs[0]
+		output.ManagedInstance = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) Read(ctx context.Context, input *ReadMangedInstanceInput) (*ReadMangedInstanceOutput, error) {
-	path, err := uritemplates.Expand("/aws/ec2/managedInstance{managedInstance}", uritemplates.Values{
-		"managedInstance": spotinst.StringValue(input.MangedInstanceID),
+func (s *ServiceOp) Read(ctx context.Context, input *ReadManagedInstanceInput) (*ReadManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
+		"managedInstance": spotinst.StringValue(input.ManagedInstanceID),
 	})
 	if err != nil {
 		return nil, err
@@ -389,24 +388,24 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadMangedInstanceInput) (*
 		return nil, err
 	}
 
-	output := new(ReadMangedInstanceOutput)
+	output := new(ReadManagedInstanceOutput)
 	if len(gs) > 0 {
-		output.MangedInstance = gs[0]
+		output.ManagedInstance = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) Update(ctx context.Context, input *UpdateMangedInstanceInput) (*UpdateMangedInstanceOutput, error) {
-	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstance}", uritemplates.Values{
-		"managedInstance": spotinst.StringValue(input.MangedInstance.ID),
+func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInput) (*UpdateMangedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
+		"managedInstance": spotinst.StringValue(input.ManagedInstance.ID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do NOT need the ID anymore, so let's drop it.
-	input.MangedInstance.ID = nil
+	input.ManagedInstance.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
@@ -429,14 +428,15 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateMangedInstanceInput
 
 	output := new(UpdateMangedInstanceOutput)
 	if len(gs) > 0 {
-		output.MangedInstance = gs[0]
+		output.ManagedInstance = gs[0]
 	}
 
 	return output, nil
 }
-func (s *ServiceOp) Delete(ctx context.Context, input *DeleteMangedInstanceInput) (*DeleteMangedInstanceOutput, error) {
-	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstance}", uritemplates.Values{ // todo need to change the path
-		"managedInstance": spotinst.StringValue(input.MangedInstanceID),
+
+func (s *ServiceOp) Delete(ctx context.Context, input *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{ // todo need to change the path
+		"managedInstance": spotinst.StringValue(input.ManagedInstanceID),
 	})
 	if err != nil {
 		return nil, err
@@ -450,81 +450,81 @@ func (s *ServiceOp) Delete(ctx context.Context, input *DeleteMangedInstanceInput
 	}
 	defer resp.Body.Close()
 
-	return &DeleteMangedInstanceOutput{}, nil
+	return &DeleteManagedInstanceOutput{}, nil
 }
 
-///////////
-// region Group
+// region Managed Instance
 
-func (o MangedInstance) MarshalJSON() ([]byte, error) {
-	type noMethod MangedInstance
+func (o ManagedInstance) MarshalJSON() ([]byte, error) {
+	type noMethod ManagedInstance
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *MangedInstance) SetId(v *string) *MangedInstance {
+func (o *ManagedInstance) SetId(v *string) *ManagedInstance {
 	if o.ID = v; o.ID == nil {
 		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetName(v *string) *MangedInstance {
+func (o *ManagedInstance) SetName(v *string) *ManagedInstance {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetDescription(v *string) *MangedInstance {
+func (o *ManagedInstance) SetDescription(v *string) *ManagedInstance {
 	if o.Description = v; o.Description == nil {
 		o.nullFields = append(o.nullFields, "Description")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetRegion(v *string) *MangedInstance {
+func (o *ManagedInstance) SetRegion(v *string) *ManagedInstance {
 	if o.Region = v; o.Region == nil {
 		o.nullFields = append(o.nullFields, "Region")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetCompute(v *Compute) *MangedInstance {
+func (o *ManagedInstance) SetStrategy(v *Strategy) *ManagedInstance {
+	if o.Strategy = v; o.Strategy == nil {
+		o.nullFields = append(o.nullFields, "Strategy")
+	}
+	return o
+}
+
+func (o *ManagedInstance) SetCompute(v *Compute) *ManagedInstance {
 	if o.Compute = v; o.Compute == nil {
 		o.nullFields = append(o.nullFields, "Compute")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetStrategy(v *Strategy) *MangedInstance {
-	if o.Strategy = v; o.Strategy == nil {
-		o.nullFields = append(o.nullFields, "Strategy")
-	}
-	return o
-}
-func (o *MangedInstance) SetScheduling(v *Scheduling) *MangedInstance {
+func (o *ManagedInstance) SetScheduling(v *Scheduling) *ManagedInstance {
 	if o.Scheduling = v; o.Scheduling == nil {
 		o.nullFields = append(o.nullFields, "Scheduling")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetIntegration(v *Integration) *MangedInstance {
+func (o *ManagedInstance) SetIntegration(v *Integration) *ManagedInstance {
 	if o.Integration = v; o.Integration == nil {
 		o.nullFields = append(o.nullFields, "Integration")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetPersistence(v *Persistence) *MangedInstance {
+func (o *ManagedInstance) SetPersistence(v *Persistence) *ManagedInstance {
 	if o.Persistence = v; o.Persistence == nil {
 		o.nullFields = append(o.nullFields, "persistence")
 	}
 	return o
 }
 
-func (o *MangedInstance) SetHealthCheck(v *HealthCheck) *MangedInstance {
+func (o *ManagedInstance) SetHealthCheck(v *HealthCheck) *ManagedInstance {
 	if o.HealthCheck = v; o.HealthCheck == nil {
 		o.nullFields = append(o.nullFields, "healthCheck")
 	}
@@ -532,6 +532,7 @@ func (o *MangedInstance) SetHealthCheck(v *HealthCheck) *MangedInstance {
 }
 
 // endregion
+
 // region Integration
 
 func (o Integration) MarshalJSON() ([]byte, error) {
@@ -549,12 +550,13 @@ func (o *Integration) SetRoute53(v *Route53Integration) *Integration {
 
 func (o *Integration) SetLoadBalancersConfig(v *LoadBalancersConfig) *Integration {
 	if o.LoadBalancersConfig = v; o.LoadBalancersConfig == nil {
-		o.nullFields = append(o.nullFields, "loadBalancersConfig")
+		o.nullFields = append(o.nullFields, "LoadBalancersConfig")
 	}
 	return o
 }
 
 // endregion
+
 // region Route53
 
 func (o Route53Integration) MarshalJSON() ([]byte, error) {
@@ -571,6 +573,7 @@ func (o *Route53Integration) SetDomains(v []*Domain) *Route53Integration {
 }
 
 // endregion
+
 // region Domain
 
 func (o Domain) MarshalJSON() ([]byte, error) {
@@ -601,6 +604,7 @@ func (o *Domain) SetRecordSets(v []*RecordSet) *Domain {
 }
 
 // endregion
+
 // region RecordSets
 
 func (o RecordSet) MarshalJSON() ([]byte, error) {
@@ -624,6 +628,7 @@ func (o *RecordSet) SetName(v *string) *RecordSet {
 }
 
 // endregion
+
 // region loadBalancersConfig
 
 func (o LoadBalancersConfig) MarshalJSON() ([]byte, error) {
@@ -783,6 +788,13 @@ func (o *Compute) SetSubnetIDs(v []string) *Compute {
 	}
 	return o
 }
+func (o *Compute) SetProduct(v *string) *Compute {
+	if o.Product = v; o.Product == nil {
+		o.nullFields = append(o.nullFields, "product")
+	}
+
+	return o
+}
 
 func (o *Compute) SetPrivateIP(v *string) *Compute {
 	if o.PrivateIP = v; o.PrivateIP == nil {
@@ -800,13 +812,14 @@ func (o *Compute) SetElasticIP(v *string) *Compute {
 }
 
 func (o *Compute) SetVpcId(v *string) *Compute {
-	if o.vpcId = v; o.vpcId == nil {
+	if o.VpcId = v; o.VpcId == nil {
 		o.nullFields = append(o.nullFields, "vpcId")
 	}
 	return o
 }
 
 // endregion
+
 // region LaunchSpecification
 
 func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
@@ -907,6 +920,7 @@ func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
 }
 
 // endregion
+
 // region NetworkInterface
 
 func (o NetworkInterface) MarshalJSON() ([]byte, error) {
@@ -918,6 +932,13 @@ func (o NetworkInterface) MarshalJSON() ([]byte, error) {
 func (o *NetworkInterface) SetDeviceIndex(v *int) *NetworkInterface {
 	if o.DeviceIndex = v; o.DeviceIndex == nil {
 		o.nullFields = append(o.nullFields, "DeviceIndex")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetId(v *string) *NetworkInterface {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
 	}
 	return o
 }
@@ -954,6 +975,7 @@ func (o *CreditSpecification) SetCPUCredits(v *string) *CreditSpecification {
 }
 
 // endregion
+
 // region iamRole
 
 func (o IAMInstanceProfile) MarshalJSON() ([]byte, error) {
@@ -977,7 +999,8 @@ func (o *IAMInstanceProfile) SetArn(v *string) *IAMInstanceProfile {
 }
 
 // endregion
-// region iamRole
+
+// region instance types
 
 func (o InstanceTypes) MarshalJSON() ([]byte, error) {
 	type noMethod InstanceTypes
@@ -986,20 +1009,22 @@ func (o InstanceTypes) MarshalJSON() ([]byte, error) {
 }
 
 func (o *InstanceTypes) SetPreferredType(v *string) *InstanceTypes {
-	if o.preferredType = v; o.preferredType == nil {
-		o.nullFields = append(o.nullFields, "preferredType")
+	if o.PreferredType = v; o.PreferredType == nil {
+		o.nullFields = append(o.nullFields, "PreferredType")
 	}
 	return o
 }
 
-func (o *InstanceTypes) SetTypesn(v []string) *InstanceTypes {
-	if o.types = v; o.types == nil {
-		o.nullFields = append(o.nullFields, "types")
+func (o *InstanceTypes) SetInstanceTypes(v []string) *InstanceTypes {
+	o.Types = v
+	if o.Types == nil {
+		o.nullFields = append(o.nullFields, "InTypes")
 	}
 	return o
 }
 
 // endregion
+
 // region healthCheck
 
 func (o HealthCheck) MarshalJSON() ([]byte, error) {
@@ -1010,28 +1035,28 @@ func (o HealthCheck) MarshalJSON() ([]byte, error) {
 
 func (o *HealthCheck) SetGracePeriod(v *int) *HealthCheck {
 	if o.HealthCheckGracePeriod = v; o.HealthCheckGracePeriod == nil {
-		o.nullFields = append(o.nullFields, "gracePeriod")
+		o.nullFields = append(o.nullFields, "HealthCheckGracePeriod")
 	}
 	return o
 }
 
-func (o *HealthCheck) SetunhealthyDuration(v *int) *HealthCheck {
+func (o *HealthCheck) SetUnhealthyDuration(v *int) *HealthCheck {
 	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
-		o.nullFields = append(o.nullFields, "unhealthyDuration")
+		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetType(v *string) *HealthCheck {
 	if o.HealthCheckType = v; o.HealthCheckType == nil {
-		o.nullFields = append(o.nullFields, "type")
+		o.nullFields = append(o.nullFields, "Type")
 	}
 	return o
 }
 
 func (o *HealthCheck) SetAutoHealing(v *bool) *HealthCheck {
 	if o.AutoHealing = v; o.AutoHealing == nil {
-		o.nullFields = append(o.nullFields, "autoHealing")
+		o.nullFields = append(o.nullFields, "AutoHealing")
 	}
 	return o
 }
@@ -1053,21 +1078,21 @@ func (o *Persistence) SetBlockDevicesMode(v *string) *Persistence {
 
 func (o *Persistence) SetPersistPrivateIP(v *bool) *Persistence {
 	if o.PersistPrivateIp = v; o.PersistPrivateIp == nil {
-		o.nullFields = append(o.nullFields, "persistPrivateIp")
+		o.nullFields = append(o.nullFields, "PersistPrivateIp")
 	}
 	return o
 }
 
 func (o *Persistence) SetShouldPersistRootDevice(v *bool) *Persistence {
 	if o.PersistRootDevice = v; o.PersistRootDevice == nil {
-		o.nullFields = append(o.nullFields, "persistRootDevice")
+		o.nullFields = append(o.nullFields, "PersistRootDevice")
 	}
 	return o
 }
 
 func (o *Persistence) SetShouldPersistBlockDevices(v *bool) *Persistence {
 	if o.PersistBlockDevices = v; o.PersistBlockDevices == nil {
-		o.nullFields = append(o.nullFields, "persistBlockDevices")
+		o.nullFields = append(o.nullFields, "PersistBlockDevices")
 	}
 	return o
 }
@@ -1119,19 +1144,20 @@ func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
 
 func (o *Strategy) SetOrientation(v *string) *Strategy {
 	if o.Orientation = v; o.Orientation == nil {
-		o.nullFields = append(o.nullFields, "orientation")
+		o.nullFields = append(o.nullFields, "Orientation")
 	}
 	return o
 }
 
 func (o *Strategy) SetLifeCycle(v *string) *Strategy {
 	if o.LifeCycle = v; o.LifeCycle == nil {
-		o.nullFields = append(o.nullFields, "lifeCycle")
+		o.nullFields = append(o.nullFields, "LifeCycle")
 	}
 	return o
 }
 
 // endregion
+
 // region RevertToSpot
 
 func (o RevertToSpot) MarshalJSON() ([]byte, error) {

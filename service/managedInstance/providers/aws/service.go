@@ -12,10 +12,10 @@ import (
 // for details on the service.
 type Service interface {
 	List(context.Context, *ListMangedInstancesInput) (*ListMangedInstancesOutput, error)
-	Create(context.Context, *CreateMangedInstanceInput) (*CreateMangedInstanceOutput, error)
-	Read(context.Context, *ReadMangedInstanceInput) (*ReadMangedInstanceOutput, error)
-	Update(context.Context, *UpdateMangedInstanceInput) (*UpdateMangedInstanceOutput, error)
-	Delete(context.Context, *DeleteMangedInstanceInput) (*DeleteMangedInstanceOutput, error)
+	Create(context.Context, *CreateManagedInstanceInput) (*CreateManagedInstanceOutput, error)
+	Read(context.Context, *ReadManagedInstanceInput) (*ReadManagedInstanceOutput, error)
+	Update(context.Context, *UpdateManagedInstanceInput) (*UpdateMangedInstanceOutput, error)
+	Delete(context.Context, *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error)
 }
 
 type ServiceOp struct {
