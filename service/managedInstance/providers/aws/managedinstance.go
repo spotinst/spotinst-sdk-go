@@ -205,7 +205,7 @@ type Persistence struct {
 
 type HealthCheck struct {
 	HealthCheckType   *string `json:"healthCheckType,omitempty"`
-	GracePeriod       *int    `json:"GracePeriod,omitempty"`
+	GracePeriod       *int    `json:"gracePeriod,omitempty"`
 	UnhealthyDuration *int    `json:"unhealthyDuration,omitempty"`
 	AutoHealing       *bool   `json:"autoHealing,omitempty"`
 
