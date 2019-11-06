@@ -94,8 +94,8 @@ type ManagedInstance struct {
 type Compute struct {
 	Product             *string              `json:"product,omitempty"`
 	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
-	ElasticIP           *string              `json:"elasticIps,omitempty"`
-	PrivateIP           *string              `json:"privateIps,omitempty"`
+	ElasticIP           *string              `json:"elasticIp,omitempty"`
+	PrivateIP           *string              `json:"privateIp,omitempty"`
 	SubnetIDs           []string             `json:"subnetIds,omitempty"`
 	VpcId               *string              `json:"vpcId,omitempty"`
 
@@ -204,7 +204,7 @@ type Persistence struct {
 }
 
 type HealthCheck struct {
-	HealthCheckType   *string `json:"healthCheckType,omitempty"`
+	HealthCheckType   *string `json:"type,omitempty"`
 	GracePeriod       *int    `json:"gracePeriod,omitempty"`
 	UnhealthyDuration *int    `json:"unhealthyDuration,omitempty"`
 	AutoHealing       *bool   `json:"autoHealing,omitempty"`
@@ -265,10 +265,10 @@ type LoadBalancer struct {
 	nullFields      []string
 }
 
-type ListMangedInstancesInput struct{}
+type ListManagedInstancesInput struct{}
 
-type ListMangedInstancesOutput struct {
-	MangedInstances []*ManagedInstance `json:"managedInstances,omitempty"`
+type ListManagedInstancesOutput struct {
+	ManagedInstances []*ManagedInstance `json:"managedInstances,omitempty"`
 }
 type CreateManagedInstanceInput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
@@ -286,7 +286,7 @@ type UpdateManagedInstanceInput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 	AutoApplyTags   *bool            `json:"-"`
 }
-type UpdateMangedInstanceOutput struct {
+type UpdateManagedInstanceOutput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
 type DeleteManagedInstanceInput struct {
@@ -295,7 +295,7 @@ type DeleteManagedInstanceInput struct {
 
 type DeleteManagedInstanceOutput struct{}
 
-func MangedInstancesFromHttpResponse(resp *http.Response) ([]*ManagedInstance, error) {
+func ManagedInstancesFromHttpResponse(resp *http.Response) ([]*ManagedInstance, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -329,7 +329,7 @@ func ManagedInstancesFromJSON(in []byte) ([]*ManagedInstance, error) {
 	return out, nil
 }
 
-func (s *ServiceOp) List(ctx context.Context, input *ListMangedInstancesInput) (*ListMangedInstancesOutput, error) {
+func (s *ServiceOp) List(ctx context.Context, input *ListManagedInstancesInput) (*ListManagedInstancesOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/aws/ec2/managedInstance")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -337,12 +337,12 @@ func (s *ServiceOp) List(ctx context.Context, input *ListMangedInstancesInput) (
 	}
 	defer resp.Body.Close()
 
-	gs, err := MangedInstancesFromHttpResponse(resp)
+	gs, err := ManagedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ListMangedInstancesOutput{MangedInstances: gs}, nil
+	return &ListManagedInstancesOutput{ManagedInstances: gs}, nil
 }
 
 func (s *ServiceOp) Create(ctx context.Context, input *CreateManagedInstanceInput) (*CreateManagedInstanceOutput, error) {
@@ -355,7 +355,7 @@ func (s *ServiceOp) Create(ctx context.Context, input *CreateManagedInstanceInpu
 	}
 	defer resp.Body.Close()
 
-	gs, err := MangedInstancesFromHttpResponse(resp)
+	gs, err := ManagedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -383,7 +383,7 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadManagedInstanceInput) (
 	}
 	defer resp.Body.Close()
 
-	gs, err := MangedInstancesFromHttpResponse(resp)
+	gs, err := ManagedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
@@ -396,7 +396,7 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadManagedInstanceInput) (
 	return output, nil
 }
 
-func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInput) (*UpdateMangedInstanceOutput, error) {
+func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInput) (*UpdateManagedInstanceOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}", uritemplates.Values{
 		"managedInstanceId": spotinst.StringValue(input.ManagedInstance.ID),
 	})
@@ -421,12 +421,12 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateManagedInstanceInpu
 	}
 	defer resp.Body.Close()
 
-	gs, err := MangedInstancesFromHttpResponse(resp)
+	gs, err := ManagedInstancesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(UpdateMangedInstanceOutput)
+	output := new(UpdateManagedInstanceOutput)
 	if len(gs) > 0 {
 		output.ManagedInstance = gs[0]
 	}
@@ -798,7 +798,7 @@ func (o *Compute) SetProduct(v *string) *Compute {
 
 func (o *Compute) SetPrivateIP(v *string) *Compute {
 	if o.PrivateIP = v; o.PrivateIP == nil {
-		o.nullFields = append(o.nullFields, "PrivateIP")
+		o.nullFields = append(o.nullFields, "PrivateIp")
 	}
 
 	return o
@@ -806,7 +806,7 @@ func (o *Compute) SetPrivateIP(v *string) *Compute {
 
 func (o *Compute) SetElasticIP(v *string) *Compute {
 	if o.ElasticIP = v; o.ElasticIP == nil {
-		o.nullFields = append(o.nullFields, "ElasticIPs")
+		o.nullFields = append(o.nullFields, "ElasticIp")
 	}
 	return o
 }
@@ -1047,7 +1047,7 @@ func (o *HealthCheck) SetUnhealthyDuration(v *int) *HealthCheck {
 	return o
 }
 
-func (o *HealthCheck) SetType(v *string) *HealthCheck {
+func (o *HealthCheck) SetHealthCheckType(v *string) *HealthCheck {
 	if o.HealthCheckType = v; o.HealthCheckType == nil {
 		o.nullFields = append(o.nullFields, "Type")
 	}

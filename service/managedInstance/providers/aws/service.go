@@ -11,10 +11,10 @@ import (
 // endpoints of the Spotinst API. See this package's package overview docs
 // for details on the service.
 type Service interface {
-	List(context.Context, *ListMangedInstancesInput) (*ListMangedInstancesOutput, error)
+	List(context.Context, *ListManagedInstancesInput) (*ListManagedInstancesOutput, error)
 	Create(context.Context, *CreateManagedInstanceInput) (*CreateManagedInstanceOutput, error)
 	Read(context.Context, *ReadManagedInstanceInput) (*ReadManagedInstanceOutput, error)
-	Update(context.Context, *UpdateManagedInstanceInput) (*UpdateMangedInstanceOutput, error)
+	Update(context.Context, *UpdateManagedInstanceInput) (*UpdateManagedInstanceOutput, error)
 	Delete(context.Context, *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error)
 }
 
