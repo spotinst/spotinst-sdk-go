@@ -62,7 +62,6 @@ type ECSAutoScale struct {
 
 type ECSAutoScaleHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
-	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
 
@@ -394,13 +393,6 @@ func (o ECSAutoScaleHeadroom) MarshalJSON() ([]byte, error) {
 func (o *ECSAutoScaleHeadroom) SetCPUPerUnit(v *int) *ECSAutoScaleHeadroom {
 	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "CPUPerUnit")
-	}
-	return o
-}
-
-func (o *ECSAutoScaleHeadroom) SetGPUPerUnit(v *int) *ECSAutoScaleHeadroom {
-	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
-		o.nullFields = append(o.nullFields, "GPUPerUnit")
 	}
 	return o
 }
