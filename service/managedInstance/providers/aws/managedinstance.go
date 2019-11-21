@@ -253,13 +253,13 @@ type LoadBalancersConfig struct {
 }
 
 type LoadBalancer struct {
-	Name          *string `json:"name,omitempty"`
-	Arn           *string `json:"arn,omitempty"`
-	Type          *string `json:"type,omitempty"`
-	BalancerID    *string `json:"balancerId,omitempty"`
-	TargetSetID   *string `json:"targetSetId,omitempty"`
-	ZoneAwareness *bool   `json:"azAwareness,omitempty"`
-	AutoWeight    *bool   `json:"autoWeight,omitempty"`
+	Name        *string `json:"name,omitempty"`
+	Arn         *string `json:"arn,omitempty"`
+	Type        *string `json:"type,omitempty"`
+	BalancerID  *string `json:"balancerId,omitempty"`
+	TargetSetID *string `json:"targetSetId,omitempty"`
+	AzAwareness *bool   `json:"azAwareness,omitempty"`
+	AutoWeight  *bool   `json:"autoWeight,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -270,25 +270,32 @@ type ListManagedInstancesInput struct{}
 type ListManagedInstancesOutput struct {
 	ManagedInstances []*ManagedInstance `json:"managedInstances,omitempty"`
 }
+
 type CreateManagedInstanceInput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
+
 type CreateManagedInstanceOutput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
+
 type ReadManagedInstanceInput struct {
 	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
 }
+
 type ReadManagedInstanceOutput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
+
 type UpdateManagedInstanceInput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 	AutoApplyTags   *bool            `json:"-"`
 }
+
 type UpdateManagedInstanceOutput struct {
 	ManagedInstance *ManagedInstance `json:"managedInstance,omitempty"`
 }
+
 type DeleteManagedInstanceInput struct {
 	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
 }
@@ -310,6 +317,7 @@ func ManagedInstanceFromJSON(in []byte) (*ManagedInstance, error) {
 	}
 	return b, nil
 }
+
 func ManagedInstancesFromJSON(in []byte) ([]*ManagedInstance, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
@@ -690,8 +698,8 @@ func (o *LoadBalancer) SetTargetSetId(v *string) *LoadBalancer {
 }
 
 func (o *LoadBalancer) SetZoneAwareness(v *bool) *LoadBalancer {
-	if o.ZoneAwareness = v; o.ZoneAwareness == nil {
-		o.nullFields = append(o.nullFields, "ZoneAwareness")
+	if o.AzAwareness = v; o.AzAwareness == nil {
+		o.nullFields = append(o.nullFields, "AzAwareness")
 	}
 	return o
 }
@@ -1060,6 +1068,8 @@ func (o *HealthCheck) SetAutoHealing(v *bool) *HealthCheck {
 	}
 	return o
 }
+
+//endregion
 
 // region Persistence
 
