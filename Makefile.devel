@@ -1,8 +1,18 @@
-GO           := GO111MODULE=on go
-GO_RELEASER  := goreleaser
-GIT_DIRTY    := $(shell test -n "`git status --porcelain`" && echo ".CHANGES" || true)
-VERSION_FILE := spotinst/version.go
-VERSION      := $$(grep 'SDKVersion =' $(VERSION_FILE) | awk '{print $$4}' | xargs)
+GO         := GO111MODULE=on go
+DOCKER     := docker
+GORELEASER := goreleaser/goreleaser:v0.123-cgo
+GIT_DIRTY  := $(shell test -n "`git status --porcelain`" && echo ".CHANGES" || true)
+VERSION    := $$(grep 'SDKVersion =' spotinst/version.go | awk '{print $$4}' | xargs)
+
+define goreleaser_release
+	$(DOCKER) run --rm --privileged \
+		-v $(PWD):/go/src/github.com/spotinst/spotinst-sdk-go \
+		-v /var/run/docker.sock:/var/run/docker.sock \
+		-w /go/src/github.com/spotinst/spotinst-sdk-go \
+		-e GITHUB_TOKEN=$(GITHUB_TOKEN) \
+		-e VERSION=$(VERSION) \
+		$(GORELEASER) release --rm-dist
+endef
 
 ##@ Development
 
@@ -11,11 +21,11 @@ release: test ## Release a new version
 ifneq ($(strip $(GIT_DIRTY)),)
 	@echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
 else
-	read -p "Bump version: $(VERSION) → " version; sed -i "s/$(VERSION)/$$version/g" $(VERSION_FILE) && \
+	@read -p "Bump version: $(VERSION) → " version; sed -i "s/$(VERSION)/$$version/g" spotinst/version.go && \
 	git commit -am "release: v$(VERSION)" && \
 	git tag v$(VERSION) && \
 	git push && \
-	VERSION=$(VERSION) $(GO_RELEASER) release --rm-dist
+	$(call goreleaser_release)
 endif
 
 .PHONY: test

@@ -5,6 +5,22 @@ before:
   hooks:
     - go generate ./...
 
+builds:
+  -
+    # Path to main.go file or main package.
+    main: ./pseudo/main.go
+
+    # Name template for the binary final name.
+    binary: pseudo
+
+    # GOOS list to build for.
+    goos:
+      - linux
+
+    # GOARCH list to build for.
+    goarch:
+      - amd64
+
 checksum:
   # Checksums file name template.
   name_template: '{{ .ProjectName }}-checksums.txt'
