@@ -1,0 +1,42 @@
+project_name: spotinst-sdk-go
+
+before:
+  # Global hooks.
+  hooks:
+    - go generate ./...
+
+checksum:
+  # Checksums file name template.
+  name_template: '{{ .ProjectName }}-checksums.txt'
+
+changelog:
+  sort: asc
+
+  # Commit messages matching the regexp listed here will be removed from the changelog.
+  filters:
+    exclude:
+      - '^doc:'
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch
+
+archives:
+    # Archive name template.
+  - name_template: '{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Env.VERSION }}'
+
+    # Additional files/globs you want to add to the archive.
+    files:
+      - none*
+
+release:
+  # If set to true, will not auto-upload any artifacts to GitHub.
+  disable: false
+
+  # If set to true, will not auto-publish the release.
+  draft: false
+
+  # If set to auto, will mark the release as not ready for production in case there
+  # is an indicator for this in the tag e.g. v1.0.0-rc1. If set to true, will mark
+  # the release as not ready for production.
+  prerelease: auto
