@@ -5,9 +5,8 @@ GIT_DIRTY  := $(shell test -n "`git status --porcelain`" && echo ".CHANGES" || t
 VERSION    := $$(grep 'SDKVersion =' spotinst/version.go | awk '{print $$4}' | xargs)
 
 define goreleaser_release
-	$(DOCKER) run --rm --privileged \
+	$(DOCKER) run --rm \
 		-v $(PWD):/go/src/github.com/spotinst/spotinst-sdk-go \
-		-v /var/run/docker.sock:/var/run/docker.sock \
 		-w /go/src/github.com/spotinst/spotinst-sdk-go \
 		-e GITHUB_TOKEN=$(GITHUB_TOKEN) \
 		-e VERSION=$(VERSION) \
