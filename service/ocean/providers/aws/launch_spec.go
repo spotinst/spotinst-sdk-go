@@ -24,6 +24,7 @@ type LaunchSpec struct {
 	Labels             []*Label            `json:"labels,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
 	AutoScale          *AutoScale          `json:"autoScale,omitempty"`
+	SubnetIDs          []string            `json:"subnetIds,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -353,6 +354,13 @@ func (o *LaunchSpec) SetTaints(v []*Taint) *LaunchSpec {
 func (o *LaunchSpec) SetAutoScale(v *AutoScale) *LaunchSpec {
 	if o.AutoScale = v; o.AutoScale == nil {
 		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetSubnetIDs(v []string) *LaunchSpec {
+	if o.SubnetIDs = v; o.SubnetIDs == nil {
+		o.nullFields = append(o.nullFields, "SubnetIDs")
 	}
 	return o
 }
