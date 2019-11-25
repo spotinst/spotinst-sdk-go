@@ -17,7 +17,7 @@ endef
 ##@ Development
 
 .PHONY: release
-release: test ## Release a new version
+release: fmt ## Release a new version
 ifneq ($(strip $(GIT_DIRTY)),)
 	@echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
 else
@@ -52,11 +52,15 @@ vendor: ## Make vendored copy of all dependencies
 	@$(GO) mod vendor
 
 .PHONY: fmt
-fmt: ## Format all .go files
-	@$(GO) fmt ./...
+fmt: ## Format the code
+	@gofmt -s -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+
+.PHONY: imports
+imports: ## Optimize imports
+	@goimports -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
 
 .PHONY: vet
-vet: ## Analyze all .go files
+vet: ## Analyze the code
 	@$(GO) vet ./...
 
 .PHONY: clean
