@@ -145,7 +145,8 @@ type AutoScalerResourceLimits struct {
 }
 
 type AutoScalerDown struct {
-	EvaluationPeriods *int `json:"evaluationPeriods,omitempty"`
+	EvaluationPeriods      *int `json:"evaluationPeriods,omitempty"`
+	MaxScaleDownPercentage *int `json:"maxScaleDownPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -866,6 +867,13 @@ func (o AutoScalerDown) MarshalJSON() ([]byte, error) {
 func (o *AutoScalerDown) SetEvaluationPeriods(v *int) *AutoScalerDown {
 	if o.EvaluationPeriods = v; o.EvaluationPeriods == nil {
 		o.nullFields = append(o.nullFields, "EvaluationPeriods")
+	}
+	return o
+}
+
+func (o *AutoScalerDown) SetMaxScaleDownPercentage(v *int) *AutoScalerDown {
+	if o.MaxScaleDownPercentage = v; o.MaxScaleDownPercentage == nil {
+		o.nullFields = append(o.nullFields, "MaxScaleDownPercentage")
 	}
 	return o
 }
