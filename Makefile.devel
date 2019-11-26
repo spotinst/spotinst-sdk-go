@@ -5,9 +5,8 @@ GIT_DIRTY  := $(shell test -n "`git status --porcelain`" && echo ".CHANGES" || t
 VERSION    := $$(grep 'SDKVersion =' spotinst/version.go | awk '{print $$4}' | xargs)
 
 define goreleaser_release
-	$(DOCKER) run --rm --privileged \
+	$(DOCKER) run --rm \
 		-v $(PWD):/go/src/github.com/spotinst/spotinst-sdk-go \
-		-v /var/run/docker.sock:/var/run/docker.sock \
 		-w /go/src/github.com/spotinst/spotinst-sdk-go \
 		-e GITHUB_TOKEN=$(GITHUB_TOKEN) \
 		-e VERSION=$(VERSION) \
@@ -17,7 +16,7 @@ endef
 ##@ Development
 
 .PHONY: release
-release: test ## Release a new version
+release: fmt ## Release a new version
 ifneq ($(strip $(GIT_DIRTY)),)
 	@echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
 else
@@ -52,11 +51,15 @@ vendor: ## Make vendored copy of all dependencies
 	@$(GO) mod vendor
 
 .PHONY: fmt
-fmt: ## Format all .go files
-	@$(GO) fmt ./...
+fmt: ## Format the code
+	@gofmt -s -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+
+.PHONY: imports
+imports: ## Optimize imports
+	@goimports -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
 
 .PHONY: vet
-vet: ## Analyze all .go files
+vet: ## Analyze the code
 	@$(GO) vet ./...
 
 .PHONY: clean
