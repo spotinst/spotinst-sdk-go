@@ -25,6 +25,7 @@ type LaunchSpec struct {
 	Labels             []*Label            `json:"labels,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
 	AutoScale          *AutoScale          `json:"autoScale,omitempty"`
+	RootVolumeSize     *int                `json:"rootVolumeSize,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -333,6 +334,13 @@ func (o *LaunchSpec) SetSecurityGroupIDs(v []string) *LaunchSpec {
 func (o *LaunchSpec) SetSubnetIDs(v []string) *LaunchSpec {
 	if o.SubnetIDs = v; o.SubnetIDs == nil {
 		o.nullFields = append(o.nullFields, "SubnetIDs")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetRootVolumeSize(v *int) *LaunchSpec {
+	if o.RootVolumeSize = v; o.RootVolumeSize == nil {
+		o.nullFields = append(o.nullFields, "RootVolumeSize")
 	}
 	return o
 }
