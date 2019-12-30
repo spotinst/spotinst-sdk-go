@@ -19,13 +19,13 @@ type LaunchSpec struct {
 	OceanID            *string             `json:"oceanId,omitempty"`
 	ImageID            *string             `json:"imageId,omitempty"`
 	UserData           *string             `json:"userData,omitempty"`
+	RootVolumeSize     *int                `json:"rootVolumeSize,omitempty"`
 	SecurityGroupIDs   []string            `json:"securityGroupIds,omitempty"`
 	SubnetIDs          []string            `json:"subnetIds,omitempty"`
 	IAMInstanceProfile *IAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
 	Labels             []*Label            `json:"labels,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
 	AutoScale          *AutoScale          `json:"autoScale,omitempty"`
-	RootVolumeSize     *int                `json:"rootVolumeSize,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
