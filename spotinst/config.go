@@ -28,17 +28,20 @@ type Config struct {
 	BaseURL *url.URL
 
 	// The HTTP Client the SDK's API clients will use to invoke HTTP requests.
-	// The SDK defaults to a DefaultHTTPClient allowing API clients to create
-	// copies of the HTTP client for service specific customizations.
+	//
+	// Defaults to a DefaultHTTPClient allowing API clients to create copies of
+	// the HTTP client for service specific customizations.
 	HTTPClient *http.Client
 
-	// The credentials object to use when signing requests. Defaults to a chain
-	// of credential providers to search for credentials in environment variables
-	// and shared credential file.
+	// The credentials object to use when signing requests.
+	//
+	// Defaults to a chain of credential providers to search for credentials in
+	// environment variables and shared credential file.
 	Credentials *credentials.Credentials
 
-	// The logger writer interface to write logging messages to. Defaults to
-	// standard out.
+	// The logger writer interface to write logging messages to.
+	//
+	// Defaults to standard out.
 	Logger log.Logger
 
 	// The User-Agent and Content-Type HTTP headers to set when invoking HTTP
@@ -60,6 +63,11 @@ func DefaultUserAgent() string {
 		runtime.Version(),
 		runtime.GOOS,
 		runtime.GOARCH).String()
+}
+
+// DefaultContentType returns the default Content-Type header.
+func DefaultContentType() string {
+	return defaultContentType
 }
 
 // DefaultTransport returns a new http.Transport with similar default values to
@@ -97,7 +105,7 @@ func DefaultConfig() *Config {
 		BaseURL:     DefaultBaseURL(),
 		HTTPClient:  DefaultHTTPClient(),
 		UserAgent:   DefaultUserAgent(),
-		ContentType: defaultContentType,
+		ContentType: DefaultContentType(),
 		Credentials: credentials.NewChainCredentials(
 			new(credentials.EnvProvider),
 			new(credentials.FileProvider),
