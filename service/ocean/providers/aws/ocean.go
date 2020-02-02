@@ -21,7 +21,7 @@ type Cluster struct {
 	Strategy            *Strategy   `json:"strategy,omitempty"`
 	Capacity            *Capacity   `json:"capacity,omitempty"`
 	Compute             *Compute    `json:"compute,omitempty"`
-	scheduling          *Scheduling `json:"scheduling,omitempty"`
+	Scheduling          *Scheduling `json:"scheduling,omitempty"`
 	AutoScaler          *AutoScaler `json:"autoScaler,omitempty"`
 
 	// Read-only fields.
@@ -74,7 +74,8 @@ type Compute struct {
 }
 
 type Scheduling struct {
-	shutdownHours *ShutdownHours `json:"shutdownHours,omitempty"`
+	ShutdownHours *ShutdownHours `json:"shutdownHours,omitempty"`
+	Tasks         []*Task        `json:"tasks,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -83,6 +84,15 @@ type Scheduling struct {
 type ShutdownHours struct {
 	IsEnabled   *bool    `json:"isEnabled,omitempty"`
 	TimeWindows []string `json:"timeWindows,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Task struct {
+	IsEnabled      *bool   `json:"isEnabled,omitempty"`
+	CronExpression *string `json:"cronExpression,omitempty"`
+	TaskType       *string `json:"taskType,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -513,7 +523,7 @@ func (o *Cluster) SetCompute(v *Compute) *Cluster {
 }
 
 func (o *Cluster) SetScheduling(v *Scheduling) *Cluster {
-	if o.scheduling = v; o.scheduling == nil {
+	if o.Scheduling = v; o.Scheduling == nil {
 		o.nullFields = append(o.nullFields, "Scheduling")
 	}
 	return o
@@ -637,15 +647,53 @@ func (o Scheduling) MarshalJSON() ([]byte, error) {
 }
 
 func (o *Scheduling) SetShutdownHours(v *ShutdownHours) *Scheduling {
-	if o.shutdownHours = v; o.shutdownHours == nil {
+	if o.ShutdownHours = v; o.ShutdownHours == nil {
 		o.nullFields = append(o.nullFields, "ShutdownHours")
+	}
+	return o
+}
+
+func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
+	if o.Tasks = v; o.Tasks == nil {
+		o.nullFields = append(o.nullFields, "tasks")
 	}
 	return o
 }
 
 // endregion
 
-// region Scheduling
+// region ShutdownHours
+
+func (o Task) MarshalJSON() ([]byte, error) {
+	type noMethod Task
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Task) SetIsEnabled(v *bool) *Task {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *Task) SetTaskType(v *string) *Task {
+	if o.TaskType = v; o.TaskType == nil {
+		o.nullFields = append(o.nullFields, "taskType")
+	}
+	return o
+}
+
+func (o *Task) SetCronExpression(v *string) *Task {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "cronExpression")
+	}
+	return o
+}
+
+// endregion
+
+// region ShutdownHours
 
 func (o ShutdownHours) MarshalJSON() ([]byte, error) {
 	type noMethod ShutdownHours
