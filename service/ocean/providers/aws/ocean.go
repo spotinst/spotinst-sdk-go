@@ -662,7 +662,7 @@ func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
 
 // endregion
 
-// region ShutdownHours
+// region Tasks
 
 func (o Task) MarshalJSON() ([]byte, error) {
 	type noMethod Task
