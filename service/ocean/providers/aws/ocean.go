@@ -91,8 +91,8 @@ type ShutdownHours struct {
 
 type Task struct {
 	IsEnabled      *bool   `json:"isEnabled,omitempty"`
+	Type           *string `json:"taskType,omitempty"`
 	CronExpression *string `json:"cronExpression,omitempty"`
-	TaskType       *string `json:"taskType,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -655,7 +655,7 @@ func (o *Scheduling) SetShutdownHours(v *ShutdownHours) *Scheduling {
 
 func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
 	if o.Tasks = v; o.Tasks == nil {
-		o.nullFields = append(o.nullFields, "tasks")
+		o.nullFields = append(o.nullFields, "Tasks")
 	}
 	return o
 }
@@ -677,16 +677,16 @@ func (o *Task) SetIsEnabled(v *bool) *Task {
 	return o
 }
 
-func (o *Task) SetTaskType(v *string) *Task {
-	if o.TaskType = v; o.TaskType == nil {
-		o.nullFields = append(o.nullFields, "taskType")
+func (o *Task) SetType(v *string) *Task {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
 	}
 	return o
 }
 
 func (o *Task) SetCronExpression(v *string) *Task {
 	if o.CronExpression = v; o.CronExpression == nil {
-		o.nullFields = append(o.nullFields, "cronExpression")
+		o.nullFields = append(o.nullFields, "CronExpression")
 	}
 	return o
 }
