@@ -11,7 +11,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
-//ResourceSuggestion - single resource suggestion from Spot API
+// ResourceSuggestion represents a single resource suggestion.
 type ResourceSuggestion struct {
 	DeploymentName  *string `json:"deploymentName,omitempty"`
 	Namespace       *string `json:"namespace,omitempty"`
@@ -21,34 +21,30 @@ type ResourceSuggestion struct {
 	RequestedMemory *int    `json:"requestedMemory,omitempty"`
 }
 
-//ListResourceSuggestionsInput - Input struct required for getting Spot Right
-//Sizing suggestions for an Ocean cluster
+// ListResourceSuggestionsInput represents the input of `ListResourceSuggestions` function.
 type ListResourceSuggestionsInput struct {
 	OceanID *string `json:"oceanId,omitempty"`
 }
 
-//ListResourceSuggestionsOutput - output struct of suggestion array as Right Sizing
-//API response with array of suggestions per Namespace & Deploymnet
+// ListResourceSuggestionsOutput represents the output of `ListResourceSuggestions` function.
 type ListResourceSuggestionsOutput struct {
 	Suggestions []*ResourceSuggestion `json:"suggestions,omitempty"`
 }
 
 func resourceSuggestionFromJSON(in []byte) (*ResourceSuggestion, error) {
 	b := new(ResourceSuggestion)
-
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
+
 func resourceSuggestionsFromJSON(in []byte) ([]*ResourceSuggestion, error) {
 	var rw client.Response
-
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
 	out := make([]*ResourceSuggestion, len(rw.Response.Items))
-
 	for i, rb := range rw.Response.Items {
 		b, err := resourceSuggestionFromJSON(rb)
 		if err != nil {
@@ -67,7 +63,8 @@ func resourceSuggestionsFromHTTPResponse(resp *http.Response) ([]*ResourceSugges
 	return resourceSuggestionsFromJSON(body)
 }
 
-//ListResourceSuggestions - get all right-sizing resource suggestionsfor an Ocean cluster
+// ListResourceSuggestions returns a list of right-sizing resource suggestions
+// for an Ocean cluster.
 func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error) {
 	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{oceanId}/rightSizing/resourceSuggestion", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanID),
@@ -87,5 +84,6 @@ func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListReso
 	if err != nil {
 		return nil, err
 	}
+
 	return &ListResourceSuggestionsOutput{Suggestions: gs}, nil
 }
