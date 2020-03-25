@@ -1157,4 +1157,11 @@ func (o *AutoScalerDown) SetEvaluationPeriods(v *int) *AutoScalerDown {
 	return o
 }
 
+func (o *AutoScalerDown) SetMaxScaleDownPercentage(v *int) *AutoScalerDown {
+	if o.MaxScaleDownPercentage = v; o.MaxScaleDownPercentage == nil {
+		o.nullFields = append(o.nullFields, "MaxScaleDownPercentage")
+	}
+	return o
+}
+
 // endregion
