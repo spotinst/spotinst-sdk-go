@@ -1,16 +1,19 @@
+
 # Spotinst SDK Go
 
 The official Spotinst SDK for the Go programming language.
 
-* [Installation](https://github.com/spotinst/spotinst-sdk-go#installation)
-* [Authentication](https://github.com/spotinst/spotinst-sdk-go#authentication)
-* [Complete SDK Example](https://github.com/spotinst/spotinst-sdk-go#complete-sdk-example)
-* [Documentation](https://github.com/spotinst/spotinst-sdk-go#documentation)
-* [Examples](https://github.com/spotinst/spotinst-sdk-go#examples)
-* [Getting Help](https://github.com/spotinst/spotinst-sdk-go#getting-help)
-* [Community](https://github.com/spotinst/spotinst-sdk-go#community)
-* [Contributing](https://github.com/spotinst/spotinst-sdk-go#contributing)
-* [License](https://github.com/spotinst/spotinst-sdk-go#license)
+## Contents
+
+* [Installation](#installation)
+* [Authentication](#authentication)
+* [Complete SDK Example](#complete-sdk-example)
+* [Documentation](#documentation)
+* [Examples](#examples)
+* [Getting Help](#getting-help)
+* [Community](#community)
+* [Contributing](#contributing)
+* [License](#license)
 
 ## Installation
 
@@ -112,24 +115,24 @@ func main() {
 
 ## Documentation
 
-For a comprehensive documentation, check out the [API documentation](http://api.spotinst.com/).
+For a comprehensive documentation, check out the [API documentation](https://help.spot.io/).
 
 ## Examples
 
-For a list of examples, check out the [examples](https://github.com/spotinst/spotinst-sdk-go/tree/master/examples) directory.
+For a list of examples, check out the [examples](/examples) directory.
 
 ## Getting Help
 
 We use GitHub issues for tracking bugs and feature requests. Please use these community resources for getting help:
 
 * Ask a question on [Stack Overflow](https://stackoverflow.com/) and tag it with [spotinst-sdk-go](https://stackoverflow.com/questions/tagged/spotinst-sdk-go/).
-* Join our Spotinst community on [Slack](http://slack.spotinst.com/).
+* Join our Spotinst community on [Slack](http://slack.spot.io/).
 * Open an [issue](https://github.com/spotinst/spotinst-sdk-go/issues/new/choose/).
 
 ## Community
 
-* [Slack](http://slack.spotinst.com/)
-* [Twitter](https://twitter.com/spotinst/)
+* [Slack](http://slack.spot.io/)
+* [Twitter](https://twitter.com/spot_hq/)
 
 ## Contributing
 

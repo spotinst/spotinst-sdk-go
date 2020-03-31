@@ -6,7 +6,7 @@ If you submit a pull request, please keep the following guidelines in mind:
 2. Types, structs and funcs should be documented.
 3. Tests pass.
 
-All pull requests must be submitted under the Apache 2.0 license and will be reviewed by an SDK team member before being merged in. Accompanying unit tests, where possible, are appreciated.
+All pull requests must be submitted under the Apache 2.0 license and will be reviewed by a Spot team member before being merged in. Accompanying unit tests, where possible, are appreciated.
 
 ## Testing
 
