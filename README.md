@@ -136,4 +136,4 @@ We use GitHub issues for tracking bugs and feature requests. Please use these co
 Please see the [contribution guidelines](.github/CONTRIBUTING.md).
 
 ## License
-Code is licensed under the [Apache License 2.0](LICENSE).
+Code is licensed under the [Apache License 2.0](LICENSE). See [NOTICE.md](NOTICE.md) for complete details, including software and third-party licenses and permissions.
