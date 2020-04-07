@@ -551,7 +551,7 @@ func (o *Scaler) SetTerminationPolicies(v []*TerminationPolicy) *Scaler {
 
 //endregion
 
-// region TerminationPolicies
+// region TerminationPolicy
 
 func (o TerminationPolicy) MarshalJSON() ([]byte, error) {
 	type noMethod TerminationPolicy
