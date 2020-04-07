@@ -568,7 +568,7 @@ func (o *TerminationPolicy) SetStatements(v []*Statement) *TerminationPolicy {
 
 //endregion
 
-// region TerminationPolicies
+// region Statement
 
 func (o Statement) MarshalJSON() ([]byte, error) {
 	type noMethod Statement
