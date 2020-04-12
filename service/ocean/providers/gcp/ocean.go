@@ -971,7 +971,7 @@ func (o *NetworkInterface) SetNetwork(v *string) *NetworkInterface {
 	return o
 }
 
-func (o *NetworkInterface) SetProjectID(v *string) *NetworkInterface {
+func (o *NetworkInterface) SetProjectId(v *string) *NetworkInterface {
 	if o.ProjectID = v; o.ProjectID == nil {
 		o.nullFields = append(o.nullFields, "ProjectID")
 	}
