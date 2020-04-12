@@ -196,6 +196,7 @@ type NetworkInterface struct {
 	AccessConfigs []*AccessConfig `json:"accessConfigs,omitempty"`
 	AliasIPRanges []*AliasIPRange `json:"aliasIpRanges,omitempty"`
 	Network       *string         `json:"network,omitempty"`
+	ProjectID     *string         `json:"projectId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -966,6 +967,13 @@ func (o *NetworkInterface) SetAliasIPRanges(v []*AliasIPRange) *NetworkInterface
 func (o *NetworkInterface) SetNetwork(v *string) *NetworkInterface {
 	if o.Network = v; o.Network == nil {
 		o.nullFields = append(o.nullFields, "Network")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetProjectId(v *string) *NetworkInterface {
+	if o.ProjectID = v; o.ProjectID == nil {
+		o.nullFields = append(o.nullFields, "ProjectID")
 	}
 	return o
 }
