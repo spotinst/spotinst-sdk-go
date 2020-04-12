@@ -266,7 +266,7 @@ type NetworkInterface struct {
 	AccessConfigs []*AccessConfig `json:"accessConfigs,omitempty"`
 	AliasIPRanges []*AliasIPRange `json:"aliasIpRanges,omitempty"`
 	Network       *string         `json:"network,omitempty"`
-	ProjectId     *string         `json:"projectId,omitempty"`
+	ProjectID     *string         `json:"projectId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
