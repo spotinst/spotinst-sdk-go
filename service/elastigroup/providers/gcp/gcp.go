@@ -1556,7 +1556,7 @@ func (o *NetworkInterface) SetNetwork(v *string) *NetworkInterface {
 // SetProjectId sets the project identifier of the network.
 func (o *NetworkInterface) SetProjectId(v *string) *NetworkInterface {
 	if o.ProjectID = v; o.ProjectID == nil {
-		o.nullFields = append(o.nullFields, "subnetwork_project")
+		o.nullFields = append(o.nullFields, "ProjectID")
 	}
 	return o
 }
