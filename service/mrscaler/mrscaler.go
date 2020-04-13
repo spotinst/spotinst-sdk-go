@@ -216,6 +216,7 @@ type InstanceGroup struct {
 	Target           *int                   `json:"target,omitempty"`
 	Capacity         *InstanceGroupCapacity `json:"capacity,omitempty"`
 	LifeCycle        *string                `json:"lifeCycle,omitempty"`
+	Unit             *string                `json:"unit,omitempty"`
 	EBSConfiguration *EBSConfiguration      `json:"ebsConfiguration,omitempty"`
 
 	forceSendFields []string
@@ -1240,6 +1241,13 @@ func (o *InstanceGroup) SetLifeCycle(v *string) *InstanceGroup {
 func (o *InstanceGroup) SetEBSConfiguration(v *EBSConfiguration) *InstanceGroup {
 	if o.EBSConfiguration = v; v == nil {
 		o.nullFields = append(o.nullFields, "EBSConfiguration")
+	}
+	return o
+}
+
+func (o *InstanceGroup) SetUnit(v *string) *InstanceGroup {
+	if o.Unit = v; v == nil {
+		o.nullFields = append(o.nullFields, "Unit")
 	}
 	return o
 }
