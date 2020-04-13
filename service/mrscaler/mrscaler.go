@@ -216,7 +216,6 @@ type InstanceGroup struct {
 	Target           *int                   `json:"target,omitempty"`
 	Capacity         *InstanceGroupCapacity `json:"capacity,omitempty"`
 	LifeCycle        *string                `json:"lifeCycle,omitempty"`
-	Unit             *string                `json:"unit,omitempty"`
 	EBSConfiguration *EBSConfiguration      `json:"ebsConfiguration,omitempty"`
 
 	forceSendFields []string
@@ -224,9 +223,10 @@ type InstanceGroup struct {
 }
 
 type InstanceGroupCapacity struct {
-	Target  *int `json:"target,omitempty"`
-	Minimum *int `json:"minimum,omitempty"`
-	Maximum *int `json:"maximum,omitempty"`
+	Target  *int    `json:"target,omitempty"`
+	Minimum *int    `json:"minimum,omitempty"`
+	Maximum *int    `json:"maximum,omitempty"`
+	Unit    *string `json:"unit,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1245,13 +1245,6 @@ func (o *InstanceGroup) SetEBSConfiguration(v *EBSConfiguration) *InstanceGroup 
 	return o
 }
 
-func (o *InstanceGroup) SetUnit(v *string) *InstanceGroup {
-	if o.Unit = v; v == nil {
-		o.nullFields = append(o.nullFields, "Unit")
-	}
-	return o
-}
-
 //endregion
 
 //region InstanceGroupCapacity
@@ -1278,6 +1271,13 @@ func (o *InstanceGroupCapacity) SetMinimum(v *int) *InstanceGroupCapacity {
 func (o *InstanceGroupCapacity) SetMaximum(v *int) *InstanceGroupCapacity {
 	if o.Maximum = v; v == nil {
 		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+func (o *InstanceGroupCapacity) SetUnit(v *string) *InstanceGroupCapacity {
+	if o.Unit = v; o.Unit == nil {
+		o.nullFields = append(o.nullFields, "Unit")
 	}
 	return o
 }
