@@ -22,6 +22,7 @@ type LaunchSpec struct {
 	RootVolumeSize     *int                `json:"rootVolumeSize,omitempty"`
 	SecurityGroupIDs   []string            `json:"securityGroupIds,omitempty"`
 	SubnetIDs          []string            `json:"subnetIds,omitempty"`
+	ElasticIpPool      *ElasticIpPool      `json:"elasticIpPool,omitempty"`
 	IAMInstanceProfile *IAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
 	Labels             []*Label            `json:"labels,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
@@ -61,6 +62,21 @@ type Taint struct {
 	Key    *string `json:"key,omitempty"`
 	Value  *string `json:"value,omitempty"`
 	Effect *string `json:"effect,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ElasticIpPool struct {
+	TagSelector *TagSelector `json:"tagSelector,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TagSelector struct {
+	TagKey   *string `json:"tagKey,omitempty"`
+	TagValue *string `json:"tagValue,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -370,6 +386,54 @@ func (o *LaunchSpec) SetTaints(v []*Taint) *LaunchSpec {
 func (o *LaunchSpec) SetAutoScale(v *AutoScale) *LaunchSpec {
 	if o.AutoScale = v; o.AutoScale == nil {
 		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetElasticIpPool(v *ElasticIpPool) *LaunchSpec {
+	if o.ElasticIpPool = v; o.ElasticIpPool == nil {
+		o.nullFields = append(o.nullFields, "ElasticIpPool")
+	}
+	return o
+}
+
+// endregion
+
+// region ElasticIpPool
+
+func (o ElasticIpPool) MarshalJSON() ([]byte, error) {
+	type noMethod ElasticIpPool
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ElasticIpPool) SetTagSelector(v *TagSelector) *ElasticIpPool {
+	if o.TagSelector = v; o.TagSelector == nil {
+		o.nullFields = append(o.nullFields, "TagSelector")
+	}
+	return o
+}
+
+// endregion
+
+// region TagSelector
+
+func (o TagSelector) MarshalJSON() ([]byte, error) {
+	type noMethod TagSelector
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TagSelector) SetTagKey(v *string) *TagSelector {
+	if o.TagKey = v; o.TagKey == nil {
+		o.nullFields = append(o.nullFields, "TagKey")
+	}
+	return o
+}
+
+func (o *TagSelector) SetTagValue(v *string) *TagSelector {
+	if o.TagValue = v; o.TagValue == nil {
+		o.nullFields = append(o.nullFields, "TagValue")
 	}
 	return o
 }
