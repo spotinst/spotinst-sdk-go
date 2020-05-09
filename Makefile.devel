@@ -1,6 +1,6 @@
 GO         := GO111MODULE=on go
 DOCKER     := docker
-GORELEASER := goreleaser/goreleaser:v0.123-cgo
+GORELEASER := goreleaser/goreleaser:v0.133-cgo
 GIT_DIRTY  := $(shell test -n "`git status --porcelain`" && echo ".CHANGES" || true)
 VERSION    := $$(grep 'SDKVersion =' spotinst/version.go | awk '{print $$4}' | xargs)
 
