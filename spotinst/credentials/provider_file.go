@@ -29,9 +29,9 @@ var (
 	// credentials from the credentials file.
 	ErrFileCredentialsLoadFailed = errors.New("spotinst: failed to load credentials file")
 
-	// ErrFileCredentialsTokenNotFound is emitted when the loaded credentials
-	// do not contain a valid token.
-	ErrFileCredentialsTokenNotFound = errors.New("spotinst: credentials do not contain token")
+	// ErrFileCredentialsNotFound is emitted when the loaded credentials
+	// are empty.
+	ErrFileCredentialsNotFound = errors.New("spotinst: credentials file or profile is empty")
 )
 
 // DefaultProfile returns the SDK's default profile name to use when loading
@@ -136,8 +136,8 @@ func (p *FileProvider) loadCredentials(profile, filename string) (Value, error) 
 		}
 	}
 
-	if len(value.Token) == 0 {
-		return value, ErrFileCredentialsTokenNotFound
+	if value.IsEmpty() {
+		return value, ErrFileCredentialsNotFound
 	}
 
 	return value, nil
@@ -151,13 +151,33 @@ func (p *FileProvider) loadCredentialsINI(profile, filename string) (Value, erro
 		return value, err
 	}
 
+	value, err = getCredentialsFromINIProfile(profile, config)
+	if err != nil {
+		return value, err
+	}
+
+	// Try to complete missing fields with default profile
+	if profile != DefaultProfile() && !value.IsComplete() {
+		defaultValue, err := getCredentialsFromINIProfile(DefaultProfile(), config)
+		if err == nil {
+			value.Merge(defaultValue)
+		}
+	}
+
+	return value, nil
+}
+
+func getCredentialsFromINIProfile(profile string, config *ini.File) (Value, error) {
+	var value Value
+
 	section, err := config.GetSection(profile)
 	if err != nil {
 		return value, err
 	}
 
-	value.Token = section.Key("token").String()
-	value.Account = section.Key("account").String()
+	if err := section.StrictMapTo(&value); err != nil {
+		return value, err
+	}
 
 	return value, nil
 }

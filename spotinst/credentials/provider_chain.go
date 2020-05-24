@@ -48,23 +48,39 @@ func NewChainCredentials(providers ...Provider) *Credentials {
 // Retrieve returns the credentials value or error if no provider returned
 // without error. If a provider is found it will be cached.
 func (c *ChainProvider) Retrieve() (Value, error) {
+	var value Value
 	var errs errorList
+
 	for _, p := range c.Providers {
-		value, err := p.Retrieve()
+		v, err := p.Retrieve()
 		if err == nil {
-			c.active = p
-			return value, nil
+			value.Merge(v)
+			// active is keep for legacy reasons
+			// and set to the provider providing the token
+			// maybe it can be removed
+			if v.Token != "" && c.active == nil {
+				c.active = p
+			}
+			if value.IsComplete() {
+				return value, nil
+			}
+		} else {
+			errs = append(errs, err)
 		}
-		errs = append(errs, err)
-	}
-	c.active = nil
-
-	err := ErrNoValidProvidersFoundInChain
-	if len(errs) > 0 {
-		err = errs
 	}
 
-	return Value{}, err
+	if value.Token == "" {
+		c.active = nil
+
+		err := ErrNoValidProvidersFoundInChain
+		if len(errs) > 0 {
+			err = errs
+		}
+
+		return Value{}, err
+	}
+
+	return value, nil
 }
 
 func (c *ChainProvider) String() string {

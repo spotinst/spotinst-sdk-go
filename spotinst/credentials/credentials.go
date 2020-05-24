@@ -1,6 +1,7 @@
 package credentials
 
 import (
+	"fmt"
 	"sync"
 )
 
@@ -42,6 +43,12 @@ func (c *Credentials) Get() (Value, error) {
 		creds, err := c.provider.Retrieve()
 		if err != nil {
 			return Value{}, err
+		}
+		if creds.Token == "" {
+			return Value{}, fmt.Errorf(
+				"spotinst: token not found in \"%s\"",
+				creds.ProviderName,
+			)
 		}
 		c.creds = creds
 		c.forceRefresh = false

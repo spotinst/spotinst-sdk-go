@@ -26,7 +26,7 @@ func NewStaticCredentials(token, account string) *Credentials {
 
 // Retrieve returns the credentials or error if the credentials are invalid.
 func (s *StaticProvider) Retrieve() (Value, error) {
-	if s.Token == "" {
+	if s.IsEmpty() {
 		return Value{ProviderName: StaticCredentialsProviderName},
 			ErrStaticCredentialsEmpty
 	}

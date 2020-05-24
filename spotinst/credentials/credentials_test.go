@@ -14,7 +14,7 @@ type mockProvider struct {
 }
 
 func (m *mockProvider) Retrieve() (Value, error) {
-	if m.creds.Token == "" {
+	if m.creds.IsEmpty() {
 		return Value{}, errors.New("spotinst: invalid credentials")
 	}
 
@@ -66,7 +66,7 @@ func TestChainCredentials(t *testing.T) {
 				Account: "account1",
 			},
 		},
-		"multiple_providers_first_invalid": {
+		"multiple_providers_first_no_token": {
 			Providers: []Provider{
 				&mockProvider{
 					creds: Value{
@@ -83,6 +83,26 @@ func TestChainCredentials(t *testing.T) {
 			},
 			Expected: Value{
 				Token:   "token2",
+				Account: "account1",
+			},
+		},
+		"multiple_providers_first_no_account": {
+			Providers: []Provider{
+				&mockProvider{
+					creds: Value{
+						Token:   "token1",
+						Account: "",
+					},
+				},
+				&mockProvider{
+					creds: Value{
+						Token:   "token2",
+						Account: "account2",
+					},
+				},
+			},
+			Expected: Value{
+				Token:   "token1",
 				Account: "account2",
 			},
 		},
@@ -154,6 +174,15 @@ func TestFileCredentials(t *testing.T) {
 				Token:        "partial_credentials_token",
 			},
 		},
+		"valid_ini_profile_partial_credentials_with_default": {
+			Filename: filenameINI,
+			Profile:  "partial_credentials_with_default",
+			Expected: Value{
+				ProviderName: FileCredentialsProviderName,
+				Token:        "default_token",
+				Account:      "partial_credentials_with_default_account",
+			},
+		},
 		"valid_ini_profile_complete_credentials": {
 			Filename: filenameINI,
 			Profile:  "complete_credentials",
@@ -214,13 +243,13 @@ func TestEnvCredentials(t *testing.T) {
 	}{
 		"no_variables": {
 			Env: map[string]string{},
-			Err: errors.New("spotinst: SPOTINST_TOKEN not found in environment"),
+			Err: errors.New("spotinst: SPOTINST_TOKEN and SPOTINST_ACCOUNT not found in environment"),
 		},
 		"only_account": {
 			Env: map[string]string{
 				"SPOTINST_ACCOUNT": "account",
 			},
-			Err: errors.New("spotinst: SPOTINST_TOKEN not found in environment"),
+			Err: errors.New("spotinst: token not found in \"EnvCredentialsProvider\""),
 		},
 		"only_token": {
 			Env: map[string]string{
@@ -284,7 +313,7 @@ func TestStaticCredentials(t *testing.T) {
 		"empty_token": {
 			Account: "account",
 			Token:   "",
-			Err:     errors.New("spotinst: static credentials are empty"),
+			Err:     errors.New("spotinst: token not found in \"StaticCredentialsProvider\""),
 		},
 		"empty_account": {
 			Token: "token",
