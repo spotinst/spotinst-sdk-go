@@ -1,9 +1,12 @@
 package credentials
 
 import (
-	"fmt"
+	"errors"
 	"sync"
 )
+
+// ErrNoValidTokenFound is returned when there is no valid token.
+var ErrNoValidTokenFound = errors.New("spotinst: no valid token found")
 
 // A Credentials provides synchronous safe retrieval of Spotinst credentials.
 // Credentials will cache the credentials value.
@@ -45,10 +48,7 @@ func (c *Credentials) Get() (Value, error) {
 			return Value{}, err
 		}
 		if creds.Token == "" {
-			return Value{}, fmt.Errorf(
-				"spotinst: token not found in \"%s\"",
-				creds.ProviderName,
-			)
+			return Value{ProviderName: creds.ProviderName}, ErrNoValidTokenFound
 		}
 		c.creds = creds
 		c.forceRefresh = false

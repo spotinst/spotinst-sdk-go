@@ -3,14 +3,16 @@ package credentials
 import (
 	"errors"
 	"fmt"
+
+	"github.com/spotinst/spotinst-sdk-go/spotinst/featureflag"
 )
 
-// ErrNoValidProvidersFoundInChain Is returned when there are no valid credentials
+// ErrNoValidProvidersFoundInChain is returned when there are no valid credentials
 // providers in the ChainProvider.
-var ErrNoValidProvidersFoundInChain = errors.New("spotinst: no valid credentials providers in chain")
+var ErrNoValidProvidersFoundInChain = errors.New("spotinst: no valid " +
+	"credentials providers in chain")
 
-// A ChainProvider will search for a provider which returns credentials and cache
-// that provider until Retrieve is called again.
+// A ChainProvider will search for a provider which returns credentials.
 //
 // The ChainProvider provides a way of chaining multiple providers together which
 // will pick the first available using priority order of the Providers in the list.
@@ -34,7 +36,6 @@ var ErrNoValidProvidersFoundInChain = errors.New("spotinst: no valid credentials
 //	)
 type ChainProvider struct {
 	Providers []Provider
-	active    Provider
 }
 
 // NewChainCredentials returns a pointer to a new Credentials object
@@ -46,7 +47,7 @@ func NewChainCredentials(providers ...Provider) *Credentials {
 }
 
 // Retrieve returns the credentials value or error if no provider returned
-// without error. If a provider is found it will be cached.
+// without error.
 func (c *ChainProvider) Retrieve() (Value, error) {
 	var value Value
 	var errs errorList
@@ -54,15 +55,14 @@ func (c *ChainProvider) Retrieve() (Value, error) {
 	for _, p := range c.Providers {
 		v, err := p.Retrieve()
 		if err == nil {
-			value.Merge(v)
-			// active is keep for legacy reasons
-			// and set to the provider providing the token
-			// maybe it can be removed
-			if v.Token != "" && c.active == nil {
-				c.active = p
-			}
-			if value.IsComplete() {
-				return value, nil
+			if featureflag.MergeCredentialsChain.Enabled() {
+				value.Merge(v)
+				if value.IsComplete() {
+					return value, nil
+				}
+			} else {
+				value = v
+				break
 			}
 		} else {
 			errs = append(errs, err)
@@ -70,19 +70,18 @@ func (c *ChainProvider) Retrieve() (Value, error) {
 	}
 
 	if value.Token == "" {
-		c.active = nil
-
 		err := ErrNoValidProvidersFoundInChain
 		if len(errs) > 0 {
 			err = errs
 		}
 
-		return Value{}, err
+		return Value{ProviderName: c.String()}, err
 	}
 
 	return value, nil
 }
 
+// String returns the string representation of the provider.
 func (c *ChainProvider) String() string {
 	var out string
 	for i, provider := range c.Providers {
