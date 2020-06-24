@@ -31,6 +31,7 @@ type ClusterCost struct {
 type Namespace struct {
 	Namespace *string  `json:"namespace,omitempty"`
 	Cost      *float64 `json:"cost,omitempty"`
+	Labels    map[string]string `json:"labels,omitempty"`
 }
 
 type Deployment struct {
