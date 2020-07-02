@@ -2,6 +2,7 @@ package featureflag
 
 import (
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -16,6 +17,9 @@ var (
 // FeatureFlag indicates whether a given feature is enabled or not.
 type FeatureFlag interface {
 	fmt.Stringer
+
+	// Name returns the name of the feature flag.
+	Name() string
 
 	// Enabled returns true if the feature is enabled.
 	Enabled() bool
@@ -42,15 +46,21 @@ func New(name string, enabled bool) FeatureFlag {
 	return ff
 }
 
+// Name returns the name of the feature flag.
+func (f *featureFlag) Name() string { return f.name }
+
 // Enabled returns true if the feature is enabled.
-func (f *featureFlag) Enabled() bool {
-	return f.enabled
-}
+func (f *featureFlag) Enabled() bool { return f.enabled }
 
 // String returns the string representation of the feature flag.
-func (f *featureFlag) String() string {
-	return fmt.Sprintf("%s=%t", f.name, f.enabled)
-}
+func (f *featureFlag) String() string { return fmt.Sprintf("%s=%t", f.name, f.enabled) }
+
+// EnvVar is the name of the environment variable to read feature flags from.
+// The value should be a comma-separated list of K=V flags, while V is optional.
+const EnvVar = "SPOTINST_FEATURE_FLAGS"
+
+// SetFromEnv reads an environment variable and sets features from its value.
+func SetFromEnv() { Set(os.Getenv(EnvVar)) }
 
 // Set parses and stores features from a string like "feature1=true,feature2=false".
 func Set(features string) {

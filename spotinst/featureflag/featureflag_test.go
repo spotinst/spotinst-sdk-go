@@ -1,7 +1,6 @@
 package featureflag
 
 import (
-	"errors"
 	"testing"
 )
 
@@ -14,7 +13,6 @@ func TestFeatureFlags(t *testing.T) {
 	tests := []struct {
 		arg  string
 		want map[string]bool
-		err  error
 	}{
 		{
 			arg:  "",
@@ -34,7 +32,9 @@ func TestFeatureFlags(t *testing.T) {
 		},
 		{
 			arg: "TestAlpha=foo",
-			err: errors.New("invalid value of TestAlpha"),
+			want: map[string]bool{
+				testAlphaGate: false,
+			},
 		},
 		{
 			arg: "TestAlpha=false,TestBeta=true",
