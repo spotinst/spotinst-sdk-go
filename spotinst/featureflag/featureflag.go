@@ -2,7 +2,6 @@ package featureflag
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 	"sync"
@@ -55,13 +54,6 @@ func (f *featureFlag) Enabled() bool { return f.enabled }
 // String returns the string representation of the feature flag.
 func (f *featureFlag) String() string { return fmt.Sprintf("%s=%t", f.name, f.enabled) }
 
-// EnvVar is the name of the environment variable to read feature flags from.
-// The value should be a comma-separated list of K=V flags, while V is optional.
-const EnvVar = "SPOTINST_FEATURE_FLAGS"
-
-// SetFromEnv reads an environment variable and sets features from its value.
-func SetFromEnv() { Set(os.Getenv(EnvVar)) }
-
 // Set parses and stores features from a string like "feature1=true,feature2=false".
 func Set(features string) {
 	for _, s := range strings.Split(strings.TrimSpace(features), ",") {
@@ -98,9 +90,6 @@ func Get(name string) FeatureFlag {
 	}
 }
 
-// FeatureFlags defines a list of feature flags.
-type FeatureFlags []FeatureFlag
-
 // All returns a list of all known feature flags.
 func All() FeatureFlags {
 	flagsMutex.Lock()
@@ -116,6 +105,9 @@ func All() FeatureFlags {
 
 	return features
 }
+
+// FeatureFlags defines a list of feature flags.
+type FeatureFlags []FeatureFlag
 
 // String returns the string representation of a list of feature flags.
 func (f FeatureFlags) String() string {
