@@ -14,21 +14,22 @@ import (
 )
 
 type LaunchSpec struct {
-	ID                 *string             `json:"id,omitempty"`
-	Name               *string             `json:"name,omitempty"`
-	OceanID            *string             `json:"oceanId,omitempty"`
-	ImageID            *string             `json:"imageId,omitempty"`
-	UserData           *string             `json:"userData,omitempty"`
-	RootVolumeSize     *int                `json:"rootVolumeSize,omitempty"`
-	SecurityGroupIDs   []string            `json:"securityGroupIds,omitempty"`
-	SubnetIDs          []string            `json:"subnetIds,omitempty"`
-	ResourceLimits     *ResourceLimits     `json:"resourceLimits,omitempty"`
-	IAMInstanceProfile *IAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
-	AutoScale          *AutoScale          `json:"autoScale,omitempty"`
-	ElasticIPPool      *ElasticIPPool      `json:"elasticIpPool,omitempty"`
-	Labels             []*Label            `json:"labels,omitempty"`
-	Taints             []*Taint            `json:"taints,omitempty"`
-	Tags               []*Tag              `json:"tags,omitempty"`
+	ID                  *string               `json:"id,omitempty"`
+	Name                *string               `json:"name,omitempty"`
+	OceanID             *string               `json:"oceanId,omitempty"`
+	ImageID             *string               `json:"imageId,omitempty"`
+	UserData            *string               `json:"userData,omitempty"`
+	RootVolumeSize      *int                  `json:"rootVolumeSize,omitempty"`
+	SecurityGroupIDs    []string              `json:"securityGroupIds,omitempty"`
+	SubnetIDs           []string              `json:"subnetIds,omitempty"`
+	ResourceLimits      *ResourceLimits       `json:"resourceLimits,omitempty"`
+	IAMInstanceProfile  *IAMInstanceProfile   `json:"iamInstanceProfile,omitempty"`
+	AutoScale           *AutoScale            `json:"autoScale,omitempty"`
+	ElasticIPPool       *ElasticIPPool        `json:"elasticIpPool,omitempty"`
+	BlockDeviceMappings []*BlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
+	Labels              []*Label              `json:"labels,omitempty"`
+	Taints              []*Taint              `json:"taints,omitempty"`
+	Tags                []*Tag                `json:"tags,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -56,6 +57,21 @@ type ResourceLimits struct {
 
 	forceSendFields []string
 	nullFields      []string
+}
+
+type BlockDeviceMapping struct {
+	DeviceName  *string `json:"deviceName,omitempty"`
+	EBS         *EBS    `json:"ebs,omitempty"`
+	NoDevice    *string `json:"noDevice,omitempty"`
+	VirtualName *string `json:"virtualName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type EBS struct {
+	Encrypted *bool `json:"encrypted,omitempty"`
+	Iops      *int  `json:"iops,omitempty"`
 }
 
 type Label struct {
