@@ -70,8 +70,25 @@ type BlockDeviceMapping struct {
 }
 
 type EBS struct {
-	Encrypted *bool `json:"encrypted,omitempty"`
-	Iops      *int  `json:"iops,omitempty"`
+	Encrypted         *bool              `json:"encrypted,omitempty"`
+	Iops              *int               `json:"iops,omitempty"`
+	KmsKeyId          *string            `json:"kmsKeyId,omitempty"`
+	SnapshotId        *string            `json:"snapshotId,omitempty"`
+	VolumeType        *string            `json:"volumeType,omitempty"`
+	VolumeSize        *int               `json:"volumeSize,omitempty"`
+	DynamicVolumeSize *DynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type DynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Label struct {
