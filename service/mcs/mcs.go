@@ -3,11 +3,12 @@ package mcs
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
-	"io/ioutil"
-	"net/http"
 )
 
 type ClusterCostInput struct {
@@ -21,22 +22,50 @@ type ClusterCostOutput struct {
 }
 
 type ClusterCost struct {
-	TotalCost          *float64      `json:"totalCost,omitempty"`
 	Namespaces         []*Namespace  `json:"namespaces,omitempty"`
 	Deployments        []*Deployment `json:"deployments,omitempty"`
+	TotalCost          *float64      `json:"totalCost,omitempty"`
+	TotalComputeCost   *float64      `json:"totalComputeCost,omitempty"`
+	TotalStorageCost   *float64      `json:"totalStorageCost,omitempty"`
+	UnusedStorageCost  *float64      `json:"unusedStorageCost,omitempty"`
 	StandAlonePodsCost *float64      `json:"standAlonePodsCost,omitempty"`
 	HeadroomCost       *float64      `json:"headroomCost,omitempty"`
+	IdleCost           *float64      `json:"idleCost,omitempty"`
 }
 
 type Namespace struct {
-	Namespace *string  `json:"namespace,omitempty"`
-	Cost      *float64 `json:"cost,omitempty"`
+	Namespace          *string           `json:"namespace,omitempty"`
+	Cost               *float64          `json:"cost,omitempty"`
+	ComputeCost        *float64          `json:"computeCost,omitempty"`
+	StorageCost        *float64          `json:"storageCost,omitempty"`
+	Deployments        []*Resource       `json:"deployments,omitempty"`
+	StatefulSets       []*Resource       `json:"statefulSets,omitempty"`
+	DaemonSets         []*Resource       `json:"daemonSets,omitempty"`
+	Jobs               []*Resource       `json:"jobs,omitempty"`
+	StandAlonePodsCost *Resource         `json:"standAlonePodsCost,omitempty"`
+	Labels             map[string]string `json:"labels,omitempty"`
+	Annotations        map[string]string `json:"annotations,omitempty"`
 }
 
+// Deprecated: Use Resource instead. Kept for backward compatibility.
 type Deployment struct {
-	DeploymentName *string  `json:"deploymentName,omitempty"`
-	Namespace      *string  `json:"namespace,omitempty"`
-	Cost           *float64 `json:"cost,omitempty"`
+	DeploymentName *string           `json:"name,omitempty"`
+	Namespace      *string           `json:"namespace,omitempty"`
+	Cost           *float64          `json:"cost,omitempty"`
+	ComputeCost    *float64          `json:"computeCost,omitempty"`
+	StorageCost    *float64          `json:"storageCost,omitempty"`
+	Labels         map[string]string `json:"labels,omitempty"`
+	Annotations    map[string]string `json:"annotations,omitempty"`
+}
+
+type Resource struct {
+	Name        *string           `json:"name,omitempty"`
+	Namespace   *string           `json:"namespace,omitempty"`
+	Cost        *float64          `json:"cost,omitempty"`
+	ComputeCost *float64          `json:"computeCost,omitempty"`
+	StorageCost *float64          `json:"storageCost,omitempty"`
+	Labels      map[string]string `json:"labels,omitempty"`
+	Annotations map[string]string `json:"annotations,omitempty"`
 }
 
 func clusterCostFromJSON(in []byte) (*ClusterCost, error) {
@@ -74,8 +103,9 @@ func clusterCostsFromHttpResponse(resp *http.Response) ([]*ClusterCost, error) {
 	return clusterCostsFromJSON(body)
 }
 
-// GetClusterCosts accepts kubernetes clusterId, fromDate, and toDate and returns a list of costs.
-// Dates may be in the format of yyyy-mm-dd or Unix Timestamp (1494751821472)
+// GetClusterCosts accepts Kubernetes `clusterId`, `fromDate`, and `toDate` and
+// returns a list of cost objects. Dates can be in the format of `yyyy-mm-dd`
+// or Unix timestamp (1494751821472).
 func (s *ServiceOp) GetClusterCosts(ctx context.Context, input *ClusterCostInput) (*ClusterCostOutput, error) {
 	path, err := uritemplates.Expand("/mcs/kubernetes/cluster/{clusterIdentifier}/costs", uritemplates.Values{
 		"clusterIdentifier": spotinst.StringValue(input.ClusterID),
