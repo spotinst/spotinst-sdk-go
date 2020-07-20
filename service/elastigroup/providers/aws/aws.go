@@ -4038,3 +4038,210 @@ func (s *ServiceOp) Scale(ctx context.Context, input *ScaleGroupInput) (*ScaleGr
 }
 
 //endregion
+
+// region suspend processes
+
+type SuspendProcesses struct {
+	GroupId     *string        `json:"groupId,omitempty"`
+	Suspensions []*Suspensions `json:"suspensions,omitempty"`
+	Processes   *[]string      `json:"processes,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Suspensions struct {
+	Name *string `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type SuspendProcessesRequestBody struct {
+	Suspensions []*Suspensions `json:"suspensions,omitempty"`
+}
+
+type SuspendProcessesInput struct {
+	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
+}
+
+type SuspendProcessesOutput struct {
+	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
+}
+
+type ListSuspendProcessesInput struct {
+	GroupId *string `json:"groupId,omitempty"`
+}
+
+type ListSuspendProcessesOutput struct {
+	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
+}
+
+type DeleteSuspendProcessesInput struct {
+	GroupId   *string   `json:"groupId,omitempty"`
+	Processes *[]string `json:"processes,omitempty"`
+}
+
+type DeleteSuspendProcessesOutput struct{}
+
+type DeleteSuspendRequestBody struct {
+	Processes *[]string `json:"processes,omitempty"`
+}
+
+func suspendProcessesFromHttpResponse(resp *http.Response) ([]*SuspendProcesses, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return suspendProcessesFromJSON(body)
+}
+
+func suspendProcessFromJSON(in []byte) (*SuspendProcesses, error) {
+	v := new(SuspendProcesses)
+	if err := json.Unmarshal(in, v); err != nil {
+		return nil, err
+	}
+	return v, nil
+}
+
+func suspendProcessesFromJSON(in []byte) ([]*SuspendProcesses, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*SuspendProcesses, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		v, err := suspendProcessFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = v
+	}
+	return out, nil
+}
+
+func (s *ServiceOp) SuspendProcesses(ctx context.Context, input *SuspendProcessesInput) (*SuspendProcessesOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupID}/suspension", uritemplates.Values{
+		"groupID": spotinst.StringValue(input.SuspendProcesses.GroupId),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var rBody SuspendProcessesRequestBody
+	rBody.Suspensions = input.SuspendProcesses.Suspensions
+
+	r := client.NewRequest(http.MethodPost, path)
+	r.Obj = rBody
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	suspendProcesses, err := suspendProcessesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(SuspendProcessesOutput)
+	if len(suspendProcesses) > 0 {
+		output.SuspendProcesses = suspendProcesses[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ListSuspendProcesses(ctx context.Context, input *ListSuspendProcessesInput) (*ListSuspendProcessesOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupID}/suspension", uritemplates.Values{
+		"groupID": spotinst.StringValue(input.GroupId),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	suspendProcesses, err := suspendProcessesFromHttpResponse(resp)
+	output := new(ListSuspendProcessesOutput)
+
+	if len(suspendProcesses) > 0 {
+		output.SuspendProcesses = suspendProcesses[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) DeleteSuspendProcesses(ctx context.Context, input *DeleteSuspendProcessesInput) (*DeleteSuspendProcessesOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupID}/suspension", uritemplates.Values{
+		"groupID": spotinst.StringValue(input.GroupId),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	var rBody DeleteSuspendRequestBody
+	rBody.Processes = input.Processes
+
+	r := client.NewRequest(http.MethodDelete, path)
+	r.Obj = rBody
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	retval := new(DeleteSuspendProcessesOutput)
+
+	return retval, nil
+}
+
+func (o SuspendProcesses) MarshalJSON() ([]byte, error) {
+	type noMethod SuspendProcesses
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *SuspendProcesses) SetGroupId(v *string) *SuspendProcesses {
+	if o.GroupId = v; o.GroupId == nil {
+		o.nullFields = append(o.nullFields, "GroupId")
+	}
+	return o
+}
+
+func (o *SuspendProcesses) SetSuspensions(v []*Suspensions) *SuspendProcesses {
+	if o.Suspensions = v; o.Suspensions == nil {
+		o.nullFields = append(o.nullFields, "Suspensions")
+	}
+	return o
+}
+
+// endregion
+
+// region Suspensions
+
+func (o Suspensions) MarshalJSON() ([]byte, error) {
+	type noMethod Suspensions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Suspensions) SetName(v *string) *Suspensions {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+// endregion
