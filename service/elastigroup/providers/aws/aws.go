@@ -4037,4 +4037,207 @@ func (s *ServiceOp) Scale(ctx context.Context, input *ScaleGroupInput) (*ScaleGr
 	return output, err
 }
 
-//endregion
+// endregion
+
+// region SuspendProcesses
+
+type SuspendProcesses struct {
+	Suspensions []*Suspension `json:"suspensions,omitempty"`
+	Processes   []string      `json:"processes,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Suspension struct {
+	Name         *string `json:"name,omitempty"`
+	TTLInMinutes *int    `json:"ttlInMinutes,omitempty"`
+
+	// Read-only fields.
+	ExpiresAt *time.Time `json:"expiresAt,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CreateSuspendProcessesInput struct {
+	GroupID          *string           `json:"groupId,omitempty"`
+	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
+}
+
+type CreateSuspendProcessesOutput struct {
+	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
+}
+
+type ListSuspendProcessesInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+}
+
+type ListSuspendProcessesOutput struct {
+	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
+}
+
+type DeleteSuspendProcessesInput struct {
+	GroupID   *string  `json:"groupId,omitempty"`
+	Processes []string `json:"processes,omitempty"`
+}
+
+type DeleteSuspendProcessesOutput struct{}
+
+func suspendProcessesFromHttpResponse(resp *http.Response) ([]*SuspendProcesses, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return suspendProcessesFromJSON(body)
+}
+
+func suspendProcessesObjFromJSON(in []byte) (*SuspendProcesses, error) {
+	v := new(SuspendProcesses)
+	if err := json.Unmarshal(in, v); err != nil {
+		return nil, err
+	}
+	return v, nil
+}
+
+func suspendProcessesFromJSON(in []byte) ([]*SuspendProcesses, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*SuspendProcesses, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		v, err := suspendProcessesObjFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = v
+	}
+	return out, nil
+}
+
+func (s *ServiceOp) CreateSuspendProcesses(ctx context.Context, input *CreateSuspendProcessesInput) (*CreateSuspendProcessesOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/suspension", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPost, path)
+	r.Obj = input.SuspendProcesses
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	suspendProcesses, err := suspendProcessesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(CreateSuspendProcessesOutput)
+	if len(suspendProcesses) > 0 {
+		output.SuspendProcesses = suspendProcesses[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ListSuspendProcesses(ctx context.Context, input *ListSuspendProcessesInput) (*ListSuspendProcessesOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/suspension", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	suspendProcesses, err := suspendProcessesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ListSuspendProcessesOutput)
+	if len(suspendProcesses) > 0 {
+		output.SuspendProcesses = suspendProcesses[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) DeleteSuspendProcesses(ctx context.Context, input *DeleteSuspendProcessesInput) (*DeleteSuspendProcessesOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/suspension", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
+	r := client.NewRequest(http.MethodDelete, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DeleteSuspendProcessesOutput{}, nil
+}
+
+func (o SuspendProcesses) MarshalJSON() ([]byte, error) {
+	type noMethod SuspendProcesses
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *SuspendProcesses) SetSuspensions(v []*Suspension) *SuspendProcesses {
+	if o.Suspensions = v; o.Suspensions == nil {
+		o.nullFields = append(o.nullFields, "Suspensions")
+	}
+	return o
+}
+
+func (o *SuspendProcesses) SetProcesses(v []string) *SuspendProcesses {
+	if o.Processes = v; o.Processes == nil {
+		o.nullFields = append(o.nullFields, "Processes")
+	}
+	return o
+}
+
+func (o Suspension) MarshalJSON() ([]byte, error) {
+	type noMethod Suspension
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Suspension) SetName(v *string) *Suspension {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Suspension) SetTTLInMinutes(v *int) *Suspension {
+	if o.TTLInMinutes = v; o.TTLInMinutes == nil {
+		o.nullFields = append(o.nullFields, "TTLInMinutes")
+	}
+	return o
+}
+
+// endregion
