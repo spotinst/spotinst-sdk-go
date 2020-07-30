@@ -21,7 +21,7 @@ ifneq ($(strip $(GIT_DIRTY)),)
 	@echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
 else
 	@read -p "Bump version: $(VERSION) → " version; sed -i "s/$(VERSION)/$$version/g" spotinst/version.go && \
-	git commit -am "release: v$(VERSION)" && \
+	git commit -am "chore(release): $(VERSION)" && \
 	git tag v$(VERSION) && \
 	git push && \
 	$(call goreleaser_release)
