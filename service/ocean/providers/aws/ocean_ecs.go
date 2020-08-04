@@ -156,7 +156,7 @@ type ECSAutoScalerResourceLimits struct {
 }
 
 type ECSAutoScalerDown struct {
-	MaxScaleDownPercentage *int `json:"maxScaleDownPercentage,omitempty"`
+	MaxScaleDownPercentage *float64 `json:"maxScaleDownPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -918,7 +918,7 @@ func (o ECSAutoScalerDown) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ECSAutoScalerDown) SetMaxScaleDownPercentage(v *int) *ECSAutoScalerDown {
+func (o *ECSAutoScalerDown) SetMaxScaleDownPercentage(v *float64) *ECSAutoScalerDown {
 	if o.MaxScaleDownPercentage = v; o.MaxScaleDownPercentage == nil {
 		o.nullFields = append(o.nullFields, "MaxScaleDownPercentage")
 	}
