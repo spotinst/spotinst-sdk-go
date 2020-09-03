@@ -31,6 +31,9 @@ type Service interface {
 	StartBeanstalkMaintenance(context.Context, *BeanstalkMaintenanceInput) (*BeanstalkMaintenanceOutput, error)
 	FinishBeanstalkMaintenance(context.Context, *BeanstalkMaintenanceInput) (*BeanstalkMaintenanceOutput, error)
 	GetBeanstalkMaintenanceStatus(context.Context, *BeanstalkMaintenanceInput) (*string, error)
+	CreateSuspendProcesses(context.Context, *CreateSuspendProcessesInput) (*CreateSuspendProcessesOutput, error)
+	ListSuspendProcesses(context.Context, *ListSuspendProcessesInput) (*ListSuspendProcessesOutput, error)
+	DeleteSuspendProcesses(context.Context, *DeleteSuspendProcessesInput) (*DeleteSuspendProcessesOutput, error)
 }
 
 type ServiceOp struct {
