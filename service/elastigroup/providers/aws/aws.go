@@ -4044,9 +4044,6 @@ func (s *ServiceOp) Scale(ctx context.Context, input *ScaleGroupInput) (*ScaleGr
 type SuspendProcesses struct {
 	Suspensions []*Suspension `json:"suspensions,omitempty"`
 	Processes   []string      `json:"processes,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
 }
 
 type Suspension struct {
@@ -4060,29 +4057,29 @@ type Suspension struct {
 	nullFields      []string
 }
 
-type CreateSuspendProcessesInput struct {
-	GroupID          *string           `json:"groupId,omitempty"`
+type CreateSuspensionsInput struct {
+	GroupID     *string       `json:"groupId,omitempty"`
+	Suspensions []*Suspension `json:"suspensions,omitempty"`
+}
+
+type CreateSuspensionsOutput struct {
 	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
 }
 
-type CreateSuspendProcessesOutput struct {
-	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
-}
-
-type ListSuspendProcessesInput struct {
+type ListSuspensionsInput struct {
 	GroupID *string `json:"groupId,omitempty"`
 }
 
-type ListSuspendProcessesOutput struct {
+type ListSuspensionsOutput struct {
 	SuspendProcesses *SuspendProcesses `json:"suspendProcesses,omitempty"`
 }
 
-type DeleteSuspendProcessesInput struct {
+type DeleteSuspensionsInput struct {
 	GroupID   *string  `json:"groupId,omitempty"`
 	Processes []string `json:"processes,omitempty"`
 }
 
-type DeleteSuspendProcessesOutput struct{}
+type DeleteSuspensionsOutput struct{}
 
 func suspendProcessesFromHttpResponse(resp *http.Response) ([]*SuspendProcesses, error) {
 	body, err := ioutil.ReadAll(resp.Body)
@@ -4119,7 +4116,7 @@ func suspendProcessesFromJSON(in []byte) ([]*SuspendProcesses, error) {
 	return out, nil
 }
 
-func (s *ServiceOp) CreateSuspendProcesses(ctx context.Context, input *CreateSuspendProcessesInput) (*CreateSuspendProcessesOutput, error) {
+func (s *ServiceOp) CreateSuspensions(ctx context.Context, input *CreateSuspensionsInput) (*CreateSuspensionsOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/suspension", uritemplates.Values{
 		"groupId": spotinst.StringValue(input.GroupID),
 	})
@@ -4127,8 +4124,11 @@ func (s *ServiceOp) CreateSuspendProcesses(ctx context.Context, input *CreateSus
 		return nil, err
 	}
 
+	// We do not need the ID anymore so let's drop it.
+	input.GroupID = nil
+
 	r := client.NewRequest(http.MethodPost, path)
-	r.Obj = input.SuspendProcesses
+	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -4141,7 +4141,7 @@ func (s *ServiceOp) CreateSuspendProcesses(ctx context.Context, input *CreateSus
 		return nil, err
 	}
 
-	output := new(CreateSuspendProcessesOutput)
+	output := new(CreateSuspensionsOutput)
 	if len(suspendProcesses) > 0 {
 		output.SuspendProcesses = suspendProcesses[0]
 	}
@@ -4149,7 +4149,7 @@ func (s *ServiceOp) CreateSuspendProcesses(ctx context.Context, input *CreateSus
 	return output, nil
 }
 
-func (s *ServiceOp) ListSuspendProcesses(ctx context.Context, input *ListSuspendProcessesInput) (*ListSuspendProcessesOutput, error) {
+func (s *ServiceOp) ListSuspensions(ctx context.Context, input *ListSuspensionsInput) (*ListSuspensionsOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/suspension", uritemplates.Values{
 		"groupId": spotinst.StringValue(input.GroupID),
 	})
@@ -4169,7 +4169,7 @@ func (s *ServiceOp) ListSuspendProcesses(ctx context.Context, input *ListSuspend
 		return nil, err
 	}
 
-	output := new(ListSuspendProcessesOutput)
+	output := new(ListSuspensionsOutput)
 	if len(suspendProcesses) > 0 {
 		output.SuspendProcesses = suspendProcesses[0]
 	}
@@ -4177,7 +4177,7 @@ func (s *ServiceOp) ListSuspendProcesses(ctx context.Context, input *ListSuspend
 	return output, nil
 }
 
-func (s *ServiceOp) DeleteSuspendProcesses(ctx context.Context, input *DeleteSuspendProcessesInput) (*DeleteSuspendProcessesOutput, error) {
+func (s *ServiceOp) DeleteSuspensions(ctx context.Context, input *DeleteSuspensionsInput) (*DeleteSuspensionsOutput, error) {
 	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/suspension", uritemplates.Values{
 		"groupId": spotinst.StringValue(input.GroupID),
 	})
@@ -4197,27 +4197,7 @@ func (s *ServiceOp) DeleteSuspendProcesses(ctx context.Context, input *DeleteSus
 	}
 	defer resp.Body.Close()
 
-	return &DeleteSuspendProcessesOutput{}, nil
-}
-
-func (o SuspendProcesses) MarshalJSON() ([]byte, error) {
-	type noMethod SuspendProcesses
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *SuspendProcesses) SetSuspensions(v []*Suspension) *SuspendProcesses {
-	if o.Suspensions = v; o.Suspensions == nil {
-		o.nullFields = append(o.nullFields, "Suspensions")
-	}
-	return o
-}
-
-func (o *SuspendProcesses) SetProcesses(v []string) *SuspendProcesses {
-	if o.Processes = v; o.Processes == nil {
-		o.nullFields = append(o.nullFields, "Processes")
-	}
-	return o
+	return &DeleteSuspensionsOutput{}, nil
 }
 
 func (o Suspension) MarshalJSON() ([]byte, error) {
