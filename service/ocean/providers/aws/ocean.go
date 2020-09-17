@@ -46,11 +46,11 @@ type Cluster struct {
 }
 
 type Strategy struct {
-	SpotPercentage           *float64 `json:"spotPercentage,omitempty"`
-	UtilizeReservedInstances *bool    `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool    `json:"fallbackToOd,omitempty"`
-	DrainingTimeout          *int     `json:"drainingTimeout,omitempty"`
-	GracePeriod              *int     `json:"gracePeriod,omitempty"`
+	SpotPercentage           *int  `json:"spotPercentage,omitempty"`
+	UtilizeReservedInstances *bool `json:"utilizeReservedInstances,omitempty"`
+	FallbackToOnDemand       *bool `json:"fallbackToOd,omitempty"`
+	DrainingTimeout          *int  `json:"drainingTimeout,omitempty"`
+	GracePeriod              *int  `json:"gracePeriod,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -778,7 +778,7 @@ func (o Strategy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Strategy) SetSpotPercentage(v *float64) *Strategy {
+func (o *Strategy) SetSpotPercentage(v *int) *Strategy {
 	if o.SpotPercentage = v; o.SpotPercentage == nil {
 		o.nullFields = append(o.nullFields, "SpotPercentage")
 	}

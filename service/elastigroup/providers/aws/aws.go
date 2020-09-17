@@ -478,7 +478,7 @@ type Predictive struct {
 }
 
 type Strategy struct {
-	Risk                     *float64         `json:"risk,omitempty"`
+	Risk                     *int             `json:"risk,omitempty"`
 	OnDemandCount            *int             `json:"onDemandCount,omitempty"`
 	DrainingTimeout          *int             `json:"drainingTimeout,omitempty"`
 	AvailabilityVsCost       *string          `json:"availabilityVsCost,omitempty"`
@@ -2926,7 +2926,7 @@ func (o Strategy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Strategy) SetRisk(v *float64) *Strategy {
+func (o *Strategy) SetRisk(v *int) *Strategy {
 	if o.Risk = v; o.Risk == nil {
 		o.nullFields = append(o.nullFields, "Risk")
 	}
