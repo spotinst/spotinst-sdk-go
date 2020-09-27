@@ -140,6 +140,13 @@ type AutoScaleECS struct {
 	nullFields      []string
 }
 
+type Batch struct {
+	JobQueueNames []string `json:"jobQueueNames,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
 type AutoScaleKubernetes struct {
 	AutoScale                   // embedding
 	Labels    []*AutoScaleLabel `json:"labels,omitempty"`
@@ -286,6 +293,7 @@ type RancherIntegration struct {
 type EC2ContainerServiceIntegration struct {
 	ClusterName *string       `json:"clusterName,omitempty"`
 	AutoScale   *AutoScaleECS `json:"autoScale,omitempty"`
+	Batch       *Batch        `json:"batch,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1976,6 +1984,26 @@ func (o EC2ContainerServiceIntegration) MarshalJSON() ([]byte, error) {
 func (o *EC2ContainerServiceIntegration) SetClusterName(v *string) *EC2ContainerServiceIntegration {
 	if o.ClusterName = v; o.ClusterName == nil {
 		o.nullFields = append(o.nullFields, "ClusterName")
+	}
+	return o
+}
+
+func (o Batch) MarshalJSON() ([]byte, error) {
+	type noMethod Batch
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *EC2ContainerServiceIntegration) SetBatch(v *Batch) *EC2ContainerServiceIntegration {
+	if o.Batch = v; o.Batch == nil {
+		o.nullFields = append(o.nullFields, "Batch")
+	}
+	return o
+}
+
+func (o *Batch) SetJobQueueNames(v []string) *Batch {
+	if o.JobQueueNames = v; o.JobQueueNames == nil {
+		o.nullFields = append(o.nullFields, "JobQueueNames")
 	}
 	return o
 }
