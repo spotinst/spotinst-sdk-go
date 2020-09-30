@@ -558,7 +558,7 @@ func (o *ECSEBS) SetVolumeSize(v *int) *ECSEBS {
 }
 
 func (o *ECSEBS) SetDynamicVolumeSize(v *ECSDynamicVolumeSize) *ECSEBS {
-	if o.ECSDynamicVolumeSize = v; o.ECSDynamicVolumeSize == nil {
+	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
 		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
 	}
 	return o
