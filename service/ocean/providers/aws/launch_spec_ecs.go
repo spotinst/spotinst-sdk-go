@@ -75,21 +75,21 @@ type ECSBlockDeviceMapping struct {
 	DeviceName  *string `json:"deviceName,omitempty"`
 	NoDevice    *string `json:"noDevice,omitempty"`
 	VirtualName *string `json:"virtualName,omitempty"`
-	ECSEBS      *ECSEBS `json:"ebs,omitempty"`
+	EBS         *ECSEBS `json:"ebs,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type ECSEBS struct {
-	DeleteOnTermination  *bool                 `json:"deleteOnTermination,omitempty"`
-	Encrypted            *bool                 `json:"encrypted,omitempty"`
-	KMSKeyID             *string               `json:"kmsKeyId,omitempty"`
-	SnapshotID           *string               `json:"snapshotId,omitempty"`
-	VolumeType           *string               `json:"volumeType,omitempty"`
-	IOPS                 *int                  `json:"iops,omitempty"`
-	VolumeSize           *int                  `json:"volumeSize,omitempty"`
-	ECSDynamicVolumeSize *ECSDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+	DeleteOnTermination *bool                 `json:"deleteOnTermination,omitempty"`
+	Encrypted           *bool                 `json:"encrypted,omitempty"`
+	KMSKeyID            *string               `json:"kmsKeyId,omitempty"`
+	SnapshotID          *string               `json:"snapshotId,omitempty"`
+	VolumeType          *string               `json:"volumeType,omitempty"`
+	IOPS                *int                  `json:"iops,omitempty"`
+	VolumeSize          *int                  `json:"volumeSize,omitempty"`
+	DynamicVolumeSize   *ECSDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -492,7 +492,7 @@ func (o *ECSBlockDeviceMapping) SetVirtualName(v *string) *ECSBlockDeviceMapping
 }
 
 func (o *ECSBlockDeviceMapping) SetEBS(v *ECSEBS) *ECSBlockDeviceMapping {
-	if o.ECSEBS = v; o.ECSEBS == nil {
+	if o.EBS = v; o.EBS == nil {
 		o.nullFields = append(o.nullFields, "EBS")
 	}
 	return o
@@ -558,7 +558,7 @@ func (o *ECSEBS) SetVolumeSize(v *int) *ECSEBS {
 }
 
 func (o *ECSEBS) SetDynamicVolumeSize(v *ECSDynamicVolumeSize) *ECSEBS {
-	if o.ECSDynamicVolumeSize = v; o.ECSDynamicVolumeSize == nil {
+	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
 		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
 	}
 	return o
