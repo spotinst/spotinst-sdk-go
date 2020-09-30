@@ -75,7 +75,7 @@ type ECSBlockDeviceMapping struct {
 	DeviceName  *string `json:"deviceName,omitempty"`
 	NoDevice    *string `json:"noDevice,omitempty"`
 	VirtualName *string `json:"virtualName,omitempty"`
-	ECSEBS      *ECSEBS `json:"ebs,omitempty"`
+	EBS      *ECSEBS `json:"ebs,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
