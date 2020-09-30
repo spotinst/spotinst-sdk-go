@@ -89,7 +89,7 @@ type ECSEBS struct {
 	VolumeType           *string               `json:"volumeType,omitempty"`
 	IOPS                 *int                  `json:"iops,omitempty"`
 	VolumeSize           *int                  `json:"volumeSize,omitempty"`
-	ECSDynamicVolumeSize *ECSDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+	DynamicVolumeSize *ECSDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
