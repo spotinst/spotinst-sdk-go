@@ -75,21 +75,21 @@ type ECSBlockDeviceMapping struct {
 	DeviceName  *string `json:"deviceName,omitempty"`
 	NoDevice    *string `json:"noDevice,omitempty"`
 	VirtualName *string `json:"virtualName,omitempty"`
-	EBS         *ECSEBS `json:"ebs,omitempty"`
+	EBS      *ECSEBS `json:"ebs,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type ECSEBS struct {
-	DeleteOnTermination *bool                 `json:"deleteOnTermination,omitempty"`
-	Encrypted           *bool                 `json:"encrypted,omitempty"`
-	KMSKeyID            *string               `json:"kmsKeyId,omitempty"`
-	SnapshotID          *string               `json:"snapshotId,omitempty"`
-	VolumeType          *string               `json:"volumeType,omitempty"`
-	IOPS                *int                  `json:"iops,omitempty"`
-	VolumeSize          *int                  `json:"volumeSize,omitempty"`
-	DynamicVolumeSize   *ECSDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+	DeleteOnTermination  *bool                 `json:"deleteOnTermination,omitempty"`
+	Encrypted            *bool                 `json:"encrypted,omitempty"`
+	KMSKeyID             *string               `json:"kmsKeyId,omitempty"`
+	SnapshotID           *string               `json:"snapshotId,omitempty"`
+	VolumeType           *string               `json:"volumeType,omitempty"`
+	IOPS                 *int                  `json:"iops,omitempty"`
+	VolumeSize           *int                  `json:"volumeSize,omitempty"`
+	DynamicVolumeSize *ECSDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
