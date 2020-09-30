@@ -492,7 +492,7 @@ func (o *ECSBlockDeviceMapping) SetVirtualName(v *string) *ECSBlockDeviceMapping
 }
 
 func (o *ECSBlockDeviceMapping) SetEBS(v *ECSEBS) *ECSBlockDeviceMapping {
-	if o.ECSEBS = v; o.ECSEBS == nil {
+	if o.EBS = v; o.EBS == nil {
 		o.nullFields = append(o.nullFields, "EBS")
 	}
 	return o
