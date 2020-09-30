@@ -31,6 +31,7 @@ func main() {
 	// Update group configuration.
 	out, err := svc.CloudProviderAWS().Update(ctx, &aws.UpdateGroupInput{
 		Group: &aws.Group{
+			ID: spotinst.String("sig-12345"),
 			Capacity: &aws.Capacity{
 				Target: spotinst.Int(5),
 			},
