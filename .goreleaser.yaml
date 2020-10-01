@@ -6,20 +6,8 @@ before:
     - go generate ./...
 
 builds:
-  -
-    # Path to main.go file or main package.
-    main: ./pseudo/main.go
-
-    # Name template for the binary final name.
-    binary: pseudo
-
-    # GOOS list to build for.
-    goos:
-      - linux
-
-    # GOARCH list to build for.
-    goarch:
-      - amd64
+  # Skip the build. Useful for library projects.
+  - skip: true
 
 checksum:
   # Checksums file name template.
@@ -38,7 +26,7 @@ changelog:
       - Merge branch
 
 archives:
-    # Archive name template.
+  # Archive name template.
   - name_template: '{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}-{{ .Env.VERSION }}'
 
     # Additional files/globs you want to add to the archive.
@@ -50,7 +38,7 @@ release:
   disable: false
 
   # If set to true, will not auto-publish the release.
-  draft: false
+  draft: true
 
   # If set to auto, will mark the release as not ready for production in case there
   # is an indicator for this in the tag e.g. v1.0.0-rc1. If set to true, will mark

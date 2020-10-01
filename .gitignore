@@ -1,5 +1,6 @@
 # artifacts
 dist/
+test/
 
 # macOS
 .DS_Store

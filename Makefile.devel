@@ -1,67 +1,52 @@
-GO         := GO111MODULE=on go
-DOCKER     := docker
-GORELEASER := goreleaser/goreleaser:v0.133-cgo
-GIT_DIRTY  := $(shell test -n "`git status --porcelain`" && echo ".CHANGES" || true)
-VERSION    := $$(grep 'SDKVersion =' spotinst/version.go | awk '{print $$4}' | xargs)
-
-define goreleaser_release
-	$(DOCKER) run --rm \
-		-v $(PWD):/go/src/github.com/spotinst/spotinst-sdk-go \
-		-w /go/src/github.com/spotinst/spotinst-sdk-go \
-		-e GITHUB_TOKEN=$(GITHUB_TOKEN) \
-		-e VERSION=$(VERSION) \
-		$(GORELEASER) release --rm-dist
-endef
-
 ##@ Development
 
 .PHONY: release
 release: fmt ## Release a new version
 ifneq ($(strip $(GIT_DIRTY)),)
-	@echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
+	$(Q) echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
 else
-	@read -p "Bump version: $(VERSION) → " version; sed -i "s/$(VERSION)/$$version/g" spotinst/version.go && \
-	git commit -am "chore(release): $(VERSION)" && \
-	git tag v$(VERSION) && \
-	git push && \
-	$(call goreleaser_release)
+	$(Q) read -p "Release version: $(VERSION) → " version; sed -i "s/$(VERSION)/$$version/g" spotinst/version.go
+	$(Q) git commit -a -m "chore(release): $(VERSION)"
+	$(Q) git tag -f -s -m "chore(release): $(VERSION)" v$(VERSION)
+	$(Q) git push
+	$(Q) $(call goreleaser_release)
 endif
 
 .PHONY: test
 test: fmt ## Run all tests
-	@mkdir -p dist/ && \
-	$(GO) test \
+	$(Q) mkdir -p $(TEST_DIR)
+	$(Q) $(GO) test \
 		-v $$($(GO) list ./... | grep -v vendor) $(TESTARGS) \
 		-covermode=atomic \
-		-coverprofile=dist/coverage.txt \
+		-coverprofile=$(GO_COVERAGE) \
 		-race \
 		-timeout=30s \
 		-parallel=4
 
 .PHONY: cover
 cover: test ## Run all tests and open the coverage report
-	@$(GO) tool cover -html=dist/coverage.txt
+	$(Q) $(GO) tool cover -html=$(GO_COVERAGE)
 
 .PHONY: tidy
 tidy: ## Add missing and remove unused modules
-	@$(GO) mod tidy
+	$(Q) $(GO) mod tidy
 
 .PHONY: vendor
 vendor: ## Make vendored copy of all dependencies
-	@$(GO) mod vendor
+	$(Q) $(GO) mod vendor
 
 .PHONY: fmt
 fmt: ## Format the code
-	@gofmt -s -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+	$(Q) gofmt -s -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
 
 .PHONY: imports
 imports: ## Optimize imports
-	@goimports -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+	$(Q) goimports -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
 
 .PHONY: vet
 vet: ## Analyze the code
-	@$(GO) vet ./...
+	$(Q) $(GO) vet ./...
 
 .PHONY: clean
 clean: ## Clean all generated artifacts
-	@rm -rf dist
+	$(Q) rm -rf $(DIST_DIR) $(TEST_DIR)
