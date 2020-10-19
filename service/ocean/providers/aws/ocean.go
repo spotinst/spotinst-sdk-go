@@ -265,17 +265,17 @@ type RollSpec struct {
 }
 
 type RollStatus struct {
-	ID            *string   `json:"id,omitempty"`
-	ClusterID     *string   `json:"oceanId,omitempty"`
-	Comment       *string   `json:"comment,omitempty"`
-	Status        *string   `json:"status,omitempty"`
-	Progress      *Progress `json:"progress,omitempty"`
-	CurrentBatch  *int      `json:"currentBatch,omitempty"`
-	NumOfBatches  *int      `json:"numOfBatches,omitempty"`
-	LaunchSpecIDs []string  `json:"launchSpecIds,omitempty"`
-	InstanceIDs   []string  `json:"instanceIds,omitempty"`
-	CreatedAt     *string   `json:"createdAt,omitempty"`
-	UpdatedAt     *string   `json:"updatedAt,omitempty"`
+	ID            *string    `json:"id,omitempty"`
+	ClusterID     *string    `json:"oceanId,omitempty"`
+	Comment       *string    `json:"comment,omitempty"`
+	Status        *string    `json:"status,omitempty"`
+	Progress      *Progress  `json:"progress,omitempty"`
+	CurrentBatch  *int       `json:"currentBatch,omitempty"`
+	NumOfBatches  *int       `json:"numOfBatches,omitempty"`
+	LaunchSpecIDs []string   `json:"launchSpecIds,omitempty"`
+	InstanceIDs   []string   `json:"instanceIds,omitempty"`
+	CreatedAt     *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt     *time.Time `json:"updatedAt,omitempty"`
 }
 
 type Progress struct {
