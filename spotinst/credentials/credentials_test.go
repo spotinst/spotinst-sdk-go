@@ -243,7 +243,7 @@ func TestFileCredentials(t *testing.T) {
 		"profile_not_exist": {
 			filename: filenameINI,
 			profile:  "profile_not_exist",
-			err:      errors.New("spotinst: failed to load credentials file: section 'profile_not_exist' does not exist"),
+			err:      errors.New("spotinst: failed to load credentials file: section \"profile_not_exist\" does not exist"),
 		},
 		"valid_ini_profile_default": {
 			filename: filenameINI,

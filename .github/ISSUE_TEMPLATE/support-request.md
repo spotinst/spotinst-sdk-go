@@ -1,9 +1,7 @@
 ---
 name: Support Request
 about: Support request or question relating to Spotinst SDK Go
-title: ''
-labels: ''
-assignees: ''
+labels: kind/support
 ---
 
 <!-- STOP, PLEASE READ BEFORE CREATING AN ISSUE!

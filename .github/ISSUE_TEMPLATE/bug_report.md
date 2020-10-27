@@ -1,9 +1,7 @@
 ---
 name: Bug report
 about: Report a bug encountered while operating Spotinst SDK Go
-title: ''
-labels: ''
-assignees: ''
+labels: kind/bug
 ---
 
 <!-- Please use this template while reporting a bug and provide as much info as possible. Not doing so may result in your bug not being addressed in a timely manner. Thanks!
@@ -20,6 +18,7 @@ If the matter is security related, please disclose it privately via https://kube
 **Anything else we need to know:**
 
 **Environment:**
+
 - Version (use `cat spotinst/version.go`):
 - OS (e.g: `cat /etc/os-release`):
 - Kernel (e.g. `uname -a`):

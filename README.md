@@ -1,4 +1,3 @@
-
 # Spotinst SDK Go
 
 The official Spotinst SDK for the Go programming language.
@@ -115,7 +114,7 @@ func main() {
 
 ## Documentation
 
-For a comprehensive documentation, check out the [API documentation](https://help.spot.io/).
+For a comprehensive documentation, check out the [Spot Documentation](https://docs.spot.io/) website.
 
 ## Examples
 

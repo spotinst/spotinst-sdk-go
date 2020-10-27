@@ -8,7 +8,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/featureflag"
 )
 
-func ExampleStatic() {
+func Example_static() {
 	// Initialize a new static credentials provider.
 	provider := credentials.NewStaticCredentials("secret", "acc-12345")
 
@@ -21,7 +21,7 @@ func ExampleStatic() {
 	// Output: secret acc-12345
 }
 
-func ExampleEnv() {
+func Example_env() {
 	// Set both token and account.
 	//
 	// Can be set using an environment variables as well, for example:
@@ -48,7 +48,7 @@ func ExampleEnv() {
 	// Output: secret acc-12345
 }
 
-func ExampleChainAllowPartial() {
+func Example_chainAllowPartial() {
 	// Set both token and account.
 	os.Setenv(credentials.EnvCredentialsVarToken, "secret")
 
@@ -82,7 +82,7 @@ func ExampleChainAllowPartial() {
 	// Output: secret
 }
 
-func ExampleChainAllowMerge() {
+func Example_chainAllowMerge() {
 	os.Setenv(credentials.EnvCredentialsVarToken, "secret")
 	defer func() { os.Unsetenv(credentials.EnvCredentialsVarToken) }()
 

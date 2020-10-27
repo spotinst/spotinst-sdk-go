@@ -1,9 +1,7 @@
 ---
 name: Enhancement Request
 about: Suggest an enhancement to the Spotinst SDK Go project
-title: ''
-labels: ''
-assignees: ''
+labels: kind/feature
 ---
 
 <!-- Please only use this template for submitting enhancement requests -->

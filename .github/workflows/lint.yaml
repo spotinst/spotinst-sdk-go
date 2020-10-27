@@ -1,0 +1,32 @@
+name: Lint
+
+on: [push, pull_request]
+
+jobs:
+  gofmt:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.15
+
+      - name: Run Gofmt # https://golang.org/cmd/gofmt
+        run: test -z "$(gofmt -l -e $(go list -f {{.Dir}} ./... | grep -v /vendor/))"
+
+  goimports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.15
+
+      - name: Run Goimports # https://pkg.go.dev/golang.org/x/tools/cmd/goimports
+        run: test -z "$(gofmt -l -e $(go list -f {{.Dir}} ./... | grep -v /vendor/))"
