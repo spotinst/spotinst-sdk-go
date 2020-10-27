@@ -104,16 +104,16 @@ type ECSInstanceTypes struct {
 }
 
 type ECSLaunchSpecification struct {
-	AssociatePublicIPAddress *bool                           `json:"associatePublicIpAddress,omitempty"`
-	SecurityGroupIDs         []string                        `json:"securityGroupIds,omitempty"`
-	ImageID                  *string                         `json:"imageId,omitempty"`
-	KeyPair                  *string                         `json:"keyPair,omitempty"`
-	UserData                 *string                         `json:"userData,omitempty"`
-	IAMInstanceProfile       *ECSIAMInstanceProfile          `json:"iamInstanceProfile,omitempty"`
-	Tags                     []*Tag                          `json:"tags,omitempty"`
-	Monitoring               *bool                           `json:"monitoring,omitempty"`
-	EBSOptimized             *bool                           `json:"ebsOptimized,omitempty"`
-	BlockDeviceMappings      []*ECSClusterBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
+	AssociatePublicIPAddress *bool                    `json:"associatePublicIpAddress,omitempty"`
+	SecurityGroupIDs         []string                 `json:"securityGroupIds,omitempty"`
+	ImageID                  *string                  `json:"imageId,omitempty"`
+	KeyPair                  *string                  `json:"keyPair,omitempty"`
+	UserData                 *string                  `json:"userData,omitempty"`
+	IAMInstanceProfile       *ECSIAMInstanceProfile   `json:"iamInstanceProfile,omitempty"`
+	Tags                     []*Tag                   `json:"tags,omitempty"`
+	Monitoring               *bool                    `json:"monitoring,omitempty"`
+	EBSOptimized             *bool                    `json:"ebsOptimized,omitempty"`
+	BlockDeviceMappings      []*ECSBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -232,39 +232,6 @@ type ECSRollClusterStatus struct {
 type ECSProgress struct {
 	Unit  *string `json:"unit,omitempty"`
 	Value *int    `json:"value,omitempty"`
-}
-
-type ECSClusterBlockDeviceMapping struct {
-	DeviceName  *string        `json:"deviceName,omitempty"`
-	NoDevice    *string        `json:"noDevice,omitempty"`
-	VirtualName *string        `json:"virtualName,omitempty"`
-	EBS         *ECSClusterEBS `json:"ebs,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type ECSClusterEBS struct {
-	DeleteOnTermination *bool                        `json:"deleteOnTermination,omitempty"`
-	Encrypted           *bool                        `json:"encrypted,omitempty"`
-	KMSKeyID            *string                      `json:"kmsKeyId,omitempty"`
-	SnapshotID          *string                      `json:"snapshotId,omitempty"`
-	VolumeType          *string                      `json:"volumeType,omitempty"`
-	IOPS                *int                         `json:"iops,omitempty"`
-	VolumeSize          *int                         `json:"volumeSize,omitempty"`
-	DynamicVolumeSize   *ECSClusterDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type ECSClusterDynamicVolumeSize struct {
-	BaseSize            *int    `json:"baseSize,omitempty"`
-	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
-	Resource            *string `json:"resource,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
 }
 
 func ecsClusterFromJSON(in []byte) (*ECSCluster, error) {
@@ -811,7 +778,7 @@ func (o *ECSLaunchSpecification) SetEBSOptimized(v *bool) *ECSLaunchSpecificatio
 	return o
 }
 
-func (o *ECSLaunchSpecification) SetBlockDeviceMappings(v []*ECSClusterBlockDeviceMapping) *ECSLaunchSpecification {
+func (o *ECSLaunchSpecification) SetBlockDeviceMappings(v []*ECSBlockDeviceMapping) *ECSLaunchSpecification {
 	if o.BlockDeviceMappings = v; o.BlockDeviceMappings == nil {
 		o.nullFields = append(o.nullFields, "BlockDeviceMappings")
 	}
@@ -1000,141 +967,6 @@ func (o *ECSRoll) SetLaunchSpecIDs(v []string) *ECSRoll {
 func (o *ECSRoll) SetInstanceIDs(v []string) *ECSRoll {
 	if o.InstanceIDs = v; o.InstanceIDs == nil {
 		o.nullFields = append(o.nullFields, "InstanceIDs")
-	}
-	return o
-}
-
-// endregion
-
-// region ECSClusterBlockDeviceMapping
-
-func (o ECSClusterBlockDeviceMapping) MarshalJSON() ([]byte, error) {
-	type noMethod ECSClusterBlockDeviceMapping
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *ECSClusterBlockDeviceMapping) SetDeviceName(v *string) *ECSClusterBlockDeviceMapping {
-	if o.DeviceName = v; o.DeviceName == nil {
-		o.nullFields = append(o.nullFields, "DeviceName")
-	}
-	return o
-}
-
-func (o *ECSClusterBlockDeviceMapping) SetNoDevice(v *string) *ECSClusterBlockDeviceMapping {
-	if o.NoDevice = v; o.NoDevice == nil {
-		o.nullFields = append(o.nullFields, "NoDevice")
-	}
-	return o
-}
-
-func (o *ECSClusterBlockDeviceMapping) SetVirtualName(v *string) *ECSClusterBlockDeviceMapping {
-	if o.VirtualName = v; o.VirtualName == nil {
-		o.nullFields = append(o.nullFields, "VirtualName")
-	}
-	return o
-}
-
-func (o *ECSClusterBlockDeviceMapping) SetEBS(v *ECSClusterEBS) *ECSClusterBlockDeviceMapping {
-	if o.EBS = v; o.EBS == nil {
-		o.nullFields = append(o.nullFields, "EBS")
-	}
-	return o
-}
-
-// endregion
-
-// region ECSClusterEBS
-
-func (o ECSClusterEBS) MarshalJSON() ([]byte, error) {
-	type noMethod ECSClusterEBS
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *ECSClusterEBS) SetEncrypted(v *bool) *ECSClusterEBS {
-	if o.Encrypted = v; o.Encrypted == nil {
-		o.nullFields = append(o.nullFields, "Encrypted")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetIOPS(v *int) *ECSClusterEBS {
-	if o.IOPS = v; o.IOPS == nil {
-		o.nullFields = append(o.nullFields, "IOPS")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetKMSKeyId(v *string) *ECSClusterEBS {
-	if o.KMSKeyID = v; o.KMSKeyID == nil {
-		o.nullFields = append(o.nullFields, "KMSKeyID")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetSnapshotId(v *string) *ECSClusterEBS {
-	if o.SnapshotID = v; o.SnapshotID == nil {
-		o.nullFields = append(o.nullFields, "SnapshotID")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetVolumeType(v *string) *ECSClusterEBS {
-	if o.VolumeType = v; o.VolumeType == nil {
-		o.nullFields = append(o.nullFields, "VolumeType")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetDeleteOnTermination(v *bool) *ECSClusterEBS {
-	if o.DeleteOnTermination = v; o.DeleteOnTermination == nil {
-		o.nullFields = append(o.nullFields, "DeleteOnTermination")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetVolumeSize(v *int) *ECSClusterEBS {
-	if o.VolumeSize = v; o.VolumeSize == nil {
-		o.nullFields = append(o.nullFields, "VolumeSize")
-	}
-	return o
-}
-
-func (o *ECSClusterEBS) SetDynamicVolumeSize(v *ECSClusterDynamicVolumeSize) *ECSClusterEBS {
-	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
-		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
-	}
-	return o
-}
-
-// endregion
-
-// region ECSDynamicVolumeSize
-
-func (o ECSClusterDynamicVolumeSize) MarshalJSON() ([]byte, error) {
-	type noMethod ECSClusterDynamicVolumeSize
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *ECSClusterDynamicVolumeSize) SetBaseSize(v *int) *ECSClusterDynamicVolumeSize {
-	if o.BaseSize = v; o.BaseSize == nil {
-		o.nullFields = append(o.nullFields, "BaseSize")
-	}
-	return o
-}
-
-func (o *ECSClusterDynamicVolumeSize) SetResource(v *string) *ECSClusterDynamicVolumeSize {
-	if o.Resource = v; o.Resource == nil {
-		o.nullFields = append(o.nullFields, "Resource")
-	}
-	return o
-}
-
-func (o *ECSClusterDynamicVolumeSize) SetSizePerResourceUnit(v *int) *ECSClusterDynamicVolumeSize {
-	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
-		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
 	}
 	return o
 }
