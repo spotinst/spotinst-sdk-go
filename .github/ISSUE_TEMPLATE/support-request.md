@@ -2,7 +2,7 @@
 name: Support Request
 about: Support request or question relating to Spotinst SDK Go
 title: ''
-labels: ''
+labels: kind/support
 assignees: ''
 ---
 

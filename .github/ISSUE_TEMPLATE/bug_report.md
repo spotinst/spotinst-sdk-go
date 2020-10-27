@@ -2,7 +2,7 @@
 name: Bug report
 about: Report a bug encountered while operating Spotinst SDK Go
 title: ''
-labels: ''
+labels: kind/bug
 assignees: ''
 ---
 

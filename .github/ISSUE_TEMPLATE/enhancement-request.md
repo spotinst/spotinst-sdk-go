@@ -2,7 +2,7 @@
 name: Enhancement Request
 about: Suggest an enhancement to the Spotinst SDK Go project
 title: ''
-labels: ''
+labels: kind/feature
 assignees: ''
 ---
 
