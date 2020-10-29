@@ -2,21 +2,21 @@
 
 The official Spotinst SDK for the Go programming language.
 
-## Contents
+## Table of Contents
 
-* [Installation](#installation)
-* [Authentication](#authentication)
-* [Complete SDK Example](#complete-sdk-example)
-* [Documentation](#documentation)
-* [Examples](#examples)
-* [Getting Help](#getting-help)
-* [Community](#community)
-* [Contributing](#contributing)
-* [License](#license)
+- [Installation](#installation)
+- [Authentication](#authentication)
+- [Complete SDK Example](#complete-sdk-example)
+- [Documentation](#documentation)
+- [Examples](#examples)
+- [Getting Help](#getting-help)
+- [Community](#community)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Installation
 
-The best way to get started working with the SDK is to use go get to add the SDK to your Go Workspace or application using Go modules.
+The best way to get started working with the SDK is to use go get to add the SDK to your Go application using Go modules.
 
 ```
 go get -u github.com/spotinst/spotinst-sdk-go
@@ -124,18 +124,19 @@ For a list of examples, check out the [examples](/examples) directory.
 
 We use GitHub issues for tracking bugs and feature requests. Please use these community resources for getting help:
 
-* Ask a question on [Stack Overflow](https://stackoverflow.com/) and tag it with [spotinst-sdk-go](https://stackoverflow.com/questions/tagged/spotinst-sdk-go/).
-* Join our Spotinst community on [Slack](http://slack.spot.io/).
-* Open an [issue](https://github.com/spotinst/spotinst-sdk-go/issues/new/choose/).
+- Ask a question on [Stack Overflow](https://stackoverflow.com/) and tag it with [spotinst-sdk-go](https://stackoverflow.com/questions/tagged/spotinst-sdk-go/).
+- Join our Spotinst community on [Slack](http://slack.spot.io/).
+- Open an [issue](https://github.com/spotinst/spotinst-sdk-go/issues/new/choose/).
 
 ## Community
 
-* [Slack](http://slack.spot.io/)
-* [Twitter](https://twitter.com/spot_hq/)
+- [Slack](http://slack.spot.io/)
+- [Twitter](https://twitter.com/spot_hq/)
 
 ## Contributing
 
 Please see the [contribution guidelines](.github/CONTRIBUTING.md).
 
 ## License
+
 Code is licensed under the [Apache License 2.0](LICENSE). See [NOTICE.md](NOTICE.md) for complete details, including software and third-party licenses and permissions.
