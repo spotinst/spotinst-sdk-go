@@ -26,6 +26,7 @@ type ClusterCost struct {
 	Deployments        []*Deployment `json:"deployments,omitempty"`
 	TotalCost          *float64      `json:"totalCost,omitempty"`
 	TotalComputeCost   *float64      `json:"totalComputeCost,omitempty"`
+	TotalEBSCost       *float64      `json:"totalEbsCost,omitempty"`
 	TotalStorageCost   *float64      `json:"totalStorageCost,omitempty"`
 	UnusedStorageCost  *float64      `json:"unusedStorageCost,omitempty"`
 	StandAlonePodsCost *float64      `json:"standAlonePodsCost,omitempty"`
@@ -37,6 +38,7 @@ type Namespace struct {
 	Namespace          *string           `json:"namespace,omitempty"`
 	Cost               *float64          `json:"cost,omitempty"`
 	ComputeCost        *float64          `json:"computeCost,omitempty"`
+	EBSCost            *float64          `json:"ebsCost,omitempty"`
 	StorageCost        *float64          `json:"storageCost,omitempty"`
 	Deployments        []*Resource       `json:"deployments,omitempty"`
 	StatefulSets       []*Resource       `json:"statefulSets,omitempty"`
@@ -63,6 +65,7 @@ type Resource struct {
 	Namespace   *string           `json:"namespace,omitempty"`
 	Cost        *float64          `json:"cost,omitempty"`
 	ComputeCost *float64          `json:"computeCost,omitempty"`
+	EBSCost     *float64          `json:"ebsCost,omitempty"`
 	StorageCost *float64          `json:"storageCost,omitempty"`
 	Labels      map[string]string `json:"labels,omitempty"`
 	Annotations map[string]string `json:"annotations,omitempty"`
