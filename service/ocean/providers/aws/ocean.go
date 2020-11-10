@@ -119,7 +119,7 @@ type LaunchSpecification struct {
 	RootVolumeSize           *int                `json:"rootVolumeSize,omitempty"`
 	Monitoring               *bool               `json:"monitoring,omitempty"`
 	EBSOptimized             *bool               `json:"ebsOptimized,omitempty"`
-	UseAsTemplateOnly		 *bool				 `json:"useAsTemplateOnly,omitempty"`
+	UseAsTemplateOnly        *bool               `json:"useAsTemplateOnly,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
