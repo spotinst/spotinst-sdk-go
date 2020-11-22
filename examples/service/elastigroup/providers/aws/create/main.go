@@ -33,6 +33,7 @@ func main() {
 		Group: &aws.Group{
 			Name:        spotinst.String("foo"),
 			Description: spotinst.String("bar"),
+			Region:      spotinst.String("us-west-2"),
 			Capacity: &aws.Capacity{
 				Target: spotinst.Int(5),
 			},
