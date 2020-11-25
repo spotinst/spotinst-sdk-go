@@ -483,7 +483,7 @@ func (o *LaunchSpec) SetStrategy(v *LaunchSpecStrategy) *LaunchSpec {
 	return o
 }
 
-func (o *LaunchSpec) SetAssociatePublicIpAddress(v *bool) *LaunchSpec {
+func (o *LaunchSpec) SetAssociatePublicIPAddress(v *bool) *LaunchSpec {
 	if o.AssociatePublicIPAddress = v; o.AssociatePublicIPAddress == nil {
 		o.nullFields = append(o.nullFields, "AssociatePublicIPAddress")
 	}
