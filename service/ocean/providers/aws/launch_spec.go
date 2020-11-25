@@ -32,7 +32,7 @@ type LaunchSpec struct {
 	Labels                   []*Label              `json:"labels,omitempty"`
 	Taints                   []*Taint              `json:"taints,omitempty"`
 	Tags                     []*Tag                `json:"tags,omitempty"`
-	AssociatePublicIpAddress *bool                 `json:"associatePublicIpAddress,omitempty"`
+	AssociatePublicIPAddress *bool                 `json:"associatePublicIpAddress,omitempty"`
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
