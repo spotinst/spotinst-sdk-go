@@ -498,6 +498,7 @@ type Strategy struct {
 	Persistence              *Persistence     `json:"persistence,omitempty"`
 	RevertToSpot             *RevertToSpot    `json:"revertToSpot,omitempty"`
 	ScalingStrategy          *ScalingStrategy `json:"scalingStrategy,omitempty"`
+	UtilizeCommitments       *bool            `json:"utilizeCommitments,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3051,6 +3052,13 @@ func (o *Strategy) SetRevertToSpot(v *RevertToSpot) *Strategy {
 func (o *Strategy) SetScalingStrategy(v *ScalingStrategy) *Strategy {
 	if o.ScalingStrategy = v; o.ScalingStrategy == nil {
 		o.nullFields = append(o.nullFields, "ScalingStrategy")
+	}
+	return o
+}
+
+func (o *Strategy) SetUtilizeCommitments(v *bool) *Strategy {
+	if o.UtilizeCommitments = v; o.UtilizeCommitments == nil {
+		o.nullFields = append(o.nullFields, "UtilizeCommitments")
 	}
 	return o
 }
