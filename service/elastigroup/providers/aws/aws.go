@@ -908,8 +908,8 @@ type RollGroupStatus struct {
 }
 
 type Progress struct {
-	Unit  *string `json:"unit,omitempty"`
-	Value *int    `json:"value,omitempty"`
+	Unit  *string  `json:"unit,omitempty"`
+	Value *float64 `json:"value,omitempty"`
 }
 
 type StopDeploymentInput struct {
