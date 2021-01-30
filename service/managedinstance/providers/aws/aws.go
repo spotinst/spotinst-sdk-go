@@ -305,6 +305,23 @@ type DeleteManagedInstanceInput struct {
 
 type DeleteManagedInstanceOutput struct{}
 
+type StatusManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
+}
+
+type StatusManagedInstanceOutput struct {
+	ID           *string    `json:"id,omitempty"`
+	ImageId      *string    `json:"imageId,omitempty"`
+	InstanceId   *string    `json:"instanceId,omitempty"`
+	InstanceType *string    `json:"instanceType,omitempty"`
+	Name         *string    `json:"name,omitempty"`
+	PrivateIp    *string    `json:"privateIp,omitempty"`
+	PublicIp     *string    `json:"publicIp,omitempty"`
+	Status       *string    `json:"status,omitempty"`
+	CreatedAt    *time.Time `json:"createdAt,omitempty"`
+	LaunchedAt   *time.Time `json:"launchedAt,omitempty"`
+}
+
 func managedInstancesFromHttpResponse(resp *http.Response) ([]*ManagedInstance, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -462,6 +479,43 @@ func (s *ServiceOp) Delete(ctx context.Context, input *DeleteManagedInstanceInpu
 	defer resp.Body.Close()
 
 	return &DeleteManagedInstanceOutput{}, nil
+}
+
+func (s *ServiceOp) Status(ctx context.Context, input *StatusManagedInstanceInput) (*StatusManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}/status", uritemplates.Values{
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var rw client.Response
+	if err := json.Unmarshal(body, &rw); err != nil {
+		return nil, err
+	}
+
+	if len(rw.Response.Items) == 0 {
+		return &StatusManagedInstanceOutput{}, nil
+	}
+
+	output := new(StatusManagedInstanceOutput)
+	if err := json.Unmarshal(rw.Response.Items[0], output); err != nil {
+		return nil, err
+	}
+
+	return output, nil
 }
 
 // region ManagedInstance
