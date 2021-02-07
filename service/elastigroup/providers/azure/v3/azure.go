@@ -48,7 +48,6 @@ type Strategy struct {
 	DrainingTimeout    *int          `json:"drainingTimeout,omitempty"`
 	SpotPercentage     *int          `json:"spotPercentage,omitempty"`
 	FallbackToOnDemand *bool         `json:"fallbackToOd,omitempty"`
-	RevertToSpot       *RevertToSpot `json:"revertToSpot,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -109,22 +108,22 @@ type MarketPlaceImage struct {
 
 type CustomImage struct {
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
-	ImageName         *string `json:"imageName,omitempty"`
+	Name              *string `json:"name,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type Network struct {
-	VirtualNetworkName *string              `json:"virtualNetworkName,omitempty"`
-	ResourceGroupName  *string              `json:"resourceGroupName,omitempty"`
-	NetworkInterfaces  []*NetworkInterfaces `json:"NetworkInterfaces,omitempty"`
+	VirtualNetworkName *string             `json:"virtualNetworkName,omitempty"`
+	ResourceGroupName  *string             `json:"resourceGroupName,omitempty"`
+	NetworkInterfaces  []*NetworkInterface `json:"networkInterfaces,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type NetworkInterfaces struct {
+type NetworkInterface struct {
 	SubnetName          *string               `json:"subnetName,omitempty"`
 	AssignPublicIP      *bool                 `json:"assignPublicIp,omitempty"`
 	IsPrimary           *bool                 `json:"isPrimary,omitempty"`
@@ -146,13 +145,6 @@ type Login struct {
 	UserName     *string `json:"userName,omitempty"`
 	SSHPublicKey *string `json:"sshPublicKey,omitempty"`
 	Password     *string `json:"password,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type RevertToSpot struct {
-	PerformAt *string `json:"performAt,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -450,13 +442,6 @@ func (o *Strategy) SetFallbackToOnDemand(v *bool) *Strategy {
 	return o
 }
 
-func (o *Strategy) SetRevertToSpot(v *RevertToSpot) *Strategy {
-	if o.RevertToSpot = v; o.RevertToSpot == nil {
-		o.nullFields = append(o.nullFields, "RevertToSpot")
-	}
-	return o
-}
-
 // endregion
 
 // region Capacity
@@ -576,23 +561,6 @@ func (o *LaunchSpecification) SetLogin(v *Login) *LaunchSpecification {
 
 // endregion
 
-// region RevertToSpot
-
-func (o RevertToSpot) MarshalJSON() ([]byte, error) {
-	type noMethod RevertToSpot
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
-	if o.PerformAt = v; o.PerformAt == nil {
-		o.nullFields = append(o.nullFields, "PerformAt")
-	}
-	return o
-}
-
-// endregion
-
 // region Image
 
 func (o Image) MarshalJSON() ([]byte, error) {
@@ -670,9 +638,9 @@ func (o *CustomImage) SetResourceGroupName(v *string) *CustomImage {
 	return o
 }
 
-func (o *CustomImage) SetImageName(v *string) *CustomImage {
-	if o.ImageName = v; o.ImageName == nil {
-		o.nullFields = append(o.nullFields, "ImageName")
+func (o *CustomImage) SetName(v *string) *CustomImage {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
@@ -701,7 +669,7 @@ func (o *Network) SetResourceGroupName(v *string) *Network {
 	return o
 }
 
-func (o *Network) SetNetworkInterfaces(v []*NetworkInterfaces) *Network {
+func (o *Network) SetNetworkInterfaces(v []*NetworkInterface) *Network {
 	if o.NetworkInterfaces = v; o.NetworkInterfaces == nil {
 		o.nullFields = append(o.nullFields, "NetworkInterfaces")
 	}
@@ -710,36 +678,36 @@ func (o *Network) SetNetworkInterfaces(v []*NetworkInterfaces) *Network {
 
 // endregion
 
-// region NetworkInterfaces
+// region NetworkInterface
 
-func (o NetworkInterfaces) MarshalJSON() ([]byte, error) {
-	type noMethod NetworkInterfaces
+func (o NetworkInterface) MarshalJSON() ([]byte, error) {
+	type noMethod NetworkInterface
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *NetworkInterfaces) SetSubnetName(v *string) *NetworkInterfaces {
+func (o *NetworkInterface) SetSubnetName(v *string) *NetworkInterface {
 	if o.SubnetName = v; o.SubnetName == nil {
 		o.nullFields = append(o.nullFields, "SubnetName")
 	}
 	return o
 }
 
-func (o *NetworkInterfaces) SetAdditionalIPConfigs(v []*AdditionalIPConfig) *NetworkInterfaces {
+func (o *NetworkInterface) SetAdditionalIPConfigs(v []*AdditionalIPConfig) *NetworkInterface {
 	if o.AdditionalIPConfigs = v; o.AdditionalIPConfigs == nil {
 		o.nullFields = append(o.nullFields, "AdditionalIPConfigs")
 	}
 	return o
 }
 
-func (o *NetworkInterfaces) SetAssignPublicIP(v *bool) *NetworkInterfaces {
+func (o *NetworkInterface) SetAssignPublicIP(v *bool) *NetworkInterface {
 	if o.AssignPublicIP = v; o.AssignPublicIP == nil {
 		o.nullFields = append(o.nullFields, "AssignPublicIP")
 	}
 	return o
 }
 
-func (o *NetworkInterfaces) SetIsPrimary(v *bool) *NetworkInterfaces {
+func (o *NetworkInterface) SetIsPrimary(v *bool) *NetworkInterface {
 	if o.IsPrimary = v; o.IsPrimary == nil {
 		o.nullFields = append(o.nullFields, "IsPrimary")
 	}

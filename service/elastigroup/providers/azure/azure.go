@@ -2101,7 +2101,7 @@ func (o *CustomImage) SetResourceGroupName(v *string) *CustomImage {
 
 func (o *CustomImage) SetImageName(v *string) *CustomImage {
 	if o.ImageName = v; o.ImageName == nil {
-		o.nullFields = append(o.nullFields, "ImageName")
+		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
