@@ -16,6 +16,7 @@ type Service interface {
 	Read(context.Context, *ReadGroupInput) (*ReadGroupOutput, error)
 	Update(context.Context, *UpdateGroupInput) (*UpdateGroupOutput, error)
 	Delete(context.Context, *DeleteGroupInput) (*DeleteGroupOutput, error)
+	List(context.Context, *ListGroupsInput) (*ListGroupsOutput, error)
 }
 
 type ServiceOp struct {
