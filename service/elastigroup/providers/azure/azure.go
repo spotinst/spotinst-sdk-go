@@ -766,7 +766,7 @@ func (s *ServiceOp) List(ctx context.Context, input *ListGroupsInput) (*ListGrou
 }
 
 func (s *ServiceOp) Create(ctx context.Context, input *CreateGroupInput) (*CreateGroupOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/azure/compute/group")
+	r := client.NewRequest(http.MethodPost, "/compute/azure/group")
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -2101,7 +2101,7 @@ func (o *CustomImage) SetResourceGroupName(v *string) *CustomImage {
 
 func (o *CustomImage) SetImageName(v *string) *CustomImage {
 	if o.ImageName = v; o.ImageName == nil {
-		o.nullFields = append(o.nullFields, "Name")
+		o.nullFields = append(o.nullFields, "ImageName")
 	}
 	return o
 }
