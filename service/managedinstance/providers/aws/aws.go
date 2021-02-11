@@ -311,12 +311,12 @@ type StatusManagedInstanceInput struct {
 
 type StatusManagedInstanceOutput struct {
 	ID           *string    `json:"id,omitempty"`
-	ImageId      *string    `json:"imageId,omitempty"`
-	InstanceId   *string    `json:"instanceId,omitempty"`
+	ImageID      *string    `json:"imageId,omitempty"`
+	InstanceID   *string    `json:"instanceId,omitempty"`
 	InstanceType *string    `json:"instanceType,omitempty"`
 	Name         *string    `json:"name,omitempty"`
-	PrivateIp    *string    `json:"privateIp,omitempty"`
-	PublicIp     *string    `json:"publicIp,omitempty"`
+	PrivateIP    *string    `json:"privateIp,omitempty"`
+	PublicIP     *string    `json:"publicIp,omitempty"`
 	Status       *string    `json:"status,omitempty"`
 	CreatedAt    *time.Time `json:"createdAt,omitempty"`
 	LaunchedAt   *time.Time `json:"launchedAt,omitempty"`
