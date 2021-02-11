@@ -499,6 +499,7 @@ type Strategy struct {
 	RevertToSpot             *RevertToSpot    `json:"revertToSpot,omitempty"`
 	ScalingStrategy          *ScalingStrategy `json:"scalingStrategy,omitempty"`
 	UtilizeCommitments       *bool            `json:"utilizeCommitments,omitempty"`
+	MinimumInstanceLifetime  *int             `json:"minimumInstanceLifetime,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3060,6 +3061,13 @@ func (o *Strategy) SetScalingStrategy(v *ScalingStrategy) *Strategy {
 func (o *Strategy) SetUtilizeCommitments(v *bool) *Strategy {
 	if o.UtilizeCommitments = v; o.UtilizeCommitments == nil {
 		o.nullFields = append(o.nullFields, "UtilizeCommitments")
+	}
+	return o
+}
+
+func (o *Strategy) SetMinimumInstanceLifetime(v *int) *Strategy {
+	if o.MinimumInstanceLifetime = v; o.MinimumInstanceLifetime == nil {
+		o.nullFields = append(o.nullFields, "MinimumInstanceLifetime")
 	}
 	return o
 }
