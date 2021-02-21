@@ -4,7 +4,7 @@ github.com/davecgh/go-spew/spew
 github.com/pmezard/go-difflib/difflib
 # github.com/smartystreets/goconvey v1.6.4
 ## explicit
-# github.com/stretchr/testify v1.6.1
+# github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
 # gopkg.in/ini.v1 v1.62.0

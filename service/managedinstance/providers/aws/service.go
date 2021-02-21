@@ -17,6 +17,7 @@ type Service interface {
 	Read(context.Context, *ReadManagedInstanceInput) (*ReadManagedInstanceOutput, error)
 	Update(context.Context, *UpdateManagedInstanceInput) (*UpdateManagedInstanceOutput, error)
 	Delete(context.Context, *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error)
+	Status(context.Context, *StatusManagedInstanceInput) (*StatusManagedInstanceOutput, error)
 }
 
 type ServiceOp struct {

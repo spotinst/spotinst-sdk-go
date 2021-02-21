@@ -36,7 +36,7 @@ vendor: ## Make vendored copy of all dependencies
 
 .PHONY: fmt
 fmt: ## Format the code
-	$(Q) gofmt -s -w $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
+	$(Q) go fmt $$($(GO) list -f {{.Dir}} ./... | grep -v /vendor/)
 
 .PHONY: imports
 imports: ## Optimize imports
