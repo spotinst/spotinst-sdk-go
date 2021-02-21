@@ -204,7 +204,7 @@ func launchSpecsFromJSON(in []byte) ([]*LaunchSpec, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		s := string(in)
-		log.Printf("Failed to parse response to json: %s", s)
+		log.Printf("Failed to parse LaunchSpecs response to json: %s", s)
 		return nil, err
 	}
 	out := make([]*LaunchSpec, len(rw.Response.Items))
