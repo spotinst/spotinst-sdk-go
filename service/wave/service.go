@@ -12,6 +12,9 @@ import (
 // the service.
 type Service interface {
 	ListClusters(context.Context, *ListClustersInput) (*ListClustersOutput, error)
+	DeleteCluster(context.Context, *DeleteClusterInput) (*DeleteClusterOutput, error)
+	// TODO Get cluster?
+	// TODO Get Spark application(s)
 }
 
 type ServiceOp struct {

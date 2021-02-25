@@ -3,8 +3,11 @@ package wave
 import (
 	"context"
 	"encoding/json"
+	"github.com/spotinst/spotinst-sdk-go/spotinst"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
@@ -50,6 +53,14 @@ type ListClustersOutput struct {
 	Clusters []*Cluster `json:"clusters,omitempty"`
 }
 
+type DeleteClusterInput struct {
+	ClusterID         *string `json:"clusterId,omitempty"`
+	ShouldDeleteOcean *bool   `json:"shouldDeleteOcean,omitempty"`
+	ForceDelete       *bool   `json:"forceDelete,omitempty"`
+}
+
+type DeleteClusterOutput struct{}
+
 func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) (*ListClustersOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/wave/cluster")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -64,6 +75,35 @@ func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) 
 	}
 
 	return &ListClustersOutput{Clusters: clusters}, nil
+}
+
+func (s *ServiceOp) DeleteCluster(ctx context.Context, input *DeleteClusterInput) (*DeleteClusterOutput, error) {
+	path, err := uritemplates.Expand("/wave/cluster/{clusterId}", uritemplates.Values{
+		"clusterId": spotinst.StringValue(input.ClusterID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodDelete, path)
+
+	if input.ShouldDeleteOcean != nil {
+		r.Params.Set("shouldDeleteOcean",
+			strconv.FormatBool(spotinst.BoolValue(input.ShouldDeleteOcean)))
+	}
+
+	if input.ForceDelete != nil {
+		r.Params.Set("forceDelete",
+			strconv.FormatBool(spotinst.BoolValue(input.ForceDelete)))
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DeleteClusterOutput{}, nil
 }
 
 func clustersFromHttpResponse(resp *http.Response) ([]*Cluster, error) {
