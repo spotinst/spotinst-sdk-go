@@ -1,26 +1,20 @@
-project_name: spotinst-sdk-go
-
 before:
-  # Global hooks.
   hooks:
     - go generate ./...
 
 builds:
-  # Skip the build. Useful for library projects.
   - skip: true
 
 changelog:
   sort: asc
-
-  # Commit messages matching the regexp listed here will be removed from the changelog.
   filters:
     exclude:
-      - '^doc:'
-      - '^docs:'
-      - '^test:'
+      - '^chore'
+      - '^ci'
+      - '^doc'
+      - '^test'
       - Merge pull request
       - Merge branch
 
 release:
-  # If set to true, will not auto-publish the release.
   draft: true
