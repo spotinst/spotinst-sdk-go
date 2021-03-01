@@ -47,17 +47,6 @@ type Component struct {
 	State           *string           `json:"state,omitempty"`
 }
 
-// TODO Remove this I think - just let the API return a validation error
-type ClusterState string
-
-const (
-	ClusterAvailable   ClusterState = "AVAILABLE"
-	ClusterProgressing ClusterState = "PROGRESSING"
-	ClusterDegraded    ClusterState = "DEGRADED"
-	ClusterFailing     ClusterState = "FAILING"
-	ClusterUnknown     ClusterState = "UNKNOWN"
-)
-
 type SparkApplication struct {
 	ID                *string `json:"id,omitempty"`
 	ApplicationID     *string `json:"applicationId,omitempty"`
@@ -67,16 +56,14 @@ type SparkApplication struct {
 	Heritage          *string `json:"heritage,omitempty"`
 	ApplicationState  *string `json:"applicationState,omitempty"`
 
-	// TODO More fields?
-
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 }
 
 type ListClustersInput struct {
-	ClusterIdentifier *string       `json:"clusterIdentifier,omitempty"`
-	ClusterState      *ClusterState `json:"clusterState,omitempty"`
+	ClusterIdentifier *string `json:"clusterIdentifier,omitempty"`
+	ClusterState      *string `json:"clusterState,omitempty"`
 }
 
 type ListClustersOutput struct {
@@ -129,7 +116,7 @@ func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) 
 		}
 
 		if input.ClusterState != nil {
-			r.Params.Set("state", string(*input.ClusterState))
+			r.Params.Set("state", spotinst.StringValue(input.ClusterState))
 		}
 	}
 
