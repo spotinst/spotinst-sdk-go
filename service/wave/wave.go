@@ -3,14 +3,14 @@ package wave
 import (
 	"context"
 	"encoding/json"
-	"github.com/spotinst/spotinst-sdk-go/spotinst"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
 
+	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
 type Cluster struct {
