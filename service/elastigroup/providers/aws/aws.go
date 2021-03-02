@@ -4336,3 +4336,19 @@ func (o *MetadataOptions) SetHTTPPutResponseHopLimit(v *int) *MetadataOptions {
 }
 
 // endregion
+
+// region CPUOptions
+
+func (o CPUOptions) MarshalJSON() ([]byte, error) {
+	type noMethod CPUOptions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+func (o *CPUOptions) SetThreadsPerCore(v *int) *CPUOptions {
+	if o.ThreadsPerCore = v; o.ThreadsPerCore == nil {
+		o.nullFields = append(o.nullFields, "ThreadsPerCore")
+	}
+	return o
+}
+
+// endregion
