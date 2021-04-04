@@ -105,26 +105,26 @@ type Compute struct {
 }
 
 type LaunchSpecification struct {
-	SecurityGroupIDs    []string               `json:"securityGroupIds,omitempty"`
-	ImageID             *string                `json:"imageId,omitempty"`
-	KeyPair             *string                `json:"keyPair,omitempty"`
-	UserData            *string                `json:"userData,omitempty"`
-	ShutdownScript      *string                `json:"shutdownScript,omitempty"`
-	Tenancy             *string                `json:"tenancy,omitempty"`
-	Monitoring          *bool                  `json:"monitoring,omitempty"`
-	EBSOptimized        *bool                  `json:"ebsOptimized,omitempty"`
-	InstanceTypes       *InstanceTypes         `json:"instanceTypes,omitempty"`
-	CreditSpecification *CreditSpecification   `json:"creditSpecification,omitempty"`
-	IAMInstanceProfile  *IAMInstanceProfile    `json:"iamRole,omitempty"`
-	NetworkInterfaces   []*NetworkInterface    `json:"networkInterfaces,omitempty"`
-	Tags                []*Tag                 `json:"tags,omitempty"`
-	BlockDeviceMappings []*BlockDeviceMappings `json:"blockDeviceMappings,omitempty"`
+	SecurityGroupIDs    []string              `json:"securityGroupIds,omitempty"`
+	ImageID             *string               `json:"imageId,omitempty"`
+	KeyPair             *string               `json:"keyPair,omitempty"`
+	UserData            *string               `json:"userData,omitempty"`
+	ShutdownScript      *string               `json:"shutdownScript,omitempty"`
+	Tenancy             *string               `json:"tenancy,omitempty"`
+	Monitoring          *bool                 `json:"monitoring,omitempty"`
+	EBSOptimized        *bool                 `json:"ebsOptimized,omitempty"`
+	InstanceTypes       *InstanceTypes        `json:"instanceTypes,omitempty"`
+	CreditSpecification *CreditSpecification  `json:"creditSpecification,omitempty"`
+	IAMInstanceProfile  *IAMInstanceProfile   `json:"iamRole,omitempty"`
+	NetworkInterfaces   []*NetworkInterface   `json:"networkInterfaces,omitempty"`
+	Tags                []*Tag                `json:"tags,omitempty"`
+	BlockDeviceMappings []*BlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type BlockDeviceMappings struct {
+type BlockDeviceMapping struct {
 	DeviceName *string `json:"deviceName,omitempty"`
 	EBS        *EBS    `json:"ebs,omitempty"`
 
@@ -1019,7 +1019,7 @@ func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
 	return o
 }
 
-func (o *LaunchSpecification) SetBlockDeviceMappings(v []*BlockDeviceMappings) *LaunchSpecification {
+func (o *LaunchSpecification) SetBlockDeviceMappings(v []*BlockDeviceMapping) *LaunchSpecification {
 	if o.BlockDeviceMappings = v; o.BlockDeviceMappings == nil {
 		o.nullFields = append(o.nullFields, "BlockDeviceMappings")
 	}
@@ -1285,20 +1285,20 @@ func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
 
 // region BlockDeviceMappings
 
-func (o BlockDeviceMappings) MarshalJSON() ([]byte, error) {
-	type noMethod BlockDeviceMappings
+func (o BlockDeviceMapping) MarshalJSON() ([]byte, error) {
+	type noMethod BlockDeviceMapping
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *BlockDeviceMappings) SetDeviceName(v *string) *BlockDeviceMappings {
+func (o *BlockDeviceMapping) SetDeviceName(v *string) *BlockDeviceMapping {
 	if o.DeviceName = v; o.DeviceName == nil {
 		o.nullFields = append(o.nullFields, "DeviceName")
 	}
 	return o
 }
 
-func (o *BlockDeviceMappings) SetEBS(v *EBS) *BlockDeviceMappings {
+func (o *BlockDeviceMapping) SetEBS(v *EBS) *BlockDeviceMapping {
 	if o.EBS = v; o.EBS == nil {
 		o.nullFields = append(o.nullFields, "EBS")
 	}
