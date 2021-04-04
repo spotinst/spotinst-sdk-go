@@ -1283,7 +1283,7 @@ func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
 
 // endregion
 
-// region BlockDeviceMappings
+// region BlockDeviceMapping
 
 func (o BlockDeviceMapping) MarshalJSON() ([]byte, error) {
 	type noMethod BlockDeviceMapping
