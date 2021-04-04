@@ -105,19 +105,39 @@ type Compute struct {
 }
 
 type LaunchSpecification struct {
-	SecurityGroupIDs    []string             `json:"securityGroupIds,omitempty"`
-	ImageID             *string              `json:"imageId,omitempty"`
-	KeyPair             *string              `json:"keyPair,omitempty"`
-	UserData            *string              `json:"userData,omitempty"`
-	ShutdownScript      *string              `json:"shutdownScript,omitempty"`
-	Tenancy             *string              `json:"tenancy,omitempty"`
-	Monitoring          *bool                `json:"monitoring,omitempty"`
-	EBSOptimized        *bool                `json:"ebsOptimized,omitempty"`
-	InstanceTypes       *InstanceTypes       `json:"instanceTypes,omitempty"`
-	CreditSpecification *CreditSpecification `json:"creditSpecification,omitempty"`
-	IAMInstanceProfile  *IAMInstanceProfile  `json:"iamRole,omitempty"`
-	NetworkInterfaces   []*NetworkInterface  `json:"networkInterfaces,omitempty"`
-	Tags                []*Tag               `json:"tags,omitempty"`
+	SecurityGroupIDs    []string              `json:"securityGroupIds,omitempty"`
+	ImageID             *string               `json:"imageId,omitempty"`
+	KeyPair             *string               `json:"keyPair,omitempty"`
+	UserData            *string               `json:"userData,omitempty"`
+	ShutdownScript      *string               `json:"shutdownScript,omitempty"`
+	Tenancy             *string               `json:"tenancy,omitempty"`
+	Monitoring          *bool                 `json:"monitoring,omitempty"`
+	EBSOptimized        *bool                 `json:"ebsOptimized,omitempty"`
+	InstanceTypes       *InstanceTypes        `json:"instanceTypes,omitempty"`
+	CreditSpecification *CreditSpecification  `json:"creditSpecification,omitempty"`
+	IAMInstanceProfile  *IAMInstanceProfile   `json:"iamRole,omitempty"`
+	NetworkInterfaces   []*NetworkInterface   `json:"networkInterfaces,omitempty"`
+	Tags                []*Tag                `json:"tags,omitempty"`
+	BlockDeviceMappings []*BlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type BlockDeviceMapping struct {
+	DeviceName *string `json:"deviceName,omitempty"`
+	EBS        *EBS    `json:"ebs,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type EBS struct {
+	DeleteOnTermination *bool   `json:"deleteOnTermination,omitempty"`
+	VolumeType          *string `json:"volumeType,omitempty"`
+	IOPS                *int    `json:"iops,omitempty"`
+	VolumeSize          *int    `json:"volumeSize,omitempty"`
+	Throughput          *int    `json:"throughput,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -999,6 +1019,13 @@ func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
 	return o
 }
 
+func (o *LaunchSpecification) SetBlockDeviceMappings(v []*BlockDeviceMapping) *LaunchSpecification {
+	if o.BlockDeviceMappings = v; o.BlockDeviceMappings == nil {
+		o.nullFields = append(o.nullFields, "BlockDeviceMappings")
+	}
+	return o
+}
+
 // endregion
 
 // region NetworkInterface
@@ -1250,6 +1277,75 @@ func (o RevertToSpot) MarshalJSON() ([]byte, error) {
 func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
 	if o.PerformAt = v; o.PerformAt == nil {
 		o.nullFields = append(o.nullFields, "PerformAt")
+	}
+	return o
+}
+
+// endregion
+
+// region BlockDeviceMapping
+
+func (o BlockDeviceMapping) MarshalJSON() ([]byte, error) {
+	type noMethod BlockDeviceMapping
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *BlockDeviceMapping) SetDeviceName(v *string) *BlockDeviceMapping {
+	if o.DeviceName = v; o.DeviceName == nil {
+		o.nullFields = append(o.nullFields, "DeviceName")
+	}
+	return o
+}
+
+func (o *BlockDeviceMapping) SetEBS(v *EBS) *BlockDeviceMapping {
+	if o.EBS = v; o.EBS == nil {
+		o.nullFields = append(o.nullFields, "EBS")
+	}
+	return o
+}
+
+// endregion
+
+// region EBS
+
+func (o EBS) MarshalJSON() ([]byte, error) {
+	type noMethod EBS
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *EBS) SetIOPS(v *int) *EBS {
+	if o.IOPS = v; o.IOPS == nil {
+		o.nullFields = append(o.nullFields, "IOPS")
+	}
+	return o
+}
+
+func (o *EBS) SetThroughput(v *int) *EBS {
+	if o.Throughput = v; o.Throughput == nil {
+		o.nullFields = append(o.nullFields, "Throughput")
+	}
+	return o
+}
+
+func (o *EBS) SetVolumeSize(v *int) *EBS {
+	if o.VolumeSize = v; o.VolumeSize == nil {
+		o.nullFields = append(o.nullFields, "VolumeSize")
+	}
+	return o
+}
+
+func (o *EBS) SetVolumeType(v *string) *EBS {
+	if o.VolumeType = v; o.VolumeType == nil {
+		o.nullFields = append(o.nullFields, "VolumeType")
+	}
+	return o
+}
+
+func (o *EBS) SetDeleteOnTermination(v *bool) *EBS {
+	if o.DeleteOnTermination = v; o.DeleteOnTermination == nil {
+		o.nullFields = append(o.nullFields, "DeleteOnTermination")
 	}
 	return o
 }
