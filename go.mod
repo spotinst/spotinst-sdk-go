@@ -1,6 +1,6 @@
 module github.com/spotinst/spotinst-sdk-go
 
-go 1.15
+go 1.16
 
 require (
 	github.com/smartystreets/goconvey v1.6.4 // indirect
