@@ -19,6 +19,9 @@ type Service interface {
 	Delete(context.Context, *DeleteManagedInstanceInput) (*DeleteManagedInstanceOutput, error)
 	Status(context.Context, *StatusManagedInstanceInput) (*StatusManagedInstanceOutput, error)
 	Costs(context.Context, *CostsManagedInstanceInput) (*CostsManagedInstanceOutput, error)
+	Pause(context.Context, *PauseManagedInstanceInput) (*PauseManagedInstanceOutput, error)
+	Resume(context.Context, *ResumeManagedInstanceInput) (*ResumeManagedInstanceOutput, error)
+	Recycle(context.Context, *RecycleManagedInstanceInput) (*RecycleManagedInstanceOutput, error)
 }
 
 type ServiceOp struct {
