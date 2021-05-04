@@ -845,6 +845,20 @@ func (o *LaunchSpecification) SetLogin(v *Login) *LaunchSpecification {
 	return o
 }
 
+func (o *LaunchSpecification) SetExtensions(v []*Extension) *LaunchSpecification {
+	if o.Extensions = v; o.Extensions == nil {
+		o.nullFields = append(o.nullFields, "Extensions")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetLoadBalancersConfig(v *LoadBalancersConfig) *LaunchSpecification {
+	if o.LoadBalancersConfig = v; o.LoadBalancersConfig == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancersConfig")
+	}
+	return o
+}
+
 // endregion
 
 // region Image
