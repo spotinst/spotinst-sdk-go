@@ -104,7 +104,7 @@ type Automatic struct {
 }
 
 type VMSizes struct {
-	Whitelist []*string `json:"whitelist,omitempty"`
+	Whitelist []string `json:"whitelist,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -794,7 +794,7 @@ func (o VMSizes) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VMSizes) SetWhitelist(v []*string) *VMSizes {
+func (o *VMSizes) SetWhitelist(v []string) *VMSizes {
 	if o.Whitelist = v; o.Whitelist == nil {
 		o.nullFields = append(o.nullFields, "Whitelist")
 	}
