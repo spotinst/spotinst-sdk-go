@@ -178,11 +178,11 @@ type MarketplaceImage struct {
 }
 
 type LoadBalancer struct {
-	BackendPoolNames  []*string `json:"backendPoolNames,omitempty"`
-	LoadBalancerSKU   *string   `json:"loadBalancerSku,omitempty"`
-	Name              *string   `json:"name,omitempty"`
-	ResourceGroupName *string   `json:"resourceGroupName,omitempty"`
-	Type              *string   `json:"type,omitempty"`
+	BackendPoolNames  []string `json:"backendPoolNames,omitempty"`
+	LoadBalancerSKU   *string  `json:"loadBalancerSku,omitempty"`
+	Name              *string  `json:"name,omitempty"`
+	ResourceGroupName *string  `json:"resourceGroupName,omitempty"`
+	Type              *string  `json:"type,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -194,6 +194,7 @@ type NetworkInterface struct {
 	IsPrimary           *bool                 `json:"isPrimary,omitempty"`
 	EnableIPForwarding  *bool                 `json:"enableIPForwarding,omitempty"`
 	PublicIPSKU         *string               `json:"publicIpSku,omitempty"`
+	SecurityGroup       *SecurityGroup        `json:"securityGroup,omitempty"`
 	AdditionalIPConfigs []*AdditionalIPConfig `json:"additionalIpConfigurations,omitempty"`
 
 	forceSendFields []string
@@ -859,6 +860,20 @@ func (o *LaunchSpecification) SetLoadBalancersConfig(v *LoadBalancersConfig) *La
 	return o
 }
 
+func (o *LaunchSpecification) SetOSDisk(v *OSDisk) *LaunchSpecification {
+	if o.OSDisk = v; o.OSDisk == nil {
+		o.nullFields = append(o.nullFields, "OSDisk")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
 // endregion
 
 // region Image
@@ -997,6 +1012,14 @@ func (o *NetworkInterface) SetPublicIPSKU(v *string) *NetworkInterface {
 	return o
 }
 
+func (o *NetworkInterface) SetSecurityGroup(v *SecurityGroup) *NetworkInterface {
+	if o.SecurityGroup = v; o.SecurityGroup == nil {
+		o.nullFields = append(o.nullFields, "SecurityGroup")
+	}
+	return o
+}
+
+
 // endregion
 
 // region AdditionalIPConfig
@@ -1102,7 +1125,7 @@ func (o LoadBalancersConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LoadBalancersConfig) SetUserName(v []*LoadBalancer) *LoadBalancersConfig {
+func (o *LoadBalancersConfig) SetLoadBalancers(v []*LoadBalancer) *LoadBalancersConfig {
 	if o.LoadBalancers = v; o.LoadBalancers == nil {
 		o.nullFields = append(o.nullFields, "LoadBalancers")
 	}
@@ -1147,7 +1170,7 @@ func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
 	return o
 }
 
-func (o *LoadBalancer) SeBackendPoolNames(v []*string) *LoadBalancer {
+func (o *LoadBalancer) SeBackendPoolNames(v []string) *LoadBalancer {
 	if o.BackendPoolNames = v; o.BackendPoolNames == nil {
 		o.nullFields = append(o.nullFields, "BackendPoolNames")
 	}
