@@ -1019,7 +1019,6 @@ func (o *NetworkInterface) SetSecurityGroup(v *SecurityGroup) *NetworkInterface 
 	return o
 }
 
-
 // endregion
 
 // region AdditionalIPConfig
