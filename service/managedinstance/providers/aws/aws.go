@@ -343,6 +343,29 @@ type StatusManagedInstanceOutput struct {
 	LaunchedAt   *time.Time `json:"launchedAt,omitempty"`
 }
 
+type CostsManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
+	AggregationPeriod *string `json:"aggregationPeriod,omitempty"`
+	FromDate          *string `json:"fromDate,omitempty"`
+	ToDate            *string `json:"toDate,omitempty"`
+}
+
+type CostsManagedInstanceOutput struct {
+	Costs   *Costs     `json:"costs"`
+	Running *UnitValue `json:"running"`
+	Savings *UnitValue `json:"savings"`
+}
+
+type Costs struct {
+	Actual    *float32 `json:"actual,omitempty"`
+	Potential *float32 `json:"potential,omitempty"`
+}
+
+type UnitValue struct {
+	Unit  *string  `json:"unit,omitempty"`
+	Value *float32 `json:"value,omitempty"`
+}
+
 func managedInstancesFromHttpResponse(resp *http.Response) ([]*ManagedInstance, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -532,6 +555,56 @@ func (s *ServiceOp) Status(ctx context.Context, input *StatusManagedInstanceInpu
 	}
 
 	output := new(StatusManagedInstanceOutput)
+	if err := json.Unmarshal(rw.Response.Items[0], output); err != nil {
+		return nil, err
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) Costs(ctx context.Context, input *CostsManagedInstanceInput) (*CostsManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}/costs", uritemplates.Values{
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+
+	if input.AggregationPeriod != nil {
+		r.Params.Set("aggregationPeriod", spotinst.StringValue(input.AggregationPeriod))
+	}
+
+	if input.FromDate != nil {
+		r.Params.Set("fromDate", spotinst.StringValue(input.FromDate))
+	}
+
+	if input.ToDate != nil {
+		r.Params.Set("toDate", spotinst.StringValue(input.ToDate))
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var rw client.Response
+	if err := json.Unmarshal(body, &rw); err != nil {
+		return nil, err
+	}
+
+	if len(rw.Response.Items) == 0 {
+		return &CostsManagedInstanceOutput{}, nil
+	}
+
+	output := new(CostsManagedInstanceOutput)
 	if err := json.Unmarshal(rw.Response.Items[0], output); err != nil {
 		return nil, err
 	}
