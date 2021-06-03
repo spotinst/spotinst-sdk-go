@@ -184,6 +184,7 @@ type Strategy struct {
 	UtilizeReservedInstances *bool         `json:"utilizeReservedInstances,omitempty"`
 	OptimizationWindows      []string      `json:"optimizationWindows,omitempty"`
 	RevertToSpot             *RevertToSpot `json:"revertToSpot,omitempty"`
+	MinimumInstanceLifetime  *int          `json:"minimumInstanceLifetime,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1333,6 +1334,13 @@ func (o *Strategy) SetOrientation(v *string) *Strategy {
 func (o *Strategy) SetLifeCycle(v *string) *Strategy {
 	if o.LifeCycle = v; o.LifeCycle == nil {
 		o.nullFields = append(o.nullFields, "LifeCycle")
+	}
+	return o
+}
+
+func (o *Strategy) SetMinimumInstanceLifetime(v *int) *Strategy {
+	if o.MinimumInstanceLifetime = v; o.MinimumInstanceLifetime == nil {
+		o.nullFields = append(o.nullFields, "MinimumInstanceLifetime")
 	}
 	return o
 }
