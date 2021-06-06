@@ -289,6 +289,18 @@ type LoadBalancer struct {
 	nullFields      []string
 }
 
+type AMIBackup struct {
+	ShouldDeleteImages *bool `json:"shouldDeleteImages,omitempty"`
+}
+
+type DeallocationConfig struct {
+	ShouldDeleteImages            *bool `json:"shouldDeleteImages,omitempty"`
+	ShouldDeleteNetworkInterfaces *bool `json:"shouldDeleteNetworkInterfaces,omitempty"`
+	ShouldDeleteSnapshots         *bool `json:"shouldDeleteSnapshots,omitempty"`
+	ShouldDeleteVolumes           *bool `json:"shouldDeleteVolumes,omitempty"`
+	ShouldTerminateInstance       *bool `json:"shouldTerminateInstance,omitempty"`
+}
+
 type ListManagedInstancesInput struct{}
 
 type ListManagedInstancesOutput struct {
@@ -321,7 +333,9 @@ type UpdateManagedInstanceOutput struct {
 }
 
 type DeleteManagedInstanceInput struct {
-	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
+	ManagedInstanceID  *string             `json:"managedInstanceId,omitempty"`
+	AMIBackup          *AMIBackup          `json:"amiBackup,omitempty"`
+	DeallocationConfig *DeallocationConfig `json:"deallocationConfig,omitempty"`
 }
 
 type DeleteManagedInstanceOutput struct{}
@@ -355,6 +369,24 @@ type CostsManagedInstanceOutput struct {
 	Running *UnitValue `json:"running"`
 	Savings *UnitValue `json:"savings"`
 }
+
+type PauseManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
+}
+
+type PauseManagedInstanceOutput struct{}
+
+type ResumeManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
+}
+
+type ResumeManagedInstanceOutput struct{}
+
+type RecycleManagedInstanceInput struct {
+	ManagedInstanceID *string `json:"managedInstanceId,omitempty"`
+}
+
+type RecycleManagedInstanceOutput struct{}
 
 type Costs struct {
 	Actual    *float32 `json:"actual,omitempty"`
@@ -514,7 +546,11 @@ func (s *ServiceOp) Delete(ctx context.Context, input *DeleteManagedInstanceInpu
 		return nil, err
 	}
 
+	// We do not need the ID anymore so let's drop it.
+	input.ManagedInstanceID = nil
+
 	r := client.NewRequest(http.MethodDelete, path)
+	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -610,6 +646,60 @@ func (s *ServiceOp) Costs(ctx context.Context, input *CostsManagedInstanceInput)
 	}
 
 	return output, nil
+}
+
+func (s *ServiceOp) Pause(ctx context.Context, input *PauseManagedInstanceInput) (*PauseManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}/pause", uritemplates.Values{
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &PauseManagedInstanceOutput{}, nil
+}
+
+func (s *ServiceOp) Resume(ctx context.Context, input *ResumeManagedInstanceInput) (*ResumeManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}/resume", uritemplates.Values{
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &ResumeManagedInstanceOutput{}, nil
+}
+
+func (s *ServiceOp) Recycle(ctx context.Context, input *RecycleManagedInstanceInput) (*RecycleManagedInstanceOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/managedInstance/{managedInstanceId}/recycle", uritemplates.Values{
+		"managedInstanceId": spotinst.StringValue(input.ManagedInstanceID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &RecycleManagedInstanceOutput{}, nil
 }
 
 // region ManagedInstance

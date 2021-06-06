@@ -124,10 +124,11 @@ type Network struct {
 }
 
 type NetworkInterface struct {
-	SubnetName          *string               `json:"subnetName,omitempty"`
-	AssignPublicIP      *bool                 `json:"assignPublicIp,omitempty"`
-	IsPrimary           *bool                 `json:"isPrimary,omitempty"`
-	AdditionalIPConfigs []*AdditionalIPConfig `json:"additionalIpConfigurations,omitempty"`
+	SubnetName                *string                     `json:"subnetName,omitempty"`
+	AssignPublicIP            *bool                       `json:"assignPublicIp,omitempty"`
+	IsPrimary                 *bool                       `json:"isPrimary,omitempty"`
+	AdditionalIPConfigs       []*AdditionalIPConfig       `json:"additionalIpConfigurations,omitempty"`
+	ApplicationSecurityGroups []*ApplicationSecurityGroup `json:"applicationSecurityGroups,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -145,6 +146,14 @@ type Login struct {
 	UserName     *string `json:"userName,omitempty"`
 	SSHPublicKey *string `json:"sshPublicKey,omitempty"`
 	Password     *string `json:"password,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ApplicationSecurityGroup struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -714,6 +723,13 @@ func (o *NetworkInterface) SetIsPrimary(v *bool) *NetworkInterface {
 	return o
 }
 
+func (o *NetworkInterface) SetApplicationSecurityGroups(v []*ApplicationSecurityGroup) *NetworkInterface {
+	if o.ApplicationSecurityGroups = v; o.ApplicationSecurityGroups == nil {
+		o.nullFields = append(o.nullFields, "ApplicationSecurityGroups")
+	}
+	return o
+}
+
 // endregion
 
 // region AdditionalIPConfig
@@ -724,7 +740,6 @@ func (o AdditionalIPConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-// SetName sets the name
 func (o *AdditionalIPConfig) SetName(v *string) *AdditionalIPConfig {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
@@ -732,7 +747,6 @@ func (o *AdditionalIPConfig) SetName(v *string) *AdditionalIPConfig {
 	return o
 }
 
-// SetPrivateIPAddressVersion sets the ip address version
 func (o *AdditionalIPConfig) SetPrivateIPAddressVersion(v *string) *AdditionalIPConfig {
 	if o.PrivateIPAddressVersion = v; o.PrivateIPAddressVersion == nil {
 		o.nullFields = append(o.nullFields, "PrivateIPAddressVersion")
@@ -767,6 +781,30 @@ func (o *Login) SetSSHPublicKey(v *string) *Login {
 func (o *Login) SetPassword(v *string) *Login {
 	if o.Password = v; o.Password == nil {
 		o.nullFields = append(o.nullFields, "Password")
+	}
+	return o
+}
+
+// endregion
+
+// region ApplicationSecurityGroup
+
+func (o ApplicationSecurityGroup) MarshalJSON() ([]byte, error) {
+	type noMethod ApplicationSecurityGroup
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ApplicationSecurityGroup) SetName(v *string) *ApplicationSecurityGroup {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *ApplicationSecurityGroup) SetResourceGroupName(v *string) *ApplicationSecurityGroup {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
 	}
 	return o
 }
