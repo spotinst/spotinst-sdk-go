@@ -25,6 +25,7 @@ type LaunchSpec struct {
 	Tags               []*Tag              `json:"tags,omitempty"`
 	Strategy           *LaunchSpecStrategy `json:"strategy,omitempty"`
 	RootVolumeSizeInGB *int                `json:"rootVolumeSizeInGb,omitempty"`
+	RootVolumeType     *string             `json:"rootVolumeType,omitempty"`
 	ServiceAccount     *string             `json:"serviceAccount,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
