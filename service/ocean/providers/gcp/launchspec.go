@@ -578,3 +578,29 @@ func (o *LaunchSpecStrategy) SetPreemptiblePercentage(v *int) *LaunchSpecStrateg
 }
 
 //endregion
+
+
+// region ShieldedInstanceConfig
+
+func (o ShieldedInstanceConfig) MarshalJSON() ([]byte, error) {
+	type noMethod ShieldedInstanceConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ShieldedInstanceConfig) SetEnableIntegrityMonitoring(v *bool) *ShieldedInstanceConfig {
+	if o.EnableIntegrityMonitoring = v; o.EnableIntegrityMonitoring == nil {
+		o.nullFields = append(o.nullFields, "EnableIntegrityMonitoring")
+	}
+	return o
+}
+
+func (o *ShieldedInstanceConfig) SetEnableSecureBoot(v *bool) *ShieldedInstanceConfig {
+	if o.EnableSecureBoot = v; o.EnableSecureBoot == nil {
+		o.nullFields = append(o.nullFields, "EnableSecureBoot")
+	}
+	return o
+}
+
+//endregion
+
