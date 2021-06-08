@@ -27,8 +27,7 @@ type LaunchSpec struct {
 	RootVolumeSizeInGB     *int                    `json:"rootVolumeSizeInGb,omitempty"`
 	RootVolumeType         *string                 `json:"rootVolumeType,omitempty"`
 	ShieldedInstanceConfig *ShieldedInstanceConfig `json:"shieldedInstanceConfig,omitempty"`
-
-	ServiceAccount *string `json:"serviceAccount,omitempty"`
+	ServiceAccount         *string                 `json:"serviceAccount,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -579,7 +578,6 @@ func (o *LaunchSpecStrategy) SetPreemptiblePercentage(v *int) *LaunchSpecStrateg
 
 //endregion
 
-
 // region ShieldedInstanceConfig
 
 func (o ShieldedInstanceConfig) MarshalJSON() ([]byte, error) {
@@ -603,4 +601,3 @@ func (o *ShieldedInstanceConfig) SetEnableSecureBoot(v *bool) *ShieldedInstanceC
 }
 
 //endregion
-
