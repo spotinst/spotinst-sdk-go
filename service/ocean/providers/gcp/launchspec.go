@@ -24,7 +24,6 @@ type LaunchSpec struct {
 	RestrictScaleDown  *bool               `json:"restrictScaleDown,omitempty"`
 	Tags               []*Tag              `json:"tags,omitempty"`
 	Strategy           *LaunchSpecStrategy `json:"strategy,omitempty"`
-	IPForwarding       *bool               `json:"ipForwarding,omitempty"`
 	RootVolumeSizeInGB *int                `json:"rootVolumeSizeInGb,omitempty"`
 	ServiceAccount     *string             `json:"serviceAccount,omitempty"`
 
