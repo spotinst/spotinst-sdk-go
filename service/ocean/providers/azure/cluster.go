@@ -125,12 +125,16 @@ type LaunchSpecification struct {
 	nullFields      []string
 }
 
+type ProtectedSettings struct {
+	Script *string `json:"script,omitempty"`
+}
 type Extension struct {
-	APIVersion              *string `json:"apiVersion,omitempty"`
-	MinorVersionAutoUpgrade *bool   `json:"minorVersionAutoUpgrade,omitempty"`
-	Name                    *string `json:"name,omitempty"`
-	Publisher               *string `json:"publisher,omitempty"`
-	Type                    *string `json:"type,omitempty"`
+	APIVersion              *string            `json:"apiVersion,omitempty"`
+	MinorVersionAutoUpgrade *bool              `json:"minorVersionAutoUpgrade,omitempty"`
+	Name                    *string            `json:"name,omitempty"`
+	Publisher               *string            `json:"publisher,omitempty"`
+	Type                    *string            `json:"type,omitempty"`
+	ProtectedSettings       *ProtectedSettings `json:"protectedSettings,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
