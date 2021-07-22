@@ -600,26 +600,27 @@ type AvailabilityZone struct {
 }
 
 type LaunchSpecification struct {
-	LoadBalancerNames                             []string              `json:"loadBalancerNames,omitempty"`
-	LoadBalancersConfig                           *LoadBalancersConfig  `json:"loadBalancersConfig,omitempty"`
-	SecurityGroupIDs                              []string              `json:"securityGroupIds,omitempty"`
-	HealthCheckType                               *string               `json:"healthCheckType,omitempty"`
-	HealthCheckGracePeriod                        *int                  `json:"healthCheckGracePeriod,omitempty"`
-	HealthCheckUnhealthyDurationBeforeReplacement *int                  `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
-	ImageID                                       *string               `json:"imageId,omitempty"`
-	KeyPair                                       *string               `json:"keyPair,omitempty"`
-	UserData                                      *string               `json:"userData,omitempty"`
-	ShutdownScript                                *string               `json:"shutdownScript,omitempty"`
-	Tenancy                                       *string               `json:"tenancy,omitempty"`
-	Monitoring                                    *bool                 `json:"monitoring,omitempty"`
-	EBSOptimized                                  *bool                 `json:"ebsOptimized,omitempty"`
-	IAMInstanceProfile                            *IAMInstanceProfile   `json:"iamRole,omitempty"`
-	CreditSpecification                           *CreditSpecification  `json:"creditSpecification,omitempty"`
-	BlockDeviceMappings                           []*BlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
-	NetworkInterfaces                             []*NetworkInterface   `json:"networkInterfaces,omitempty"`
-	Tags                                          []*Tag                `json:"tags,omitempty"`
-	MetadataOptions                               *MetadataOptions      `json:"metadataOptions,omitempty"`
-	CPUOptions                                    *CPUOptions           `json:"cpuOptions,omitempty"`
+	LoadBalancerNames                             []string                  `json:"loadBalancerNames,omitempty"`
+	LoadBalancersConfig                           *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
+	SecurityGroupIDs                              []string                  `json:"securityGroupIds,omitempty"`
+	HealthCheckType                               *string                   `json:"healthCheckType,omitempty"`
+	HealthCheckGracePeriod                        *int                      `json:"healthCheckGracePeriod,omitempty"`
+	HealthCheckUnhealthyDurationBeforeReplacement *int                      `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
+	ImageID                                       *string                   `json:"imageId,omitempty"`
+	KeyPair                                       *string                   `json:"keyPair,omitempty"`
+	UserData                                      *string                   `json:"userData,omitempty"`
+	ShutdownScript                                *string                   `json:"shutdownScript,omitempty"`
+	Tenancy                                       *string                   `json:"tenancy,omitempty"`
+	Monitoring                                    *bool                     `json:"monitoring,omitempty"`
+	EBSOptimized                                  *bool                     `json:"ebsOptimized,omitempty"`
+	IAMInstanceProfile                            *IAMInstanceProfile       `json:"iamRole,omitempty"`
+	CreditSpecification                           *CreditSpecification      `json:"creditSpecification,omitempty"`
+	BlockDeviceMappings                           []*BlockDeviceMapping     `json:"blockDeviceMappings,omitempty"`
+	NetworkInterfaces                             []*NetworkInterface       `json:"networkInterfaces,omitempty"`
+	Tags                                          []*Tag                    `json:"tags,omitempty"`
+	MetadataOptions                               *MetadataOptions          `json:"metadataOptions,omitempty"`
+	CPUOptions                                    *CPUOptions               `json:"cpuOptions,omitempty"`
+	ResourceTagSpecification                      *ResourceTagSpecification `json:"resourceTagSpecification,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -635,6 +636,44 @@ type MetadataOptions struct {
 
 type CPUOptions struct {
 	ThreadsPerCore *int `json:"threadsPerCore,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ResourceTagSpecification struct {
+	Volumes   *Volumes   `json:"volumes,omitempty"`
+	Snapshots *Snapshots `json:"snapshots,omitempty"`
+	ENIs      *ENIs      `json:"enis,omitempty"`
+	AMIs      *AMIs      `json:"amis,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Volumes struct {
+	ShouldTag *bool `json:"shouldTag,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Snapshots struct {
+	ShouldTag *bool `json:"shouldTag,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ENIs struct {
+	ShouldTag *bool `json:"shouldTag,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AMIs struct {
+	ShouldTag *bool `json:"shouldTag,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3766,6 +3805,13 @@ func (o *LaunchSpecification) SetCPUOptions(v *CPUOptions) *LaunchSpecification 
 	return o
 }
 
+func (o *LaunchSpecification) SetResourceTagSpecification(v *ResourceTagSpecification) *LaunchSpecification {
+	if o.ResourceTagSpecification = v; o.ResourceTagSpecification == nil {
+		o.nullFields = append(o.nullFields, "ResourceTagSpecification")
+	}
+	return o
+}
+
 // endregion
 
 // region LoadBalancersConfig
@@ -4626,6 +4672,112 @@ func (o *Device) SetVolumeID(v *string) *Device {
 func (o *Device) SetSnapshotID(v *string) *Device {
 	if o.SnapshotID = v; o.SnapshotID == nil {
 		o.nullFields = append(o.nullFields, "SnapshotID")
+	}
+	return o
+}
+
+// endregion
+
+// region ResourceTagSpecification
+
+func (o ResourceTagSpecification) MarshalJSON() ([]byte, error) {
+	type noMethod ResourceTagSpecification
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ResourceTagSpecification) SetVolumes(v *Volumes) *ResourceTagSpecification {
+	if o.Volumes = v; o.Volumes == nil {
+		o.nullFields = append(o.nullFields, "Volumes")
+	}
+	return o
+}
+
+func (o *ResourceTagSpecification) SetSnapshots(v *Snapshots) *ResourceTagSpecification {
+	if o.Snapshots = v; o.Snapshots == nil {
+		o.nullFields = append(o.nullFields, "Snapshots")
+	}
+	return o
+}
+
+func (o *ResourceTagSpecification) SetENIs(v *ENIs) *ResourceTagSpecification {
+	if o.ENIs = v; o.ENIs == nil {
+		o.nullFields = append(o.nullFields, "ENIs")
+	}
+	return o
+}
+
+func (o *ResourceTagSpecification) SetAMIs(v *AMIs) *ResourceTagSpecification {
+	if o.AMIs = v; o.AMIs == nil {
+		o.nullFields = append(o.nullFields, "AMIs")
+	}
+	return o
+}
+
+// endregion
+
+// region Volumes
+
+func (o Volumes) MarshalJSON() ([]byte, error) {
+	type noMethod Volumes
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Volumes) SetShouldTag(v *bool) *Volumes {
+	if o.ShouldTag = v; o.ShouldTag == nil {
+		o.nullFields = append(o.nullFields, "ShouldTag")
+	}
+	return o
+}
+
+// endregion
+
+// region Snapshots
+
+func (o Snapshots) MarshalJSON() ([]byte, error) {
+	type noMethod Snapshots
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Snapshots) SetShouldTag(v *bool) *Snapshots {
+	if o.ShouldTag = v; o.ShouldTag == nil {
+		o.nullFields = append(o.nullFields, "ShouldTag")
+	}
+	return o
+}
+
+// endregion
+
+// region ENIs
+
+func (o ENIs) MarshalJSON() ([]byte, error) {
+	type noMethod ENIs
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ENIs) SetShouldTag(v *bool) *ENIs {
+	if o.ShouldTag = v; o.ShouldTag == nil {
+		o.nullFields = append(o.nullFields, "ShouldTag")
+	}
+	return o
+}
+
+// endregion
+
+// region AMIs
+
+func (o AMIs) MarshalJSON() ([]byte, error) {
+	type noMethod AMIs
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AMIs) SetShouldTag(v *bool) *AMIs {
+	if o.ShouldTag = v; o.ShouldTag == nil {
+		o.nullFields = append(o.nullFields, "ShouldTag")
 	}
 	return o
 }
