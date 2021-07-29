@@ -648,7 +648,7 @@ func (o Storage) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Storage) SetLocalSsdCount(v *int) *Storage {
+func (o *Storage) SetLocalSSDCount(v *int) *Storage {
 	if o.LocalSSDCount = v; o.LocalSSDCount == nil {
 		o.nullFields = append(o.nullFields, "LocalSSDCount")
 	}
