@@ -650,7 +650,7 @@ func (o Storage) MarshalJSON() ([]byte, error) {
 
 func (o *Storage) SetLocalSsdCount(v *int) *Storage {
 	if o.LocalSsdCount = v; o.LocalSsdCount == nil {
-		o.nullFields = append(o.nullFields, "LocalSsdCount")
+		o.nullFields = append(o.nullFields, "LocalSSDCount")
 	}
 	return o
 }
