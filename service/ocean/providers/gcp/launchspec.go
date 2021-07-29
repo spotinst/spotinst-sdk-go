@@ -99,7 +99,7 @@ type ShieldedInstanceConfig struct {
 }
 
 type Storage struct {
-	LocalSSDCount *int `json:"localSsdCount,omitempty"`
+	LocalSSDCount *int `json:"localSSDCount,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
