@@ -467,7 +467,7 @@ func (o *LaunchSpec) SetStorage(v *Storage) *LaunchSpec {
 }
 
 func (o *LaunchSpec) SetResourceLimits(v *ResourceLimits) *LaunchSpec {
-	if o.ResourceLimits = v; o.Storage == nil {
+	if o.ResourceLimits = v; o.ResourceLimits == nil {
 		o.nullFields = append(o.nullFields, "ResourceLimits")
 	}
 	return o
