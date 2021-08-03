@@ -192,8 +192,6 @@ type InstanceMetadataOptions struct {
 	nullFields      []string
 }
 
-// region LaunchSpecification
-
 type ListClustersInput struct{}
 
 type ListClustersOutput struct {
@@ -1101,6 +1099,8 @@ func (o *InstanceTypes) SetBlacklist(v []string) *InstanceTypes {
 }
 
 // endregion
+
+// region LaunchSpecification
 
 func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
 	type noMethod LaunchSpecification
