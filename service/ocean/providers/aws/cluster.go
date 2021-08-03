@@ -110,18 +110,19 @@ type InstanceTypes struct {
 }
 
 type LaunchSpecification struct {
-	AssociatePublicIPAddress *bool               `json:"associatePublicIpAddress,omitempty"`
-	SecurityGroupIDs         []string            `json:"securityGroupIds,omitempty"`
-	ImageID                  *string             `json:"imageId,omitempty"`
-	KeyPair                  *string             `json:"keyPair,omitempty"`
-	UserData                 *string             `json:"userData,omitempty"`
-	IAMInstanceProfile       *IAMInstanceProfile `json:"iamInstanceProfile,omitempty"`
-	Tags                     []*Tag              `json:"tags,omitempty"`
-	LoadBalancers            []*LoadBalancer     `json:"loadBalancers,omitempty"`
-	RootVolumeSize           *int                `json:"rootVolumeSize,omitempty"`
-	Monitoring               *bool               `json:"monitoring,omitempty"`
-	EBSOptimized             *bool               `json:"ebsOptimized,omitempty"`
-	UseAsTemplateOnly        *bool               `json:"useAsTemplateOnly,omitempty"`
+	AssociatePublicIPAddress *bool                    `json:"associatePublicIpAddress,omitempty"`
+	SecurityGroupIDs         []string                 `json:"securityGroupIds,omitempty"`
+	ImageID                  *string                  `json:"imageId,omitempty"`
+	KeyPair                  *string                  `json:"keyPair,omitempty"`
+	UserData                 *string                  `json:"userData,omitempty"`
+	IAMInstanceProfile       *IAMInstanceProfile      `json:"iamInstanceProfile,omitempty"`
+	Tags                     []*Tag                   `json:"tags,omitempty"`
+	LoadBalancers            []*LoadBalancer          `json:"loadBalancers,omitempty"`
+	RootVolumeSize           *int                     `json:"rootVolumeSize,omitempty"`
+	Monitoring               *bool                    `json:"monitoring,omitempty"`
+	EBSOptimized             *bool                    `json:"ebsOptimized,omitempty"`
+	UseAsTemplateOnly        *bool                    `json:"useAsTemplateOnly,omitempty"`
+	InstanceMetadataOptions  *InstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -182,6 +183,16 @@ type AutoScalerDown struct {
 	forceSendFields []string
 	nullFields      []string
 }
+
+type InstanceMetadataOptions struct {
+	HTTPTokens              *string `json:"httpTokens,omitempty"`
+	HTTPPutResponseHopLimit *int    `json:"httpPutResponseHopLimit,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// region LaunchSpecification
 
 type ListClustersInput struct{}
 
@@ -1091,8 +1102,6 @@ func (o *InstanceTypes) SetBlacklist(v []string) *InstanceTypes {
 
 // endregion
 
-// region LaunchSpecification
-
 func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
 	type noMethod LaunchSpecification
 	raw := noMethod(o)
@@ -1179,6 +1188,13 @@ func (o *LaunchSpecification) SetEBSOptimized(v *bool) *LaunchSpecification {
 func (o *LaunchSpecification) SetUseAsTemplateOnly(v *bool) *LaunchSpecification {
 	if o.UseAsTemplateOnly = v; o.UseAsTemplateOnly == nil {
 		o.nullFields = append(o.nullFields, "UseAsTemplateOnly")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetInstanceMetadataOptions(v *InstanceMetadataOptions) *LaunchSpecification {
+	if o.InstanceMetadataOptions = v; o.InstanceMetadataOptions == nil {
+		o.nullFields = append(o.nullFields, "InstanceMetadataOptions")
 	}
 	return o
 }
@@ -1470,6 +1486,30 @@ func (o *RollSpec) SetLaunchSpecIDs(v []string) *RollSpec {
 func (o *RollSpec) SetInstanceIDs(v []string) *RollSpec {
 	if o.InstanceIDs = v; o.InstanceIDs == nil {
 		o.nullFields = append(o.nullFields, "InstanceIDs")
+	}
+	return o
+}
+
+// endregion
+
+// region InstanceMetadataOptions
+
+func (o InstanceMetadataOptions) MarshalJSON() ([]byte, error) {
+	type noMethod InstanceMetadataOptions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *InstanceMetadataOptions) SetHTTPTokens(v *string) *InstanceMetadataOptions {
+	if o.HTTPTokens = v; o.HTTPTokens == nil {
+		o.nullFields = append(o.nullFields, "HTTPTokens")
+	}
+	return o
+}
+
+func (o *InstanceMetadataOptions) SetHTTPPutResponseHopLimit(v *int) *InstanceMetadataOptions {
+	if o.HTTPPutResponseHopLimit = v; o.HTTPPutResponseHopLimit == nil {
+		o.nullFields = append(o.nullFields, "HTTPPutResponseHopLimit")
 	}
 	return o
 }
