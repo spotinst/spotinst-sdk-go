@@ -344,7 +344,7 @@ type Scheduling struct {
 type Task struct {
 	IsEnabled         *bool   `json:"isEnabled,omitempty"`
 	Type              *string `json:"taskType,omitempty"`
-	InstanceGroupType *string `json:"instanceGroupType"`
+	InstanceGroupType *string `json:"instanceGroupType,omitempty"`
 	CronExpression    *string `json:"cronExpression,omitempty"`
 	TargetCapacity    *int    `json:"targetCapacity,omitempty"`
 	MinCapacity       *int    `json:"minCapacity,omitempty"`
