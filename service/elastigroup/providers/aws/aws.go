@@ -432,26 +432,27 @@ type Scaling struct {
 }
 
 type ScalingPolicy struct {
-	PolicyName          *string      `json:"policyName,omitempty"`
-	MetricName          *string      `json:"metricName,omitempty"`
-	Namespace           *string      `json:"namespace,omitempty"`
-	Source              *string      `json:"source,omitempty"`
-	Statistic           *string      `json:"statistic,omitempty"`
-	Unit                *string      `json:"unit,omitempty"`
-	Threshold           *float64     `json:"threshold,omitempty"`
-	Adjustment          *int         `json:"adjustment,omitempty"`
-	MinTargetCapacity   *int         `json:"minTargetCapacity,omitempty"`
-	MaxTargetCapacity   *int         `json:"maxTargetCapacity,omitempty"`
-	EvaluationPeriods   *int         `json:"evaluationPeriods,omitempty"`
-	Period              *int         `json:"period,omitempty"`
-	Cooldown            *int         `json:"cooldown,omitempty"`
-	Operator            *string      `json:"operator,omitempty"`
-	Dimensions          []*Dimension `json:"dimensions,omitempty"`
-	Action              *Action      `json:"action,omitempty"`
-	Target              *float64     `json:"target,omitempty"`
-	IsEnabled           *bool        `json:"isEnabled,omitempty"`
-	MaxCapacityPerScale *string      `json:"maxCapacityPerScale,omitempty"`
-	Predictive          *Predictive  `json:"predictive,omitempty"`
+	PolicyName          *string           `json:"policyName,omitempty"`
+	MetricName          *string           `json:"metricName,omitempty"`
+	Namespace           *string           `json:"namespace,omitempty"`
+	Source              *string           `json:"source,omitempty"`
+	Statistic           *string           `json:"statistic,omitempty"`
+	Unit                *string           `json:"unit,omitempty"`
+	Threshold           *float64          `json:"threshold,omitempty"`
+	Adjustment          *int              `json:"adjustment,omitempty"`
+	MinTargetCapacity   *int              `json:"minTargetCapacity,omitempty"`
+	MaxTargetCapacity   *int              `json:"maxTargetCapacity,omitempty"`
+	EvaluationPeriods   *int              `json:"evaluationPeriods,omitempty"`
+	Period              *int              `json:"period,omitempty"`
+	Cooldown            *int              `json:"cooldown,omitempty"`
+	Operator            *string           `json:"operator,omitempty"`
+	Dimensions          []*Dimension      `json:"dimensions,omitempty"`
+	Action              *Action           `json:"action,omitempty"`
+	Target              *float64          `json:"target,omitempty"`
+	IsEnabled           *bool             `json:"isEnabled,omitempty"`
+	MaxCapacityPerScale *string           `json:"maxCapacityPerScale,omitempty"`
+	Predictive          *Predictive       `json:"predictive,omitempty"`
+	StepAdjustments     []*StepAdjustment `json:"stepAdjustments,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -480,6 +481,14 @@ type Dimension struct {
 
 type Predictive struct {
 	Mode *string `json:"mode,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type StepAdjustment struct {
+	Action    *Action `json:"action,omitempty"`
+	Threshold *int    `json:"threshold,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3107,6 +3116,13 @@ func (o *ScalingPolicy) SetMaxCapacityPerScale(v *string) *ScalingPolicy {
 	return o
 }
 
+func (o *ScalingPolicy) SetStepAdjustments(v []*StepAdjustment) *ScalingPolicy {
+	if o.StepAdjustments = v; o.StepAdjustments == nil {
+		o.nullFields = append(o.nullFields, "StepAdjustments")
+	}
+	return o
+}
+
 // endregion
 
 // region Action
@@ -3203,6 +3219,30 @@ func (o *Predictive) MarshalJSON() ([]byte, error) {
 func (o *Predictive) SetMode(v *string) *Predictive {
 	if o.Mode = v; o.Mode == nil {
 		o.nullFields = append(o.nullFields, "Mode")
+	}
+	return o
+}
+
+// endregion
+
+// region StepAdjustments
+
+func (o StepAdjustment) MarshalJSON() ([]byte, error) {
+	type noMethod StepAdjustment
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *StepAdjustment) SetAction(v *Action) *StepAdjustment {
+	if o.Action = v; o.Action == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+func (o *StepAdjustment) SetThreshold(v *int) *StepAdjustment {
+	if o.Threshold = v; o.Threshold == nil {
+		o.nullFields = append(o.nullFields, "Threshold")
 	}
 	return o
 }
