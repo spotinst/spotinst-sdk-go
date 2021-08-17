@@ -423,9 +423,18 @@ type Task struct {
 }
 
 type Scaling struct {
-	Up     []*ScalingPolicy `json:"up,omitempty"`
-	Down   []*ScalingPolicy `json:"down,omitempty"`
-	Target []*ScalingPolicy `json:"target,omitempty"`
+	Up              []*ScalingPolicy `json:"up,omitempty"`
+	Down            []*ScalingPolicy `json:"down,omitempty"`
+	Target          []*ScalingPolicy `json:"target,omitempty"`
+	MultipleMetrics *MultipleMetrics `json:"multipleMetrics,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type MultipleMetrics struct {
+	Metrics     []*ScalingPolicy `json:"metrics,omitempty"`
+	Expressions []*Expressions   `json:"expressions,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -453,6 +462,16 @@ type ScalingPolicy struct {
 	MaxCapacityPerScale *string           `json:"maxCapacityPerScale,omitempty"`
 	Predictive          *Predictive       `json:"predictive,omitempty"`
 	StepAdjustments     []*StepAdjustment `json:"stepAdjustments,omitempty"`
+	ExtendedStatistic   *string           `json:"extendedStatistic,omitempty"`
+	Name                *string           `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Expressions struct {
+	Expression *string `json:"expression,omitempty"`
+	Name       *string `json:"name,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2966,6 +2985,13 @@ func (o *Scaling) SetTarget(v []*ScalingPolicy) *Scaling {
 	return o
 }
 
+func (o *Scaling) SetMultipleMetrics(v *MultipleMetrics) *Scaling {
+	if o.MultipleMetrics = v; o.MultipleMetrics == nil {
+		o.nullFields = append(o.nullFields, "MultipleMetrics")
+	}
+	return o
+}
+
 // endregion
 
 // region ScalingPolicy
@@ -3119,6 +3145,68 @@ func (o *ScalingPolicy) SetMaxCapacityPerScale(v *string) *ScalingPolicy {
 func (o *ScalingPolicy) SetStepAdjustments(v []*StepAdjustment) *ScalingPolicy {
 	if o.StepAdjustments = v; o.StepAdjustments == nil {
 		o.nullFields = append(o.nullFields, "StepAdjustments")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetName(v *string) *ScalingPolicy {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetExtendedStatistic(v *string) *ScalingPolicy {
+	if o.ExtendedStatistic = v; o.ExtendedStatistic == nil {
+		o.nullFields = append(o.nullFields, "ExtendedStatistic")
+	}
+	return o
+}
+
+// endregion
+
+// region MultipleMetrics
+
+func (o MultipleMetrics) MarshalJSON() ([]byte, error) {
+	type noMethod MultipleMetrics
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *MultipleMetrics) SetExpressions(v []*Expressions) *MultipleMetrics {
+	if o.Expressions = v; o.Expressions == nil {
+		o.nullFields = append(o.nullFields, "Expressions")
+	}
+	return o
+}
+
+func (o *MultipleMetrics) SetMetrics(v []*ScalingPolicy) *MultipleMetrics {
+	if o.Metrics = v; o.Metrics == nil {
+		o.nullFields = append(o.nullFields, "Metrics")
+	}
+	return o
+}
+
+// endregion
+
+// region Expression
+
+func (o Expressions) MarshalJSON() ([]byte, error) {
+	type noMethod Expressions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Expressions) SetExpression(v *string) *Expressions {
+	if o.Expression = v; o.Expression == nil {
+		o.nullFields = append(o.nullFields, "Expression")
+	}
+	return o
+}
+
+func (o *Expressions) SetName(v *string) *Expressions {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
