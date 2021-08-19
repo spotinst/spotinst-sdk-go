@@ -423,35 +423,66 @@ type Task struct {
 }
 
 type Scaling struct {
-	Up     []*ScalingPolicy `json:"up,omitempty"`
-	Down   []*ScalingPolicy `json:"down,omitempty"`
-	Target []*ScalingPolicy `json:"target,omitempty"`
+	Up              []*ScalingPolicy `json:"up,omitempty"`
+	Down            []*ScalingPolicy `json:"down,omitempty"`
+	Target          []*ScalingPolicy `json:"target,omitempty"`
+	MultipleMetrics *MultipleMetrics `json:"multipleMetrics,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type MultipleMetrics struct {
+	Metrics     []*Metrics     `json:"metrics,omitempty"`
+	Expressions []*Expressions `json:"expressions,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type ScalingPolicy struct {
-	PolicyName          *string      `json:"policyName,omitempty"`
-	MetricName          *string      `json:"metricName,omitempty"`
-	Namespace           *string      `json:"namespace,omitempty"`
-	Source              *string      `json:"source,omitempty"`
-	Statistic           *string      `json:"statistic,omitempty"`
-	Unit                *string      `json:"unit,omitempty"`
-	Threshold           *float64     `json:"threshold,omitempty"`
-	Adjustment          *int         `json:"adjustment,omitempty"`
-	MinTargetCapacity   *int         `json:"minTargetCapacity,omitempty"`
-	MaxTargetCapacity   *int         `json:"maxTargetCapacity,omitempty"`
-	EvaluationPeriods   *int         `json:"evaluationPeriods,omitempty"`
-	Period              *int         `json:"period,omitempty"`
-	Cooldown            *int         `json:"cooldown,omitempty"`
-	Operator            *string      `json:"operator,omitempty"`
-	Dimensions          []*Dimension `json:"dimensions,omitempty"`
-	Action              *Action      `json:"action,omitempty"`
-	Target              *float64     `json:"target,omitempty"`
-	IsEnabled           *bool        `json:"isEnabled,omitempty"`
-	MaxCapacityPerScale *string      `json:"maxCapacityPerScale,omitempty"`
-	Predictive          *Predictive  `json:"predictive,omitempty"`
+	PolicyName          *string           `json:"policyName,omitempty"`
+	MetricName          *string           `json:"metricName,omitempty"`
+	Namespace           *string           `json:"namespace,omitempty"`
+	Source              *string           `json:"source,omitempty"`
+	Statistic           *string           `json:"statistic,omitempty"`
+	Unit                *string           `json:"unit,omitempty"`
+	Threshold           *float64          `json:"threshold,omitempty"`
+	Adjustment          *int              `json:"adjustment,omitempty"`
+	MinTargetCapacity   *int              `json:"minTargetCapacity,omitempty"`
+	MaxTargetCapacity   *int              `json:"maxTargetCapacity,omitempty"`
+	EvaluationPeriods   *int              `json:"evaluationPeriods,omitempty"`
+	Period              *int              `json:"period,omitempty"`
+	Cooldown            *int              `json:"cooldown,omitempty"`
+	Operator            *string           `json:"operator,omitempty"`
+	Dimensions          []*Dimension      `json:"dimensions,omitempty"`
+	Action              *Action           `json:"action,omitempty"`
+	Target              *float64          `json:"target,omitempty"`
+	IsEnabled           *bool             `json:"isEnabled,omitempty"`
+	MaxCapacityPerScale *string           `json:"maxCapacityPerScale,omitempty"`
+	Predictive          *Predictive       `json:"predictive,omitempty"`
+	StepAdjustments     []*StepAdjustment `json:"stepAdjustments,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Metrics struct {
+	Name              *string      `json:"name,omitempty"`
+	MetricName        *string      `json:"metricName,omitempty"`
+	Namespace         *string      `json:"namespace,omitempty"`
+	Dimensions        []*Dimension `json:"dimensions,omitempty"`
+	ExtendedStatistic *string      `json:"extendedStatistic,omitempty"`
+	Statistic         *string      `json:"statistic,omitempty"`
+	Unit              *string      `json:"unit,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Expressions struct {
+	Expression *string `json:"expression,omitempty"`
+	Name       *string `json:"name,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -480,6 +511,14 @@ type Dimension struct {
 
 type Predictive struct {
 	Mode *string `json:"mode,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type StepAdjustment struct {
+	Action    *Action `json:"action,omitempty"`
+	Threshold *int    `json:"threshold,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2957,6 +2996,13 @@ func (o *Scaling) SetTarget(v []*ScalingPolicy) *Scaling {
 	return o
 }
 
+func (o *Scaling) SetMultipleMetrics(v *MultipleMetrics) *Scaling {
+	if o.MultipleMetrics = v; o.MultipleMetrics == nil {
+		o.nullFields = append(o.nullFields, "MultipleMetrics")
+	}
+	return o
+}
+
 // endregion
 
 // region ScalingPolicy
@@ -3107,6 +3153,120 @@ func (o *ScalingPolicy) SetMaxCapacityPerScale(v *string) *ScalingPolicy {
 	return o
 }
 
+func (o *ScalingPolicy) SetStepAdjustments(v []*StepAdjustment) *ScalingPolicy {
+	if o.StepAdjustments = v; o.StepAdjustments == nil {
+		o.nullFields = append(o.nullFields, "StepAdjustments")
+	}
+	return o
+}
+
+// endregion
+
+// region MultipleMetrics
+
+func (o MultipleMetrics) MarshalJSON() ([]byte, error) {
+	type noMethod MultipleMetrics
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *MultipleMetrics) SetExpressions(v []*Expressions) *MultipleMetrics {
+	if o.Expressions = v; o.Expressions == nil {
+		o.nullFields = append(o.nullFields, "Expressions")
+	}
+	return o
+}
+
+func (o *MultipleMetrics) SetMetrics(v []*Metrics) *MultipleMetrics {
+	if o.Metrics = v; o.Metrics == nil {
+		o.nullFields = append(o.nullFields, "Metrics")
+	}
+	return o
+}
+
+// endregion
+
+// region Metrics
+
+func (o Metrics) MarshalJSON() ([]byte, error) {
+	type noMethod Metrics
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Metrics) SetMetricName(v *string) *Metrics {
+	if o.MetricName = v; o.MetricName == nil {
+		o.nullFields = append(o.nullFields, "MetricName")
+	}
+	return o
+}
+
+func (o *Metrics) SetNamespace(v *string) *Metrics {
+	if o.Namespace = v; o.Namespace == nil {
+		o.nullFields = append(o.nullFields, "Namespace")
+	}
+	return o
+}
+
+func (o *Metrics) SetDimensions(v []*Dimension) *Metrics {
+	if o.Dimensions = v; o.Dimensions == nil {
+		o.nullFields = append(o.nullFields, "Dimensions")
+	}
+	return o
+}
+
+func (o *Metrics) SetName(v *string) *Metrics {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Metrics) SetExtendedStatistic(v *string) *Metrics {
+	if o.ExtendedStatistic = v; o.ExtendedStatistic == nil {
+		o.nullFields = append(o.nullFields, "ExtendedStatistic")
+	}
+	return o
+}
+
+func (o *Metrics) SetStatistic(v *string) *Metrics {
+	if o.Statistic = v; o.Statistic == nil {
+		o.nullFields = append(o.nullFields, "Statistic")
+	}
+	return o
+}
+
+func (o *Metrics) SetUnit(v *string) *Metrics {
+	if o.Unit = v; o.Unit == nil {
+		o.nullFields = append(o.nullFields, "Unit")
+	}
+	return o
+}
+
+// endregion
+
+// region Expression
+
+func (o Expressions) MarshalJSON() ([]byte, error) {
+	type noMethod Expressions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Expressions) SetExpression(v *string) *Expressions {
+	if o.Expression = v; o.Expression == nil {
+		o.nullFields = append(o.nullFields, "Expression")
+	}
+	return o
+}
+
+func (o *Expressions) SetName(v *string) *Expressions {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
 // endregion
 
 // region Action
@@ -3203,6 +3363,30 @@ func (o *Predictive) MarshalJSON() ([]byte, error) {
 func (o *Predictive) SetMode(v *string) *Predictive {
 	if o.Mode = v; o.Mode == nil {
 		o.nullFields = append(o.nullFields, "Mode")
+	}
+	return o
+}
+
+// endregion
+
+// region StepAdjustments
+
+func (o StepAdjustment) MarshalJSON() ([]byte, error) {
+	type noMethod StepAdjustment
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *StepAdjustment) SetAction(v *Action) *StepAdjustment {
+	if o.Action = v; o.Action == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+func (o *StepAdjustment) SetThreshold(v *int) *StepAdjustment {
+	if o.Threshold = v; o.Threshold == nil {
+		o.nullFields = append(o.nullFields, "Threshold")
 	}
 	return o
 }
