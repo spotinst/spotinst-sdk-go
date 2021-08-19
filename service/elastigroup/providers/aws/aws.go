@@ -433,8 +433,8 @@ type Scaling struct {
 }
 
 type MultipleMetrics struct {
-	Metrics     []*ScalingPolicy `json:"metrics,omitempty"`
-	Expressions []*Expressions   `json:"expressions,omitempty"`
+	Metrics     []*Metrics     `json:"metrics,omitempty"`
+	Expressions []*Expressions `json:"expressions,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -462,8 +462,19 @@ type ScalingPolicy struct {
 	MaxCapacityPerScale *string           `json:"maxCapacityPerScale,omitempty"`
 	Predictive          *Predictive       `json:"predictive,omitempty"`
 	StepAdjustments     []*StepAdjustment `json:"stepAdjustments,omitempty"`
-	ExtendedStatistic   *string           `json:"extendedStatistic,omitempty"`
-	Name                *string           `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Metrics struct {
+	Name              *string      `json:"name,omitempty"`
+	MetricName        *string      `json:"metricName,omitempty"`
+	Namespace         *string      `json:"namespace,omitempty"`
+	Dimensions        []*Dimension `json:"dimensions,omitempty"`
+	ExtendedStatistic *string      `json:"extendedStatistic,omitempty"`
+	Statistic         *string      `json:"statistic,omitempty"`
+	Unit              *string      `json:"unit,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3149,20 +3160,6 @@ func (o *ScalingPolicy) SetStepAdjustments(v []*StepAdjustment) *ScalingPolicy {
 	return o
 }
 
-func (o *ScalingPolicy) SetName(v *string) *ScalingPolicy {
-	if o.Name = v; o.Name == nil {
-		o.nullFields = append(o.nullFields, "Name")
-	}
-	return o
-}
-
-func (o *ScalingPolicy) SetExtendedStatistic(v *string) *ScalingPolicy {
-	if o.ExtendedStatistic = v; o.ExtendedStatistic == nil {
-		o.nullFields = append(o.nullFields, "ExtendedStatistic")
-	}
-	return o
-}
-
 // endregion
 
 // region MultipleMetrics
@@ -3180,9 +3177,68 @@ func (o *MultipleMetrics) SetExpressions(v []*Expressions) *MultipleMetrics {
 	return o
 }
 
-func (o *MultipleMetrics) SetMetrics(v []*ScalingPolicy) *MultipleMetrics {
+func (o *MultipleMetrics) SetMetrics(v []*Metrics) *MultipleMetrics {
 	if o.Metrics = v; o.Metrics == nil {
 		o.nullFields = append(o.nullFields, "Metrics")
+	}
+	return o
+}
+
+// endregion
+
+// region Metrics
+
+func (o Metrics) MarshalJSON() ([]byte, error) {
+	type noMethod Metrics
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Metrics) SetMetricName(v *string) *Metrics {
+	if o.MetricName = v; o.MetricName == nil {
+		o.nullFields = append(o.nullFields, "MetricName")
+	}
+	return o
+}
+
+func (o *Metrics) SetNamespace(v *string) *Metrics {
+	if o.Namespace = v; o.Namespace == nil {
+		o.nullFields = append(o.nullFields, "Namespace")
+	}
+	return o
+}
+
+func (o *Metrics) SetDimensions(v []*Dimension) *Metrics {
+	if o.Dimensions = v; o.Dimensions == nil {
+		o.nullFields = append(o.nullFields, "Dimensions")
+	}
+	return o
+}
+
+func (o *Metrics) SetName(v *string) *Metrics {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Metrics) SetExtendedStatistic(v *string) *Metrics {
+	if o.ExtendedStatistic = v; o.ExtendedStatistic == nil {
+		o.nullFields = append(o.nullFields, "ExtendedStatistic")
+	}
+	return o
+}
+
+func (o *Metrics) SetStatistic(v *string) *Metrics {
+	if o.Statistic = v; o.Statistic == nil {
+		o.nullFields = append(o.nullFields, "Statistic")
+	}
+	return o
+}
+
+func (o *Metrics) SetUnit(v *string) *Metrics {
+	if o.Unit = v; o.Unit == nil {
+		o.nullFields = append(o.nullFields, "Unit")
 	}
 	return o
 }
