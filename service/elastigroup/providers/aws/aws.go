@@ -660,6 +660,59 @@ type LaunchSpecification struct {
 	MetadataOptions                               *MetadataOptions          `json:"metadataOptions,omitempty"`
 	CPUOptions                                    *CPUOptions               `json:"cpuOptions,omitempty"`
 	ResourceTagSpecification                      *ResourceTagSpecification `json:"resourceTagSpecification,omitempty"`
+	ITF                                           *ITF                      `json:"itf,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ITF struct {
+	LoadBalancers                 []*ITFLoadBalancer `json:"loadBalancers,omitempty"`
+	MigrationHealthinessThreshold *int               `json:"migrationHealthinessThreshold,omitempty"`
+	FixedTargetGroups             *bool              `json:"fixedTargetGroups,omitempty"`
+	WeightStrategy                *string            `json:"weightStrategy,omitempty"`
+	TargetGroupConfig             *TargetGroupConfig `json:"targetGroupConfig,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ITFLoadBalancer struct {
+	ListenerRules   []*ListenerRule `json:"listenerRules,omitempty"`
+	LoadBalancerARN *string         `json:"loadBalancerArn,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ListenerRule struct {
+	RuleARN *string `json:"ruleArn,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TargetGroupConfig struct {
+	VPCID                      *string  `json:"vpcId,omitempty"`
+	HealthCheckIntervalSeconds *int     `json:"healthCheckIntervalSeconds,omitempty"`
+	HealthCheckPath            *string  `json:"healthCheckPath,omitempty"`
+	HealthCheckPort            *string  `json:"healthCheckPort,omitempty"`
+	HealthCheckProtocol        *string  `json:"healthCheckProtocol,omitempty"`
+	HealthCheckTimeoutSeconds  *int     `json:"healthCheckTimeoutSeconds,omitempty"`
+	HealthyThresholdCount      *int     `json:"healthyThresholdCount,omitempty"`
+	UnhealthyThresholdCount    *int     `json:"unhealthyThresholdCount,omitempty"`
+	Port                       *int     `json:"port,omitempty"`
+	Protocol                   *string  `json:"protocol,omitempty"`
+	ProtocolVersion            *string  `json:"protocolVersion,omitempty"`
+	Matcher                    *Matcher `json:"matcher,omitempty"`
+	Tags                       []*Tag   `json:"tags,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Matcher struct {
+	HTTPCode *string `json:"httpCode,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3992,6 +4045,217 @@ func (o *LaunchSpecification) SetCPUOptions(v *CPUOptions) *LaunchSpecification 
 func (o *LaunchSpecification) SetResourceTagSpecification(v *ResourceTagSpecification) *LaunchSpecification {
 	if o.ResourceTagSpecification = v; o.ResourceTagSpecification == nil {
 		o.nullFields = append(o.nullFields, "ResourceTagSpecification")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetITF(v *ITF) *LaunchSpecification {
+	if o.ITF = v; o.ITF == nil {
+		o.nullFields = append(o.nullFields, "ITF")
+	}
+	return o
+}
+
+// endregion
+
+// region Matcher
+
+func (o Matcher) MarshalJSON() ([]byte, error) {
+	type noMethod Matcher
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Matcher) SetHTTPCode(v *string) *Matcher {
+	if o.HTTPCode = v; o.HTTPCode == nil {
+		o.nullFields = append(o.nullFields, "HTTPCode")
+	}
+	return o
+}
+
+// endregion
+
+// region ITF
+
+func (o ITF) MarshalJSON() ([]byte, error) {
+	type noMethod ITF
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ITF) SetLoadBalancers(v []*ITFLoadBalancer) *ITF {
+	if o.LoadBalancers = v; o.LoadBalancers == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancers")
+	}
+	return o
+}
+
+func (o *ITF) SetMigrationHealthinessThreshold(v *int) *ITF {
+	if o.MigrationHealthinessThreshold = v; o.MigrationHealthinessThreshold == nil {
+		o.nullFields = append(o.nullFields, "MigrationHealthinessThreshold")
+	}
+	return o
+}
+
+func (o *ITF) SetFixedTargetGroups(v *bool) *ITF {
+	if o.FixedTargetGroups = v; o.FixedTargetGroups == nil {
+		o.nullFields = append(o.nullFields, "FixedTargetGroups")
+	}
+	return o
+}
+
+func (o *ITF) SetWeightStrategy(v *string) *ITF {
+	if o.WeightStrategy = v; o.WeightStrategy == nil {
+		o.nullFields = append(o.nullFields, "WeightStrategy")
+	}
+	return o
+}
+
+func (o *ITF) SetTargetGroupConfig(v *TargetGroupConfig) *ITF {
+	if o.TargetGroupConfig = v; o.TargetGroupConfig == nil {
+		o.nullFields = append(o.nullFields, "TargetGroupConfig")
+	}
+	return o
+}
+
+// endregion
+
+// region ITFLoadBalancer
+
+func (o ITFLoadBalancer) MarshalJSON() ([]byte, error) {
+	type noMethod ITFLoadBalancer
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ITFLoadBalancer) SetListenerRules(v []*ListenerRule) *ITFLoadBalancer {
+	if o.ListenerRules = v; o.ListenerRules == nil {
+		o.nullFields = append(o.nullFields, "ListenerRules")
+	}
+	return o
+}
+
+func (o *ITFLoadBalancer) SetLoadBalancerARN(v *string) *ITFLoadBalancer {
+	if o.LoadBalancerARN = v; o.LoadBalancerARN == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancerARN")
+	}
+	return o
+}
+
+// endregion
+
+// region ListenerRule
+
+func (o ListenerRule) MarshalJSON() ([]byte, error) {
+	type noMethod ListenerRule
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ListenerRule) SetRuleARN(v *string) *ListenerRule {
+	if o.RuleARN = v; o.RuleARN == nil {
+		o.nullFields = append(o.nullFields, "RuleARN")
+	}
+	return o
+}
+
+// endregion
+
+// region TargetGroupConfig
+
+func (o TargetGroupConfig) MarshalJSON() ([]byte, error) {
+	type noMethod TargetGroupConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TargetGroupConfig) SetVPCID(v *string) *TargetGroupConfig {
+	if o.VPCID = v; o.VPCID == nil {
+		o.nullFields = append(o.nullFields, "VPCID")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetHealthCheckIntervalSeconds(v *int) *TargetGroupConfig {
+	if o.HealthCheckIntervalSeconds = v; o.HealthCheckIntervalSeconds == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckIntervalSeconds")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetHealthCheckPath(v *string) *TargetGroupConfig {
+	if o.HealthCheckPath = v; o.HealthCheckPath == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckPath")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetHealthCheckPort(v *string) *TargetGroupConfig {
+	if o.HealthCheckPort = v; o.HealthCheckPort == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckPort")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetHealthCheckProtocol(v *string) *TargetGroupConfig {
+	if o.HealthCheckProtocol = v; o.HealthCheckProtocol == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckProtocol")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetHealthyThresholdCount(v *int) *TargetGroupConfig {
+	if o.HealthyThresholdCount = v; o.HealthyThresholdCount == nil {
+		o.nullFields = append(o.nullFields, "HealthyThresholdCount")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetUnhealthyThresholdCount(v *int) *TargetGroupConfig {
+	if o.UnhealthyThresholdCount = v; o.UnhealthyThresholdCount == nil {
+		o.nullFields = append(o.nullFields, "UnhealthyThresholdCount")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetHealthCheckTimeoutSeconds(v *int) *TargetGroupConfig {
+	if o.HealthCheckTimeoutSeconds = v; o.HealthCheckTimeoutSeconds == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckTimeoutSeconds")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetPort(v *int) *TargetGroupConfig {
+	if o.Port = v; o.Port == nil {
+		o.nullFields = append(o.nullFields, "Port")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetProtocol(v *string) *TargetGroupConfig {
+	if o.Protocol = v; o.Protocol == nil {
+		o.nullFields = append(o.nullFields, "Protocol")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetProtocolVersion(v *string) *TargetGroupConfig {
+	if o.ProtocolVersion = v; o.ProtocolVersion == nil {
+		o.nullFields = append(o.nullFields, "ProtocolVersion")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetMatcher(v *Matcher) *TargetGroupConfig {
+	if o.Matcher = v; o.Matcher == nil {
+		o.nullFields = append(o.nullFields, "Matcher")
+	}
+	return o
+}
+
+func (o *TargetGroupConfig) SetTags(v []*Tag) *TargetGroupConfig {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
 	}
 	return o
 }
