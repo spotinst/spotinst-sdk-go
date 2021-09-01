@@ -693,6 +693,7 @@ type ListenerRule struct {
 }
 
 type TargetGroupConfig struct {
+	VPCID                      *int     `json:"vpcId,omitempty"`
 	HealthCheckIntervalSeconds *int     `json:"healthCheckIntervalSeconds,omitempty"`
 	HealthCheckPath            *string  `json:"healthCheckPath,omitempty"`
 	HealthCheckPort            *int     `json:"healthCheckPort,omitempty"`
@@ -4148,6 +4149,13 @@ func (o TargetGroupConfig) MarshalJSON() ([]byte, error) {
 	type noMethod TargetGroupConfig
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TargetGroupConfig) SetVPCID(v *int) *TargetGroupConfig {
+	if o.VPCID = v; o.VPCID == nil {
+		o.nullFields = append(o.nullFields, "VPCID")
+	}
+	return o
 }
 
 func (o *TargetGroupConfig) SetHealthCheckIntervalSeconds(v *int) *TargetGroupConfig {
