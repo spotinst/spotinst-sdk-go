@@ -693,7 +693,7 @@ type ListenerRule struct {
 }
 
 type TargetGroupConfig struct {
-	VPCID                      *int     `json:"vpcId,omitempty"`
+	VPCID                      *string  `json:"vpcId,omitempty"`
 	HealthCheckIntervalSeconds *int     `json:"healthCheckIntervalSeconds,omitempty"`
 	HealthCheckPath            *string  `json:"healthCheckPath,omitempty"`
 	HealthCheckPort            *int     `json:"healthCheckPort,omitempty"`
@@ -4058,6 +4058,23 @@ func (o *LaunchSpecification) SetITF(v *ITF) *LaunchSpecification {
 
 // endregion
 
+// region Matcher
+
+func (o Matcher) MarshalJSON() ([]byte, error) {
+	type noMethod Matcher
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Matcher) SetHTTPCode(v *string) *Matcher {
+	if o.HTTPCode = v; o.HTTPCode == nil {
+		o.nullFields = append(o.nullFields, "HTTPCode")
+	}
+	return o
+}
+
+// endregion
+
 // region ITF
 
 func (o ITF) MarshalJSON() ([]byte, error) {
@@ -4145,13 +4162,14 @@ func (o *ListenerRule) SetRuleARN(v *string) *ListenerRule {
 // endregion
 
 // region TargetGroupConfig
+
 func (o TargetGroupConfig) MarshalJSON() ([]byte, error) {
 	type noMethod TargetGroupConfig
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *TargetGroupConfig) SetVPCID(v *int) *TargetGroupConfig {
+func (o *TargetGroupConfig) SetVPCID(v *string) *TargetGroupConfig {
 	if o.VPCID = v; o.VPCID == nil {
 		o.nullFields = append(o.nullFields, "VPCID")
 	}
