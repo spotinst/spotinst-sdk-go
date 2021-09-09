@@ -669,7 +669,7 @@ type LaunchSpecification struct {
 type ITF struct {
 	LoadBalancers                 []*ITFLoadBalancer `json:"loadBalancers,omitempty"`
 	MigrationHealthinessThreshold *int               `json:"migrationHealthinessThreshold,omitempty"`
-	FixedTargetGroups             *bool              `json:"FixedTargetGroups,omitempty"`
+	FixedTargetGroups             *bool              `json:"fixedTargetGroups,omitempty"`
 	WeightStrategy                *string            `json:"weightStrategy,omitempty"`
 	TargetGroupConfig             *TargetGroupConfig `json:"targetGroupConfig,omitempty"`
 
@@ -696,7 +696,7 @@ type TargetGroupConfig struct {
 	VPCID                      *string  `json:"vpcId,omitempty"`
 	HealthCheckIntervalSeconds *int     `json:"healthCheckIntervalSeconds,omitempty"`
 	HealthCheckPath            *string  `json:"healthCheckPath,omitempty"`
-	HealthCheckPort            *int     `json:"healthCheckPort,omitempty"`
+	HealthCheckPort            *string  `json:"healthCheckPort,omitempty"`
 	HealthCheckProtocol        *string  `json:"healthCheckProtocol,omitempty"`
 	HealthCheckTimeoutSeconds  *int     `json:"healthCheckTimeoutSeconds,omitempty"`
 	HealthyThresholdCount      *int     `json:"healthyThresholdCount,omitempty"`
@@ -4190,7 +4190,7 @@ func (o *TargetGroupConfig) SetHealthCheckPath(v *string) *TargetGroupConfig {
 	return o
 }
 
-func (o *TargetGroupConfig) SetHealthCheckPort(v *int) *TargetGroupConfig {
+func (o *TargetGroupConfig) SetHealthCheckPort(v *string) *TargetGroupConfig {
 	if o.HealthCheckPort = v; o.HealthCheckPort == nil {
 		o.nullFields = append(o.nullFields, "HealthCheckPort")
 	}
