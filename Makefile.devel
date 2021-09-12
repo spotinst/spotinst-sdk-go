@@ -5,7 +5,7 @@ release: fmt tidy ## Release a new version
 ifneq ($(strip $(GIT_DIRTY)),)
 	$(Q) echo "Git is currently in a dirty state. Please commit your changes or stash them before you release."; exit 1;
 else
-	$(Q) read -p "Release version: $(VERSION) → " version; sed -i "s/$(VERSION)/$$version/g" spotinst/version.go
+	$(Q) read -p "Release version: $(VERSION) →  " version; sed -i "s/$(VERSION)/$$version/g" spotinst/version.go
 	$(Q) git commit -a -m "chore(release): $(RELEASE)"
 	$(Q) git tag -f -m    "chore(release): $(RELEASE)" $(RELEASE)
 	$(Q) git push --follow-tags
