@@ -80,9 +80,10 @@ type VMSizes struct {
 }
 
 type LaunchSpecification struct {
-	Image   *Image   `json:"image,omitempty"`
-	Network *Network `json:"network,omitempty"`
-	Login   *Login   `json:"login,omitempty"`
+	Image      *Image   `json:"image,omitempty"`
+	Network    *Network `json:"network,omitempty"`
+	Login      *Login   `json:"login,omitempty"`
+	CustomData *string  `json:"customData,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -564,6 +565,13 @@ func (o *LaunchSpecification) SetNetwork(v *Network) *LaunchSpecification {
 func (o *LaunchSpecification) SetLogin(v *Login) *LaunchSpecification {
 	if o.Login = v; o.Login == nil {
 		o.nullFields = append(o.nullFields, "Login")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetCustomData(v *string) *LaunchSpecification {
+	if o.CustomData = v; o.CustomData == nil {
+		o.nullFields = append(o.nullFields, "CustomData")
 	}
 	return o
 }
