@@ -713,6 +713,7 @@ type TargetGroupConfig struct {
 
 type Matcher struct {
 	HTTPCode *string `json:"httpCode,omitempty"`
+	GRPCCode *string `json:"GRPCCode,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -4069,6 +4070,13 @@ func (o Matcher) MarshalJSON() ([]byte, error) {
 func (o *Matcher) SetHTTPCode(v *string) *Matcher {
 	if o.HTTPCode = v; o.HTTPCode == nil {
 		o.nullFields = append(o.nullFields, "HTTPCode")
+	}
+	return o
+}
+
+func (o *Matcher) SetGRPCCode(v *string) *Matcher {
+	if o.GRPCCode = v; o.GRPCCode == nil {
+		o.nullFields = append(o.nullFields, "GRPCCode")
 	}
 	return o
 }
