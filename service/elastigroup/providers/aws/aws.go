@@ -713,7 +713,7 @@ type TargetGroupConfig struct {
 
 type Matcher struct {
 	HTTPCode *string `json:"httpCode,omitempty"`
-	GRPCCode *string `json:"GRPCCode,omitempty"`
+	GRPCCode *string `json:"grpcCode,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
