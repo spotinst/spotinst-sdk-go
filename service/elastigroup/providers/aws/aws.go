@@ -4169,7 +4169,7 @@ func (o TargetGroupConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *TargetGroupConfig) SetVPCID(v *string) *TargetGroupConfig {
+func (o *TargetGroupConfig) SetVPCId(v *string) *TargetGroupConfig {
 	if o.VPCID = v; o.VPCID == nil {
 		o.nullFields = append(o.nullFields, "VPCID")
 	}
