@@ -1,6 +1,7 @@
 package ocean
 
 import (
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/insights"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/gcp"
@@ -16,6 +17,7 @@ type Service interface {
 	CloudProviderAWS() aws.Service
 	CloudProviderGCP() gcp.Service
 	CloudProviderAzure() azure.Service
+	Insights() insights.Service
 }
 
 type ServiceOp struct {
@@ -48,6 +50,12 @@ func (s *ServiceOp) CloudProviderGCP() gcp.Service {
 
 func (s *ServiceOp) CloudProviderAzure() azure.Service {
 	return &azure.ServiceOp{
+		Client: s.Client,
+	}
+}
+
+func (s *ServiceOp) Insights() insights.Service {
+	return &insights.ServiceOp{
 		Client: s.Client,
 	}
 }
