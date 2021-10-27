@@ -80,10 +80,11 @@ type VMSizes struct {
 }
 
 type LaunchSpecification struct {
-	Image      *Image   `json:"image,omitempty"`
-	Network    *Network `json:"network,omitempty"`
-	Login      *Login   `json:"login,omitempty"`
-	CustomData *string  `json:"customData,omitempty"`
+	Image                    *Image                    `json:"image,omitempty"`
+	Network                  *Network                  `json:"network,omitempty"`
+	Login                    *Login                    `json:"login,omitempty"`
+	CustomData               *string                   `json:"customData,omitempty"`
+	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -155,6 +156,14 @@ type Login struct {
 type ApplicationSecurityGroup struct {
 	Name              *string `json:"name,omitempty"`
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ManagedServiceIdentity struct {
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+	Name              *string `json:"name,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -576,6 +585,13 @@ func (o *LaunchSpecification) SetCustomData(v *string) *LaunchSpecification {
 	return o
 }
 
+func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIdentity) *LaunchSpecification {
+	if o.ManagedServiceIdentities = v; o.ManagedServiceIdentities == nil {
+		o.nullFields = append(o.nullFields, "ManagedServiceIdentities")
+	}
+	return o
+}
+
 // endregion
 
 // region Image
@@ -813,6 +829,30 @@ func (o *ApplicationSecurityGroup) SetName(v *string) *ApplicationSecurityGroup 
 func (o *ApplicationSecurityGroup) SetResourceGroupName(v *string) *ApplicationSecurityGroup {
 	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
 		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+// endregion
+
+// region ManagedServiceIdentity
+
+func (o ManagedServiceIdentity) MarshalJSON() ([]byte, error) {
+	type noMethod ManagedServiceIdentity
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ManagedServiceIdentity) SetResourceGroupName(v *string) *ManagedServiceIdentity {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *ManagedServiceIdentity) SetName(v *string) *ManagedServiceIdentity {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
