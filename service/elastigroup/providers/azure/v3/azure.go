@@ -80,11 +80,31 @@ type VMSizes struct {
 }
 
 type LaunchSpecification struct {
+	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
 	Image                    *Image                    `json:"image,omitempty"`
+	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
+	Storage                  *Storage                  `json:"storage,omitempty"`
 	Network                  *Network                  `json:"network,omitempty"`
 	Login                    *Login                    `json:"login,omitempty"`
 	CustomData               *string                   `json:"customData,omitempty"`
 	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LoadBalancersConfig struct {
+	LoadBalancers []*LoadBalancer `json:"loadBalancers,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LoadBalancer struct {
+	Type        *string `json:"type,omitempty"`
+	BalancerID  *string `json:"balancerId,omitempty"`
+	TargetSetID *string `json:"targetSetId,omitempty"`
+	AutoWeight  *bool   `json:"autoWeight,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -111,6 +131,12 @@ type MarketPlaceImage struct {
 type CustomImage struct {
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 	Name              *string `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+type Storage struct {
+	AccountName *string `json:"storageAccountName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -557,6 +583,13 @@ func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+func (o *LaunchSpecification) SetLoadBalancersConfig(v *LoadBalancersConfig) *LaunchSpecification {
+	if o.LoadBalancersConfig = v; o.LoadBalancersConfig == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancersConfig")
+	}
+	return o
+}
+
 func (o *LaunchSpecification) SetImage(v *Image) *LaunchSpecification {
 	if o.Image = v; o.Image == nil {
 		o.nullFields = append(o.nullFields, "Image")
@@ -588,6 +621,76 @@ func (o *LaunchSpecification) SetCustomData(v *string) *LaunchSpecification {
 func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIdentity) *LaunchSpecification {
 	if o.ManagedServiceIdentities = v; o.ManagedServiceIdentities == nil {
 		o.nullFields = append(o.nullFields, "ManagedServiceIdentities")
+	}
+	return o
+}
+
+// SetShutdownScript sets the shutdown script used when draining instances
+func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification {
+	if o.ShutdownScript = v; o.ShutdownScript == nil {
+		o.nullFields = append(o.nullFields, "ShutdownScript")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetStorage(v *Storage) *LaunchSpecification {
+	if o.Storage = v; o.Storage == nil {
+		o.nullFields = append(o.nullFields, "Storage")
+	}
+	return o
+}
+
+// endregion
+
+// region LoadBalancersConfig
+
+func (o LoadBalancersConfig) MarshalJSON() ([]byte, error) {
+	type noMethod LoadBalancersConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LoadBalancersConfig) SetLoadBalancers(v []*LoadBalancer) *LoadBalancersConfig {
+	if o.LoadBalancers = v; o.LoadBalancers == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancers")
+	}
+	return o
+}
+
+// endregion
+
+// region LoadBalancer
+
+func (o LoadBalancer) MarshalJSON() ([]byte, error) {
+	type noMethod LoadBalancer
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetBalancerId(v *string) *LoadBalancer {
+	if o.BalancerID = v; o.BalancerID == nil {
+		o.nullFields = append(o.nullFields, "BalancerID")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetTargetSetId(v *string) *LoadBalancer {
+	if o.TargetSetID = v; o.TargetSetID == nil {
+		o.nullFields = append(o.nullFields, "TargetSetID")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetAutoWeight(v *bool) *LoadBalancer {
+	if o.AutoWeight = v; o.AutoWeight == nil {
+		o.nullFields = append(o.nullFields, "AutoWeight")
 	}
 	return o
 }
@@ -679,6 +782,21 @@ func (o *CustomImage) SetName(v *string) *CustomImage {
 }
 
 // endregion
+
+// region Storage
+
+func (o Storage) MarshalJSON() ([]byte, error) {
+	type noMethod Storage
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Storage) SetAccountName(v *string) *Storage {
+	if o.AccountName = v; o.AccountName == nil {
+		o.nullFields = append(o.nullFields, "AccountName")
+	}
+	return o
+}
 
 // region Network
 
