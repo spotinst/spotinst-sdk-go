@@ -110,13 +110,13 @@ type ECSDynamicVolumeSize struct {
 }
 
 type ECSLaunchSpecScheduling struct {
-	Tasks []*ECSSchedulingTask `json:"tasks,omitempty"`
+	Tasks []*ECSLaunchSpecTask `json:"tasks,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type ECSSchedulingTask struct {
+type ECSLaunchSpecTask struct {
 	IsEnabled      *bool          `json:"isEnabled,omitempty"`
 	CronExpression *string        `json:"cronExpression,omitempty"`
 	TaskType       *string        `json:"taskType,omitempty"`
@@ -127,13 +127,13 @@ type ECSSchedulingTask struct {
 }
 
 type ECSTaskConfig struct {
-	ConfigHeadrooms []*ECSConfigHeadroom `json:"headrooms,omitempty"`
+	TaskHeadrooms []*ECSLaunchSpecTaskHeadroom `json:"headrooms,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type ECSConfigHeadroom struct {
+type ECSLaunchSpecTaskHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
@@ -678,7 +678,7 @@ func (o ECSLaunchSpecScheduling) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ECSLaunchSpecScheduling) SetTasks(v []*ECSSchedulingTask) *ECSLaunchSpecScheduling {
+func (o *ECSLaunchSpecScheduling) SetTasks(v []*ECSLaunchSpecTask) *ECSLaunchSpecScheduling {
 	if o.Tasks = v; o.Tasks == nil {
 		o.nullFields = append(o.nullFields, "Tasks")
 	}
@@ -687,36 +687,36 @@ func (o *ECSLaunchSpecScheduling) SetTasks(v []*ECSSchedulingTask) *ECSLaunchSpe
 
 // endregion
 
-//region SchedulingTask
+//region LaunchSpecTask
 
-func (o ECSSchedulingTask) MarshalJSON() ([]byte, error) {
-	type noMethod ECSSchedulingTask
+func (o ECSLaunchSpecTask) MarshalJSON() ([]byte, error) {
+	type noMethod ECSLaunchSpecTask
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ECSSchedulingTask) SetIsEnabled(v *bool) *ECSSchedulingTask {
+func (o *ECSLaunchSpecTask) SetIsEnabled(v *bool) *ECSLaunchSpecTask {
 	if o.IsEnabled = v; o.IsEnabled == nil {
 		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
 	return o
 }
 
-func (o *ECSSchedulingTask) SetCronExpression(v *string) *ECSSchedulingTask {
+func (o *ECSLaunchSpecTask) SetCronExpression(v *string) *ECSLaunchSpecTask {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
 	}
 	return o
 }
 
-func (o *ECSSchedulingTask) SetTaskType(v *string) *ECSSchedulingTask {
+func (o *ECSLaunchSpecTask) SetTaskType(v *string) *ECSLaunchSpecTask {
 	if o.TaskType = v; o.TaskType == nil {
 		o.nullFields = append(o.nullFields, "TaskType")
 	}
 	return o
 }
 
-func (o *ECSSchedulingTask) SetTaskConfig(v *ECSTaskConfig) *ECSSchedulingTask {
+func (o *ECSLaunchSpecTask) SetTaskConfig(v *ECSTaskConfig) *ECSLaunchSpecTask {
 	if o.Config = v; o.Config == nil {
 		o.nullFields = append(o.nullFields, "Config")
 	}
@@ -733,38 +733,38 @@ func (o ECSTaskConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ECSTaskConfig) SetHeadrooms(v []*ECSConfigHeadroom) *ECSTaskConfig {
-	if o.ConfigHeadrooms = v; o.ConfigHeadrooms == nil {
-		o.nullFields = append(o.nullFields, "ConfigHeadrooms")
+func (o *ECSTaskConfig) SetHeadrooms(v []*ECSLaunchSpecTaskHeadroom) *ECSTaskConfig {
+	if o.TaskHeadrooms = v; o.TaskHeadrooms == nil {
+		o.nullFields = append(o.nullFields, "TaskHeadrooms")
 	}
 	return o
 }
 
 // endregion
 
-// region ConfigHeadroom
+// region LaunchSpecTaskHeadroom
 
-func (o ECSConfigHeadroom) MarshalJSON() ([]byte, error) {
-	type noMethod ECSConfigHeadroom
+func (o ECSLaunchSpecTaskHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod ECSLaunchSpecTaskHeadroom
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ECSConfigHeadroom) SetCPUPerUnit(v *int) *ECSConfigHeadroom {
+func (o *ECSLaunchSpecTaskHeadroom) SetCPUPerUnit(v *int) *ECSLaunchSpecTaskHeadroom {
 	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "CPUPerUnit")
 	}
 	return o
 }
 
-func (o *ECSConfigHeadroom) SetMemoryPerUnit(v *int) *ECSConfigHeadroom {
+func (o *ECSLaunchSpecTaskHeadroom) SetMemoryPerUnit(v *int) *ECSLaunchSpecTaskHeadroom {
 	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
 		o.nullFields = append(o.nullFields, "MemoryPerUnit")
 	}
 	return o
 }
 
-func (o *ECSConfigHeadroom) SetNumOfUnits(v *int) *ECSConfigHeadroom {
+func (o *ECSLaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *ECSLaunchSpecTaskHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
 	}

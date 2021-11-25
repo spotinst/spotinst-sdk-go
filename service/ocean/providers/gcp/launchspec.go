@@ -115,13 +115,13 @@ type ResourceLimits struct {
 }
 
 type GKELaunchSpecScheduling struct {
-	Tasks []*GKESchedulingTask `json:"tasks,omitempty"`
+	Tasks []*GKELaunchSpecTask `json:"tasks,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type GKESchedulingTask struct {
+type GKELaunchSpecTask struct {
 	IsEnabled      *bool          `json:"isEnabled,omitempty"`
 	CronExpression *string        `json:"cronExpression,omitempty"`
 	TaskType       *string        `json:"taskType,omitempty"`
@@ -132,13 +132,13 @@ type GKESchedulingTask struct {
 }
 
 type GKETaskConfig struct {
-	ConfigHeadrooms []*GKEConfigHeadroom `json:"headrooms,omitempty"`
+	TaskHeadrooms []*GKELaunchSpecTaskHeadroom `json:"headrooms,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type GKEConfigHeadroom struct {
+type GKELaunchSpecTaskHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
 	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
@@ -732,7 +732,7 @@ func (o GKELaunchSpecScheduling) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *GKELaunchSpecScheduling) SetTasks(v []*GKESchedulingTask) *GKELaunchSpecScheduling {
+func (o *GKELaunchSpecScheduling) SetTasks(v []*GKELaunchSpecTask) *GKELaunchSpecScheduling {
 	if o.Tasks = v; o.Tasks == nil {
 		o.nullFields = append(o.nullFields, "Tasks")
 	}
@@ -741,36 +741,36 @@ func (o *GKELaunchSpecScheduling) SetTasks(v []*GKESchedulingTask) *GKELaunchSpe
 
 // endregion
 
-//region SchedulingTask
+//region LaunchSpecTask
 
-func (o GKESchedulingTask) MarshalJSON() ([]byte, error) {
-	type noMethod GKESchedulingTask
+func (o GKELaunchSpecTask) MarshalJSON() ([]byte, error) {
+	type noMethod GKELaunchSpecTask
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *GKESchedulingTask) SetIsEnabled(v *bool) *GKESchedulingTask {
+func (o *GKELaunchSpecTask) SetIsEnabled(v *bool) *GKELaunchSpecTask {
 	if o.IsEnabled = v; o.IsEnabled == nil {
 		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
 	return o
 }
 
-func (o *GKESchedulingTask) SetCronExpression(v *string) *GKESchedulingTask {
+func (o *GKELaunchSpecTask) SetCronExpression(v *string) *GKELaunchSpecTask {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
 	}
 	return o
 }
 
-func (o *GKESchedulingTask) SetTaskType(v *string) *GKESchedulingTask {
+func (o *GKELaunchSpecTask) SetTaskType(v *string) *GKELaunchSpecTask {
 	if o.TaskType = v; o.TaskType == nil {
 		o.nullFields = append(o.nullFields, "TaskType")
 	}
 	return o
 }
 
-func (o *GKESchedulingTask) SetTaskConfig(v *GKETaskConfig) *GKESchedulingTask {
+func (o *GKELaunchSpecTask) SetTaskConfig(v *GKETaskConfig) *GKELaunchSpecTask {
 	if o.Config = v; o.Config == nil {
 		o.nullFields = append(o.nullFields, "Config")
 	}
@@ -787,45 +787,45 @@ func (o GKETaskConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *GKETaskConfig) SetHeadrooms(v []*GKEConfigHeadroom) *GKETaskConfig {
-	if o.ConfigHeadrooms = v; o.ConfigHeadrooms == nil {
-		o.nullFields = append(o.nullFields, "ConfigHeadrooms")
+func (o *GKETaskConfig) SetHeadrooms(v []*GKELaunchSpecTaskHeadroom) *GKETaskConfig {
+	if o.TaskHeadrooms = v; o.TaskHeadrooms == nil {
+		o.nullFields = append(o.nullFields, "TaskHeadroom")
 	}
 	return o
 }
 
 // endregion
 
-// region ConfigHeadroom
+// region LaunchSpecTaskHeadroom
 
-func (o GKEConfigHeadroom) MarshalJSON() ([]byte, error) {
-	type noMethod GKEConfigHeadroom
+func (o GKELaunchSpecTaskHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod GKELaunchSpecTaskHeadroom
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *GKEConfigHeadroom) SetCPUPerUnit(v *int) *GKEConfigHeadroom {
+func (o *GKELaunchSpecTaskHeadroom) SetCPUPerUnit(v *int) *GKELaunchSpecTaskHeadroom {
 	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "CPUPerUnit")
 	}
 	return o
 }
 
-func (o *GKEConfigHeadroom) SetGPUPerUnit(v *int) *GKEConfigHeadroom {
+func (o *GKELaunchSpecTaskHeadroom) SetGPUPerUnit(v *int) *GKELaunchSpecTaskHeadroom {
 	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "GPUPerUnit")
 	}
 	return o
 }
 
-func (o *GKEConfigHeadroom) SetMemoryPerUnit(v *int) *GKEConfigHeadroom {
+func (o *GKELaunchSpecTaskHeadroom) SetMemoryPerUnit(v *int) *GKELaunchSpecTaskHeadroom {
 	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
 		o.nullFields = append(o.nullFields, "MemoryPerUnit")
 	}
 	return o
 }
 
-func (o *GKEConfigHeadroom) SetNumOfUnits(v *int) *GKEConfigHeadroom {
+func (o *GKELaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *GKELaunchSpecTaskHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
 	}

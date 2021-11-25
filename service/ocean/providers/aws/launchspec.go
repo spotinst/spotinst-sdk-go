@@ -158,13 +158,13 @@ type LaunchSpecStrategy struct {
 }
 
 type LaunchSpecScheduling struct {
-	Tasks []*SchedulingTask `json:"tasks,omitempty"`
+	Tasks []*LaunchSpecTask `json:"tasks,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type SchedulingTask struct {
+type LaunchSpecTask struct {
 	IsEnabled      *bool       `json:"isEnabled,omitempty"`
 	CronExpression *string     `json:"cronExpression,omitempty"`
 	TaskType       *string     `json:"taskType,omitempty"`
@@ -175,13 +175,13 @@ type SchedulingTask struct {
 }
 
 type TaskConfig struct {
-	ConfigHeadrooms []*ConfigHeadroom `json:"headrooms,omitempty"`
+	TaskHeadrooms []*LaunchSpecTaskHeadroom `json:"headrooms,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type ConfigHeadroom struct {
+type LaunchSpecTaskHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
 	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
@@ -906,7 +906,7 @@ func (o LaunchSpecScheduling) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecScheduling) SetTasks(v []*SchedulingTask) *LaunchSpecScheduling {
+func (o *LaunchSpecScheduling) SetTasks(v []*LaunchSpecTask) *LaunchSpecScheduling {
 	if o.Tasks = v; o.Tasks == nil {
 		o.nullFields = append(o.nullFields, "Tasks")
 	}
@@ -915,36 +915,36 @@ func (o *LaunchSpecScheduling) SetTasks(v []*SchedulingTask) *LaunchSpecScheduli
 
 // endregion
 
-//region SchedulingTask
+//region LaunchSpecTask
 
-func (o SchedulingTask) MarshalJSON() ([]byte, error) {
-	type noMethod SchedulingTask
+func (o LaunchSpecTask) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecTask
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *SchedulingTask) SetIsEnabled(v *bool) *SchedulingTask {
+func (o *LaunchSpecTask) SetIsEnabled(v *bool) *LaunchSpecTask {
 	if o.IsEnabled = v; o.IsEnabled == nil {
 		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
 	return o
 }
 
-func (o *SchedulingTask) SetCronExpression(v *string) *SchedulingTask {
+func (o *LaunchSpecTask) SetCronExpression(v *string) *LaunchSpecTask {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
 	}
 	return o
 }
 
-func (o *SchedulingTask) SetTaskType(v *string) *SchedulingTask {
+func (o *LaunchSpecTask) SetTaskType(v *string) *LaunchSpecTask {
 	if o.TaskType = v; o.TaskType == nil {
 		o.nullFields = append(o.nullFields, "TaskType")
 	}
 	return o
 }
 
-func (o *SchedulingTask) SetTaskConfig(v *TaskConfig) *SchedulingTask {
+func (o *LaunchSpecTask) SetTaskConfig(v *TaskConfig) *LaunchSpecTask {
 	if o.Config = v; o.Config == nil {
 		o.nullFields = append(o.nullFields, "Config")
 	}
@@ -961,45 +961,45 @@ func (o TaskConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *TaskConfig) SetHeadrooms(v []*ConfigHeadroom) *TaskConfig {
-	if o.ConfigHeadrooms = v; o.ConfigHeadrooms == nil {
-		o.nullFields = append(o.nullFields, "ConfigHeadrooms")
+func (o *TaskConfig) SetHeadrooms(v []*LaunchSpecTaskHeadroom) *TaskConfig {
+	if o.TaskHeadrooms = v; o.TaskHeadrooms == nil {
+		o.nullFields = append(o.nullFields, "TaskHeadrooms")
 	}
 	return o
 }
 
 // endregion
 
-// region ConfigHeadroom
+// region LaunchSpecTaskHeadroom
 
-func (o ConfigHeadroom) MarshalJSON() ([]byte, error) {
-	type noMethod ConfigHeadroom
+func (o LaunchSpecTaskHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecTaskHeadroom
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ConfigHeadroom) SetCPUPerUnit(v *int) *ConfigHeadroom {
+func (o *LaunchSpecTaskHeadroom) SetCPUPerUnit(v *int) *LaunchSpecTaskHeadroom {
 	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "CPUPerUnit")
 	}
 	return o
 }
 
-func (o *ConfigHeadroom) SetGPUPerUnit(v *int) *ConfigHeadroom {
+func (o *LaunchSpecTaskHeadroom) SetGPUPerUnit(v *int) *LaunchSpecTaskHeadroom {
 	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
 		o.nullFields = append(o.nullFields, "GPUPerUnit")
 	}
 	return o
 }
 
-func (o *ConfigHeadroom) SetMemoryPerUnit(v *int) *ConfigHeadroom {
+func (o *LaunchSpecTaskHeadroom) SetMemoryPerUnit(v *int) *LaunchSpecTaskHeadroom {
 	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
 		o.nullFields = append(o.nullFields, "MemoryPerUnit")
 	}
 	return o
 }
 
-func (o *ConfigHeadroom) SetNumOfUnits(v *int) *ConfigHeadroom {
+func (o *LaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *LaunchSpecTaskHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
 	}
