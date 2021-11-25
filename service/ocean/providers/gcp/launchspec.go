@@ -13,24 +13,25 @@ import (
 )
 
 type LaunchSpec struct {
-	ID                     *string                 `json:"id,omitempty"`
-	Name                   *string                 `json:"name,omitempty"`
-	OceanID                *string                 `json:"oceanId,omitempty"`
-	SourceImage            *string                 `json:"sourceImage,omitempty"`
-	Metadata               []*Metadata             `json:"metadata,omitempty"`
-	Labels                 []*Label                `json:"labels,omitempty"`
-	Taints                 []*Taint                `json:"taints,omitempty"`
-	AutoScale              *AutoScale              `json:"autoScale,omitempty"`
-	RestrictScaleDown      *bool                   `json:"restrictScaleDown,omitempty"`
-	Tags                   []*Tag                  `json:"tags,omitempty"`
-	Strategy               *LaunchSpecStrategy     `json:"strategy,omitempty"`
-	RootVolumeSizeInGB     *int                    `json:"rootVolumeSizeInGb,omitempty"`
-	RootVolumeType         *string                 `json:"rootVolumeType,omitempty"`
-	ShieldedInstanceConfig *ShieldedInstanceConfig `json:"shieldedInstanceConfig,omitempty"`
-	ServiceAccount         *string                 `json:"serviceAccount,omitempty"`
-	InstanceTypes          []string                `json:"instanceTypes,omitempty"`
-	Storage                *Storage                `json:"storage,omitempty"`
-	ResourceLimits         *ResourceLimits         `json:"resourceLimits,omitempty"`
+	ID                     *string                  `json:"id,omitempty"`
+	Name                   *string                  `json:"name,omitempty"`
+	OceanID                *string                  `json:"oceanId,omitempty"`
+	SourceImage            *string                  `json:"sourceImage,omitempty"`
+	Metadata               []*Metadata              `json:"metadata,omitempty"`
+	Labels                 []*Label                 `json:"labels,omitempty"`
+	Taints                 []*Taint                 `json:"taints,omitempty"`
+	AutoScale              *AutoScale               `json:"autoScale,omitempty"`
+	RestrictScaleDown      *bool                    `json:"restrictScaleDown,omitempty"`
+	Tags                   []*Tag                   `json:"tags,omitempty"`
+	Strategy               *LaunchSpecStrategy      `json:"strategy,omitempty"`
+	RootVolumeSizeInGB     *int                     `json:"rootVolumeSizeInGb,omitempty"`
+	RootVolumeType         *string                  `json:"rootVolumeType,omitempty"`
+	ShieldedInstanceConfig *ShieldedInstanceConfig  `json:"shieldedInstanceConfig,omitempty"`
+	ServiceAccount         *string                  `json:"serviceAccount,omitempty"`
+	InstanceTypes          []string                 `json:"instanceTypes,omitempty"`
+	Storage                *Storage                 `json:"storage,omitempty"`
+	ResourceLimits         *ResourceLimits          `json:"resourceLimits,omitempty"`
+	LaunchSpecScheduling   *GKELaunchSpecScheduling `json:"scheduling,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -108,6 +109,40 @@ type Storage struct {
 type ResourceLimits struct {
 	MaxInstanceCount *int `json:"maxInstanceCount,omitempty"`
 	MinInstanceCount *int `json:"minInstanceCount,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GKELaunchSpecScheduling struct {
+	Tasks []*GKESchedulingTask `json:"tasks,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GKESchedulingTask struct {
+	IsEnabled      *bool          `json:"isEnabled,omitempty"`
+	CronExpression *string        `json:"cronExpression,omitempty"`
+	TaskType       *string        `json:"taskType,omitempty"`
+	Config         *GKETaskConfig `json:"config,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GKETaskConfig struct {
+	ConfigHeadrooms []*GKEConfigHeadroom `json:"headrooms,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GKEConfigHeadroom struct {
+	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
+	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
+	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
+	NumOfUnits    *int `json:"numOfUnits,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -474,6 +509,13 @@ func (o *LaunchSpec) SetResourceLimits(v *ResourceLimits) *LaunchSpec {
 	return o
 }
 
+func (o *LaunchSpec) SetScheduling(v *GKELaunchSpecScheduling) *LaunchSpec {
+	if o.LaunchSpecScheduling = v; o.LaunchSpecScheduling == nil {
+		o.nullFields = append(o.nullFields, "GKELaunchSpecScheduling")
+	}
+	return o
+}
+
 // endregion
 
 // region Label
@@ -681,3 +723,113 @@ func (o *ResourceLimits) SetMinInstanceCount(v *int) *ResourceLimits {
 }
 
 //endregion
+
+//region Scheduling
+
+func (o GKELaunchSpecScheduling) MarshalJSON() ([]byte, error) {
+	type noMethod GKELaunchSpecScheduling
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GKELaunchSpecScheduling) SetTasks(v []*GKESchedulingTask) *GKELaunchSpecScheduling {
+	if o.Tasks = v; o.Tasks == nil {
+		o.nullFields = append(o.nullFields, "Tasks")
+	}
+	return o
+}
+
+// endregion
+
+//region SchedulingTask
+
+func (o GKESchedulingTask) MarshalJSON() ([]byte, error) {
+	type noMethod GKESchedulingTask
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GKESchedulingTask) SetIsEnabled(v *bool) *GKESchedulingTask {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *GKESchedulingTask) SetCronExpression(v *string) *GKESchedulingTask {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+func (o *GKESchedulingTask) SetTaskType(v *string) *GKESchedulingTask {
+	if o.TaskType = v; o.TaskType == nil {
+		o.nullFields = append(o.nullFields, "TaskType")
+	}
+	return o
+}
+
+func (o *GKESchedulingTask) SetTaskConfig(v *GKETaskConfig) *GKESchedulingTask {
+	if o.Config = v; o.Config == nil {
+		o.nullFields = append(o.nullFields, "Config")
+	}
+	return o
+}
+
+// endregion
+
+//region TaskConfig
+
+func (o GKETaskConfig) MarshalJSON() ([]byte, error) {
+	type noMethod GKETaskConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GKETaskConfig) SetHeadrooms(v []*GKEConfigHeadroom) *GKETaskConfig {
+	if o.ConfigHeadrooms = v; o.ConfigHeadrooms == nil {
+		o.nullFields = append(o.nullFields, "ConfigHeadrooms")
+	}
+	return o
+}
+
+// endregion
+
+// region ConfigHeadroom
+
+func (o GKEConfigHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod GKEConfigHeadroom
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GKEConfigHeadroom) SetCPUPerUnit(v *int) *GKEConfigHeadroom {
+	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
+		o.nullFields = append(o.nullFields, "CPUPerUnit")
+	}
+	return o
+}
+
+func (o *GKEConfigHeadroom) SetGPUPerUnit(v *int) *GKEConfigHeadroom {
+	if o.GPUPerUnit = v; o.GPUPerUnit == nil {
+		o.nullFields = append(o.nullFields, "GPUPerUnit")
+	}
+	return o
+}
+
+func (o *GKEConfigHeadroom) SetMemoryPerUnit(v *int) *GKEConfigHeadroom {
+	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
+		o.nullFields = append(o.nullFields, "MemoryPerUnit")
+	}
+	return o
+}
+
+func (o *GKEConfigHeadroom) SetNumOfUnits(v *int) *GKEConfigHeadroom {
+	if o.NumOfUnits = v; o.NumOfUnits == nil {
+		o.nullFields = append(o.nullFields, "NumOfUnits")
+	}
+	return o
+}
+
+// endregion

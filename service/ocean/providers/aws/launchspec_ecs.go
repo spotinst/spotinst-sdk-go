@@ -14,20 +14,21 @@ import (
 )
 
 type ECSLaunchSpec struct {
-	ID                  *string                  `json:"id,omitempty"`
-	Name                *string                  `json:"name,omitempty"`
-	OceanID             *string                  `json:"oceanId,omitempty"`
-	ImageID             *string                  `json:"imageId,omitempty"`
-	UserData            *string                  `json:"userData,omitempty"`
-	SecurityGroupIDs    []string                 `json:"securityGroupIds,omitempty"`
-	AutoScale           *ECSAutoScale            `json:"autoScale,omitempty"`
-	IAMInstanceProfile  *ECSIAMInstanceProfile   `json:"iamInstanceProfile,omitempty"`
-	Attributes          []*ECSAttribute          `json:"attributes,omitempty"`
-	BlockDeviceMappings []*ECSBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
-	Tags                []*Tag                   `json:"tags,omitempty"`
-	InstanceTypes       []string                 `json:"instanceTypes,omitempty"`
-	RestrictScaleDown   *bool                    `json:"restrictScaleDown,omitempty"`
-	SubnetIDs           []string                 `json:"subnetIds,omitempty"`
+	ID                   *string                  `json:"id,omitempty"`
+	Name                 *string                  `json:"name,omitempty"`
+	OceanID              *string                  `json:"oceanId,omitempty"`
+	ImageID              *string                  `json:"imageId,omitempty"`
+	UserData             *string                  `json:"userData,omitempty"`
+	SecurityGroupIDs     []string                 `json:"securityGroupIds,omitempty"`
+	AutoScale            *ECSAutoScale            `json:"autoScale,omitempty"`
+	IAMInstanceProfile   *ECSIAMInstanceProfile   `json:"iamInstanceProfile,omitempty"`
+	Attributes           []*ECSAttribute          `json:"attributes,omitempty"`
+	BlockDeviceMappings  []*ECSBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
+	Tags                 []*Tag                   `json:"tags,omitempty"`
+	InstanceTypes        []string                 `json:"instanceTypes,omitempty"`
+	RestrictScaleDown    *bool                    `json:"restrictScaleDown,omitempty"`
+	SubnetIDs            []string                 `json:"subnetIds,omitempty"`
+	LaunchSpecScheduling *ECSLaunchSpecScheduling `json:"scheduling,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -103,6 +104,39 @@ type ECSDynamicVolumeSize struct {
 	BaseSize            *int    `json:"baseSize,omitempty"`
 	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
 	Resource            *string `json:"resource,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSLaunchSpecScheduling struct {
+	Tasks []*ECSSchedulingTask `json:"tasks,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSSchedulingTask struct {
+	IsEnabled      *bool          `json:"isEnabled,omitempty"`
+	CronExpression *string        `json:"cronExpression,omitempty"`
+	TaskType       *string        `json:"taskType,omitempty"`
+	Config         *ECSTaskConfig `json:"config,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSTaskConfig struct {
+	ConfigHeadrooms []*ECSConfigHeadroom `json:"headrooms,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSConfigHeadroom struct {
+	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
+	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
+	NumOfUnits    *int `json:"numOfUnits,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -413,6 +447,13 @@ func (o *ECSLaunchSpec) SetSubnetIDs(v []string) *ECSLaunchSpec {
 	return o
 }
 
+func (o *ECSLaunchSpec) SetScheduling(v *ECSLaunchSpecScheduling) *ECSLaunchSpec {
+	if o.LaunchSpecScheduling = v; o.LaunchSpecScheduling == nil {
+		o.nullFields = append(o.nullFields, "ECSLaunchSpecScheduling")
+	}
+	return o
+}
+
 // endregion
 
 // region Attributes
@@ -623,6 +664,109 @@ func (o *ECSDynamicVolumeSize) SetResource(v *string) *ECSDynamicVolumeSize {
 func (o *ECSDynamicVolumeSize) SetSizePerResourceUnit(v *int) *ECSDynamicVolumeSize {
 	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
 		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+// endregion
+
+//region Scheduling
+
+func (o ECSLaunchSpecScheduling) MarshalJSON() ([]byte, error) {
+	type noMethod ECSLaunchSpecScheduling
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSLaunchSpecScheduling) SetTasks(v []*ECSSchedulingTask) *ECSLaunchSpecScheduling {
+	if o.Tasks = v; o.Tasks == nil {
+		o.nullFields = append(o.nullFields, "Tasks")
+	}
+	return o
+}
+
+// endregion
+
+//region SchedulingTask
+
+func (o ECSSchedulingTask) MarshalJSON() ([]byte, error) {
+	type noMethod ECSSchedulingTask
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSSchedulingTask) SetIsEnabled(v *bool) *ECSSchedulingTask {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *ECSSchedulingTask) SetCronExpression(v *string) *ECSSchedulingTask {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+func (o *ECSSchedulingTask) SetTaskType(v *string) *ECSSchedulingTask {
+	if o.TaskType = v; o.TaskType == nil {
+		o.nullFields = append(o.nullFields, "TaskType")
+	}
+	return o
+}
+
+func (o *ECSSchedulingTask) SetTaskConfig(v *ECSTaskConfig) *ECSSchedulingTask {
+	if o.Config = v; o.Config == nil {
+		o.nullFields = append(o.nullFields, "Config")
+	}
+	return o
+}
+
+// endregion
+
+//region TaskConfig
+
+func (o ECSTaskConfig) MarshalJSON() ([]byte, error) {
+	type noMethod ECSTaskConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSTaskConfig) SetHeadrooms(v []*ECSConfigHeadroom) *ECSTaskConfig {
+	if o.ConfigHeadrooms = v; o.ConfigHeadrooms == nil {
+		o.nullFields = append(o.nullFields, "ConfigHeadrooms")
+	}
+	return o
+}
+
+// endregion
+
+// region ConfigHeadroom
+
+func (o ECSConfigHeadroom) MarshalJSON() ([]byte, error) {
+	type noMethod ECSConfigHeadroom
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSConfigHeadroom) SetCPUPerUnit(v *int) *ECSConfigHeadroom {
+	if o.CPUPerUnit = v; o.CPUPerUnit == nil {
+		o.nullFields = append(o.nullFields, "CPUPerUnit")
+	}
+	return o
+}
+
+func (o *ECSConfigHeadroom) SetMemoryPerUnit(v *int) *ECSConfigHeadroom {
+	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
+		o.nullFields = append(o.nullFields, "MemoryPerUnit")
+	}
+	return o
+}
+
+func (o *ECSConfigHeadroom) SetNumOfUnits(v *int) *ECSConfigHeadroom {
+	if o.NumOfUnits = v; o.NumOfUnits == nil {
+		o.nullFields = append(o.nullFields, "NumOfUnits")
 	}
 	return o
 }
