@@ -80,9 +80,10 @@ func resourceSuggestionsFromHTTPResponse(resp *http.Response) ([]*ResourceSugges
 // ListResourceSuggestions returns a list of right-sizing resource suggestions
 // for an Ocean cluster.
 func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error) {
-	path, err := uritemplates.Expand("/ocean/azure/k8s/cluster/{oceanId}/rightSizing/resourceSuggestion", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/azure/k8s/cluster/{oceanId}/rightSizing/suggestion", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanID),
 	})
+
 	if err != nil {
 		return nil, err
 	}
