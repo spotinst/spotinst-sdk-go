@@ -36,8 +36,18 @@ type ContainerResourceSuggestion struct {
 
 // ListResourceSuggestionsInput represents the input of `ListResourceSuggestions` function.
 type ListResourceSuggestionsInput struct {
-	OceanID   *string `json:"oceanId,omitempty"`
-	Namespace *string `json:"namespace,omitempty"`
+	OceanID *string                    `json:"-"`
+	Filter  *FilterResourceSuggestions `json:"filter"`
+}
+
+type FilterResourceSuggestions struct {
+	Namespaces []string `json:"namespaces"`
+	Attribute  *struct {
+		Type     string `json:"type"`
+		Key      string `json:"key"`
+		Operator string `json:"operator"`
+		Value    string `json:"value"`
+	} `json:"attribute"`
 }
 
 // ListResourceSuggestionsOutput represents the output of `ListResourceSuggestions` function.
@@ -90,10 +100,7 @@ func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListReso
 
 	r := client.NewRequest(http.MethodPost, path)
 
-	if input.Namespace != nil {
-		r.Params.Set("namespace", *input.Namespace)
-	}
-	// r.Obj = input
+	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
