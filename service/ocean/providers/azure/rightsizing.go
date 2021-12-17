@@ -43,10 +43,10 @@ type ListResourceSuggestionsInput struct {
 type FilterResourceSuggestions struct {
 	Namespaces []string `json:"namespaces"`
 	Attribute  *struct {
-		Type     string `json:"type"`
-		Key      string `json:"key"`
-		Operator string `json:"operator"`
-		Value    string `json:"value"`
+		Type     *string `json:"type"`
+		Key      *string `json:"key"`
+		Operator *string `json:"operator"`
+		Value    *string `json:"value"`
 	} `json:"attribute"`
 }
 

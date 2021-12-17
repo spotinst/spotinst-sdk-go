@@ -36,8 +36,18 @@ type ContainerResourceSuggestion struct {
 
 // ListResourceSuggestionsInput represents the input of `ListResourceSuggestions` function.
 type ListResourceSuggestionsInput struct {
-	OceanID   *string `json:"oceanId,omitempty"`
-	Namespace *string `json:"namespace,omitempty"`
+	OceanID *string                    `json:"-"`
+	Filter  *FilterResourceSuggestions `json:"filter"`
+}
+
+type FilterResourceSuggestions struct {
+	Namespaces []string `json:"namespaces"`
+	Attribute  *struct {
+		Type     *string `json:"type"`
+		Key      *string `json:"key"`
+		Operator *string `json:"operator"`
+		Value    *string `json:"value"`
+	} `json:"attribute"`
 }
 
 // ListResourceSuggestionsOutput represents the output of `ListResourceSuggestions` function.
@@ -80,18 +90,15 @@ func resourceSuggestionsFromHTTPResponse(resp *http.Response) ([]*ResourceSugges
 // ListResourceSuggestions returns a list of right-sizing resource suggestions
 // for an Ocean cluster.
 func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error) {
-	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{oceanId}/rightSizing/resourceSuggestion", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{oceanId}/rightSizing/suggestion", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	r := client.NewRequest(http.MethodGet, path)
+	r := client.NewRequest(http.MethodPost, path)
 
-	if input.Namespace != nil {
-		r.Params.Set("namespace", *input.Namespace)
-	}
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
