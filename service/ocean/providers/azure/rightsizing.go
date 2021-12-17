@@ -88,12 +88,12 @@ func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListReso
 		return nil, err
 	}
 
-	r := client.NewRequest(http.MethodGet, path)
+	r := client.NewRequest(http.MethodPost, path)
 
 	if input.Namespace != nil {
 		r.Params.Set("namespace", *input.Namespace)
 	}
-	r.Obj = input
+	// r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
