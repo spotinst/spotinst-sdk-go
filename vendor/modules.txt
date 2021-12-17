@@ -1,10 +1,16 @@
+# github.com/dankinder/httpmock v1.0.2
+## explicit
+github.com/dankinder/httpmock
 # github.com/davecgh/go-spew v1.1.0
 github.com/davecgh/go-spew/spew
 # github.com/pmezard/go-difflib v1.0.0
 github.com/pmezard/go-difflib/difflib
+# github.com/stretchr/objx v0.1.0
+github.com/stretchr/objx
 # github.com/stretchr/testify v1.7.0
 ## explicit
 github.com/stretchr/testify/assert
+github.com/stretchr/testify/mock
 # gopkg.in/ini.v1 v1.65.0
 ## explicit
 gopkg.in/ini.v1
