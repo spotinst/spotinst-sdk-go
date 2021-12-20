@@ -11,7 +11,7 @@ github.com/stretchr/objx
 ## explicit
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/mock
-# gopkg.in/ini.v1 v1.65.0
+# gopkg.in/ini.v1 v1.66.2
 ## explicit
 gopkg.in/ini.v1
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
