@@ -85,6 +85,26 @@ type LaunchSpecification struct {
 	Login                    *Login                    `json:"login,omitempty"`
 	CustomData               *string                   `json:"customData,omitempty"`
 	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
+	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
+	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LoadBalancersConfig struct {
+	LoadBalancers []*LoadBalancer `json:"loadBalancers,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LoadBalancer struct {
+	Type              *string  `json:"type,omitempty"`
+	ResourceGroupName *string  `json:"resourceGroupName,omitempty"`
+	Name              *string  `json:"name,omitempty"`
+	SKU               *string  `json:"sku,omitempty"`
+	BackendPoolNames  []string `json:"backendPoolNames,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -592,6 +612,21 @@ func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIde
 	return o
 }
 
+func (o *LaunchSpecification) SetLoadBalancersConfig(v *LoadBalancersConfig) *LaunchSpecification {
+	if o.LoadBalancersConfig = v; o.LoadBalancersConfig == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancersConfig")
+	}
+	return o
+}
+
+// SetShutdownScript sets the shutdown script used when draining instances
+func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification {
+	if o.ShutdownScript = v; o.ShutdownScript == nil {
+		o.nullFields = append(o.nullFields, "ShutdownScript")
+	}
+	return o
+}
+
 // endregion
 
 // region Image
@@ -853,6 +888,68 @@ func (o *ManagedServiceIdentity) SetResourceGroupName(v *string) *ManagedService
 func (o *ManagedServiceIdentity) SetName(v *string) *ManagedServiceIdentity {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+// endregion
+
+// region LoadBalancersConfig
+
+func (o LoadBalancersConfig) MarshalJSON() ([]byte, error) {
+	type noMethod LoadBalancersConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LoadBalancersConfig) SetLoadBalancers(v []*LoadBalancer) *LoadBalancersConfig {
+	if o.LoadBalancers = v; o.LoadBalancers == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancers")
+	}
+	return o
+}
+
+// endregion
+
+// region LoadBalancer
+
+func (o LoadBalancer) MarshalJSON() ([]byte, error) {
+	type noMethod LoadBalancer
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetResourceGroupName(v *string) *LoadBalancer {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetName(v *string) *LoadBalancer {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SetSKU(v *string) *LoadBalancer {
+	if o.SKU = v; o.SKU == nil {
+		o.nullFields = append(o.nullFields, "SKU")
+	}
+	return o
+}
+
+func (o *LoadBalancer) SeBackendPoolNames(v []string) *LoadBalancer {
+	if o.BackendPoolNames = v; o.BackendPoolNames == nil {
+		o.nullFields = append(o.nullFields, "BackendPoolNames")
 	}
 	return o
 }
