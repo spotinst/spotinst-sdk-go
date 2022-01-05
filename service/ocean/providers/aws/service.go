@@ -62,6 +62,10 @@ type serviceECS interface {
 }
 
 type serviceCommon interface {
+	FetchResourceSuggestions(context.Context, *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error)
+
+	// Deprecated: ListResourceSuggestions is obsolete, exists for backward compatibility only,
+	// and should not be used. Please use FetchResourceSuggestions instead.
 	ListResourceSuggestions(context.Context, *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error)
 }
 
