@@ -30,16 +30,16 @@ func main() {
 
 	//List right sizing suggestions.
 	out, err := svc.CloudProviderAWS().FetchResourceSuggestions(ctx, &aws.ListResourceSuggestionsInput{
-		OceanID:   spotinst.String("o-8fc69f56"),
-		Namespace: spotinst.String("kube-system"),
+		OceanID:   spotinst.String("o-12345"),
+		Namespace: spotinst.String("foo"),
 		Filter: &aws.Filter{
 			Attribute: &aws.Attribute{
-				Key:      spotinst.String("app"),
-				Operator: spotinst.String("equals"),
-				Type:     spotinst.String("label"),
-				Value:    spotinst.String("redis"),
+				Key:      spotinst.String("foo"),
+				Operator: spotinst.String("foo"),
+				Type:     spotinst.String("foo"),
+				Value:    spotinst.String("foo"),
 			},
-			Namespaces: []string{"kube-system"},
+			Namespaces: []string{"foo"},
 		},
 	})
 	if err != nil {
