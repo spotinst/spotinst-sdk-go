@@ -52,15 +52,25 @@ type Attribute struct {
 	nullFields      []string
 }
 
-// ListResourceSuggestionsInput represents the input of `ListResourceSuggestions` function.
+// Deprecated: Use ListOceanResourceSuggestionsInput instead.
 type ListResourceSuggestionsInput struct {
 	OceanID   *string `json:"oceanId,omitempty"`
 	Namespace *string `json:"namespace,omitempty"`
-	Filter    *Filter `json:"filter,omitempty"`
 }
 
-// ListResourceSuggestionsOutput represents the output of `ListResourceSuggestions` function.
+// Deprecated: Use ListOceanResourceSuggestionsOutput instead.
 type ListResourceSuggestionsOutput struct {
+	Suggestions []*ResourceSuggestion `json:"suggestions,omitempty"`
+}
+
+// ListOceanResourceSuggestionsInput represents the input of `ListOceanResourceSuggestions` function.
+type ListOceanResourceSuggestionsInput struct {
+	OceanID *string `json:"oceanId,omitempty"`
+	Filter  *Filter `json:"filter,omitempty"`
+}
+
+// ListOceanResourceSuggestionsOutput represents the output of `ListOceanResourceSuggestions` function.
+type ListOceanResourceSuggestionsOutput struct {
 	Suggestions []*ResourceSuggestion `json:"suggestions,omitempty"`
 }
 
@@ -96,9 +106,9 @@ func resourceSuggestionsFromHTTPResponse(resp *http.Response) ([]*ResourceSugges
 	return resourceSuggestionsFromJSON(body)
 }
 
-// FetchResourceSuggestions returns a list of right-sizing resource suggestions
+// ListOceanResourceSuggestions returns a list of right-sizing resource suggestions
 // for an Ocean cluster.
-func (s *ServiceOp) FetchResourceSuggestions(ctx context.Context, input *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error) {
+func (s *ServiceOp) ListOceanResourceSuggestions(ctx context.Context, input *ListOceanResourceSuggestionsInput) (*ListOceanResourceSuggestionsOutput, error) {
 	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{oceanId}/rightSizing/suggestion", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanID),
 	})
@@ -123,10 +133,10 @@ func (s *ServiceOp) FetchResourceSuggestions(ctx context.Context, input *ListRes
 		return nil, err
 	}
 
-	return &ListResourceSuggestionsOutput{Suggestions: rs}, nil
+	return &ListOceanResourceSuggestionsOutput{Suggestions: rs}, nil
 }
 
-// Deprecated: Use FetchResourceSuggestions instead.
+// Deprecated: Use ListOceanResourceSuggestions instead.
 func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error) {
 	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{oceanId}/rightSizing/resourceSuggestion", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanID),

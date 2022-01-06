@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	//List right sizing suggestions.
-	out, err := svc.CloudProviderAWS().FetchResourceSuggestions(ctx, &aws.ListResourceSuggestionsInput{
+	out, err := svc.CloudProviderAWS().ListOceanResourceSuggestions(ctx, &aws.ListOceanResourceSuggestionsInput{
 		OceanID: spotinst.String("o-12345"),
 		Filter: &aws.Filter{
 			Attribute: &aws.Attribute{
