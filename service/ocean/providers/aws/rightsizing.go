@@ -108,12 +108,8 @@ func (s *ServiceOp) FetchResourceSuggestions(ctx context.Context, input *ListRes
 
 	r := client.NewRequest(http.MethodPost, path)
 
-	if input.Namespace != nil {
-		r.Params.Set("namespace", *input.Namespace)
-	}
-
+	// We do NOT need the ID anymore, so let's drop it.
 	input.OceanID = nil
-	input.Namespace = nil
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
