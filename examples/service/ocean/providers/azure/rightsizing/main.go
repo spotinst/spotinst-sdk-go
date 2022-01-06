@@ -30,8 +30,7 @@ func main() {
 
 	// List right sizing suggestions.
 	out, err := svc.CloudProviderAzure().ListResourceSuggestions(ctx, &azure.ListResourceSuggestionsInput{
-		OceanID:   spotinst.String("o-12345"),
-		Namespace: spotinst.String("foo"),
+		OceanID: spotinst.String("o-12345"),
 		Filter: &azure.Filter{
 			Attribute: &azure.Attribute{
 				Key:      spotinst.String("foo"),
