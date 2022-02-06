@@ -667,11 +667,12 @@ type LaunchSpecification struct {
 }
 
 type ITF struct {
-	LoadBalancers                 []*ITFLoadBalancer `json:"loadBalancers,omitempty"`
-	MigrationHealthinessThreshold *int               `json:"migrationHealthinessThreshold,omitempty"`
-	FixedTargetGroups             *bool              `json:"fixedTargetGroups,omitempty"`
-	WeightStrategy                *string            `json:"weightStrategy,omitempty"`
-	TargetGroupConfig             *TargetGroupConfig `json:"targetGroupConfig,omitempty"`
+	LoadBalancers                 []*ITFLoadBalancer   `json:"loadBalancers,omitempty"`
+	MigrationHealthinessThreshold *int                 `json:"migrationHealthinessThreshold,omitempty"`
+	FixedTargetGroups             *bool                `json:"fixedTargetGroups,omitempty"`
+	WeightStrategy                *string              `json:"weightStrategy,omitempty"`
+	TargetGroupConfig             *TargetGroupConfig   `json:"targetGroupConfig,omitempty"`
+	DefaultStaticTargetGroups     []*StaticTargetGroup `json:"defaultStaticTargetGroups,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -686,7 +687,16 @@ type ITFLoadBalancer struct {
 }
 
 type ListenerRule struct {
-	RuleARN *string `json:"ruleArn,omitempty"`
+	RuleARN            *string              `json:"ruleArn,omitempty"`
+	StaticTargetGroups []*StaticTargetGroup `json:"staticTargetGroups,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type StaticTargetGroup struct {
+	StaticTargetGroupARN *string  `json:"arn,omitempty"`
+	Percentage           *float64 `json:"percentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -4126,6 +4136,13 @@ func (o *ITF) SetTargetGroupConfig(v *TargetGroupConfig) *ITF {
 	return o
 }
 
+func (o *ITF) SetDefaultStaticTargetGroups(v []*StaticTargetGroup) *ITF {
+	if o.DefaultStaticTargetGroups = v; o.DefaultStaticTargetGroups == nil {
+		o.nullFields = append(o.nullFields, "DefaultStaticTargetGroups")
+	}
+	return o
+}
+
 // endregion
 
 // region ITFLoadBalancer
@@ -4167,7 +4184,36 @@ func (o *ListenerRule) SetRuleARN(v *string) *ListenerRule {
 	return o
 }
 
+func (o *ListenerRule) SetStaticTargetGroups(v []*StaticTargetGroup) *ListenerRule {
+	if o.StaticTargetGroups = v; o.StaticTargetGroups == nil {
+		o.nullFields = append(o.nullFields, "StaticTargetGroups")
+	}
+	return o
+}
+
 // endregion
+
+// region StaticTargetGroup
+
+func (o StaticTargetGroup) MarshalJSON() ([]byte, error) {
+	type noMethod StaticTargetGroup
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *StaticTargetGroup) SetStaticTargetGroupARN(v *string) *StaticTargetGroup {
+	if o.StaticTargetGroupARN = v; o.StaticTargetGroupARN == nil {
+		o.nullFields = append(o.nullFields, "StaticTargetGroupARN")
+	}
+	return o
+}
+
+func (o *StaticTargetGroup) SetPercentage(v *float64) *StaticTargetGroup {
+	if o.Percentage = v; o.Percentage == nil {
+		o.nullFields = append(o.nullFields, "Percentage")
+	}
+	return o
+}
 
 // region TargetGroupConfig
 
