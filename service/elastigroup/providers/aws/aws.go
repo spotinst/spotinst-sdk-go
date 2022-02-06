@@ -695,8 +695,8 @@ type ListenerRule struct {
 }
 
 type StaticTargetGroup struct {
-	StaticTargetGroupARN *string `json:"arn,omitempty"`
-	Percentage           *int    `json:"percentage,omitempty"`
+	StaticTargetGroupARN *string  `json:"arn,omitempty"`
+	Percentage           *float64 `json:"percentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -4208,7 +4208,7 @@ func (o *StaticTargetGroup) SetStaticTargetGroupARN(v *string) *StaticTargetGrou
 	return o
 }
 
-func (o *StaticTargetGroup) SetPercentage(v *int) *StaticTargetGroup {
+func (o *StaticTargetGroup) SetPercentage(v *float64) *StaticTargetGroup {
 	if o.Percentage = v; o.Percentage == nil {
 		o.nullFields = append(o.nullFields, "Percentage")
 	}
