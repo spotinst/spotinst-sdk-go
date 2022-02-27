@@ -15,16 +15,17 @@ import (
 )
 
 type Cluster struct {
-	ID                  *string     `json:"id,omitempty"`
-	ControllerClusterID *string     `json:"controllerClusterId,omitempty"`
-	Name                *string     `json:"name,omitempty"`
-	Region              *string     `json:"region,omitempty"`
-	Strategy            *Strategy   `json:"strategy,omitempty"`
-	Capacity            *Capacity   `json:"capacity,omitempty"`
-	Compute             *Compute    `json:"compute,omitempty"`
-	Scheduling          *Scheduling `json:"scheduling,omitempty"`
-	AutoScaler          *AutoScaler `json:"autoScaler,omitempty"`
-	Logging             *Logging    `json:"logging,omitempty"`
+	ID                         *string                     `json:"id,omitempty"`
+	ControllerClusterID        *string                     `json:"controllerClusterId,omitempty"`
+	Name                       *string                     `json:"name,omitempty"`
+	Region                     *string                     `json:"region,omitempty"`
+	Strategy                   *Strategy                   `json:"strategy,omitempty"`
+	Capacity                   *Capacity                   `json:"capacity,omitempty"`
+	Compute                    *Compute                    `json:"compute,omitempty"`
+	Scheduling                 *Scheduling                 `json:"scheduling,omitempty"`
+	AutoScaler                 *AutoScaler                 `json:"autoScaler,omitempty"`
+	Logging                    *Logging                    `json:"logging,omitempty"`
+	ExtendedResourceDefinition *ExtendedResourceDefinition `json:"extendedResourceDefinition,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -45,6 +46,14 @@ type Cluster struct {
 	// null. It is an error if a field in this list has a non-empty value.
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
+}
+
+type ExtendedResourceDefinition struct {
+	Mapping map[string]interface{} `json:"mapping,omitempty"`
+	Name    *string                `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type Strategy struct {
@@ -912,7 +921,36 @@ func (o *Cluster) SetLogging(v *Logging) *Cluster {
 	return o
 }
 
+func (o *Cluster) SetExtendedResourceDefinition(v *ExtendedResourceDefinition) *Cluster {
+	if o.ExtendedResourceDefinition = v; o.ExtendedResourceDefinition == nil {
+		o.nullFields = append(o.nullFields, "ExtendedResourceDefinition")
+	}
+	return o
+}
+
 // endregion
+
+// region ExtendedResourceDefinition
+
+func (o ExtendedResourceDefinition) MarshalJSON() ([]byte, error) {
+	type noMethod ExtendedResourceDefinition
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ExtendedResourceDefinition) SetExtendedResourceName(v *string) *ExtendedResourceDefinition {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *ExtendedResourceDefinition) SetMapping(v map[string]interface{}) *ExtendedResourceDefinition {
+	if o.Mapping = v; o.Mapping == nil {
+		o.nullFields = append(o.nullFields, "Mapping")
+	}
+	return o
+}
 
 // region Strategy
 
