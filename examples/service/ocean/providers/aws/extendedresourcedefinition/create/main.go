@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/extendedresourcedefinition"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -29,14 +30,14 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := extendedresourcedefinition.New(sess)
+	svc := ocean.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Create a new extended resource definition.
-	out, err := svc.Create(ctx, &extendedresourcedefinition.CreateExtendedResourceDefinitionInput{
-		ExtendedResourceDefinition: &extendedresourcedefinition.ExtendedResourceDefinition{
+	out, err := svc.CloudProviderAWS().CreateExtendedResourceDefinition(ctx, &aws.CreateExtendedResourceDefinitionInput{
+		ExtendedResourceDefinition: &aws.ExtendedResourceDefinition{
 			Name: spotinst.String("example.com/foo"),
 			Mapping: map[string]interface{}{
 				"c3.large":  "4Ki",

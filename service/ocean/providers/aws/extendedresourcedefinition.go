@@ -1,4 +1,4 @@
-package extendedresourcedefinition
+package aws
 
 import (
 	"context"
@@ -92,7 +92,7 @@ func extendedResourceDefinitionsFromHttpResponse(resp *http.Response) ([]*Extend
 	return extendedResourceDefinitionsFromJSON(body)
 }
 
-func (s *ServiceOp) List(ctx context.Context, input *ListExtendedResourceDefinitionsInput) (*ListExtendedResourceDefinitionsOutput, error) {
+func (s *ServiceOp) ListExtendedResourceDefinition(ctx context.Context, input *ListExtendedResourceDefinitionsInput) (*ListExtendedResourceDefinitionsOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/ocean/k8s/extendedResourceDefinition")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 
@@ -109,7 +109,7 @@ func (s *ServiceOp) List(ctx context.Context, input *ListExtendedResourceDefinit
 	return &ListExtendedResourceDefinitionsOutput{ExtendedResourceDefinitions: erds}, nil
 }
 
-func (s *ServiceOp) Create(ctx context.Context, input *CreateExtendedResourceDefinitionInput) (*CreateExtendedResourceDefinitionOutput, error) {
+func (s *ServiceOp) CreateExtendedResourceDefinition(ctx context.Context, input *CreateExtendedResourceDefinitionInput) (*CreateExtendedResourceDefinitionOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/ocean/k8s/extendedResourceDefinition")
 	r.Obj = input
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -131,7 +131,7 @@ func (s *ServiceOp) Create(ctx context.Context, input *CreateExtendedResourceDef
 	return output, nil
 }
 
-func (s *ServiceOp) Read(ctx context.Context, input *ReadExtendedResourceDefinitionInput) (*ReadExtendedResourceDefinitionOutput, error) {
+func (s *ServiceOp) ReadExtendedResourceDefinition(ctx context.Context, input *ReadExtendedResourceDefinitionInput) (*ReadExtendedResourceDefinitionOutput, error) {
 	path, err := uritemplates.Expand("/ocean/k8s/extendedResourceDefinition/{oceanExtendedResourceDefinitionId}", uritemplates.Values{
 		"oceanExtendedResourceDefinitionId": spotinst.StringValue(input.ExtendedResourceDefinitionID),
 	})
@@ -159,7 +159,7 @@ func (s *ServiceOp) Read(ctx context.Context, input *ReadExtendedResourceDefinit
 	return output, nil
 }
 
-func (s *ServiceOp) Update(ctx context.Context, input *UpdateExtendedResourceDefinitionInput) (*UpdateExtendedResourceDefinitionOutput, error) {
+func (s *ServiceOp) UpdateExtendedResourceDefinition(ctx context.Context, input *UpdateExtendedResourceDefinitionInput) (*UpdateExtendedResourceDefinitionOutput, error) {
 	path, err := uritemplates.Expand("/ocean/k8s/extendedResourceDefinition/{oceanExtendedResourceDefinitionId}", uritemplates.Values{
 		"oceanExtendedResourceDefinitionId": spotinst.StringValue(input.ExtendedResourceDefinition.ID),
 	})
@@ -192,7 +192,7 @@ func (s *ServiceOp) Update(ctx context.Context, input *UpdateExtendedResourceDef
 	return output, nil
 }
 
-func (s *ServiceOp) Delete(ctx context.Context, input *DeleteExtendedResourceDefinitionInput) (*DeleteExtendedResourceDefinitionOutput, error) {
+func (s *ServiceOp) DeleteExtendedResourceDefinition(ctx context.Context, input *DeleteExtendedResourceDefinitionInput) (*DeleteExtendedResourceDefinitionOutput, error) {
 	path, err := uritemplates.Expand("/ocean/k8s/extendedResourceDefinition/{oceanExtendedResourceDefinitionId}", uritemplates.Values{
 		"oceanExtendedResourceDefinitionId": spotinst.StringValue(input.ExtendedResourceDefinitionID),
 	})

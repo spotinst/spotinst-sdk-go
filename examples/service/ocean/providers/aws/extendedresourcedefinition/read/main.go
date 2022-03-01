@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/extendedresourcedefinition"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
@@ -22,13 +23,13 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := extendedresourcedefinition.New(sess)
+	svc := ocean.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Read extended resource definition configuration.
-	out, err := svc.Read(ctx, &extendedresourcedefinition.ReadExtendedResourceDefinitionInput{
+	out, err := svc.CloudProviderAWS().ReadExtendedResourceDefinition(ctx, &aws.ReadExtendedResourceDefinitionInput{
 		ExtendedResourceDefinitionID: spotinst.String("erd-123456"),
 	})
 	if err != nil {
