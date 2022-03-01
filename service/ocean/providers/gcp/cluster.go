@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"time"
 
@@ -166,14 +167,23 @@ type InstanceTypes struct {
 }
 
 type LaunchSpecification struct {
-	Labels             []*Label    `json:"labels,omitempty"`
-	IPForwarding       *bool       `json:"ipForwarding,omitempty"`
-	Metadata           []*Metadata `json:"metadata,omitempty"`
-	RootVolumeSizeInGB *int        `json:"rootVolumeSizeInGb,omitempty"`
-	ServiceAccount     *string     `json:"serviceAccount,omitempty"`
-	SourceImage        *string     `json:"sourceImage,omitempty"`
-	Tags               []string    `json:"tags,omitempty"`
-	RootVolumeType     *string     `json:"rootVolumeType,omitempty"`
+	Labels                 []*Label                          `json:"labels,omitempty"`
+	IPForwarding           *bool                             `json:"ipForwarding,omitempty"`
+	Metadata               []*Metadata                       `json:"metadata,omitempty"`
+	RootVolumeSizeInGB     *int                              `json:"rootVolumeSizeInGb,omitempty"`
+	ServiceAccount         *string                           `json:"serviceAccount,omitempty"`
+	SourceImage            *string                           `json:"sourceImage,omitempty"`
+	Tags                   []string                          `json:"tags,omitempty"`
+	RootVolumeType         *string                           `json:"rootVolumeType,omitempty"`
+	ShieldedInstanceConfig *LaunchSpecShieldedInstanceConfig `json:"shieldedInstanceConfig,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LaunchSpecShieldedInstanceConfig struct {
+	EnableSecureBoot          *bool `json:"enableSecureBoot,omitempty"`
+	EnableIntegrityMonitoring *bool `json:"enableIntegrityMonitoring,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -975,6 +985,15 @@ func (o *LaunchSpecification) SetRootVolumeType(v *string) *LaunchSpecification 
 	return o
 }
 
+func (o *LaunchSpecification) SetShieldedInstanceConfig(v *LaunchSpecShieldedInstanceConfig) *LaunchSpecification {
+	log.Printf("in sdk 1")
+	if o.ShieldedInstanceConfig = v; o.ShieldedInstanceConfig == nil {
+		log.Printf("in sdk 2")
+		o.nullFields = append(o.nullFields, "ShieldedInstanceConfig")
+	}
+	return o
+}
+
 // endregion
 
 // region BackendService
@@ -1340,3 +1359,31 @@ func (o *RollSpec) SetInstanceNames(v []string) *RollSpec {
 }
 
 // endregion
+
+// region ShieldedInstanceConfig
+
+func (o LaunchSpecShieldedInstanceConfig) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecShieldedInstanceConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LaunchSpecShieldedInstanceConfig) SetEnableIntegrityMonitoring(v *bool) *LaunchSpecShieldedInstanceConfig {
+	log.Printf("in sdk 3")
+	if o.EnableIntegrityMonitoring = v; o.EnableIntegrityMonitoring == nil {
+		log.Printf("in sdk 4")
+		o.nullFields = append(o.nullFields, "EnableIntegrityMonitoring")
+	}
+	return o
+}
+
+func (o *LaunchSpecShieldedInstanceConfig) SetEnableSecureBoot(v *bool) *LaunchSpecShieldedInstanceConfig {
+	log.Printf("in sdk 5")
+	if o.EnableSecureBoot = v; o.EnableSecureBoot == nil {
+		log.Printf("in sdk 6")
+		o.nullFields = append(o.nullFields, "EnableSecureBoot")
+	}
+	return o
+}
+
+//endregion
