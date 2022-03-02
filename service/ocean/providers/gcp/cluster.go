@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"time"
 
@@ -986,9 +985,7 @@ func (o *LaunchSpecification) SetRootVolumeType(v *string) *LaunchSpecification 
 }
 
 func (o *LaunchSpecification) SetShieldedInstanceConfig(v *LaunchSpecShieldedInstanceConfig) *LaunchSpecification {
-	log.Printf("in sdk 1")
 	if o.ShieldedInstanceConfig = v; o.ShieldedInstanceConfig == nil {
-		log.Printf("in sdk 2")
 		o.nullFields = append(o.nullFields, "ShieldedInstanceConfig")
 	}
 	return o
@@ -1369,18 +1366,14 @@ func (o LaunchSpecShieldedInstanceConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (o *LaunchSpecShieldedInstanceConfig) SetEnableIntegrityMonitoring(v *bool) *LaunchSpecShieldedInstanceConfig {
-	log.Printf("in sdk 3")
 	if o.EnableIntegrityMonitoring = v; o.EnableIntegrityMonitoring == nil {
-		log.Printf("in sdk 4")
 		o.nullFields = append(o.nullFields, "EnableIntegrityMonitoring")
 	}
 	return o
 }
 
 func (o *LaunchSpecShieldedInstanceConfig) SetEnableSecureBoot(v *bool) *LaunchSpecShieldedInstanceConfig {
-	log.Printf("in sdk 5")
 	if o.EnableSecureBoot = v; o.EnableSecureBoot == nil {
-		log.Printf("in sdk 6")
 		o.nullFields = append(o.nullFields, "EnableSecureBoot")
 	}
 	return o
