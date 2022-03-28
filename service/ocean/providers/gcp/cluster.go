@@ -46,8 +46,9 @@ type Cluster struct {
 }
 
 type Strategy struct {
-	DrainingTimeout   *int    `json:"drainingTimeout,omitempty"`
-	ProvisioningModel *string `json:"provisioningModel,omitempty"`
+	DrainingTimeout       *int    `json:"drainingTimeout,omitempty"`
+	ProvisioningModel     *string `json:"provisioningModel,omitempty"`
+	PreemptiblePercentage *int    `json:"preemptiblePercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -697,11 +698,12 @@ type ImportOceanGKECluster struct {
 }
 
 type ImportOceanGKEClusterInput struct {
-	ClusterName        *string                `json:"clusterName,omitempty"`
-	Location           *string                `json:"location,omitempty"`
-	NodePoolName       *string                `json:"nodePoolName,omitempty"`
-	IncludeLaunchSpecs *string                `json:"includeLaunchSpecs,omitempty"`
-	Cluster            *ImportOceanGKECluster `json:"cluster,omitempty"`
+	ClusterName           *string                `json:"clusterName,omitempty"`
+	Location              *string                `json:"location,omitempty"`
+	NodePoolName          *string                `json:"nodePoolName,omitempty"`
+	IncludeLaunchSpecs    *string                `json:"includeLaunchSpecs,omitempty"`
+	PreemptiblePercentage *int                   `json:"preemptiblePercentage,omitempty"`
+	Cluster               *ImportOceanGKECluster `json:"cluster,omitempty"`
 }
 
 type ImportOceanGKEClusterOutput struct {
@@ -845,6 +847,13 @@ func (o *Strategy) SetDrainingTimeout(v *int) *Strategy {
 func (o *Strategy) SetProvisioningModel(v *string) *Strategy {
 	if o.ProvisioningModel = v; o.ProvisioningModel == nil {
 		o.nullFields = append(o.nullFields, "ProvisioningModel")
+	}
+	return o
+}
+
+func (o *Strategy) SetPreemptiblePercentage(v *int) *Strategy {
+	if o.PreemptiblePercentage = v; o.PreemptiblePercentage == nil {
+		o.nullFields = append(o.nullFields, "PreemptiblePercentage")
 	}
 	return o
 }
