@@ -699,12 +699,11 @@ type ImportOceanGKECluster struct {
 }
 
 type ImportOceanGKEClusterInput struct {
-	ClusterName           *string                `json:"clusterName,omitempty"`
-	Location              *string                `json:"location,omitempty"`
-	NodePoolName          *string                `json:"nodePoolName,omitempty"`
-	IncludeLaunchSpecs    *string                `json:"includeLaunchSpecs,omitempty"`
-	PreemptiblePercentage *int                   `json:"preemptiblePercentage,omitempty"`
-	Cluster               *ImportOceanGKECluster `json:"cluster,omitempty"`
+	ClusterName        *string                `json:"clusterName,omitempty"`
+	Location           *string                `json:"location,omitempty"`
+	NodePoolName       *string                `json:"nodePoolName,omitempty"`
+	IncludeLaunchSpecs *string                `json:"includeLaunchSpecs,omitempty"`
+	Cluster            *ImportOceanGKECluster `json:"cluster,omitempty"`
 }
 
 type ImportOceanGKEClusterOutput struct {
