@@ -1,10 +1,14 @@
 package azure
 
 import (
+	"encoding/json"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
+	"io/ioutil"
+	"net/http"
 	"time"
 )
 
-type statefulNode struct {
+type StatefulNode struct {
 	ID                *string      `json:"id,omitempty"`
 	Name              *string      `json:"name,omitempty"`
 	ResourceGroupName *string      `json:"resourceGroupName,omitempty"`
@@ -187,3 +191,82 @@ type Persistence struct {
 	ShouldPersistNetwork    *bool   `json:"shouldPersistNetwork"`
 	ShouldPersistVm         *bool   `json:"shouldPersistVm"`
 }
+
+type CreateStatefulNodeInput struct {
+	StatefulNode *StatefulNode `json:"statefulNode,omitempty"`
+}
+
+type CreateStatefulNodeOutput struct {
+	StatefulNode *StatefulNode `json:"statefulNode,omitempty"`
+}
+
+type ReadStatefulNodeInput struct {
+	statefulNodeID *string `json:"statefulNodeId,omitempty"`
+}
+
+type ReadStatefulNodeOutput struct {
+	StatefulNode *StatefulNode `json:"statefulNode,omitempty"`
+}
+
+type UpdateStatefulNodeInput struct {
+	StatefulNode *StatefulNode `json:"statefulNode,omitempty"`
+}
+
+type UpdateStatefulNodeOutput struct {
+	StatefulNode *StatefulNode `json:"statefulNode,omitempty"`
+}
+
+type DeleteStatefulNodeInput struct {
+	StatefulNodeID *string `json:"statefulNodeId,omitempty"`
+}
+
+type DeleteStatefulNodeOutput struct{}
+
+type ListStatefulNodesInput struct{}
+
+type ListStatefulNodesOutput struct {
+	StatefulNodes []*StatefulNode `json:"statefulNodes,omitempty"`
+}
+
+// region Unmarshallers
+
+func statefulNodeFromJSON(in []byte) (*StatefulNode, error) {
+	b := new(StatefulNode)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func statefulNodesFromJSON(in []byte) ([]*StatefulNode, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*StatefulNode, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := statefulNodeFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func statefulNodesFromHttpResponse(resp *http.Response) ([]*StatefulNode, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return statefulNodesFromJSON(body)
+}
+
+// endregion
+
+// region API Requests
+
+// endregion
