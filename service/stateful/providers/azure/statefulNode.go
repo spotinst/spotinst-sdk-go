@@ -17,9 +17,12 @@ type StatefulNode struct {
 	Name              *string      `json:"name,omitempty"`
 	ResourceGroupName *string      `json:"resourceGroupName,omitempty"`
 	Region            *string      `json:"region,omitempty"`
+	Description       *string      `json:"description,omitempty"`
 	Strategy          *Strategy    `json:"strategy,omitempty"`
 	Compute           *Compute     `json:"compute,omitempty"`
 	Persistence       *Persistence `json:"persistence,omitempty"`
+	Scheduling        *Scheduling  `json:"scheduling,omitempty"`
+	Health            *Health      `json:"health,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -43,8 +46,27 @@ type StatefulNode struct {
 }
 
 type Strategy struct {
-	DrainingTimeout    *int  `json:"drainingTimeout,omitempty"`
-	FallbackToOnDemand *bool `json:"fallbackToOd,omitempty"`
+	PreferredLifecycle  *string       `json:"preferredLifecycle,omitempty"`
+	Signals             []*Signal     `json:"signals,omitempty"`
+	FallbackToOnDemand  *bool         `json:"fallbackToOd,omitempty"`
+	DrainingTimeout     *int          `json:"drainingTimeout,omitempty"`
+	RevertToSpot        *RevertToSpot `json:"revertToSpot,omitempty"`
+	OptimizationWindows []string      `json:"optimizationWindows,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Signal struct {
+	Type    *string `json:"type,omitempty"`
+	Timeout *int    `json:"timeout,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RevertToSpot struct {
+	PerformAt *string `json:"performAt,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -53,6 +75,8 @@ type Strategy struct {
 type Compute struct {
 	OS                  *string              `json:"os,omitempty"`
 	VMSizes             *VMSizes             `json:"vmSizes,omitempty"`
+	Zones               []string             `json:"zones,omitempty"`
+	PreferredZone       *string              `json:"preferredZone,omitempty"`
 	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
 
 	forceSendFields []string
@@ -60,22 +84,81 @@ type Compute struct {
 }
 
 type VMSizes struct {
-	OnDemandSizes []string `json:"odSizes,omitempty"`
-	SpotSizes     []string `json:"spotSizes,omitempty"`
+	OnDemandSizes      []string `json:"odSizes,omitempty"`
+	SpotSizes          []string `json:"spotSizes,omitempty"`
+	PreferredSpotSizes []string `json:"preferredSpotSizes,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type LaunchSpecification struct {
-	Image               *Image               `json:"image,omitempty"`
-	Network             *Network             `json:"network,omitempty"`
-	Login               *Login               `json:"login,omitempty"`
-	CustomData          *string              `json:"customData,omitempty"`
-	LoadBalancersConfig *LoadBalancersConfig `json:"loadBalancersConfig,omitempty"`
-	OSDisk              *OSDisk              `json:"osDisk,omitempty"`
-	DataDisks           *DataDisks           `json:"dataDisks,omitempty"`
-	BootDiagnostics     *BootDiagnostics     `json:"bootDiagnostics,omitempty"`
+	Image                    *Image                    `json:"image,omitempty"`
+	Network                  *Network                  `json:"network,omitempty"`
+	Login                    *Login                    `json:"login,omitempty"`
+	CustomData               *string                   `json:"customData,omitempty"`
+	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
+	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
+	Tags                     []*Tag                    `json:"tags,omitempty"`
+	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
+	Extensions               []*Extension              `json:"extensions,omitempty"`
+	OSDisk                   *OSDisk                   `json:"osDisk,omitempty"`
+	DataDisks                *DataDisks                `json:"dataDisks,omitempty"`
+	Secrets                  []*Secret                 `json:"secrets,omitempty"`
+	BootDiagnostics          *BootDiagnostics          `json:"bootDiagnostics,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Secret struct {
+	SourceVault       *SourceVault        `json:"sourceVault,omitempty"`
+	VaultCertificates []*VaultCertificate `json:"vaultCertificates,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type SourceVault struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type VaultCertificate struct {
+	CertificateUrl   *string `json:"certificateUrl,omitempty"`
+	CertificateStore *string `json:"certificateStore,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Extension struct {
+	Name                    *string                `json:"name,omitempty"`
+	Type                    *string                `json:"type,omitempty"`
+	Publisher               *string                `json:"publisher,omitempty"`
+	APIVersion              *string                `json:"apiVersion,omitempty"`
+	MinorVersionAutoUpgrade *bool                  `json:"minorVersionAutoUpgrade,omitempty"`
+	ProtectedSettings       map[string]interface{} `json:"protectedSettings,omitempty"`
+	PublicSettings          map[string]interface{} `json:"publicSettings,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Tag struct {
+	TagKey   *string `json:"tagKey,omitempty"`
+	TagValue *string `json:"tagValue,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ManagedServiceIdentity struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -192,11 +275,37 @@ type BootDiagnostics struct {
 
 type Persistence struct {
 	ShouldPersistOsDisk     *bool   `json:"shouldPersistOsDisk,omitempty"`
-	OsDiskPersistenceMode   *string `json:"osDiskPersistenceMode"`
+	OsDiskPersistenceMode   *string `json:"osDiskPersistenceMode,omitempty"`
 	ShouldPersistDataDisk   *bool   `json:"shouldPersistDataDisk,omitempty"`
-	DataDiskPersistenceMode *string `json:"dataDiskPersistenceMode"`
-	ShouldPersistNetwork    *bool   `json:"shouldPersistNetwork"`
-	ShouldPersistVm         *bool   `json:"shouldPersistVm"`
+	DataDiskPersistenceMode *string `json:"dataDiskPersistenceMode,omitempty"`
+	ShouldPersistNetwork    *bool   `json:"shouldPersistNetwork,omitempty"`
+	ShouldPersistVm         *bool   `json:"shouldPersistVm,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Scheduling struct {
+	Tasks []*Task `json:"tasks,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Task struct {
+	IsEnabled      *bool   `json:"isEnabled,omitempty"`
+	Type           *string `json:"type,omitempty"`
+	CronExpression *string `json:"cronExpression,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Health struct {
+	HealthCheckTypes  []string `json:"healthCheckTypes,omitempty"`
+	GracePeriod       *int     `json:"gracePeriod,omitempty"`
+	UnhealthyDuration *int     `json:"unhealthyDuration,omitempty"`
+	AutoHealing       *bool    `json:"autoHealing,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -248,8 +357,8 @@ type UpdateStatefulNodeStateOutput struct{}
 type DetachStatefulNodeDataDiskInput struct {
 	ID                        *string `json:"id,omitempty"`
 	DataDiskName              *string `json:"dataDiskName,omitempty"`
-	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName"`
-	ShouldDeallocate          *bool   `json:"shouldDeallocate"`
+	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName,omitempty"`
+	ShouldDeallocate          *bool   `json:"shouldDeallocate,omitempty"`
 }
 
 type DetachStatefulNodeDataDiskOutput struct{}
@@ -257,20 +366,25 @@ type DetachStatefulNodeDataDiskOutput struct{}
 type AttachStatefulNodeDataDiskInput struct {
 	ID                        *string `json:"id,omitempty"`
 	DataDiskName              *string `json:"dataDiskName,omitempty"`
-	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName"`
+	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName,omitempty"`
 	SizeGB                    *int    `json:"sizeGB,omitempty"`
+	Lun                       *int    `json:"lun,omitempty"`
+	Zone                      *string `json:"zone,omitempty"`
 }
 
 type AttachStatefulNodeDataDiskOutput struct{}
 
 type StatefulNodeImport struct {
-	ResourceGroupName *string       `json:"resourceGroupName,omitempty"`
-	OriginalVMName    *string       `json:"originalVmName"`
-	StatefulNode      *StatefulNode `json:"node,omitempty"`
+	StatefulImportId       *string       `json:"statefulImportId,omitempty"`
+	ResourceGroupName      *string       `json:"resourceGroupName,omitempty"`
+	OriginalVMName         *string       `json:"originalVmName,omitempty"`
+	DrainingTimeout        *int          `json:"drainingTimeout,omitempty"`
+	ResourcesRetentionTime *int          `json:"resourcesRetentionTime,omitempty"`
+	StatefulNode           *StatefulNode `json:"node,omitempty"`
 }
 
 type ImportVMStatefulNodeInput struct {
-	StatefulNodeImport *StatefulNodeImport `json:"statefulNodeImport"`
+	StatefulNodeImport *StatefulNodeImport `json:"statefulNodeImport,omitempty"`
 }
 
 type ImportVMStatefulNodeOutput struct {
@@ -559,7 +673,14 @@ func (o *StatefulNode) SetResourceGroupName(v *string) *StatefulNode {
 	return o
 }
 
-func (o *StatefulNode) SetCapacity(v *Persistence) *StatefulNode {
+func (o *StatefulNode) SetDescription(v *string) *StatefulNode {
+	if o.Description = v; o.Description == nil {
+		o.nullFields = append(o.nullFields, "Description")
+	}
+	return o
+}
+
+func (o *StatefulNode) SetPersistence(v *Persistence) *StatefulNode {
 	if o.Persistence = v; o.Persistence == nil {
 		o.nullFields = append(o.nullFields, "Persistence")
 	}
@@ -587,6 +708,20 @@ func (o *StatefulNode) SetRegion(v *string) *StatefulNode {
 	return o
 }
 
+func (o *StatefulNode) SetScheduling(v *Scheduling) *StatefulNode {
+	if o.Scheduling = v; o.Scheduling == nil {
+		o.nullFields = append(o.nullFields, "Scheduling")
+	}
+	return o
+}
+
+func (o *StatefulNode) SetHealth(v *Health) *StatefulNode {
+	if o.Health = v; o.Health == nil {
+		o.nullFields = append(o.nullFields, "Health")
+	}
+	return o
+}
+
 // endregion
 
 // region Strategy
@@ -607,6 +742,75 @@ func (o *Strategy) SetDrainingTimeout(v *int) *Strategy {
 func (o *Strategy) SetFallbackToOnDemand(v *bool) *Strategy {
 	if o.FallbackToOnDemand = v; o.FallbackToOnDemand == nil {
 		o.nullFields = append(o.nullFields, "FallbackToOnDemand")
+	}
+	return o
+}
+
+func (o *Strategy) SetPreferredLifecycle(v *string) *Strategy {
+	if o.PreferredLifecycle = v; o.PreferredLifecycle == nil {
+		o.nullFields = append(o.nullFields, "PreferredLifecycle")
+	}
+	return o
+}
+
+func (o *Strategy) SetSignals(v []*Signal) *Strategy {
+	if o.Signals = v; o.Signals == nil {
+		o.nullFields = append(o.nullFields, "Signals")
+	}
+	return o
+}
+
+func (o *Strategy) SetRevertToSpot(v *RevertToSpot) *Strategy {
+	if o.RevertToSpot = v; o.RevertToSpot == nil {
+		o.nullFields = append(o.nullFields, "RevertToSpot")
+	}
+	return o
+}
+
+func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
+	if o.OptimizationWindows = v; o.OptimizationWindows == nil {
+		o.nullFields = append(o.nullFields, "OptimizationWindows")
+	}
+	return o
+}
+
+// endregion
+
+// region Signal
+
+func (o Signal) MarshalJSON() ([]byte, error) {
+	type noMethod Signal
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Signal) SetType(v *string) *Signal {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Signal) SetTimeout(v *int) *Signal {
+	if o.Timeout = v; o.Timeout == nil {
+		o.nullFields = append(o.nullFields, "Timeout")
+	}
+	return o
+}
+
+// endregion
+
+// region RevertToSpot
+
+func (o RevertToSpot) MarshalJSON() ([]byte, error) {
+	type noMethod RevertToSpot
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
+	if o.PerformAt = v; o.PerformAt == nil {
+		o.nullFields = append(o.nullFields, "PerformAt")
 	}
 	return o
 }
@@ -659,6 +863,92 @@ func (o *Persistence) SetShouldPersistVm(v *bool) *Persistence {
 
 // endregion
 
+// region Scheduling
+
+func (o Scheduling) MarshalJSON() ([]byte, error) {
+	type noMethod Scheduling
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
+	if o.Tasks = v; o.Tasks == nil {
+		o.nullFields = append(o.nullFields, "Tasks")
+	}
+	return o
+}
+
+// endregion
+
+// region Task
+
+func (o Task) MarshalJSON() ([]byte, error) {
+	type noMethod Task
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Task) SetIsEnabled(v *bool) *Task {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *Task) SetType(v *string) *Task {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Task) SetCronExpression(v *string) *Task {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+// endregion
+
+// region Health
+
+func (o Health) MarshalJSON() ([]byte, error) {
+	type noMethod Health
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Health) SetHealthCheckTypes(v []string) *Health {
+	if o.HealthCheckTypes = v; o.HealthCheckTypes == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckTypes")
+	}
+	return o
+}
+
+func (o *Health) SetGracePeriod(v *int) *Health {
+	if o.GracePeriod = v; o.GracePeriod == nil {
+		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o *Health) SetUnhealthyDuration(v *int) *Health {
+	if o.UnhealthyDuration = v; o.UnhealthyDuration == nil {
+		o.nullFields = append(o.nullFields, "UnhealthyDuration")
+	}
+	return o
+}
+
+func (o *Health) SetAutoHealing(v *bool) *Health {
+	if o.AutoHealing = v; o.AutoHealing == nil {
+		o.nullFields = append(o.nullFields, "AutoHealing")
+	}
+	return o
+}
+
+// endregion
+
 // region Compute
 
 func (o Compute) MarshalJSON() ([]byte, error) {
@@ -688,6 +978,20 @@ func (o *Compute) SetLaunchSpecification(v *LaunchSpecification) *Compute {
 	return o
 }
 
+func (o *Compute) SetZones(v []string) *Compute {
+	if o.Zones = v; o.Zones == nil {
+		o.nullFields = append(o.nullFields, "Zones")
+	}
+	return o
+}
+
+func (o *Compute) SetPreferredZone(v *string) *Compute {
+	if o.PreferredZone = v; o.PreferredZone == nil {
+		o.nullFields = append(o.nullFields, "PreferredZone")
+	}
+	return o
+}
+
 // endregion
 
 // region VMSizes
@@ -708,6 +1012,13 @@ func (o *VMSizes) SetOnDemandSizes(v []string) *VMSizes {
 func (o *VMSizes) SetSpotSizes(v []string) *VMSizes {
 	if o.SpotSizes = v; o.SpotSizes == nil {
 		o.nullFields = append(o.nullFields, "SpotSizes")
+	}
+	return o
+}
+
+func (o *VMSizes) SetPreferredSpotSizes(v []string) *VMSizes {
+	if o.PreferredSpotSizes = v; o.PreferredSpotSizes == nil {
+		o.nullFields = append(o.nullFields, "PreferredSpotSizes")
 	}
 	return o
 }
@@ -774,6 +1085,199 @@ func (o *LaunchSpecification) SetDataDisks(v *DataDisks) *LaunchSpecification {
 func (o *LaunchSpecification) SetBootDiagnostics(v *BootDiagnostics) *LaunchSpecification {
 	if o.BootDiagnostics = v; o.BootDiagnostics == nil {
 		o.nullFields = append(o.nullFields, "BootDiagnostics")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification {
+	if o.ShutdownScript = v; o.ShutdownScript == nil {
+		o.nullFields = append(o.nullFields, "ShutdownScript")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetSecrets(v []*Secret) *LaunchSpecification {
+	if o.Secrets = v; o.Secrets == nil {
+		o.nullFields = append(o.nullFields, "Secrets")
+	}
+	return o
+}
+
+// endregion
+
+// region Secret
+
+func (o Secret) MarshalJSON() ([]byte, error) {
+	type noMethod Secret
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Secret) SetSourceVault(v *SourceVault) *Secret {
+	if o.SourceVault = v; o.SourceVault == nil {
+		o.nullFields = append(o.nullFields, "SourceVault")
+	}
+	return o
+}
+
+func (o *Secret) SetVaultCertificates(v []*VaultCertificate) *Secret {
+	if o.VaultCertificates = v; o.VaultCertificates == nil {
+		o.nullFields = append(o.nullFields, "VaultCertificates")
+	}
+	return o
+}
+
+// endregion
+
+// region SourceVault
+
+func (o SourceVault) MarshalJSON() ([]byte, error) {
+	type noMethod SourceVault
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *SourceVault) SetName(v *string) *SourceVault {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *SourceVault) SetResourceGroupName(v *string) *SourceVault {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+// endregion
+
+// region VaultCertificates
+
+func (o VaultCertificate) MarshalJSON() ([]byte, error) {
+	type noMethod VaultCertificate
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VaultCertificate) SetCertificateUrl(v *string) *VaultCertificate {
+	if o.CertificateUrl = v; o.CertificateUrl == nil {
+		o.nullFields = append(o.nullFields, "CertificateUrl")
+	}
+	return o
+}
+
+func (o *VaultCertificate) SetCertificateStore(v *string) *VaultCertificate {
+	if o.CertificateStore = v; o.CertificateStore == nil {
+		o.nullFields = append(o.nullFields, "CertificateStore")
+	}
+	return o
+}
+
+// endregion
+
+// region Extension
+
+func (o Extension) MarshalJSON() ([]byte, error) {
+	type noMethod Extension
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Extension) SetName(v *string) *Extension {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Extension) SetType(v *string) *Extension {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Extension) SetPublisher(v *string) *Extension {
+	if o.Publisher = v; o.Publisher == nil {
+		o.nullFields = append(o.nullFields, "Publisher")
+	}
+	return o
+}
+
+func (o *Extension) SetAPIVersion(v *string) *Extension {
+	if o.APIVersion = v; o.APIVersion == nil {
+		o.nullFields = append(o.nullFields, "APIVersion")
+	}
+	return o
+}
+
+func (o *Extension) SetMinorVersionAutoUpgrade(v *bool) *Extension {
+	if o.MinorVersionAutoUpgrade = v; o.MinorVersionAutoUpgrade == nil {
+		o.nullFields = append(o.nullFields, "MinorVersionAutoUpgrade")
+	}
+	return o
+}
+
+func (o *Extension) SetProtectedSettings(v map[string]interface{}) *Extension {
+	if o.ProtectedSettings = v; o.ProtectedSettings == nil {
+		o.nullFields = append(o.nullFields, "ProtectedSettings")
+	}
+	return o
+}
+
+func (o *Extension) SetPublicSettings(v map[string]interface{}) *Extension {
+	if o.PublicSettings = v; o.PublicSettings == nil {
+		o.nullFields = append(o.nullFields, "PublicSettings")
+	}
+	return o
+}
+
+// endregion
+
+// region Tag
+
+func (o Tag) MarshalJSON() ([]byte, error) {
+	type noMethod Tag
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Tag) SetTagKey(v *string) *Tag {
+	if o.TagKey = v; o.TagKey == nil {
+		o.nullFields = append(o.nullFields, "TagKey")
+	}
+	return o
+}
+
+func (o *Tag) SetTagValue(v *string) *Tag {
+	if o.TagValue = v; o.TagValue == nil {
+		o.nullFields = append(o.nullFields, "TagValue")
+	}
+	return o
+}
+
+// endregion
+
+// region ManagedServiceIdentity
+
+func (o ManagedServiceIdentity) MarshalJSON() ([]byte, error) {
+	type noMethod ManagedServiceIdentity
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ManagedServiceIdentity) SetName(v *string) *ManagedServiceIdentity {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *ManagedServiceIdentity) SetResourceGroupName(v *string) *ManagedServiceIdentity {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
 	}
 	return o
 }
