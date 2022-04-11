@@ -103,7 +103,7 @@ type LaunchSpecification struct {
 	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
 	Extensions               []*Extension              `json:"extensions,omitempty"`
 	OSDisk                   *OSDisk                   `json:"osDisk,omitempty"`
-	DataDisks                *DataDisks                `json:"dataDisks,omitempty"`
+	DataDisks                []*DataDisk               `json:"dataDisks,omitempty"`
 	Secrets                  []*Secret                 `json:"secrets,omitempty"`
 	BootDiagnostics          *BootDiagnostics          `json:"bootDiagnostics,omitempty"`
 
@@ -215,6 +215,45 @@ type NetworkInterface struct {
 	AssignPublicIP *bool   `json:"assignPublicIp,omitempty"`
 	IsPrimary      *bool   `json:"isPrimary,omitempty"`
 	PublicIPSku    *string `json:"publicIpSku,omitempty"`
+	//TODO - setters only
+	NetworkSecurityGroup       *NetworkSecurityGroup        `json:"networkSecurityGroup,omitempty"`
+	EnableIPForwarding         *bool                        `json:"enableIPForwarding,omitempty"`
+	PrivateIPAddresses         []string                     `json:"privateIPAddresses,omitempty"`
+	AdditionalIpConfigurations []*AdditionalIpConfiguration `json:"additionalIpConfigurations,omitempty"`
+	PublicIPs                  []*PublicIP                  `json:"publicIps,omitempty"`
+	ApplicationSecurityGroups  []*ApplicationSecurityGroup  `json:"applicationSecurityGroups,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type NetworkSecurityGroup struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AdditionalIpConfiguration struct {
+	PrivateIpAddressVersion *string `json:"privateIpAddressVersion,omitempty"`
+	Name                    *string `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type PublicIP struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ApplicationSecurityGroup struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -255,7 +294,7 @@ type OSDisk struct {
 	nullFields      []string
 }
 
-type DataDisks struct {
+type DataDisk struct {
 	SizeGB *int    `json:"sizeGB,omitempty"`
 	Lun    *int    `json:"lun,omitempty"`
 	Type   *string `json:"type,omitempty"`
@@ -1075,7 +1114,7 @@ func (o *LaunchSpecification) SetOSDisk(v *OSDisk) *LaunchSpecification {
 	return o
 }
 
-func (o *LaunchSpecification) SetDataDisks(v *DataDisks) *LaunchSpecification {
+func (o *LaunchSpecification) SetDataDisks(v []*DataDisk) *LaunchSpecification {
 	if o.DataDisks = v; o.DataDisks == nil {
 		o.nullFields = append(o.nullFields, "DataDisks")
 	}
@@ -1482,6 +1521,144 @@ func (o *NetworkInterface) SetPublicIPSku(v *string) *NetworkInterface {
 	return o
 }
 
+func (o *NetworkInterface) SetNetworkSecurityGroup(v *NetworkSecurityGroup) *NetworkInterface {
+	if o.NetworkSecurityGroup = v; o.NetworkSecurityGroup == nil {
+		o.nullFields = append(o.nullFields, "NetworkSecurityGroup")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetEnableIPForwarding(v *bool) *NetworkInterface {
+	if o.EnableIPForwarding = v; o.EnableIPForwarding == nil {
+		o.nullFields = append(o.nullFields, "EnableIPForwarding")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetPrivateIPAddresses(v []string) *NetworkInterface {
+	if o.PrivateIPAddresses = v; o.PrivateIPAddresses == nil {
+		o.nullFields = append(o.nullFields, "PrivateIPAddresses")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetAdditionalIpConfigurations(v []*AdditionalIpConfiguration) *NetworkInterface {
+	if o.AdditionalIpConfigurations = v; o.AdditionalIpConfigurations == nil {
+		o.nullFields = append(o.nullFields, "AdditionalIpConfigurations")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetPublicIPs(v []*PublicIP) *NetworkInterface {
+	if o.PublicIPs = v; o.PublicIPs == nil {
+		o.nullFields = append(o.nullFields, "PublicIPs")
+	}
+	return o
+}
+
+func (o *NetworkInterface) SetApplicationSecurityGroups(v []*ApplicationSecurityGroup) *NetworkInterface {
+	if o.ApplicationSecurityGroups = v; o.ApplicationSecurityGroups == nil {
+		o.nullFields = append(o.nullFields, "ApplicationSecurityGroups")
+	}
+	return o
+}
+
+// endregion
+
+// region NetworkSecurityGroup
+
+func (o NetworkSecurityGroup) MarshalJSON() ([]byte, error) {
+	type noMethod NetworkSecurityGroup
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NetworkSecurityGroup) SetName(v *string) *NetworkSecurityGroup {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *NetworkSecurityGroup) SetResourceGroupName(v *string) *NetworkSecurityGroup {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+// endregion
+
+// region AdditionalIpConfiguration
+
+func (o AdditionalIpConfiguration) MarshalJSON() ([]byte, error) {
+	type noMethod AdditionalIpConfiguration
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AdditionalIpConfiguration) SetName(v *string) *AdditionalIpConfiguration {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *AdditionalIpConfiguration) setPrivateIpAddressVersion(v *string) *AdditionalIpConfiguration {
+	if o.PrivateIpAddressVersion = v; o.PrivateIpAddressVersion == nil {
+		o.nullFields = append(o.nullFields, "PrivateIpAddressVersion")
+	}
+	return o
+}
+
+// endregion
+
+// region PublicIP
+
+func (o PublicIP) MarshalJSON() ([]byte, error) {
+	type noMethod PublicIP
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *PublicIP) SetName(v *string) *PublicIP {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *PublicIP) SetResourceGroupName(v *string) *PublicIP {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+// endregion
+
+// region ApplicationSecurityGroup
+
+func (o ApplicationSecurityGroup) MarshalJSON() ([]byte, error) {
+	type noMethod ApplicationSecurityGroup
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ApplicationSecurityGroup) SetName(v *string) *ApplicationSecurityGroup {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *ApplicationSecurityGroup) SetResourceGroupName(v *string) *ApplicationSecurityGroup {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
 // endregion
 
 // region Login
@@ -1603,27 +1780,27 @@ func (o *OSDisk) SetType(v *string) *OSDisk {
 
 // region DataDisks
 
-func (o DataDisks) MarshalJSON() ([]byte, error) {
-	type noMethod DataDisks
+func (o DataDisk) MarshalJSON() ([]byte, error) {
+	type noMethod DataDisk
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *DataDisks) SetSizeGB(v *int) *DataDisks {
+func (o *DataDisk) SetSizeGB(v *int) *DataDisk {
 	if o.SizeGB = v; o.SizeGB == nil {
 		o.nullFields = append(o.nullFields, "SizeGB")
 	}
 	return o
 }
 
-func (o *DataDisks) SetLun(v *int) *DataDisks {
+func (o *DataDisk) SetLun(v *int) *DataDisk {
 	if o.Lun = v; o.Lun == nil {
 		o.nullFields = append(o.nullFields, "Lun")
 	}
 	return o
 }
 
-func (o *DataDisks) SetType(v *string) *DataDisks {
+func (o *DataDisk) SetType(v *string) *DataDisk {
 	if o.Type = v; o.Type == nil {
 		o.nullFields = append(o.nullFields, "Type")
 	}
