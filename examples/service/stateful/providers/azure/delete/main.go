@@ -4,17 +4,11 @@ import (
 	"context"
 	"github.com/spotinst/spotinst-sdk-go/service/stateful/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"log"
-	"os"
 )
 
 func main() {
-
-	os.Setenv(credentials.EnvCredentialsVarToken, "5ca74c5c6fe2cd5a3827eb63f8c342c873feaac8c1b3b9d43ea046651cd6f177")
-	os.Setenv(credentials.EnvCredentialsVarAccount, "act-97b049d6")
-
 	// All clients require a Session. The Session provides the client with
 	// shared configuration such as account and credentials.
 	// A Session should be shared where possible to take advantage of
@@ -33,7 +27,26 @@ func main() {
 
 	// Delete stateful node.
 	_, err := svc.Delete(ctx, &azure.DeleteStatefulNodeInput{
-		ID: spotinst.String("sig-01245678"), //TODO - change
+		ID: spotinst.String("ssn-01234567"),
+		DeallocationConfig: &azure.DeallocationConfig{
+			ShouldTerminateVm: spotinst.Bool(true),
+			NetworkDeallocationConfig: &azure.ResourceDeallocationConfig{
+				ShouldDeallocate: spotinst.Bool(true),
+				TtlInHours:       spotinst.Int(0),
+			},
+			DiskDeallocationConfig: &azure.ResourceDeallocationConfig{
+				ShouldDeallocate: spotinst.Bool(true),
+				TtlInHours:       spotinst.Int(0),
+			},
+			SnapshotDeallocationConfig: &azure.ResourceDeallocationConfig{
+				ShouldDeallocate: spotinst.Bool(true),
+				TtlInHours:       spotinst.Int(0),
+			},
+			PublicIpDeallocationConfig: &azure.ResourceDeallocationConfig{
+				ShouldDeallocate: spotinst.Bool(true),
+				TtlInHours:       spotinst.Int(0),
+			},
+		},
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete stateful node: %v", err)

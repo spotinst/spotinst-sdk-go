@@ -33,12 +33,13 @@ func main() {
 
 	// Read stateful node configuration.
 	_, err := svc.AttachDataDisk(ctx, &azure.AttachStatefulNodeDataDiskInput{
-		ID:                        spotinst.String("sig-01245678"), //TODO - change
-		DataDiskName:              spotinst.String("dataDisk1"),    //TODO - change
-		DataDiskResourceGroupName: spotinst.String("rg1"),          //TODO - change
-		SizeGB:                    spotinst.Int(1),                 //TODO - change
-		Zone:                      spotinst.String("2"),            //TODO - change
-		Lun:                       spotinst.Int(0),                 //TODO - change
+		ID:                        spotinst.String("ssn-01234567"),
+		DataDiskName:              spotinst.String("foo"),
+		DataDiskResourceGroupName: spotinst.String("foo"),
+		StorageAccountType:        spotinst.String("StandardSSD_LRS"),
+		SizeGB:                    spotinst.Int(1),
+		Zone:                      spotinst.String("2"),
+		Lun:                       spotinst.Int(0),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to attach stateful node data disk: %v", err)

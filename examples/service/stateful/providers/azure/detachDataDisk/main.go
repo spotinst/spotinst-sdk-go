@@ -33,10 +33,10 @@ func main() {
 
 	// Read stateful node configuration.
 	_, err := svc.DetachDataDisk(ctx, &azure.DetachStatefulNodeDataDiskInput{
-		ID:                        spotinst.String("sig-01245678"), //TODO - change
-		DataDiskName:              spotinst.String("dataDisk1"),    //TODO - change
-		DataDiskResourceGroupName: spotinst.String("rg1"),          //TODO - change
-		ShouldDeallocate:          spotinst.Bool(false),
+		ID:                        spotinst.String("ssn-01234567"),
+		DataDiskName:              spotinst.String("foo"),
+		DataDiskResourceGroupName: spotinst.String("foo"),
+		ShouldDeallocate:          spotinst.Bool(true),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to detach stateful node data disk: %v", err)

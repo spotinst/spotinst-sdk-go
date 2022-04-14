@@ -4,18 +4,12 @@ import (
 	"context"
 	"github.com/spotinst/spotinst-sdk-go/service/stateful/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
-	"os"
 )
 
 func main() {
-
-	os.Setenv(credentials.EnvCredentialsVarToken, "5ca74c5c6fe2cd5a3827eb63f8c342c873feaac8c1b3b9d43ea046651cd6f177")
-	os.Setenv(credentials.EnvCredentialsVarAccount, "act-97b049d6")
-
 	// All clients require a Session. The Session provides the client with
 	// shared configuration such as account and credentials.
 	// A Session should be shared where possible to take advantage of
@@ -35,10 +29,10 @@ func main() {
 	// Read stateful node configuration.
 	out, err := svc.Create(ctx, &azure.CreateStatefulNodeInput{
 		StatefulNode: &azure.StatefulNode{
-			Name:              spotinst.String("TamirStatefulNode"),
+			Name:              spotinst.String("foo"),
 			Region:            spotinst.String("eastus"),
-			ResourceGroupName: spotinst.String("TamirResourceGroup"),
-			Description:       spotinst.String("TestingGoSDK"),
+			ResourceGroupName: spotinst.String("foo"),
+			Description:       spotinst.String("foo"),
 			Strategy: &azure.Strategy{
 				Signals: []*azure.Signal{
 					{
@@ -84,17 +78,17 @@ func main() {
 						},
 					},
 					Network: &azure.Network{
-						ResourceGroupName:  spotinst.String("TamirResourceGroup"),
-						VirtualNetworkName: spotinst.String("TamirVirtualNetwork"),
+						ResourceGroupName:  spotinst.String("foo"),
+						VirtualNetworkName: spotinst.String("foo"),
 						NetworkInterfaces: []*azure.NetworkInterface{
 							{
 								IsPrimary:      spotinst.Bool(true),
 								SubnetName:     spotinst.String("default"),
 								AssignPublicIP: spotinst.Bool(true),
-								PublicIPSku:    spotinst.String("standard"),
+								PublicIPSku:    spotinst.String("Standard"),
 								NetworkSecurityGroup: &azure.NetworkSecurityGroup{
-									ResourceGroupName: spotinst.String("TamirResourceGroup"),
-									Name:              spotinst.String("TamirNetworkSecurityGroup"),
+									ResourceGroupName: spotinst.String("foo"),
+									Name:              spotinst.String("foo"),
 								},
 							},
 						},
@@ -108,18 +102,18 @@ func main() {
 					},
 					Extensions: []*azure.Extension{
 						{
-							Name:                    spotinst.String("extensionName"),
+							Name:                    spotinst.String("foo"),
 							Type:                    spotinst.String("customScript"),
 							Publisher:               spotinst.String("Microsoft.Azure.Extensions"),
 							APIVersion:              spotinst.String("2.0"),
 							MinorVersionAutoUpgrade: spotinst.Bool(true),
 							ProtectedSettings: map[string]interface{}{
-								"script": "IyEvYmluL2Jhc2gKZWNobyAibmlyIiA+IC9ob21lL25pci9uaXIudHh0Cg=="},
+								"script": "foo"},
 						},
 					},
 					Login: &azure.Login{
-						UserName: spotinst.String("Tamir"),
-						Password: spotinst.String("Tamir123456789!@#$%"),
+						UserName: spotinst.String("foo"),
+						Password: spotinst.String("bar"),
 					},
 					Tags: []*azure.Tag{
 						{
@@ -149,11 +143,11 @@ func main() {
 				},
 			},
 			Persistence: &azure.Persistence{
-				ShouldPersistDataDisk:   spotinst.Bool(true),
-				OsDiskPersistenceMode:   spotinst.String("reattach"),
-				ShouldPersistNetwork:    spotinst.Bool(true),
-				DataDiskPersistenceMode: spotinst.String("reattach"),
-				ShouldPersistOsDisk:     spotinst.Bool(true),
+				ShouldPersistDataDisks:   spotinst.Bool(true),
+				OsDiskPersistenceMode:    spotinst.String("reattach"),
+				ShouldPersistNetwork:     spotinst.Bool(true),
+				DataDisksPersistenceMode: spotinst.String("reattach"),
+				ShouldPersistOsDisk:      spotinst.Bool(true),
 			},
 			Health: &azure.Health{
 				HealthCheckTypes: []string{

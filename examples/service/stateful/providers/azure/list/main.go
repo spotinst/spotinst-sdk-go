@@ -4,18 +4,12 @@ import (
 	"context"
 	"github.com/spotinst/spotinst-sdk-go/service/stateful/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/credentials"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
-	"os"
 )
 
 func main() {
-
-	os.Setenv(credentials.EnvCredentialsVarToken, "5ca74c5c6fe2cd5a3827eb63f8c342c873feaac8c1b3b9d43ea046651cd6f177")
-	os.Setenv(credentials.EnvCredentialsVarAccount, "act-97b049d6")
-
 	// All clients require a Session. The Session provides the client with
 	// shared configuration such as account and credentials.
 	// A Session should be shared where possible to take advantage of

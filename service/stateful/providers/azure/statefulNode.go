@@ -211,11 +211,10 @@ type Network struct {
 }
 
 type NetworkInterface struct {
-	SubnetName     *string `json:"subnetName,omitempty"`
-	AssignPublicIP *bool   `json:"assignPublicIp,omitempty"`
-	IsPrimary      *bool   `json:"isPrimary,omitempty"`
-	PublicIPSku    *string `json:"publicIpSku,omitempty"`
-	//TODO - setters only
+	SubnetName                 *string                      `json:"subnetName,omitempty"`
+	AssignPublicIP             *bool                        `json:"assignPublicIp,omitempty"`
+	IsPrimary                  *bool                        `json:"isPrimary,omitempty"`
+	PublicIPSku                *string                      `json:"publicIpSku,omitempty"`
 	NetworkSecurityGroup       *NetworkSecurityGroup        `json:"networkSecurityGroup,omitempty"`
 	EnableIPForwarding         *bool                        `json:"enableIPForwarding,omitempty"`
 	PrivateIPAddresses         []string                     `json:"privateIPAddresses,omitempty"`
@@ -313,12 +312,12 @@ type BootDiagnostics struct {
 }
 
 type Persistence struct {
-	ShouldPersistOsDisk     *bool   `json:"shouldPersistOsDisk,omitempty"`
-	OsDiskPersistenceMode   *string `json:"osDiskPersistenceMode,omitempty"`
-	ShouldPersistDataDisk   *bool   `json:"shouldPersistDataDisk,omitempty"`
-	DataDiskPersistenceMode *string `json:"dataDiskPersistenceMode,omitempty"`
-	ShouldPersistNetwork    *bool   `json:"shouldPersistNetwork,omitempty"`
-	ShouldPersistVm         *bool   `json:"shouldPersistVm,omitempty"`
+	ShouldPersistOsDisk      *bool   `json:"shouldPersistOsDisk,omitempty"`
+	OsDiskPersistenceMode    *string `json:"osDiskPersistenceMode,omitempty"`
+	ShouldPersistDataDisks   *bool   `json:"shouldPersistDataDisks,omitempty"`
+	DataDisksPersistenceMode *string `json:"dataDisksPersistenceMode,omitempty"`
+	ShouldPersistNetwork     *bool   `json:"shouldPersistNetwork,omitempty"`
+	ShouldPersistVm          *bool   `json:"shouldPersistVm,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -375,7 +374,21 @@ type UpdateStatefulNodeOutput struct {
 }
 
 type DeleteStatefulNodeInput struct {
-	ID *string `json:"id,omitempty"`
+	ID                 *string             `json:"id,omitempty"`
+	DeallocationConfig *DeallocationConfig `json:"deallocationConfig,omitempty"`
+}
+
+type DeallocationConfig struct {
+	ShouldTerminateVm          *bool                       `json:"shouldTerminateVm,omitempty"`
+	NetworkDeallocationConfig  *ResourceDeallocationConfig `json:"networkDeallocationConfig,omitempty"`
+	DiskDeallocationConfig     *ResourceDeallocationConfig `json:"diskDeallocationConfig,omitempty"`
+	SnapshotDeallocationConfig *ResourceDeallocationConfig `json:"snapshotDeallocationConfig,omitempty"`
+	PublicIpDeallocationConfig *ResourceDeallocationConfig `json:"publicIpDeallocationConfig,omitempty"`
+}
+
+type ResourceDeallocationConfig struct {
+	ShouldDeallocate *bool `json:"shouldDeallocate,omitempty"`
+	TtlInHours       *int  `json:"ttlInHours,omitempty"`
 }
 
 type DeleteStatefulNodeOutput struct{}
@@ -406,6 +419,7 @@ type AttachStatefulNodeDataDiskInput struct {
 	ID                        *string `json:"id,omitempty"`
 	DataDiskName              *string `json:"dataDiskName,omitempty"`
 	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName,omitempty"`
+	StorageAccountType        *string `json:"storageAccountType,omitempty"`
 	SizeGB                    *int    `json:"sizeGB,omitempty"`
 	Lun                       *int    `json:"lun,omitempty"`
 	Zone                      *string `json:"zone,omitempty"`
@@ -427,7 +441,7 @@ type ImportVMStatefulNodeInput struct {
 }
 
 type ImportVMStatefulNodeOutput struct {
-	StatefulNode *StatefulNode `json:"statefulNode,omitempty"`
+	StatefulNodeImport *StatefulNodeImport `json:"statefulNodeImport,omitempty"`
 }
 
 // region Unmarshallers
@@ -465,6 +479,41 @@ func statefulNodesFromHttpResponse(resp *http.Response) ([]*StatefulNode, error)
 		return nil, err
 	}
 	return statefulNodesFromJSON(body)
+}
+
+func statefulNodeImportFromJSON(in []byte) (*StatefulNodeImport, error) {
+	b := new(StatefulNodeImport)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func statefulNodesImportFromJSON(in []byte) ([]*StatefulNodeImport, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*StatefulNodeImport, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := statefulNodeImportFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func statefulNodesImportFromHttpResponse(resp *http.Response) ([]*StatefulNodeImport, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return statefulNodesImportFromJSON(body)
 }
 
 // endregion
@@ -579,7 +628,12 @@ func (s *ServiceOp) Delete(ctx context.Context, input *DeleteStatefulNodeInput) 
 		return nil, err
 	}
 
+	// We do NOT need the ID anymore, so let's drop it.
+	input.ID = nil
+
 	r := client.NewRequest(http.MethodDelete, path)
+	r.Obj = input
+
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
@@ -668,14 +722,14 @@ func (s *ServiceOp) ImportVM(ctx context.Context, input *ImportVMStatefulNodeInp
 	}
 	defer resp.Body.Close()
 
-	gs, err := statefulNodesFromHttpResponse(resp)
+	gs, err := statefulNodesImportFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(ImportVMStatefulNodeOutput)
 	if len(gs) > 0 {
-		output.StatefulNode = gs[0]
+		output.StatefulNodeImport = gs[0]
 	}
 
 	return output, nil
@@ -872,16 +926,16 @@ func (o *Persistence) SetOsDiskPersistenceMode(v *string) *Persistence {
 	return o
 }
 
-func (o *Persistence) SetShouldPersistDataDisk(v *bool) *Persistence {
-	if o.ShouldPersistDataDisk = v; o.ShouldPersistDataDisk == nil {
-		o.nullFields = append(o.nullFields, "ShouldPersistDataDisk")
+func (o *Persistence) SetShouldPersistDataDisks(v *bool) *Persistence {
+	if o.ShouldPersistDataDisks = v; o.ShouldPersistDataDisks == nil {
+		o.nullFields = append(o.nullFields, "ShouldPersistDataDisks")
 	}
 	return o
 }
 
-func (o *Persistence) SetDataDiskPersistenceMode(v *string) *Persistence {
-	if o.DataDiskPersistenceMode = v; o.DataDiskPersistenceMode == nil {
-		o.nullFields = append(o.nullFields, "DataDiskPersistenceMode")
+func (o *Persistence) SetDataDisksPersistenceMode(v *string) *Persistence {
+	if o.DataDisksPersistenceMode = v; o.DataDisksPersistenceMode == nil {
+		o.nullFields = append(o.nullFields, "DataDisksPersistenceMode")
 	}
 	return o
 }
