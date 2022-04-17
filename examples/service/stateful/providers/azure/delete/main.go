@@ -32,19 +32,19 @@ func main() {
 			ShouldTerminateVM: spotinst.Bool(true),
 			NetworkDeallocationConfig: &azure.ResourceDeallocationConfig{
 				ShouldDeallocate: spotinst.Bool(true),
-				TtlInHours:       spotinst.Int(0),
+				TTLInHours:       spotinst.Int(0),
 			},
 			DiskDeallocationConfig: &azure.ResourceDeallocationConfig{
 				ShouldDeallocate: spotinst.Bool(true),
-				TtlInHours:       spotinst.Int(0),
+				TTLInHours:       spotinst.Int(0),
 			},
 			SnapshotDeallocationConfig: &azure.ResourceDeallocationConfig{
 				ShouldDeallocate: spotinst.Bool(true),
-				TtlInHours:       spotinst.Int(0),
+				TTLInHours:       spotinst.Int(0),
 			},
-			PublicIpDeallocationConfig: &azure.ResourceDeallocationConfig{
+			PublicIPDeallocationConfig: &azure.ResourceDeallocationConfig{
 				ShouldDeallocate: spotinst.Bool(true),
-				TtlInHours:       spotinst.Int(0),
+				TTLInHours:       spotinst.Int(0),
 			},
 		},
 	})
