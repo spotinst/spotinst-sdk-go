@@ -61,10 +61,10 @@ func main() {
 					UnhealthyDuration: spotinst.Int(120),
 				},
 				Persistence: &azure.Persistence{
-					ShouldPersistOsDisk:      spotinst.Bool(true),
+					ShouldPersistOSDisk:      spotinst.Bool(true),
 					ShouldPersistDataDisks:   spotinst.Bool(true),
 					ShouldPersistNetwork:     spotinst.Bool(false),
-					OsDiskPersistenceMode:    spotinst.String("reattach"),
+					OSDiskPersistenceMode:    spotinst.String("reattach"),
 					DataDisksPersistenceMode: spotinst.String("onLaunch"),
 				},
 			},

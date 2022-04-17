@@ -29,7 +29,7 @@ func main() {
 	_, err := svc.Delete(ctx, &azure.DeleteStatefulNodeInput{
 		ID: spotinst.String("ssn-01234567"),
 		DeallocationConfig: &azure.DeallocationConfig{
-			ShouldTerminateVm: spotinst.Bool(true),
+			ShouldTerminateVM: spotinst.Bool(true),
 			NetworkDeallocationConfig: &azure.ResourceDeallocationConfig{
 				ShouldDeallocate: spotinst.Bool(true),
 				TtlInHours:       spotinst.Int(0),

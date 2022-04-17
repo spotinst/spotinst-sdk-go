@@ -96,7 +96,7 @@ func main() {
 					DataDisks: []*azure.DataDisk{
 						{
 							SizeGB: spotinst.Int(1),
-							Lun:    spotinst.Int(1),
+							LUN:    spotinst.Int(1),
 							Type:   spotinst.String("Standard_LRS"),
 						},
 					},
@@ -144,10 +144,10 @@ func main() {
 			},
 			Persistence: &azure.Persistence{
 				ShouldPersistDataDisks:   spotinst.Bool(true),
-				OsDiskPersistenceMode:    spotinst.String("reattach"),
+				OSDiskPersistenceMode:    spotinst.String("reattach"),
 				ShouldPersistNetwork:     spotinst.Bool(true),
 				DataDisksPersistenceMode: spotinst.String("reattach"),
-				ShouldPersistOsDisk:      spotinst.Bool(true),
+				ShouldPersistOSDisk:      spotinst.Bool(true),
 			},
 			Health: &azure.Health{
 				HealthCheckTypes: []string{

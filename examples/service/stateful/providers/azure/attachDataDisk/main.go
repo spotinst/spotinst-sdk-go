@@ -33,7 +33,7 @@ func main() {
 		StorageAccountType:        spotinst.String("StandardSSD_LRS"),
 		SizeGB:                    spotinst.Int(1),
 		Zone:                      spotinst.String("2"),
-		Lun:                       spotinst.Int(0),
+		LUN:                       spotinst.Int(0),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to attach stateful node data disk: %v", err)

@@ -218,7 +218,7 @@ type NetworkInterface struct {
 	NetworkSecurityGroup       *NetworkSecurityGroup        `json:"networkSecurityGroup,omitempty"`
 	EnableIPForwarding         *bool                        `json:"enableIPForwarding,omitempty"`
 	PrivateIPAddresses         []string                     `json:"privateIPAddresses,omitempty"`
-	AdditionalIpConfigurations []*AdditionalIpConfiguration `json:"additionalIpConfigurations,omitempty"`
+	AdditionalIPConfigurations []*AdditionalIPConfiguration `json:"additionalIpConfigurations,omitempty"`
 	PublicIPs                  []*PublicIP                  `json:"publicIps,omitempty"`
 	ApplicationSecurityGroups  []*ApplicationSecurityGroup  `json:"applicationSecurityGroups,omitempty"`
 
@@ -234,8 +234,8 @@ type NetworkSecurityGroup struct {
 	nullFields      []string
 }
 
-type AdditionalIpConfiguration struct {
-	PrivateIpAddressVersion *string `json:"privateIpAddressVersion,omitempty"`
+type AdditionalIPConfiguration struct {
+	PrivateIPAddressVersion *string `json:"privateIpAddressVersion,omitempty"`
 	Name                    *string `json:"name,omitempty"`
 
 	forceSendFields []string
@@ -295,7 +295,7 @@ type OSDisk struct {
 
 type DataDisk struct {
 	SizeGB *int    `json:"sizeGB,omitempty"`
-	Lun    *int    `json:"lun,omitempty"`
+	LUN    *int    `json:"lun,omitempty"`
 	Type   *string `json:"type,omitempty"`
 
 	forceSendFields []string
@@ -305,19 +305,19 @@ type DataDisk struct {
 type BootDiagnostics struct {
 	IsEnabled  *bool   `json:"isEnabled,omitempty"`
 	Type       *string `json:"type,omitempty"`
-	StorageUrl *string `json:"storageUrl,omitempty"`
+	StorageURL *string `json:"storageUrl,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type Persistence struct {
-	ShouldPersistOsDisk      *bool   `json:"shouldPersistOsDisk,omitempty"`
-	OsDiskPersistenceMode    *string `json:"osDiskPersistenceMode,omitempty"`
+	ShouldPersistOSDisk      *bool   `json:"shouldPersistOsDisk,omitempty"`
+	OSDiskPersistenceMode    *string `json:"osDiskPersistenceMode,omitempty"`
 	ShouldPersistDataDisks   *bool   `json:"shouldPersistDataDisks,omitempty"`
 	DataDisksPersistenceMode *string `json:"dataDisksPersistenceMode,omitempty"`
 	ShouldPersistNetwork     *bool   `json:"shouldPersistNetwork,omitempty"`
-	ShouldPersistVm          *bool   `json:"shouldPersistVm,omitempty"`
+	ShouldPersistVM          *bool   `json:"shouldPersistVm,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -379,7 +379,7 @@ type DeleteStatefulNodeInput struct {
 }
 
 type DeallocationConfig struct {
-	ShouldTerminateVm          *bool                       `json:"shouldTerminateVm,omitempty"`
+	ShouldTerminateVM          *bool                       `json:"shouldTerminateVm,omitempty"`
 	NetworkDeallocationConfig  *ResourceDeallocationConfig `json:"networkDeallocationConfig,omitempty"`
 	DiskDeallocationConfig     *ResourceDeallocationConfig `json:"diskDeallocationConfig,omitempty"`
 	SnapshotDeallocationConfig *ResourceDeallocationConfig `json:"snapshotDeallocationConfig,omitempty"`
@@ -421,7 +421,7 @@ type AttachStatefulNodeDataDiskInput struct {
 	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName,omitempty"`
 	StorageAccountType        *string `json:"storageAccountType,omitempty"`
 	SizeGB                    *int    `json:"sizeGB,omitempty"`
-	Lun                       *int    `json:"lun,omitempty"`
+	LUN                       *int    `json:"lun,omitempty"`
 	Zone                      *string `json:"zone,omitempty"`
 }
 
@@ -912,15 +912,15 @@ func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
 
 // region Persistence
 
-func (o *Persistence) SetShouldPersistOsDisk(v *bool) *Persistence {
-	if o.ShouldPersistOsDisk = v; o.ShouldPersistOsDisk == nil {
+func (o *Persistence) SetShouldPersistOSDisk(v *bool) *Persistence {
+	if o.ShouldPersistOSDisk = v; o.ShouldPersistOSDisk == nil {
 		o.nullFields = append(o.nullFields, "ShouldPersistOsDisk")
 	}
 	return o
 }
 
-func (o *Persistence) SetOsDiskPersistenceMode(v *string) *Persistence {
-	if o.OsDiskPersistenceMode = v; o.OsDiskPersistenceMode == nil {
+func (o *Persistence) SetOSDiskPersistenceMode(v *string) *Persistence {
+	if o.OSDiskPersistenceMode = v; o.OSDiskPersistenceMode == nil {
 		o.nullFields = append(o.nullFields, "OsDiskPersistenceMode")
 	}
 	return o
@@ -947,8 +947,8 @@ func (o *Persistence) SetShouldPersistNetwork(v *bool) *Persistence {
 	return o
 }
 
-func (o *Persistence) SetShouldPersistVm(v *bool) *Persistence {
-	if o.ShouldPersistVm = v; o.ShouldPersistVm == nil {
+func (o *Persistence) SetShouldPersistVM(v *bool) *Persistence {
+	if o.ShouldPersistVM = v; o.ShouldPersistVM == nil {
 		o.nullFields = append(o.nullFields, "ShouldPersistVm")
 	}
 	return o
@@ -1596,8 +1596,8 @@ func (o *NetworkInterface) SetPrivateIPAddresses(v []string) *NetworkInterface {
 	return o
 }
 
-func (o *NetworkInterface) SetAdditionalIpConfigurations(v []*AdditionalIpConfiguration) *NetworkInterface {
-	if o.AdditionalIpConfigurations = v; o.AdditionalIpConfigurations == nil {
+func (o *NetworkInterface) SetAdditionalIPConfigurations(v []*AdditionalIPConfiguration) *NetworkInterface {
+	if o.AdditionalIPConfigurations = v; o.AdditionalIPConfigurations == nil {
 		o.nullFields = append(o.nullFields, "AdditionalIpConfigurations")
 	}
 	return o
@@ -1645,21 +1645,21 @@ func (o *NetworkSecurityGroup) SetResourceGroupName(v *string) *NetworkSecurityG
 
 // region AdditionalIpConfiguration
 
-func (o AdditionalIpConfiguration) MarshalJSON() ([]byte, error) {
-	type noMethod AdditionalIpConfiguration
+func (o AdditionalIPConfiguration) MarshalJSON() ([]byte, error) {
+	type noMethod AdditionalIPConfiguration
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *AdditionalIpConfiguration) SetName(v *string) *AdditionalIpConfiguration {
+func (o *AdditionalIPConfiguration) SetName(v *string) *AdditionalIPConfiguration {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
 
-func (o *AdditionalIpConfiguration) setPrivateIpAddressVersion(v *string) *AdditionalIpConfiguration {
-	if o.PrivateIpAddressVersion = v; o.PrivateIpAddressVersion == nil {
+func (o *AdditionalIPConfiguration) setPrivateIPAddressVersion(v *string) *AdditionalIPConfiguration {
+	if o.PrivateIPAddressVersion = v; o.PrivateIPAddressVersion == nil {
 		o.nullFields = append(o.nullFields, "PrivateIpAddressVersion")
 	}
 	return o
@@ -1847,8 +1847,8 @@ func (o *DataDisk) SetSizeGB(v *int) *DataDisk {
 	return o
 }
 
-func (o *DataDisk) SetLun(v *int) *DataDisk {
-	if o.Lun = v; o.Lun == nil {
+func (o *DataDisk) SetLUN(v *int) *DataDisk {
+	if o.LUN = v; o.LUN == nil {
 		o.nullFields = append(o.nullFields, "Lun")
 	}
 	return o
@@ -1885,8 +1885,8 @@ func (o *BootDiagnostics) SetType(v *string) *BootDiagnostics {
 	return o
 }
 
-func (o *BootDiagnostics) SetStorageUrl(v *string) *BootDiagnostics {
-	if o.StorageUrl = v; o.StorageUrl == nil {
+func (o *BootDiagnostics) SetStorageURL(v *string) *BootDiagnostics {
+	if o.StorageURL = v; o.StorageURL == nil {
 		o.nullFields = append(o.nullFields, "StorageUrl")
 	}
 	return o
