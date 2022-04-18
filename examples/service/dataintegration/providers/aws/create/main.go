@@ -33,8 +33,8 @@ func main() {
 			Name:   spotinst.String("my-s3-integration-check"),
 			Vendor: spotinst.String("s3"),
 			Config: &aws.Config{
-				BucketName: spotinst.String("terraform-test-do-not-delete"),
-				SubDir:     spotinst.String("dev"),
+				BucketName: spotinst.String("foo"),
+				SubDir:     spotinst.String("foo"),
 			},
 		},
 	})
