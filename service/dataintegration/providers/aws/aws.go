@@ -60,7 +60,7 @@ type CreateDataIntegrationOutput struct {
 }
 
 type ReadDataIntegrationInput struct {
-	DataIntegrationID *string `json:"dataIntegrationId,omitempty"`
+	DataIntegrationId *string `json:"dataIntegrationId,omitempty"`
 }
 
 type ReadDataIntegrationOutput struct {
@@ -76,7 +76,7 @@ type UpdateDataIntegrationOutput struct {
 }
 
 type DeleteDataIntegrationInput struct {
-	DataIntegrationID *string `json:"dataIntegrationId,omitempty"`
+	DataIntegrationId *string `json:"dataIntegrationId,omitempty"`
 }
 
 type DeleteDataIntegrationOutput struct{}
@@ -157,7 +157,7 @@ func (s *ServiceOp) CreateDataIntegration(ctx context.Context, input *CreateData
 
 func (s *ServiceOp) ReadDataIntegration(ctx context.Context, input *ReadDataIntegrationInput) (*ReadDataIntegrationOutput, error) {
 	path, err := uritemplates.Expand("/insights/dataIntegration/{dataIntegrationId}", uritemplates.Values{
-		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationID),
+		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationId),
 	})
 	if err != nil {
 		return nil, err
@@ -218,7 +218,7 @@ func (s *ServiceOp) UpdateDataIntegration(ctx context.Context, input *UpdateData
 
 func (s *ServiceOp) DeleteDataIntegration(ctx context.Context, input *DeleteDataIntegrationInput) (*DeleteDataIntegrationOutput, error) {
 	path, err := uritemplates.Expand("/insights/dataIntegration/{dataIntegrationId}", uritemplates.Values{
-		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationID),
+		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationId),
 	})
 	if err != nil {
 		return nil, err
