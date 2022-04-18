@@ -128,7 +128,7 @@ type SourceVault struct {
 }
 
 type VaultCertificate struct {
-	CertificateUrl   *string `json:"certificateUrl,omitempty"`
+	CertificateURL   *string `json:"certificateUrl,omitempty"`
 	CertificateStore *string `json:"certificateStore,omitempty"`
 
 	forceSendFields []string
@@ -383,12 +383,12 @@ type DeallocationConfig struct {
 	NetworkDeallocationConfig  *ResourceDeallocationConfig `json:"networkDeallocationConfig,omitempty"`
 	DiskDeallocationConfig     *ResourceDeallocationConfig `json:"diskDeallocationConfig,omitempty"`
 	SnapshotDeallocationConfig *ResourceDeallocationConfig `json:"snapshotDeallocationConfig,omitempty"`
-	PublicIpDeallocationConfig *ResourceDeallocationConfig `json:"publicIpDeallocationConfig,omitempty"`
+	PublicIPDeallocationConfig *ResourceDeallocationConfig `json:"publicIpDeallocationConfig,omitempty"`
 }
 
 type ResourceDeallocationConfig struct {
 	ShouldDeallocate *bool `json:"shouldDeallocate,omitempty"`
-	TtlInHours       *int  `json:"ttlInHours,omitempty"`
+	TTLInHours       *int  `json:"ttlInHours,omitempty"`
 }
 
 type DeleteStatefulNodeOutput struct{}
@@ -428,7 +428,7 @@ type AttachStatefulNodeDataDiskInput struct {
 type AttachStatefulNodeDataDiskOutput struct{}
 
 type StatefulNodeImport struct {
-	StatefulImportId       *string       `json:"statefulImportId,omitempty"`
+	StatefulImportID       *string       `json:"statefulImportId,omitempty"`
 	ResourceGroupName      *string       `json:"resourceGroupName,omitempty"`
 	OriginalVMName         *string       `json:"originalVmName,omitempty"`
 	DrainingTimeout        *int          `json:"drainingTimeout,omitempty"`
@@ -1254,8 +1254,8 @@ func (o VaultCertificate) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VaultCertificate) SetCertificateUrl(v *string) *VaultCertificate {
-	if o.CertificateUrl = v; o.CertificateUrl == nil {
+func (o *VaultCertificate) SetCertificateURL(v *string) *VaultCertificate {
+	if o.CertificateURL = v; o.CertificateURL == nil {
 		o.nullFields = append(o.nullFields, "CertificateUrl")
 	}
 	return o
