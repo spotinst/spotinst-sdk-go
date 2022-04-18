@@ -29,7 +29,7 @@ func main() {
 
 	// Read data integration configuration.
 	out, err := svc.CloudProviderAWS().ReadDataIntegration(ctx, &aws.ReadDataIntegrationInput{
-		DataIntegrationID: spotinst.String("di-12345"),
+		DataIntegrationId: spotinst.String("di-12345"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read data integration: %v", err)
