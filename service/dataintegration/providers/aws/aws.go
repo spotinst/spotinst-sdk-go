@@ -12,7 +12,7 @@ import (
 )
 
 type DataIntegration struct {
-	Id              *string `json:"id,omitempty"`
+	ID              *string `json:"id,omitempty"`
 	Config          *Config `json:"config,omitempty"`
 	Name            *string `json:"name,omitempty"`
 	Vendor          *string `json:"vendor,omitempty"`
@@ -39,7 +39,7 @@ type DataIntegration struct {
 
 type Config struct {
 	BucketName *string `json:"bucketName,omitempty"`
-	Subdir     *string `json:"subdir,omitempty"`
+	SubDir     *string `json:"subdir,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -60,7 +60,7 @@ type CreateDataIntegrationOutput struct {
 }
 
 type ReadDataIntegrationInput struct {
-	DataIntegrationId *string `json:"dataIntegrationId,omitempty"`
+	DataIntegrationID *string `json:"dataIntegrationId,omitempty"`
 }
 
 type ReadDataIntegrationOutput struct {
@@ -76,7 +76,7 @@ type UpdateDataIntegrationOutput struct {
 }
 
 type DeleteDataIntegrationInput struct {
-	DataIntegrationId *string `json:"dataIntegrationId,omitempty"`
+	DataIntegrationID *string `json:"dataIntegrationId,omitempty"`
 }
 
 type DeleteDataIntegrationOutput struct{}
@@ -157,7 +157,7 @@ func (s *ServiceOp) CreateDataIntegration(ctx context.Context, input *CreateData
 
 func (s *ServiceOp) ReadDataIntegration(ctx context.Context, input *ReadDataIntegrationInput) (*ReadDataIntegrationOutput, error) {
 	path, err := uritemplates.Expand("/insights/dataIntegration/{dataIntegrationId}", uritemplates.Values{
-		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationId),
+		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationID),
 	})
 	if err != nil {
 		return nil, err
@@ -185,14 +185,14 @@ func (s *ServiceOp) ReadDataIntegration(ctx context.Context, input *ReadDataInte
 
 func (s *ServiceOp) UpdateDataIntegration(ctx context.Context, input *UpdateDataIntegrationInput) (*UpdateDataIntegrationOutput, error) {
 	path, err := uritemplates.Expand("/insights/dataIntegration/{dataIntegrationId}", uritemplates.Values{
-		"dataIntegrationId": spotinst.StringValue(input.DataIntegration.Id),
+		"dataIntegrationId": spotinst.StringValue(input.DataIntegration.ID),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do NOT need the ID anymore, so let's drop it.
-	input.DataIntegration.Id = nil
+	input.DataIntegration.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
@@ -218,7 +218,7 @@ func (s *ServiceOp) UpdateDataIntegration(ctx context.Context, input *UpdateData
 
 func (s *ServiceOp) DeleteDataIntegration(ctx context.Context, input *DeleteDataIntegrationInput) (*DeleteDataIntegrationOutput, error) {
 	path, err := uritemplates.Expand("/insights/dataIntegration/{dataIntegrationId}", uritemplates.Values{
-		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationId),
+		"dataIntegrationId": spotinst.StringValue(input.DataIntegrationID),
 	})
 	if err != nil {
 		return nil, err
@@ -243,8 +243,8 @@ func (o DataIntegration) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *DataIntegration) SetId(v *string) *DataIntegration {
-	if o.Id = v; o.Id == nil {
+func (o *DataIntegration) SetID(v *string) *DataIntegration {
+	if o.ID = v; o.ID == nil {
 		o.nullFields = append(o.nullFields, "Id")
 	}
 	return o
@@ -309,8 +309,8 @@ func (o *Config) SetBucketName(v *string) *Config {
 	return o
 }
 
-func (o *Config) SetSubdir(v *string) *Config {
-	if o.Subdir = v; o.Subdir == nil {
+func (o *Config) SetSubDir(v *string) *Config {
+	if o.SubDir = v; o.SubDir == nil {
 		o.nullFields = append(o.nullFields, "Subdir")
 	}
 	return o

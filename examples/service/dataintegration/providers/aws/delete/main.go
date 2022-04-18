@@ -28,7 +28,7 @@ func main() {
 
 	// Delete an existing data integration.
 	_, err := svc.CloudProviderAWS().DeleteDataIntegration(ctx, &aws.DeleteDataIntegrationInput{
-		DataIntegrationId: spotinst.String("di-04db4be2"),
+		DataIntegrationID: spotinst.String("di-04db4be2"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete data integration: %v", err)

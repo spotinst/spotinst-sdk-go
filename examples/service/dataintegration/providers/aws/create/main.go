@@ -34,7 +34,7 @@ func main() {
 			Vendor: spotinst.String("s3"),
 			Config: &aws.Config{
 				BucketName: spotinst.String("terraform-test-do-not-delete"),
-				Subdir:     spotinst.String("dev"),
+				SubDir:     spotinst.String("dev"),
 			},
 		},
 	})
@@ -45,7 +45,7 @@ func main() {
 	// Output.
 	if out.DataIntegration != nil {
 		log.Printf("Data Integration %q: %s",
-			spotinst.StringValue(out.DataIntegration.Id),
+			spotinst.StringValue(out.DataIntegration.ID),
 			stringutil.Stringify(out.DataIntegration))
 	}
 }

@@ -37,7 +37,7 @@ func main() {
 	if len(out.DataIntegrations) > 0 {
 		for _, dataIntegration := range out.DataIntegrations {
 			log.Printf("Data Integration %q: %s",
-				spotinst.StringValue(dataIntegration.Id),
+				spotinst.StringValue(dataIntegration.ID),
 				stringutil.Stringify(dataIntegration))
 		}
 	}

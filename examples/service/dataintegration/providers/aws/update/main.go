@@ -30,10 +30,10 @@ func main() {
 	// Update data integration configuration.
 	out, err := svc.CloudProviderAWS().UpdateDataIntegration(ctx, &aws.UpdateDataIntegrationInput{
 		DataIntegration: &aws.DataIntegration{
-			Id:     spotinst.String("di-f3b43f2a"),
+			ID:     spotinst.String("di-f3b43f2a"),
 			Vendor: spotinst.String("s3"),
 			Config: &aws.Config{
-				Subdir: spotinst.String("dev"),
+				SubDir: spotinst.String("dev"),
 			},
 		},
 	})
@@ -44,7 +44,7 @@ func main() {
 	// Output.
 	if out.DataIntegration != nil {
 		log.Printf("Data Integration %q: %s",
-			spotinst.StringValue(out.DataIntegration.Id),
+			spotinst.StringValue(out.DataIntegration.ID),
 			stringutil.Stringify(out.DataIntegration))
 	}
 }
