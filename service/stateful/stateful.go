@@ -1,4 +1,4 @@
-package providers
+package stateful
 
 import (
 	"github.com/spotinst/spotinst-sdk-go/service/stateful/providers/azure"
