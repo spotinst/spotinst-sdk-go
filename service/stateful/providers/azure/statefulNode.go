@@ -1205,7 +1205,7 @@ func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
 
 func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIdentity) *LaunchSpecification {
 	if o.ManagedServiceIdentities = v; o.ManagedServiceIdentities == nil {
-		o.nullFields = append(o.nullFields, "ManagedServiceIdentity")
+		o.nullFields = append(o.nullFields, "ManagedServiceIdentities")
 	}
 	return o
 }
