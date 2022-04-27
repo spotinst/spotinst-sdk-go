@@ -1196,6 +1196,27 @@ func (o *LaunchSpecification) SetSecrets(v []*Secret) *LaunchSpecification {
 	return o
 }
 
+func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIdentity) *LaunchSpecification {
+	if o.ManagedServiceIdentities = v; o.ManagedServiceIdentities == nil {
+		o.nullFields = append(o.nullFields, "ManagedServiceIdentities")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetExtensions(v []*Extension) *LaunchSpecification {
+	if o.Extensions = v; o.Extensions == nil {
+		o.nullFields = append(o.nullFields, "Extensions")
+	}
+	return o
+}
+
 // endregion
 
 // region Secret
@@ -1658,7 +1679,7 @@ func (o *AdditionalIPConfiguration) SetName(v *string) *AdditionalIPConfiguratio
 	return o
 }
 
-func (o *AdditionalIPConfiguration) setPrivateIPAddressVersion(v *string) *AdditionalIPConfiguration {
+func (o *AdditionalIPConfiguration) SetPrivateIPAddressVersion(v *string) *AdditionalIPConfiguration {
 	if o.PrivateIPAddressVersion = v; o.PrivateIPAddressVersion == nil {
 		o.nullFields = append(o.nullFields, "PrivateIpAddressVersion")
 	}
