@@ -31,6 +31,7 @@ func main() {
 		DataDiskName:              spotinst.String("foo"),
 		DataDiskResourceGroupName: spotinst.String("foo"),
 		ShouldDeallocate:          spotinst.Bool(true),
+		TTLInHours:                spotinst.Int(2),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to detach stateful node data disk: %v", err)

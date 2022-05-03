@@ -411,6 +411,7 @@ type DetachStatefulNodeDataDiskInput struct {
 	DataDiskName              *string `json:"dataDiskName,omitempty"`
 	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName,omitempty"`
 	ShouldDeallocate          *bool   `json:"shouldDeallocate,omitempty"`
+	TTLInHours                *int    `json:"ttlInHours,omitempty"`
 }
 
 type DetachStatefulNodeDataDiskOutput struct{}
