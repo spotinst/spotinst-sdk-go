@@ -26,18 +26,18 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Read stateful node configuration.
-	out, err := svc.Read(ctx, &azure.ReadStatefulNodeInput{
-		ID: spotinst.String("ssn-12345678"),
+	// Get stateful node state.
+	out, err := svc.GetState(ctx, &azure.GetStatefulNodeStateInput{
+		ID: spotinst.String("ssn-66050b04"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read stateful node: %v", err)
 	}
 
 	// Output.
-	if out.StatefulNode != nil {
-		log.Printf("StatefulNode %q: %s",
-			spotinst.StringValue(out.StatefulNode.ID),
-			stringutil.Stringify(out.StatefulNode))
+	if out.StatefulNodeState != nil {
+		log.Printf("StatefulNode state for stateful node %q: %s",
+			spotinst.StringValue(out.StatefulNodeState.ID),
+			stringutil.Stringify(out.StatefulNodeState))
 	}
 }

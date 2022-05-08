@@ -21,6 +21,7 @@ type Service interface {
 	DetachDataDisk(context.Context, *DetachStatefulNodeDataDiskInput) (*DetachStatefulNodeDataDiskOutput, error)
 	AttachDataDisk(context.Context, *AttachStatefulNodeDataDiskInput) (*AttachStatefulNodeDataDiskOutput, error)
 	ImportVM(context.Context, *ImportVMStatefulNodeInput) (*ImportVMStatefulNodeOutput, error)
+	GetState(context.Context, *GetStatefulNodeStateInput) (*GetStatefulNodeStateOutput, error)
 }
 
 type ServiceOp struct {
