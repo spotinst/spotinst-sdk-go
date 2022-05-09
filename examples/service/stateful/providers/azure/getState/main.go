@@ -28,7 +28,7 @@ func main() {
 
 	// Get stateful node state.
 	out, err := svc.GetState(ctx, &azure.GetStatefulNodeStateInput{
-		ID: spotinst.String("ssn-66050b04"),
+		ID: spotinst.String("ssn-01234567"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read stateful node: %v", err)
