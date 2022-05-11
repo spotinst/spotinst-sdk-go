@@ -28,18 +28,34 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// List all clusters.
-	out, err := svc.CloudProviderAWS().ListClusters(ctx, &aws.ListClustersInput{})
+	// List eks clusters.
+	eks, err := svc.CloudProviderAWS().ListClusters(ctx, &aws.ListClustersInput{})
 	if err != nil {
 		log.Fatalf("spotinst: failed to list clusters: %v", err)
 	}
 
 	// Output all clusters, if any.
-	if len(out.Clusters) > 0 {
-		for _, cluster := range out.Clusters {
+	if len(eks.Clusters) > 0 {
+		for _, cluster := range eks.Clusters {
 			log.Printf("Cluster %q: %s",
 				spotinst.StringValue(cluster.ID),
 				stringutil.Stringify(cluster))
 		}
 	}
+
+	// List ecs clusters.
+	ecs, err := svc.CloudProviderAWS().ListECSClusters(ctx, &aws.ListECSClustersInput{})
+	if err != nil {
+		log.Fatalf("spotinst: failed to list clusters: %v", err)
+	}
+
+	// Output all clusters, if any.
+	if len(ecs.Clusters) > 0 {
+		for _, cluster := range ecs.Clusters {
+			log.Printf("Cluster %q: %s",
+				spotinst.StringValue(cluster.ID),
+				stringutil.Stringify(cluster))
+		}
+	}
+
 }
