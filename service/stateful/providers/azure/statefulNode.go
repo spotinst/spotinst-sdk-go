@@ -442,8 +442,8 @@ type StatefulNodeState struct {
 	Region            *string `json:"region,omitempty"`
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 	Status            *string `json:"status,omitempty"`
-	VMName            *string `json:"VMName,omitempty"`
-	VMSize            *string `json:"VMSize,omitempty"`
+	VMName            *string `json:"vmName,omitempty"`
+	VMSize            *string `json:"vmSize,omitempty"`
 	LifeCycle         *string `json:"lifeCycle,omitempty"`
 	RollbackReason    *string `json:"rollbackReason,omitempty"`
 	ErrorReason       *string `json:"errorReason,omitempty"`
