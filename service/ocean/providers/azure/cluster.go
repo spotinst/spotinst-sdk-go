@@ -67,7 +67,6 @@ type Health struct {
 type VirtualNodeGroupTemplate struct {
 	VMSizes             *VMSizes             `json:"vmSizes,omitempty"`
 	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
-	Zones               []string             `json:"zones,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -703,13 +702,6 @@ func (o *VirtualNodeGroupTemplate) SetVMSizes(v *VMSizes) *VirtualNodeGroupTempl
 func (o *VirtualNodeGroupTemplate) SetLaunchSpecification(v *LaunchSpecification) *VirtualNodeGroupTemplate {
 	if o.LaunchSpecification = v; o.LaunchSpecification == nil {
 		o.nullFields = append(o.nullFields, "LaunchSpecification")
-	}
-	return o
-}
-
-func (o *VirtualNodeGroupTemplate) SetZones(v []string) *VirtualNodeGroupTemplate {
-	if o.Zones = v; o.Zones == nil {
-		o.nullFields = append(o.nullFields, "Zones")
 	}
 	return o
 }
