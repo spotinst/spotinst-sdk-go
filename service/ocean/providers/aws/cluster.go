@@ -252,6 +252,92 @@ type DeleteClusterInput struct {
 
 type DeleteClusterOutput struct{}
 
+type GetAggregatedCostInput struct {
+	ClusterID *string    `json:"oceanClusterId"`
+	StartTime *time.Time `json:"startTime"`
+	EndTime   *time.Time `json:"endTime"`
+}
+
+type Total struct {
+	Total *float64 `json:"total,omitempty"`
+}
+
+type EfsPvCost struct {
+	Total
+}
+
+type EbsPvCost struct {
+	Total
+}
+
+type NonPvCost struct {
+	Total
+}
+
+type FileStorageCost struct {
+	EfsPv *EfsPvCost `json:"efsPv,omitempty"`
+	Total
+}
+
+type BlockStorageCost struct {
+	EbsPv *EbsPvCost `json:"ebsPv,omitempty"`
+	NonPv *NonPvCost `json:"nonPv,omitempty"`
+	Total
+}
+
+type StorageCost struct {
+	Block *BlockStorageCost `json:"block,omitempty"`
+	File  *FileStorageCost  `json:"file,omitempty"`
+	Total
+}
+
+type ComputeCost struct {
+	Total
+}
+
+type ResourceMetadata struct {
+	Name      string `json:"name,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
+	Type      string `json:"type,omitempty"`
+}
+
+type ResourceCost struct {
+	Compute *ComputeCost `json:"compute,omitempty"`
+	Storage *StorageCost `json:"storage,omitempty"`
+	Total
+}
+
+type Resource struct {
+	ResourceCost
+	Metadata *ResourceMetadata `json:"metadata,omitempty"`
+}
+
+type CostGroup struct {
+	Resources []*Resource   `json:"resources,omitempty"`
+	Summary   *ResourceCost `json:"summary,omitempty"`
+}
+
+type DetailedCost struct {
+	Aggregations map[string]*CostGroup `json:"aggregations,omitempty"`
+	GroupedBy    string                `json:"groupedBy,omitempty"`
+}
+
+type DurationTotal struct {
+	DetailedCosts *DetailedCost `json:"detailedCosts,omitempty"`
+	EndTime       time.Time     `json:"endTime,omitempty"`
+	StartTime     time.Time     `json:"startTime,omitempty"`
+	Summary       *ResourceCost `json:"summary,omitempty"`
+}
+
+type AggregatedCostResult struct {
+	TotalForDuration *DurationTotal `json:"totalForDuration,omitempty"`
+}
+
+type GetAggregatedCostOutput struct {
+	AggregatedCosts []*AggregatedCostResult `json:"aggregatedCosts,omitempty"`
+}
+
+
 // Deprecated: Use CreateRollInput instead.
 type RollClusterInput struct {
 	Roll *Roll `json:"roll,omitempty"`
@@ -513,6 +599,43 @@ func logEventsFromHttpResponse(resp *http.Response) ([]*LogEvent, error) {
 	return logEventsFromJSON(body)
 }
 
+func aggregatedCostFromJSON(in []byte) (*AggregatedCost, error) {
+	b := new(AggregatedCost)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func aggregatedCostsFromJSON(in []byte) ([]*AggregatedCost, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*AggregatedCost, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := aggregatedCostFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func aggregatedCostsFromHttpResponse(resp *http.Response) ([]*AggregatedCost, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return aggregatedCostsFromJSON(body)
+}
+
+
+
 func (s *ServiceOp) ListClusters(ctx context.Context, input *ListClustersInput) (*ListClustersOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/ocean/aws/k8s/cluster")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
@@ -675,6 +798,33 @@ func (s *ServiceOp) GetLogEvents(ctx context.Context, input *GetLogEventsInput) 
 
 	return &GetLogEventsOutput{Events: events}, nil
 }
+
+func (s *ServiceOp) GetAggregatedCosts(ctx context.Context, input *GetAggregatedCostInput) (*GetAggregatedCostOutput, error) {
+	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}/aggregatedCosts", uritemplates.Values{
+		"clusterId": spotinst.StringValue(input.ClusterID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPost, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	costs, err := aggregatedCostsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &GetAggregatedCostOutput{AggregatedCosts: costs}, nil
+}
+
+
 
 func (s *ServiceOp) ListRolls(ctx context.Context, input *ListRollsInput) (*ListRollsOutput, error) {
 	path, err := uritemplates.Expand("/ocean/aws/k8s/cluster/{clusterId}/roll", uritemplates.Values{
