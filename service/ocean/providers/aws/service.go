@@ -35,6 +35,8 @@ type serviceKubernetes interface {
 	DetachClusterInstances(context.Context, *DetachClusterInstancesInput) (*DetachClusterInstancesOutput, error)
 
 	GetLogEvents(context.Context, *GetLogEventsInput) (*GetLogEventsOutput, error)
+	
+	GetAggregatedCosts(context.Context, *GetAggregatedCostsInput) (*GetAggregatedCostsOutput, error)
 
 	ListRolls(context.Context, *ListRollsInput) (*ListRollsOutput, error)
 	CreateRoll(context.Context, *CreateRollInput) (*CreateRollOutput, error)
