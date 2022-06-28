@@ -375,8 +375,8 @@ type GetLogEventsOutput struct {
 
 type ClusterAggregatedCostInput struct {
 	OceanId   *string           `json:"oceanId,omitempty"`
-	EndTime   *string           `json:"endTime,omitempty"`
 	StartTime *string           `json:"startTime,omitempty"`
+	EndTime   *string           `json:"endTime,omitempty"`
 	GroupBy   *string           `json:"groupBy,omitempty"`
 	Filter    *AggregatedFilter `json:"filter,omitempty"`
 }
@@ -401,7 +401,7 @@ type AllMatchInner struct {
 	Value    *string `json:"value,omitempty"`
 }
 
-type ClusterAggregatedCostOutput struct {
+type ClusterAggregatedCostOutput struct { //TODO baruch verify that this object is really needed
 	Items []*WrapResult `json:"items,omitempty"`
 }
 
@@ -414,10 +414,10 @@ type Result struct {
 }
 
 type TotalForDuration struct {
-	DetailedCosts *DetailedCosts `json:"detailedCosts,omitempty"`
-	EndTime       *string        `json:"endTime,omitempty"`
-	StartTime     *string        `json:"startTime,omitempty"`
 	Summary       *Summary       `json:"summary,omitempty"`
+	StartTime     *string        `json:"startTime,omitempty"`
+	EndTime       *string        `json:"endTime,omitempty"`
+	DetailedCosts *DetailedCosts `json:"detailedCosts,omitempty"`
 }
 
 type DetailedCosts struct {
@@ -432,14 +432,14 @@ type Property struct {
 
 type Summary struct {
 	Compute *AggregatedCompute `json:"compute,omitempty"`
-	Storage *Storage           `json:"storage,omitempty"`
+	Storage *AggregatedStorage `json:"storage,omitempty"`
 	Total   *float64           `json:"total,omitempty"`
 }
 
 type AggregatedCostResource struct {
 	Compute  *AggregatedCompute `json:"compute,omitempty"`
+	Storage  *AggregatedStorage `json:"storage,omitempty"`
 	MetaData *MetaData          `json:"metaData,omitempty"`
-	Storage  *Storage           `json:"storage,omitempty"`
 	Total    *float64           `json:"total,omitempty"`
 }
 
@@ -449,7 +449,7 @@ type AggregatedCompute struct {
 	Workloads *Workloads `json:"workloads,omitempty"`
 }
 
-type Storage struct {
+type AggregatedStorage struct {
 	Block *Block   `json:"block,omitempty"`
 	File  *File    `json:"file,omitempty"`
 	Total *float64 `json:"total,omitempty"`
@@ -458,7 +458,7 @@ type Storage struct {
 type MetaData struct {
 	Name      *string `json:"name,omitempty"`
 	Namespace *string `json:"namespace,omitempty"`
-	Type      *string `json:"type,omitempty"`
+	Type      *string `json:"type,omitempty"` //TODO baruch add customType field (String)
 }
 
 type Headroom struct {

@@ -35,8 +35,7 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// get aggregated costs of a new ocean cluster.
-
+	// Get aggregated costs of an ocean cluster.
 	AllMatch := []*aws.AllMatchInner{{
 		Type:     spotinst.String("label"),
 		Key:      spotinst.String("k8s-app"),
@@ -46,7 +45,7 @@ func main() {
 	AllMatchArray := []*aws.AllMatch{{AllMatches: AllMatch}}
 
 	out, err := svc.GetClusterAggregatedCosts(ctx, &aws.ClusterAggregatedCostInput{
-		OceanId:   spotinst.String("o-56d4124b"),
+		OceanId:   spotinst.String("o-56dl24b"),
 		StartTime: spotinst.String("1655769600000"),
 		EndTime:   spotinst.String("1655856000000"),
 		GroupBy:   spotinst.String("resource.label.K8s-App"),
