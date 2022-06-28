@@ -401,11 +401,11 @@ type AllMatchInner struct {
 	Value    *string `json:"value,omitempty"`
 }
 
-type ClusterAggregatedCostOutput struct { //TODO baruch verify that this object is really needed
-	Items []*WrapResult `json:"items,omitempty"`
+type ClusterAggregatedCostOutput struct {
+	AggregatedClusterCosts []*AggregatedClusterCost `json:"aggregatedClusterCosts,omitempty"`
 }
 
-type WrapResult struct {
+type AggregatedClusterCost struct {
 	Result *Result `json:"result,omitempty"`
 }
 
@@ -456,9 +456,10 @@ type AggregatedStorage struct {
 }
 
 type MetaData struct {
-	Name      *string `json:"name,omitempty"`
-	Namespace *string `json:"namespace,omitempty"`
-	Type      *string `json:"type,omitempty"` //TODO baruch add customType field (String)
+	Name       *string `json:"name,omitempty"`
+	Namespace  *string `json:"namespace,omitempty"`
+	Type       *string `json:"type,omitempty"`
+	CustomType *string `json:"customType,omitempty"`
 }
 
 type Headroom struct {
@@ -632,8 +633,8 @@ func logEventsFromHttpResponse(resp *http.Response) ([]*LogEvent, error) {
 	return logEventsFromJSON(body)
 }
 
-func clusterAggregatedCostFromJSON(in []byte) (*WrapResult, error) {
-	b := new(WrapResult)
+func clusterAggregatedCostFromJSON(in []byte) (*AggregatedClusterCost, error) {
+	b := new(AggregatedClusterCost)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
@@ -641,12 +642,12 @@ func clusterAggregatedCostFromJSON(in []byte) (*WrapResult, error) {
 	return b, nil
 }
 
-func clusterAggregatedCostsFromJSON(in []byte) ([]*WrapResult, error) {
+func clusterAggregatedCostsFromJSON(in []byte) ([]*AggregatedClusterCost, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*WrapResult, len(rw.Response.Items))
+	out := make([]*AggregatedClusterCost, len(rw.Response.Items))
 
 	if len(out) == 0 {
 		return out, nil
@@ -662,7 +663,7 @@ func clusterAggregatedCostsFromJSON(in []byte) ([]*WrapResult, error) {
 	return out, nil
 }
 
-func clusterAggregatedCostsFromHttpResponse(resp *http.Response) ([]*WrapResult, error) {
+func clusterAggregatedCostsFromHttpResponse(resp *http.Response) ([]*AggregatedClusterCost, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err

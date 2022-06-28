@@ -20,7 +20,7 @@ func main() {
 	sess := session.New()
 
 	os.Setenv(credentials.EnvCredentialsVarToken, "secret token")
-	os.Setenv(credentials.EnvCredentialsVarAccount, "some account")
+	os.Setenv(credentials.EnvCredentialsVarAccount, "account")
 
 	cred := credentials.NewChainCredentials(
 		new(credentials.EnvProvider),
@@ -40,15 +40,15 @@ func main() {
 		Type:     spotinst.String("label"),
 		Key:      spotinst.String("k8s-app"),
 		Operator: spotinst.String("notEquals"),
-		Value:    spotinst.String("coredns-autoscaler"),
+		Value:    spotinst.String("dns-controller"),
 	}}
 	AllMatchArray := []*aws.AllMatch{{AllMatches: AllMatch}}
 
 	out, err := svc.GetClusterAggregatedCosts(ctx, &aws.ClusterAggregatedCostInput{
-		OceanId:   spotinst.String("o-56dl24b"),
-		StartTime: spotinst.String("1655769600000"),
-		EndTime:   spotinst.String("1655856000000"),
-		GroupBy:   spotinst.String("resource.label.K8s-App"),
+		OceanId:   spotinst.String("o-12345"),
+		StartTime: spotinst.String("1655812800000"),
+		EndTime:   spotinst.String("1655985600000"),
+		//GroupBy:   spotinst.String("resource.label.K8s-App"),
 		Filter: &aws.AggregatedFilter{
 			Scope:      spotinst.String("resource"),
 			Conditions: &aws.Conditions{AnyMatch: AllMatchArray},
@@ -58,10 +58,14 @@ func main() {
 		log.Fatalf("spotinst: Failed to revieve the aggregated costs: %v", err)
 	}
 
-	output, _ := json.Marshal(out.Items)
+	output, errJson := json.Marshal(out.AggregatedClusterCosts)
+	if errJson != nil {
+		log.Fatalf("spotinst: Failed to marshal output into Json: %v", err)
+	}
 	// Do something with output.
-	if out.Items != nil {
+	if out.AggregatedClusterCosts != nil {
 		log.Printf("Aggregated Costs:\n %s",
 			output)
 	}
+
 }
