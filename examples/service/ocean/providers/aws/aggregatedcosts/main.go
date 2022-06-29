@@ -48,7 +48,7 @@ func main() {
 		OceanId:   spotinst.String("o-12345"),
 		StartTime: spotinst.String("1655812800000"),
 		EndTime:   spotinst.String("1655985600000"),
-		//GroupBy:   spotinst.String("resource.label.K8s-App"),
+		GroupBy:   spotinst.String("namespace"),
 		Filter: &aws.AggregatedFilter{
 			Scope:      spotinst.String("resource"),
 			Conditions: &aws.Conditions{AnyMatch: AllMatchArray},
