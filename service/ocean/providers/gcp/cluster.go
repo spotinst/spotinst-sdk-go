@@ -161,6 +161,7 @@ type GKE struct {
 
 type InstanceTypes struct {
 	Whitelist []string `json:"whitelist,omitempty"`
+	Blacklist []string `json:"blacklist,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -176,6 +177,7 @@ type LaunchSpecification struct {
 	Tags                   []string                          `json:"tags,omitempty"`
 	RootVolumeType         *string                           `json:"rootVolumeType,omitempty"`
 	ShieldedInstanceConfig *LaunchSpecShieldedInstanceConfig `json:"shieldedInstanceConfig,omitempty"`
+	UseAsTemplateOnly      *bool                             `json:"useAsTemplateOnly,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -920,6 +922,13 @@ func (o *InstanceTypes) SetWhitelist(v []string) *InstanceTypes {
 	return o
 }
 
+func (o *InstanceTypes) SetBlacklist(v []string) *InstanceTypes {
+	if o.Blacklist = v; o.Blacklist == nil {
+		o.nullFields = append(o.nullFields, "Blacklist")
+	}
+	return o
+}
+
 // endregion
 
 // region LaunchSpecification
@@ -996,6 +1005,13 @@ func (o *LaunchSpecification) SetRootVolumeType(v *string) *LaunchSpecification 
 func (o *LaunchSpecification) SetShieldedInstanceConfig(v *LaunchSpecShieldedInstanceConfig) *LaunchSpecification {
 	if o.ShieldedInstanceConfig = v; o.ShieldedInstanceConfig == nil {
 		o.nullFields = append(o.nullFields, "ShieldedInstanceConfig")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetUseAsTemplateOnly(v *bool) *LaunchSpecification {
+	if o.UseAsTemplateOnly = v; o.UseAsTemplateOnly == nil {
+		o.nullFields = append(o.nullFields, "UseAsTemplateOnly")
 	}
 	return o
 }
