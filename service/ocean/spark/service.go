@@ -16,6 +16,7 @@ type Service interface {
 	ListClusters(context.Context, *ListClustersInput) (*ListClustersOutput, error)
 	DeleteCluster(context.Context, *DeleteClusterInput) (*DeleteClusterOutput, error)
 	CreateCluster(context.Context, *CreateClusterInput) (*CreateClusterOutput, error)
+	UpdateCluster(context.Context, *UpdateClusterInput) (*UpdateClusterOutput, error)
 }
 
 type ClusterManager interface {
