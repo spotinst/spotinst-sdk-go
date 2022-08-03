@@ -28,34 +28,12 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Create a new cluster.
-	out, err := svc.Spark().CreateCluster(ctx, &spark.CreateClusterInput{
-		Cluster: &spark.CreateClusterRequest{
-			OceanClusterID: spotinst.String("o-12345"),
-			Config: &spark.Config{
-				LogCollection: &spark.LogCollectionConfig{
-					CollectDriverLogs: spotinst.Bool(true),
-				},
-				Compute: &spark.ComputeConfig{
-					UseTaints:  spotinst.Bool(true),
-					CreateVngs: spotinst.Bool(true),
-				},
-				Ingress: &spark.IngressConfig{
-					ServiceAnnotations: map[string]string{
-						"my-custom-annotation": "custom_value",
-					},
-				},
-				Webhook: &spark.WebhookConfig{
-					UseHostNetwork: spotinst.Bool(true),
-					HostNetworkPorts: spotinst.IntSlice([]int{
-						2000,
-					}),
-				},
-			},
-		},
+	// Read cluster configuration.
+	out, err := svc.Spark().ReadCluster(ctx, &spark.ReadClusterInput{
+		ClusterID: spotinst.String("osc-12345"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to create cluster: %v", err)
+		log.Fatalf("spotinst: failed to read cluster: %v", err)
 	}
 
 	// Output.

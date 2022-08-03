@@ -96,17 +96,19 @@ type CreateClusterOutput struct {
 }
 
 type UpdateClusterInput struct {
-	Cluster *UpdateClusterRequest `json:"cluster,omitempty"`
+	ClusterID            *string               `json:"clusterId,omitempty"`
+	UpdateClusterRequest *UpdateClusterRequest `json:"updateClusterRequest,omitempty"`
 }
 
 type UpdateClusterRequest struct {
-	OceanClusterID *string `json:"oceanClusterId,omitempty"`
-	Config         *Config `json:"config,omitempty"`
+	Cluster *ClusterConfig `json:"cluster,omitempty"`
 }
 
-type UpdateClusterOutput struct {
-	Cluster *Cluster `json:"cluster,omitempty"`
+type ClusterConfig struct {
+	Config *Config `json:"config,omitempty"`
 }
+
+type UpdateClusterOutput struct{}
 
 type DeleteClusterInput struct {
 	ClusterID *string `json:"clusterId,omitempty"`
@@ -226,8 +228,16 @@ func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput
 	if input == nil {
 		return nil, fmt.Errorf("input is nil")
 	}
-	r := client.NewRequest(http.MethodPut, "/ocean/spark/cluster")
-	r.Obj = input
+
+	path, err := uritemplates.Expand("/ocean/spark/cluster/{clusterId}", uritemplates.Values{
+		"clusterId": spotinst.StringValue(input.ClusterID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input.UpdateClusterRequest
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -235,17 +245,7 @@ func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput
 	}
 	defer resp.Body.Close()
 
-	gs, err := clustersFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	output := new(UpdateClusterOutput)
-	if len(gs) > 0 {
-		output.Cluster = gs[0]
-	}
-
-	return output, nil
+	return &UpdateClusterOutput{}, nil
 }
 
 func clustersFromHttpResponse(resp *http.Response) ([]*Cluster, error) {

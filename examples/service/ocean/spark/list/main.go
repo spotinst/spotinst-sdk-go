@@ -28,40 +28,18 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Create a new cluster.
-	out, err := svc.Spark().CreateCluster(ctx, &spark.CreateClusterInput{
-		Cluster: &spark.CreateClusterRequest{
-			OceanClusterID: spotinst.String("o-12345"),
-			Config: &spark.Config{
-				LogCollection: &spark.LogCollectionConfig{
-					CollectDriverLogs: spotinst.Bool(true),
-				},
-				Compute: &spark.ComputeConfig{
-					UseTaints:  spotinst.Bool(true),
-					CreateVngs: spotinst.Bool(true),
-				},
-				Ingress: &spark.IngressConfig{
-					ServiceAnnotations: map[string]string{
-						"my-custom-annotation": "custom_value",
-					},
-				},
-				Webhook: &spark.WebhookConfig{
-					UseHostNetwork: spotinst.Bool(true),
-					HostNetworkPorts: spotinst.IntSlice([]int{
-						2000,
-					}),
-				},
-			},
-		},
-	})
+	// List all clusters.
+	out, err := svc.Spark().ListClusters(ctx, &spark.ListClustersInput{})
 	if err != nil {
-		log.Fatalf("spotinst: failed to create cluster: %v", err)
+		log.Fatalf("spotinst: failed to list clusters: %v", err)
 	}
 
-	// Output.
-	if out.Cluster != nil {
-		log.Printf("Cluster %q: %s",
-			spotinst.StringValue(out.Cluster.ID),
-			stringutil.Stringify(out.Cluster))
+	// Output all clusters, if any.
+	if len(out.Clusters) > 0 {
+		for _, cluster := range out.Clusters {
+			log.Printf("Cluster %q: %s",
+				spotinst.StringValue(cluster.ID),
+				stringutil.Stringify(cluster))
+		}
 	}
 }
