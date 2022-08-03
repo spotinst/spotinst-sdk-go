@@ -95,6 +95,19 @@ type CreateClusterOutput struct {
 	Cluster *Cluster `json:"cluster,omitempty"`
 }
 
+type UpdateClusterInput struct {
+	Cluster *UpdateClusterRequest `json:"cluster,omitempty"`
+}
+
+type UpdateClusterRequest struct {
+	OceanClusterID *string `json:"oceanClusterId,omitempty"`
+	Config         *Config `json:"config,omitempty"`
+}
+
+type UpdateClusterOutput struct {
+	Cluster *Cluster `json:"cluster,omitempty"`
+}
+
 type DeleteClusterInput struct {
 	ClusterID *string `json:"clusterId,omitempty"`
 }
@@ -202,6 +215,32 @@ func (s *ServiceOp) CreateCluster(ctx context.Context, input *CreateClusterInput
 	}
 
 	output := new(CreateClusterOutput)
+	if len(gs) > 0 {
+		output.Cluster = gs[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput) (*UpdateClusterOutput, error) {
+	if input == nil {
+		return nil, fmt.Errorf("input is nil")
+	}
+	r := client.NewRequest(http.MethodPut, "/ocean/spark/cluster")
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := clustersFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(UpdateClusterOutput)
 	if len(gs) > 0 {
 		output.Cluster = gs[0]
 	}
