@@ -43,7 +43,7 @@ type Config struct {
 	Ingress       *IngressConfig       `json:"ingress,omitempty"`
 	Webhook       *WebhookConfig       `json:"webhook,omitempty"`
 	Compute       *ComputeConfig       `json:"compute,omitempty"`
-	LogCollection *LogCollectionConfig `json:"LogCollection,omitempty"`
+	LogCollection *LogCollectionConfig `json:"logCollection,omitempty"`
 }
 
 type LogCollectionConfig struct {
