@@ -17,6 +17,8 @@ type Service interface {
 	DeleteCluster(context.Context, *DeleteClusterInput) (*DeleteClusterOutput, error)
 	CreateCluster(context.Context, *CreateClusterInput) (*CreateClusterOutput, error)
 	UpdateCluster(context.Context, *UpdateClusterInput) (*UpdateClusterOutput, error)
+	DetachVirtualNodeGroup(context.Context, *DetachVngInput) (*DetachVngOutput, error)
+	AttachVirtualNodeGroup(context.Context, *AttachVngInput) (*AttachVngOutput, error)
 }
 
 type ClusterManager interface {

@@ -16,7 +16,7 @@ import (
 //region Cluster
 type Cluster struct {
 	ID                  *string      `json:"id,omitempty"`
-	ControllerClusterId *string      `json:"controllerClusterId,omitempty"`
+	ControllerClusterID *string      `json:"controllerClusterId,omitempty"`
 	Region              *string      `json:"region,omitempty"`
 	Environment         *Environment `json:"environment,omitempty"`
 	Config              *Config      `json:"config,omitempty"`
@@ -274,6 +274,125 @@ func clustersFromJSON(in []byte) ([]*Cluster, error) {
 
 func clusterFromJSON(in []byte) (*Cluster, error) {
 	b := new(Cluster)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+//endregion
+
+//region Virtual Node Group
+type DedicatedVirtualNodeGroup struct {
+	OceanClusterID      *string `json:"oceanClusterId,omitempty"`
+	OceanSparkClusterID *string `json:"oceanSparkClusterId,omitempty"`
+	VngID               *string `json:"vngId,omitempty"`
+}
+
+type AttacheVirtualNodeGroupRequest struct {
+	VngID *string `json:"id,omitempty"`
+}
+
+type AttachVngInput struct {
+	ClusterID        *string                         `json:"-"`
+	VirtualNodeGroup *AttacheVirtualNodeGroupRequest `json:"virtualNodeGroup,omitempty"`
+}
+
+type AttachVngOutput struct {
+	VirtualNodeGroup *DedicatedVirtualNodeGroup `json:"virtualNodeGroup,omitempty"`
+}
+
+type DetachVngInput struct {
+	ClusterID *string `json:"clusterId,omitempty"`
+	VngID     *string `json:"vngId,omitempty"`
+}
+
+type DetachVngOutput struct{}
+
+func (s *ServiceOp) DetachVirtualNodeGroup(ctx context.Context, input *DetachVngInput) (*DetachVngOutput, error) {
+	if input == nil {
+		return nil, fmt.Errorf("input is nil")
+	}
+
+	path, err := uritemplates.Expand("/ocean/spark/cluster/{clusterId}/virtualNodeGroup/{vngId}", uritemplates.Values{
+		"clusterId": spotinst.StringValue(input.ClusterID),
+		"vngId":     spotinst.StringValue(input.VngID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodDelete, path)
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &DetachVngOutput{}, nil
+}
+
+func (s *ServiceOp) AttachVirtualNodeGroup(ctx context.Context, input *AttachVngInput) (*AttachVngOutput, error) {
+	if input == nil {
+		return nil, fmt.Errorf("input is nil")
+	}
+
+	path, err := uritemplates.Expand("/ocean/spark/cluster/{clusterId}/virtualNodeGroup", uritemplates.Values{
+		"clusterId": spotinst.StringValue(input.ClusterID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPost, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := vngsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(AttachVngOutput)
+	if len(gs) > 0 {
+		output.VirtualNodeGroup = gs[0]
+	}
+
+	return output, nil
+}
+
+func vngsFromHttpResponse(resp *http.Response) ([]*DedicatedVirtualNodeGroup, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return vngsFromJSON(body)
+}
+
+func vngsFromJSON(in []byte) ([]*DedicatedVirtualNodeGroup, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*DedicatedVirtualNodeGroup, len(rw.Response.Items))
+	for i, rb := range rw.Response.Items {
+		b, err := vngFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func vngFromJSON(in []byte) (*DedicatedVirtualNodeGroup, error) {
+	b := new(DedicatedVirtualNodeGroup)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
