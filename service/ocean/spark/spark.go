@@ -96,15 +96,11 @@ type CreateClusterOutput struct {
 }
 
 type UpdateClusterInput struct {
-	ClusterID            *string               `json:"clusterId,omitempty"`
-	UpdateClusterRequest *UpdateClusterRequest `json:"updateClusterRequest,omitempty"`
+	ClusterID *string               `json:"-"`
+	Cluster   *UpdateClusterRequest `json:"cluster,omitempty"`
 }
 
 type UpdateClusterRequest struct {
-	Cluster *ClusterConfig `json:"cluster,omitempty"`
-}
-
-type ClusterConfig struct {
 	Config *Config `json:"config,omitempty"`
 }
 
@@ -237,7 +233,7 @@ func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput
 	}
 
 	r := client.NewRequest(http.MethodPut, path)
-	r.Obj = input.UpdateClusterRequest
+	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {

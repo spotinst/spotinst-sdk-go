@@ -30,27 +30,25 @@ func main() {
 	// Update cluster configuration.
 	_, err := svc.Spark().UpdateCluster(ctx, &spark.UpdateClusterInput{
 		ClusterID: spotinst.String("osc-12345"),
-		UpdateClusterRequest: &spark.UpdateClusterRequest{
-			Cluster: &spark.ClusterConfig{
-				Config: &spark.Config{
-					LogCollection: &spark.LogCollectionConfig{
-						CollectDriverLogs: spotinst.Bool(true),
+		Cluster: &spark.UpdateClusterRequest{
+			Config: &spark.Config{
+				LogCollection: &spark.LogCollectionConfig{
+					CollectDriverLogs: spotinst.Bool(true),
+				},
+				Compute: &spark.ComputeConfig{
+					UseTaints:  spotinst.Bool(true),
+					CreateVngs: spotinst.Bool(true),
+				},
+				Ingress: &spark.IngressConfig{
+					ServiceAnnotations: map[string]string{
+						"my-custom-annotation": "custom_value",
 					},
-					Compute: &spark.ComputeConfig{
-						UseTaints:  spotinst.Bool(true),
-						CreateVngs: spotinst.Bool(true),
-					},
-					Ingress: &spark.IngressConfig{
-						ServiceAnnotations: map[string]string{
-							"my-custom-annotation": "custom_value",
-						},
-					},
-					Webhook: &spark.WebhookConfig{
-						UseHostNetwork: spotinst.Bool(true),
-						HostNetworkPorts: spotinst.IntSlice([]int{
-							2000,
-						}),
-					},
+				},
+				Webhook: &spark.WebhookConfig{
+					UseHostNetwork: spotinst.Bool(true),
+					HostNetworkPorts: spotinst.IntSlice([]int{
+						2000,
+					}),
 				},
 			},
 		},
