@@ -645,6 +645,7 @@ type LaunchSpecification struct {
 	HealthCheckType                               *string                   `json:"healthCheckType,omitempty"`
 	HealthCheckGracePeriod                        *int                      `json:"healthCheckGracePeriod,omitempty"`
 	HealthCheckUnhealthyDurationBeforeReplacement *int                      `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
+	Images                                        []string                  `json:"images,omitempty"`
 	ImageID                                       *string                   `json:"imageId,omitempty"`
 	KeyPair                                       *string                   `json:"keyPair,omitempty"`
 	UserData                                      *string                   `json:"userData,omitempty"`
@@ -3951,6 +3952,13 @@ func (o *LaunchSpecification) SetHealthCheckGracePeriod(v *int) *LaunchSpecifica
 func (o *LaunchSpecification) SetHealthCheckUnhealthyDurationBeforeReplacement(v *int) *LaunchSpecification {
 	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
 		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetImages(v []string) *LaunchSpecification {
+	if o.Images = v; o.Images == nil {
+		o.nullFields = append(o.nullFields, "Images")
 	}
 	return o
 }
