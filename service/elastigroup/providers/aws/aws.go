@@ -4339,7 +4339,7 @@ func (o Image) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Image) SetImageId(v *string) *Image {
+func (o *Image) SetId(v *string) *Image {
 	if o.Id = v; o.Id == nil {
 		o.nullFields = append(o.nullFields, "Id")
 	}
