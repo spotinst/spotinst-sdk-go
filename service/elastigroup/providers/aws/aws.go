@@ -784,7 +784,7 @@ type AMIs struct {
 }
 
 type Image struct {
-	ImageID *string `json:"imageId,omitempty"`
+	Id *string `json:"Id,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -4340,8 +4340,8 @@ func (o Image) MarshalJSON() ([]byte, error) {
 }
 
 func (o *Image) SetImageId(v *string) *Image {
-	if o.ImageID = v; o.ImageID == nil {
-		o.nullFields = append(o.nullFields, "ImageID")
+	if o.Id = v; o.Id == nil {
+		o.nullFields = append(o.nullFields, "Id")
 	}
 	return o
 }
