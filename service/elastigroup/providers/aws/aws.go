@@ -784,7 +784,7 @@ type AMIs struct {
 }
 
 type Image struct {
-	Id *string `json:"Id,omitempty"`
+	Id *string `json:"id,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
