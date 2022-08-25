@@ -23,6 +23,7 @@ type ECSCluster struct {
 	AutoScaler  *ECSAutoScaler `json:"autoScaler,omitempty"`
 	Strategy    *ECSStrategy   `json:"strategy,omitempty"`
 	Scheduling  *ECSScheduling `json:"scheduling,omitempty"`
+	Logging     *ECSLogging    `json:"logging,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -58,6 +59,27 @@ type ECSStrategy struct {
 type ECSScheduling struct {
 	Tasks         []*ECSTask        `json:"tasks,omitempty"`
 	ShutdownHours *ECSShutdownHours `json:"shutdownHours,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSLogging struct {
+	Export *ECSExport `json:"export,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSExport struct {
+	S3 *ECSS3 `json:"s3,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSS3 struct {
+	ID *string `json:"id,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -118,6 +140,7 @@ type ECSLaunchSpecification struct {
 	EBSOptimized             *bool                       `json:"ebsOptimized,omitempty"`
 	BlockDeviceMappings      []*ECSBlockDeviceMapping    `json:"blockDeviceMappings,omitempty"`
 	InstanceMetadataOptions  *ECSInstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
+	UseAsTemplateOnly        *bool                       `json:"useAsTemplateOnly,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -577,6 +600,64 @@ func (o *ECSCluster) SetScheduling(v *ECSScheduling) *ECSCluster {
 	return o
 }
 
+func (o *ECSCluster) SetLogging(v *ECSLogging) *ECSCluster {
+	if o.Logging = v; o.Logging == nil {
+		o.nullFields = append(o.nullFields, "Logging")
+	}
+	return o
+}
+
+// endregion
+
+// region Logging
+
+func (o ECSLogging) MarshalJSON() ([]byte, error) {
+	type noMethod ECSLogging
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSLogging) SetExport(v *ECSExport) *ECSLogging {
+	if o.Export = v; o.Export == nil {
+		o.nullFields = append(o.nullFields, "Export")
+	}
+	return o
+}
+
+// endregion
+
+// region Export
+
+func (o ECSExport) MarshalJSON() ([]byte, error) {
+	type noMethod ECSExport
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSExport) SetS3(v *ECSS3) *ECSExport {
+	if o.S3 = v; o.S3 == nil {
+		o.nullFields = append(o.nullFields, "S3")
+	}
+	return o
+}
+
+// endregion
+
+// region S3
+
+func (o ECSS3) MarshalJSON() ([]byte, error) {
+	type noMethod ECSS3
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSS3) SetId(v *string) *ECSS3 {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+
 // endregion
 
 // region Scheduling
@@ -832,6 +913,13 @@ func (o *ECSLaunchSpecification) SetBlockDeviceMappings(v []*ECSBlockDeviceMappi
 func (o *ECSLaunchSpecification) SetInstanceMetadataOptions(v *ECSInstanceMetadataOptions) *ECSLaunchSpecification {
 	if o.InstanceMetadataOptions = v; o.InstanceMetadataOptions == nil {
 		o.nullFields = append(o.nullFields, "InstanceMetadataOptions")
+	}
+	return o
+}
+
+func (o *ECSLaunchSpecification) SetUseAsTemplateOnly(v *bool) *ECSLaunchSpecification {
+	if o.UseAsTemplateOnly = v; o.UseAsTemplateOnly == nil {
+		o.nullFields = append(o.nullFields, "UseAsTemplateOnly")
 	}
 	return o
 }

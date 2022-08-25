@@ -5,6 +5,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/stateful/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
 )
 
@@ -25,15 +26,18 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Read stateful node configuration.
-	_, err := svc.DetachDataDisk(ctx, &azure.DetachStatefulNodeDataDiskInput{
-		ID:                        spotinst.String("ssn-01234567"),
-		DataDiskName:              spotinst.String("foo"),
-		DataDiskResourceGroupName: spotinst.String("foo"),
-		ShouldDeallocate:          spotinst.Bool(true),
-		TTLInHours:                spotinst.Int(2),
+	// Get stateful node state.
+	out, err := svc.GetState(ctx, &azure.GetStatefulNodeStateInput{
+		ID: spotinst.String("ssn-01234567"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to detach stateful node data disk: %v", err)
+		log.Fatalf("spotinst: failed to read stateful node: %v", err)
+	}
+
+	// Output.
+	if out.StatefulNodeState != nil {
+		log.Printf("StatefulNode state for stateful node %q: %s",
+			spotinst.StringValue(out.StatefulNodeState.ID),
+			stringutil.Stringify(out.StatefulNodeState))
 	}
 }

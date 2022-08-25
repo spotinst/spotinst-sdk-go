@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/stateful/providers/azure"
+	"log"
+
+	"github.com/spotinst/spotinst-sdk-go/service/ocean"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/spark"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
-	"log"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -20,20 +23,26 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := azure.New(sess)
+	svc := ocean.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
-	// Read stateful node configuration.
-	_, err := svc.DetachDataDisk(ctx, &azure.DetachStatefulNodeDataDiskInput{
-		ID:                        spotinst.String("ssn-01234567"),
-		DataDiskName:              spotinst.String("foo"),
-		DataDiskResourceGroupName: spotinst.String("foo"),
-		ShouldDeallocate:          spotinst.Bool(true),
-		TTLInHours:                spotinst.Int(2),
+	// Attach Ocean VNG to Spark cluster.
+	out, err := svc.Spark().AttachVirtualNodeGroup(ctx, &spark.AttachVngInput{
+		ClusterID: spotinst.String("osc-12345"),
+		VirtualNodeGroup: &spark.AttacheVirtualNodeGroupRequest{
+			VngID: spotinst.String("ols-12345"),
+		},
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to detach stateful node data disk: %v", err)
+		log.Fatalf("spotinst: failed to attach VNG: %v", err)
+	}
+
+	// Output.
+	if out.VirtualNodeGroup != nil {
+		log.Printf("Dedicated VNG %q: %s",
+			spotinst.StringValue(out.VirtualNodeGroup.VngID),
+			stringutil.Stringify(out.VirtualNodeGroup))
 	}
 }

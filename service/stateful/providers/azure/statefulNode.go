@@ -411,6 +411,7 @@ type DetachStatefulNodeDataDiskInput struct {
 	DataDiskName              *string `json:"dataDiskName,omitempty"`
 	DataDiskResourceGroupName *string `json:"dataDiskResourceGroupName,omitempty"`
 	ShouldDeallocate          *bool   `json:"shouldDeallocate,omitempty"`
+	TTLInHours                *int    `json:"ttlInHours,omitempty"`
 }
 
 type DetachStatefulNodeDataDiskOutput struct{}
@@ -426,6 +427,29 @@ type AttachStatefulNodeDataDiskInput struct {
 }
 
 type AttachStatefulNodeDataDiskOutput struct{}
+
+type GetStatefulNodeStateInput struct {
+	ID *string `json:"id,omitempty"`
+}
+
+type GetStatefulNodeStateOutput struct {
+	StatefulNodeState *StatefulNodeState `json:"statefulNodeState,omitempty"`
+}
+
+type StatefulNodeState struct {
+	ID                *string `json:"id,omitempty"`
+	Name              *string `json:"name,omitempty"`
+	Region            *string `json:"region,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+	Status            *string `json:"status,omitempty"`
+	VMName            *string `json:"vmName,omitempty"`
+	VMSize            *string `json:"vmSize,omitempty"`
+	LifeCycle         *string `json:"lifeCycle,omitempty"`
+	RollbackReason    *string `json:"rollbackReason,omitempty"`
+	ErrorReason       *string `json:"errorReason,omitempty"`
+	PrivateIP         *string `json:"privateIP,omitempty"`
+	PublicIP          *string `json:"publicIP,omitempty"`
+}
 
 type StatefulNodeImport struct {
 	StatefulImportID       *string       `json:"statefulImportId,omitempty"`
@@ -514,6 +538,41 @@ func statefulNodesImportFromHttpResponse(resp *http.Response) ([]*StatefulNodeIm
 		return nil, err
 	}
 	return statefulNodesImportFromJSON(body)
+}
+
+func statefulNodeStateFromJSON(in []byte) (*StatefulNodeState, error) {
+	b := new(StatefulNodeState)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func statefulNodeStatesFromJSON(in []byte) ([]*StatefulNodeState, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*StatefulNodeState, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := statefulNodeStateFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func statefulNodeStatesFromHttpResponse(resp *http.Response) ([]*StatefulNodeState, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return statefulNodeStatesFromJSON(body)
 }
 
 // endregion
@@ -710,6 +769,34 @@ func (s *ServiceOp) AttachDataDisk(ctx context.Context,
 	defer resp.Body.Close()
 
 	return &AttachStatefulNodeDataDiskOutput{}, nil
+}
+
+func (s *ServiceOp) GetState(ctx context.Context, input *GetStatefulNodeStateInput) (*GetStatefulNodeStateOutput, error) {
+	path, err := uritemplates.Expand("/azure/compute/statefulNode/{statefulNodeId}/status", uritemplates.Values{
+		"statefulNodeId": spotinst.StringValue(input.ID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	states, err := statefulNodeStatesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(GetStatefulNodeStateOutput)
+	if len(states) > 0 {
+		output.StatefulNodeState = states[0]
+	}
+
+	return output, nil
 }
 
 func (s *ServiceOp) ImportVM(ctx context.Context, input *ImportVMStatefulNodeInput) (*ImportVMStatefulNodeOutput, error) {
