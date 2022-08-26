@@ -3,12 +3,12 @@ package spark
 import "time"
 
 type Cluster struct {
-	ID                  *string      `json:"id,omitempty"`
-	ControllerClusterID *string      `json:"controllerClusterId,omitempty"`
-	Region              *string      `json:"region,omitempty"`
-	Environment         *Environment `json:"environment,omitempty"`
-	Config              *Config      `json:"config,omitempty"`
-	State               *string      `json:"state,omitempty"`
+	ID                  *string `json:"id,omitempty"`
+	ControllerClusterID *string `json:"controllerClusterId,omitempty"`
+	OceanClusterID      *string `json:"oceanClusterId,omitempty"`
+	Region              *string `json:"region,omitempty"`
+	Config              *Config `json:"config,omitempty"`
+	State               *string `json:"state,omitempty"`
 
 	// Read-only fields.
 	K8sVersion            *string    `json:"k8sVersion,omitempty"`
@@ -16,15 +16,6 @@ type Cluster struct {
 	OperatorLastHeartbeat *time.Time `json:"operatorLastHeartbeat,omitempty"`
 	CreatedAt             *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt             *time.Time `json:"updatedAt,omitempty"`
-}
-
-type Environment struct {
-	OperatorVersion         *string `json:"operatorVersion,omitempty"`
-	CertManagerDeployed     *bool   `json:"certManagerDeployed,omitempty"`
-	K8sClusterProvisioned   *bool   `json:"k8sClusterProvisioned,omitempty"`
-	OceanClusterProvisioned *bool   `json:"oceanClusterProvisioned,omitempty"`
-	EnvironmentNamespace    *string `json:"environmentNamespace,omitempty"`
-	OceanClusterID          *string `json:"oceanClusterId,omitempty"`
 }
 
 type Config struct {
