@@ -3973,6 +3973,7 @@ func (o *LaunchSpecification) SetImages(v []*Image) *LaunchSpecification {
 func (o *LaunchSpecification) SetImageId(v *string) *LaunchSpecification {
 	if o.ImageID = v; o.ImageID == nil {
 		o.nullFields = append(o.nullFields, "ImageID")
+
 	}
 	return o
 }
