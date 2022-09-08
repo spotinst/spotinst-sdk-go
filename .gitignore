@@ -11,3 +11,6 @@ test/
 
 # jetbrains
 .idea
+
+# vscode
+.vscode

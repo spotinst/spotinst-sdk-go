@@ -31,7 +31,7 @@ func main() {
 	// Attach Ocean VNG to Spark cluster.
 	out, err := svc.Spark().AttachVirtualNodeGroup(ctx, &spark.AttachVngInput{
 		ClusterID: spotinst.String("osc-12345"),
-		VirtualNodeGroup: &spark.AttacheVirtualNodeGroupRequest{
+		VirtualNodeGroup: &spark.AttachVirtualNodeGroupRequest{
 			VngID: spotinst.String("ols-12345"),
 		},
 	})
