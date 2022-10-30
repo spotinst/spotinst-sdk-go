@@ -398,6 +398,8 @@ func (s *ServiceOp) DeleteLaunchSpec(ctx context.Context, input *DeleteLaunchSpe
 
 	if input.ForceDelete != nil {
 		r.Params.Set("forceDelete", strconv.FormatBool(spotinst.BoolValue(input.ForceDelete)))
+	}
+	if input.DeleteNodes != nil {
 		r.Params.Set("deleteNodes", strconv.FormatBool(spotinst.BoolValue(input.DeleteNodes)))
 	}
 
