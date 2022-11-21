@@ -394,6 +394,7 @@ type StatusManagedInstanceOutput struct {
 	Status       *string    `json:"status,omitempty"`
 	CreatedAt    *time.Time `json:"createdAt,omitempty"`
 	LaunchedAt   *time.Time `json:"launchedAt,omitempty"`
+	Ipv6Address  *string    `json:"ipv6Address,omitempty"`
 }
 
 type CostsManagedInstanceInput struct {
