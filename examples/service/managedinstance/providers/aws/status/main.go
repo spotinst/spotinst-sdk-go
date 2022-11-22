@@ -40,6 +40,6 @@ func main() {
 	if out.ID != nil {
 		log.Printf("Managed Instance Id %q: and IPV6Address %s",
 			spotinst.StringValue(out.ID),
-			stringutil.Stringify(out.Ipv6Address))
+			stringutil.Stringify(out.IPv6Address))
 	}
 }

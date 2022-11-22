@@ -40,6 +40,6 @@ func main() {
 	if out.Instances != nil {
 		log.Printf("Instance ID %q: and IPV6Address %s",
 			spotinst.StringValue(out.Instances[0].ID),
-			stringutil.Stringify(out.Instances[0].Ipv6Address))
+			stringutil.Stringify(out.Instances[0].IPv6Address))
 	}
 }
