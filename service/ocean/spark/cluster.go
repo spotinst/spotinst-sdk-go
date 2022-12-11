@@ -59,9 +59,9 @@ type WebhookConfig struct {
 }
 
 type IngressConfig struct {
-	// TODO(thorsteinn) deprecated
+	// Deprecated: Use LoadBalancer.ServiceAnnotations instead.
 	ServiceAnnotations map[string]string `json:"serviceAnnotations,omitempty"`
-	// TODO(thorsteinn) deprecated
+	// Deprecated: Has no effect.
 	DeployIngress *bool `json:"deployIngress,omitempty"`
 
 	Controller     *IngressConfigController     `json:"controller,omitempty"`
