@@ -43,6 +43,24 @@ func main() {
 					ServiceAnnotations: map[string]string{
 						"my-custom-annotation": "custom_value",
 					},
+					Controller: &spark.IngressConfigController{
+						Managed: spotinst.Bool(true),
+					},
+					CustomEndpoint: &spark.IngressConfigCustomEndpoint{
+						Enabled: spotinst.Bool(false),
+						Address: spotinst.String("custom-endpoint-address"),
+					},
+					LoadBalancer: &spark.IngressConfigLoadBalancer{
+						Managed:        spotinst.Bool(true),
+						TargetGroupARN: spotinst.String("target-group-arn"),
+						ServiceAnnotations: map[string]string{
+							"lb-service-annotation": "lb-service-annotation-value",
+						},
+					},
+					PrivateLink: &spark.IngressConfigPrivateLink{
+						Enabled:            spotinst.Bool(false),
+						VPCEndpointService: spotinst.String("vpc-endpoint-service"),
+					},
 				},
 				Webhook: &spark.WebhookConfig{
 					UseHostNetwork: spotinst.Bool(true),
