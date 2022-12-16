@@ -32,8 +32,15 @@ func main() {
 	out, err := svc.CloudProviderAWS().UpdateCluster(ctx, &aws.UpdateClusterInput{
 		Cluster: &aws.Cluster{
 			ID: spotinst.String("o-12345"),
-			Capacity: &aws.Capacity{
-				Target: spotinst.Int(5),
+			Compute: &aws.Compute{
+				InstanceTypes: &aws.InstanceTypes{
+					Filters: &aws.Filters{
+						IncludeFamilies: []string{
+							"m*", "t*",
+						},
+						Categories: []string{"General_purpose", "Compute_optimized"},
+					},
+				},
 			},
 		},
 	})

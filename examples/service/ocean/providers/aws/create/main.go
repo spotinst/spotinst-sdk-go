@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"log"
-
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
+	"log"
 )
 
 func main() {
@@ -31,8 +30,9 @@ func main() {
 	// Create a new cluster.
 	out, err := svc.CloudProviderAWS().CreateCluster(ctx, &aws.CreateClusterInput{
 		Cluster: &aws.Cluster{
-			Name:   spotinst.String("foo"),
-			Region: spotinst.String("us-west-2"),
+			Name:                spotinst.String("foo"),
+			Region:              spotinst.String("us-west-2"),
+			ControllerClusterID: spotinst.String("foo"),
 			Capacity: &aws.Capacity{
 				Target: spotinst.Int(5),
 			},
@@ -42,9 +42,26 @@ func main() {
 			},
 			Compute: &aws.Compute{
 				InstanceTypes: &aws.InstanceTypes{
-					Whitelist: []string{
-						"c3.large",
-						"c4.large",
+					Filters: &aws.Filters{
+						Architectures:         []string{"x86_64", "i386"},
+						DiskTypes:             []string{"EBS", "SSD"},
+						MinVcpu:               spotinst.Int(2),
+						MaxVcpu:               spotinst.Int(80),
+						MinGpu:                spotinst.Int(0),
+						MaxGpu:                spotinst.Int(5),
+						IncludeFamilies:       []string{"c*", "t*"},
+						ExcludeFamilies:       []string{"m*"},
+						ExcludeMetal:          spotinst.Bool(true),
+						Categories:            []string{"General_purpose", "Compute_optimized"},
+						Hypervisor:            []string{"nitro", "xen"},
+						IsEnaSupported:        spotinst.Bool(true),
+						MaxMemoryGiB:          spotinst.Float64(16),
+						MinMemoryGiB:          spotinst.Float64(8),
+						MinEnis:               spotinst.Int(2),
+						VirtualizationTypes:   []string{"hvm"},
+						RootDeviceTypes:       []string{"ebs"},
+						MaxNetworkPerformance: spotinst.Int(20),
+						MinNetworkPerformance: spotinst.Int(2),
 					},
 				},
 				SubnetIDs: []string{
