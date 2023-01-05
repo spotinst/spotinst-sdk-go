@@ -137,19 +137,20 @@ type Filters struct {
 }
 
 type LaunchSpecification struct {
-	AssociatePublicIPAddress *bool                    `json:"associatePublicIpAddress,omitempty"`
-	SecurityGroupIDs         []string                 `json:"securityGroupIds,omitempty"`
-	ImageID                  *string                  `json:"imageId,omitempty"`
-	KeyPair                  *string                  `json:"keyPair,omitempty"`
-	UserData                 *string                  `json:"userData,omitempty"`
-	IAMInstanceProfile       *IAMInstanceProfile      `json:"iamInstanceProfile,omitempty"`
-	Tags                     []*Tag                   `json:"tags,omitempty"`
-	LoadBalancers            []*LoadBalancer          `json:"loadBalancers,omitempty"`
-	RootVolumeSize           *int                     `json:"rootVolumeSize,omitempty"`
-	Monitoring               *bool                    `json:"monitoring,omitempty"`
-	EBSOptimized             *bool                    `json:"ebsOptimized,omitempty"`
-	UseAsTemplateOnly        *bool                    `json:"useAsTemplateOnly,omitempty"`
-	InstanceMetadataOptions  *InstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
+	AssociatePublicIPAddress *bool                        `json:"associatePublicIpAddress,omitempty"`
+	SecurityGroupIDs         []string                     `json:"securityGroupIds,omitempty"`
+	ImageID                  *string                      `json:"imageId,omitempty"`
+	KeyPair                  *string                      `json:"keyPair,omitempty"`
+	UserData                 *string                      `json:"userData,omitempty"`
+	IAMInstanceProfile       *IAMInstanceProfile          `json:"iamInstanceProfile,omitempty"`
+	Tags                     []*Tag                       `json:"tags,omitempty"`
+	LoadBalancers            []*LoadBalancer              `json:"loadBalancers,omitempty"`
+	RootVolumeSize           *int                         `json:"rootVolumeSize,omitempty"`
+	Monitoring               *bool                        `json:"monitoring,omitempty"`
+	EBSOptimized             *bool                        `json:"ebsOptimized,omitempty"`
+	UseAsTemplateOnly        *bool                        `json:"useAsTemplateOnly,omitempty"`
+	InstanceMetadataOptions  *InstanceMetadataOptions     `json:"instanceMetadataOptions,omitempty"`
+	BlockDeviceMappings      []*ClusterBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1989,3 +1990,184 @@ func (o *Filters) SetVirtualizationTypes(v []string) *Filters {
 	}
 	return o
 }
+
+func (o *LaunchSpecification) SetClusterBlockDeviceMappings(v []*ClusterBlockDeviceMapping) *LaunchSpecification {
+	if o.BlockDeviceMappings = v; o.BlockDeviceMappings == nil {
+		o.nullFields = append(o.nullFields, "BlockDeviceMappings")
+	}
+	return o
+}
+
+type ClusterBlockDeviceMapping struct {
+	DeviceName  *string     `json:"deviceName,omitempty"`
+	NoDevice    *string     `json:"noDevice,omitempty"`
+	VirtualName *string     `json:"virtualName,omitempty"`
+	EBS         *ClusterEBS `json:"ebs,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+type ClusterEBS struct {
+	DeleteOnTermination *bool                     `json:"deleteOnTermination,omitempty"`
+	Encrypted           *bool                     `json:"encrypted,omitempty"`
+	KMSKeyID            *string                   `json:"kmsKeyId,omitempty"`
+	SnapshotID          *string                   `json:"snapshotId,omitempty"`
+	VolumeType          *string                   `json:"volumeType,omitempty"`
+	IOPS                *int                      `json:"iops,omitempty"`
+	VolumeSize          *int                      `json:"volumeSize,omitempty"`
+	Throughput          *int                      `json:"throughput,omitempty"`
+	DynamicVolumeSize   *ClusterDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+type ClusterDynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+// region BlockDeviceMapping
+
+func (o ClusterBlockDeviceMapping) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterBlockDeviceMapping
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ClusterBlockDeviceMapping) SetDeviceName(v *string) *ClusterBlockDeviceMapping {
+	if o.DeviceName = v; o.DeviceName == nil {
+		o.nullFields = append(o.nullFields, "DeviceName")
+	}
+	return o
+}
+
+func (o *ClusterBlockDeviceMapping) SetNoDevice(v *string) *ClusterBlockDeviceMapping {
+	if o.NoDevice = v; o.NoDevice == nil {
+		o.nullFields = append(o.nullFields, "NoDevice")
+	}
+	return o
+}
+
+func (o *ClusterBlockDeviceMapping) SetVirtualName(v *string) *ClusterBlockDeviceMapping {
+	if o.VirtualName = v; o.VirtualName == nil {
+		o.nullFields = append(o.nullFields, "VirtualName")
+	}
+	return o
+}
+
+func (o *ClusterBlockDeviceMapping) SetEBS(v *ClusterEBS) *ClusterBlockDeviceMapping {
+	if o.EBS = v; o.EBS == nil {
+		o.nullFields = append(o.nullFields, "EBS")
+	}
+	return o
+}
+
+// endregion
+
+// region EBS
+
+func (o ClusterEBS) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterEBS
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ClusterEBS) SetEncrypted(v *bool) *ClusterEBS {
+	if o.Encrypted = v; o.Encrypted == nil {
+		o.nullFields = append(o.nullFields, "Encrypted")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetIOPS(v *int) *ClusterEBS {
+	if o.IOPS = v; o.IOPS == nil {
+		o.nullFields = append(o.nullFields, "IOPS")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetKMSKeyId(v *string) *ClusterEBS {
+	if o.KMSKeyID = v; o.KMSKeyID == nil {
+		o.nullFields = append(o.nullFields, "KMSKeyID")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetSnapshotId(v *string) *ClusterEBS {
+	if o.SnapshotID = v; o.SnapshotID == nil {
+		o.nullFields = append(o.nullFields, "SnapshotID")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetVolumeType(v *string) *ClusterEBS {
+	if o.VolumeType = v; o.VolumeType == nil {
+		o.nullFields = append(o.nullFields, "VolumeType")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetDeleteOnTermination(v *bool) *ClusterEBS {
+	if o.DeleteOnTermination = v; o.DeleteOnTermination == nil {
+		o.nullFields = append(o.nullFields, "DeleteOnTermination")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetVolumeSize(v *int) *ClusterEBS {
+	if o.VolumeSize = v; o.VolumeSize == nil {
+		o.nullFields = append(o.nullFields, "VolumeSize")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetDynamicVolumeSize(v *ClusterDynamicVolumeSize) *ClusterEBS {
+	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
+		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
+	}
+	return o
+}
+
+func (o *ClusterEBS) SetThroughput(v *int) *ClusterEBS {
+	if o.Throughput = v; o.Throughput == nil {
+		o.nullFields = append(o.nullFields, "Throughput")
+	}
+	return o
+}
+
+// endregion
+
+// region DynamicVolumeSize
+
+func (o ClusterDynamicVolumeSize) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterDynamicVolumeSize
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ClusterDynamicVolumeSize) SetBaseSize(v *int) *ClusterDynamicVolumeSize {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *ClusterDynamicVolumeSize) SetResource(v *string) *ClusterDynamicVolumeSize {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *ClusterDynamicVolumeSize) SetSizePerResourceUnit(v *int) *ClusterDynamicVolumeSize {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+// endregion

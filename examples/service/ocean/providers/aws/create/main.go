@@ -72,6 +72,24 @@ func main() {
 					ImageID:          spotinst.String("ami-12345"),
 					Monitoring:       spotinst.Bool(false),
 					SecurityGroupIDs: []string{"sg-foo"},
+					BlockDeviceMappings: []*aws.ClusterBlockDeviceMapping{
+						&aws.ClusterBlockDeviceMapping{
+							DeviceName: spotinst.String("/dev/sdf"),
+							EBS: &aws.ClusterEBS{
+								DeleteOnTermination: spotinst.Bool(true),
+								Encrypted:           spotinst.Bool(false),
+								IOPS:                spotinst.Int(100),
+								Throughput:          spotinst.Int(125),
+								VolumeType:          spotinst.String("gp3"),
+								SnapshotID:          spotinst.String("snap-12345"),
+								DynamicVolumeSize: &aws.ClusterDynamicVolumeSize{
+									BaseSize:            spotinst.Int(20),
+									Resource:            spotinst.String("CPU"),
+									SizePerResourceUnit: spotinst.Int(2),
+								},
+							},
+						},
+					},
 				},
 			},
 		},
