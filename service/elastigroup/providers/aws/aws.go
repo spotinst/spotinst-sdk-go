@@ -539,6 +539,7 @@ type Strategy struct {
 	ScalingStrategy          *ScalingStrategy `json:"scalingStrategy,omitempty"`
 	UtilizeCommitments       *bool            `json:"utilizeCommitments,omitempty"`
 	MinimumInstanceLifetime  *int             `json:"minimumInstanceLifetime,omitempty"`
+	ConsiderODPricing        *bool            `json:"considerODPricing,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3568,6 +3569,12 @@ func (o *Strategy) SetUtilizeCommitments(v *bool) *Strategy {
 func (o *Strategy) SetMinimumInstanceLifetime(v *int) *Strategy {
 	if o.MinimumInstanceLifetime = v; o.MinimumInstanceLifetime == nil {
 		o.nullFields = append(o.nullFields, "MinimumInstanceLifetime")
+	}
+	return o
+}
+func (o *Strategy) SetConsiderODPricing(v *bool) *Strategy {
+	if o.ConsiderODPricing = v; o.ConsiderODPricing == nil {
+		o.nullFields = append(o.nullFields, "ConsiderODPricing")
 	}
 	return o
 }

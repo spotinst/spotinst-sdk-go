@@ -40,6 +40,7 @@ func main() {
 			Strategy: &aws.Strategy{
 				Risk:               spotinst.Float64(100),
 				FallbackToOnDemand: spotinst.Bool(true),
+				ConsiderODPricing:  spotinst.Bool(true),
 			},
 			Compute: &aws.Compute{
 				Product: spotinst.String(aws.ProductName[aws.ProductLinuxUnix]),
