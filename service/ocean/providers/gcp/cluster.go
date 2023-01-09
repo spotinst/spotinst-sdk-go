@@ -276,7 +276,7 @@ type RollSpec struct {
 	BatchMinHealthyPercentage *int     `json:"batchMinHealthyPercentage,omitempty"`
 	LaunchSpecIDs             []string `json:"launchSpecIds,omitempty"`
 	InstanceNames             []string `json:"instanceNames,omitempty"`
-	RespectPdb                *bool    `json:"respectPdb,omitempty"`
+	RespectPDB                *bool    `json:"respectPdb,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1388,8 +1388,8 @@ func (o *RollSpec) SetInstanceNames(v []string) *RollSpec {
 	return o
 }
 
-func (o *RollSpec) SetRespectPdb(v *bool) *RollSpec {
-	if o.RespectPdb = v; o.RespectPdb == nil {
+func (o *RollSpec) SetRespectPDB(v *bool) *RollSpec {
+	if o.RespectPDB = v; o.RespectPDB == nil {
 		o.nullFields = append(o.nullFields, "RespectPdb")
 	}
 	return o
