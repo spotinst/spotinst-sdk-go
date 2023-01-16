@@ -39,6 +39,9 @@ func main() {
 			Strategy: &aws.Strategy{
 				SpotPercentage:     spotinst.Float64(100),
 				FallbackToOnDemand: spotinst.Bool(true),
+				ClusterOrientation: &aws.ClusterOrientation{
+					AvailabilityVsCost: spotinst.String("cheapest"),
+				},
 			},
 			Compute: &aws.Compute{
 				InstanceTypes: &aws.InstanceTypes{
