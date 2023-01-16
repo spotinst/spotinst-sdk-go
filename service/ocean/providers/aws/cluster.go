@@ -66,14 +66,14 @@ type ClusterOrientation struct {
 
 func (o *ClusterOrientation) SetAvailabilityVsCost(v *string) *ClusterOrientation {
 	if o.AvailabilityVsCost = v; o.AvailabilityVsCost == nil {
-		o.nullFields = append(o.nullFields, "ImageID")
+		o.nullFields = append(o.nullFields, "AvailabilityVsCost")
 	}
 	return o
 }
 
 func (o *Strategy) SetClusterOrientation(v *ClusterOrientation) *Strategy {
 	if o.ClusterOrientation = v; o.ClusterOrientation == nil {
-		o.nullFields = append(o.nullFields, "InstanceTypes")
+		o.nullFields = append(o.nullFields, "ClusterOrientation")
 	}
 	return o
 }
