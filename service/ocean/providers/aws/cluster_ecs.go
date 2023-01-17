@@ -122,7 +122,34 @@ type ECSCompute struct {
 }
 
 type ECSInstanceTypes struct {
-	Whitelist []string `json:"whitelist,omitempty"`
+	Whitelist []string    `json:"whitelist,omitempty"`
+	Blacklist []string    `json:"blacklist,omitempty"`
+	Filters   *ECSFilters `json:"filters,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ECSFilters struct {
+	Architectures         []string `json:"architectures,omitempty"`
+	Categories            []string `json:"categories,omitempty"`
+	DiskTypes             []string `json:"diskTypes,omitempty"`
+	ExcludeFamilies       []string `json:"excludeFamilies,omitempty"`
+	ExcludeMetal          *bool    `json:"excludeMetal,omitempty"`
+	Hypervisor            []string `json:"hypervisor,omitempty"`
+	IncludeFamilies       []string `json:"includeFamilies,omitempty"`
+	IsEnaSupported        *bool    `json:"isEnaSupported,omitempty"`
+	MaxGpu                *int     `json:"maxGpu,omitempty"`
+	MaxMemoryGiB          *float64 `json:"maxMemoryGiB,omitempty"`
+	MaxNetworkPerformance *int     `json:"maxNetworkPerformance,omitempty"`
+	MaxVcpu               *int     `json:"maxVcpu,omitempty"`
+	MinEnis               *int     `json:"minEnis,omitempty"`
+	MinGpu                *int     `json:"minGpu,omitempty"`
+	MinMemoryGiB          *float64 `json:"minMemoryGiB,omitempty"`
+	MinNetworkPerformance *int     `json:"minNetworkPerformance,omitempty"`
+	MinVcpu               *int     `json:"minVcpu,omitempty"`
+	RootDeviceTypes       []string `json:"rootDeviceTypes,omitempty"`
+	VirtualizationTypes   []string `json:"virtualizationTypes,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -830,6 +857,20 @@ func (o *ECSInstanceTypes) SetWhitelist(v []string) *ECSInstanceTypes {
 	return o
 }
 
+func (o *ECSInstanceTypes) SetBlacklist(v []string) *ECSInstanceTypes {
+	if o.Blacklist = v; o.Blacklist == nil {
+		o.nullFields = append(o.nullFields, "Blacklist")
+	}
+	return o
+}
+
+func (o *ECSInstanceTypes) SetFilters(v *ECSFilters) *ECSInstanceTypes {
+	if o.Filters = v; o.Filters == nil {
+		o.nullFields = append(o.nullFields, "Filters")
+	}
+	return o
+}
+
 // endregion
 
 // region LaunchSpecification
@@ -1175,6 +1216,145 @@ func (o *ECSInstanceMetadataOptions) SetHTTPTokens(v *string) *ECSInstanceMetada
 func (o *ECSInstanceMetadataOptions) SetHTTPPutResponseHopLimit(v *int) *ECSInstanceMetadataOptions {
 	if o.HTTPPutResponseHopLimit = v; o.HTTPPutResponseHopLimit == nil {
 		o.nullFields = append(o.nullFields, "HTTPPutResponseHopLimit")
+	}
+	return o
+}
+
+func (o ECSFilters) MarshalJSON() ([]byte, error) {
+	type noMethod Filters
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ECSFilters) SetArchitectures(v []string) *ECSFilters {
+	if o.Architectures = v; o.Architectures == nil {
+		o.nullFields = append(o.nullFields, "Architectures")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetCategories(v []string) *ECSFilters {
+	if o.Categories = v; o.Categories == nil {
+		o.nullFields = append(o.nullFields, "Categories")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetDiskTypes(v []string) *ECSFilters {
+	if o.DiskTypes = v; o.DiskTypes == nil {
+		o.nullFields = append(o.nullFields, "DiskTypes")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetExcludeFamilies(v []string) *ECSFilters {
+	if o.ExcludeFamilies = v; o.ExcludeFamilies == nil {
+		o.nullFields = append(o.nullFields, "ExcludeFamilies")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetExcludeMetal(v *bool) *ECSFilters {
+	if o.ExcludeMetal = v; o.ExcludeMetal == nil {
+		o.nullFields = append(o.nullFields, "ExcludeMetal")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetHypervisor(v []string) *ECSFilters {
+	if o.Hypervisor = v; o.Hypervisor == nil {
+		o.nullFields = append(o.nullFields, "Hypervisor")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetIncludeFamilies(v []string) *ECSFilters {
+	if o.IncludeFamilies = v; o.IncludeFamilies == nil {
+		o.nullFields = append(o.nullFields, "IncludeFamilies")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetIsEnaSupported(v *bool) *ECSFilters {
+	if o.IsEnaSupported = v; o.IsEnaSupported == nil {
+		o.nullFields = append(o.nullFields, "IsEnaSupported")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMaxGpu(v *int) *ECSFilters {
+	if o.MaxGpu = v; o.MaxGpu == nil {
+		o.nullFields = append(o.nullFields, "MaxGpu")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMaxMemoryGiB(v *float64) *ECSFilters {
+	if o.MaxMemoryGiB = v; o.MaxMemoryGiB == nil {
+		o.nullFields = append(o.nullFields, "MaxMemoryGiB")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMaxNetworkPerformance(v *int) *ECSFilters {
+	if o.MaxNetworkPerformance = v; o.MaxNetworkPerformance == nil {
+		o.nullFields = append(o.nullFields, "MaxNetworkPerformance")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMaxVcpu(v *int) *ECSFilters {
+	if o.MaxVcpu = v; o.MaxVcpu == nil {
+		o.nullFields = append(o.nullFields, "MaxVcpu")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMinEnis(v *int) *ECSFilters {
+	if o.MinEnis = v; o.MinEnis == nil {
+		o.nullFields = append(o.nullFields, "MinEnis")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMinGpu(v *int) *ECSFilters {
+	if o.MinGpu = v; o.MinGpu == nil {
+		o.nullFields = append(o.nullFields, "MinGpu")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMinMemoryGiB(v *float64) *ECSFilters {
+	if o.MinMemoryGiB = v; o.MinMemoryGiB == nil {
+		o.nullFields = append(o.nullFields, "MinMemoryGiB")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMinNetworkPerformance(v *int) *ECSFilters {
+	if o.MinNetworkPerformance = v; o.MinNetworkPerformance == nil {
+		o.nullFields = append(o.nullFields, "MinNetworkPerformance")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetMinVcpu(v *int) *ECSFilters {
+	if o.MinVcpu = v; o.MinVcpu == nil {
+		o.nullFields = append(o.nullFields, "MinVcpu")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetRootDeviceTypes(v []string) *ECSFilters {
+	if o.RootDeviceTypes = v; o.RootDeviceTypes == nil {
+		o.nullFields = append(o.nullFields, "RootDeviceTypes")
+	}
+	return o
+}
+
+func (o *ECSFilters) SetVirtualizationTypes(v []string) *ECSFilters {
+	if o.VirtualizationTypes = v; o.VirtualizationTypes == nil {
+		o.nullFields = append(o.nullFields, "VirtualizationTypes")
 	}
 	return o
 }
