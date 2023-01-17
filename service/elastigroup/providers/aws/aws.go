@@ -525,21 +525,22 @@ type StepAdjustment struct {
 }
 
 type Strategy struct {
-	Risk                     *float64         `json:"risk,omitempty"`
-	OnDemandCount            *int             `json:"onDemandCount,omitempty"`
-	DrainingTimeout          *int             `json:"drainingTimeout,omitempty"`
-	AvailabilityVsCost       *string          `json:"availabilityVsCost,omitempty"`
-	LifetimePeriod           *string          `json:"lifetimePeriod,omitempty"`
-	UtilizeReservedInstances *bool            `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool            `json:"fallbackToOd,omitempty"`
-	SpinUpTime               *int             `json:"spinUpTime,omitempty"`
-	Signals                  []*Signal        `json:"signals,omitempty"`
-	Persistence              *Persistence     `json:"persistence,omitempty"`
-	RevertToSpot             *RevertToSpot    `json:"revertToSpot,omitempty"`
-	ScalingStrategy          *ScalingStrategy `json:"scalingStrategy,omitempty"`
-	UtilizeCommitments       *bool            `json:"utilizeCommitments,omitempty"`
-	MinimumInstanceLifetime  *int             `json:"minimumInstanceLifetime,omitempty"`
-	ConsiderODPricing        *bool            `json:"considerODPricing,omitempty"`
+	Risk                        *float64         `json:"risk,omitempty"`
+	OnDemandCount               *int             `json:"onDemandCount,omitempty"`
+	DrainingTimeout             *int             `json:"drainingTimeout,omitempty"`
+	AvailabilityVsCost          *string          `json:"availabilityVsCost,omitempty"`
+	LifetimePeriod              *string          `json:"lifetimePeriod,omitempty"`
+	UtilizeReservedInstances    *bool            `json:"utilizeReservedInstances,omitempty"`
+	FallbackToOnDemand          *bool            `json:"fallbackToOd,omitempty"`
+	SpinUpTime                  *int             `json:"spinUpTime,omitempty"`
+	Signals                     []*Signal        `json:"signals,omitempty"`
+	Persistence                 *Persistence     `json:"persistence,omitempty"`
+	RevertToSpot                *RevertToSpot    `json:"revertToSpot,omitempty"`
+	ScalingStrategy             *ScalingStrategy `json:"scalingStrategy,omitempty"`
+	UtilizeCommitments          *bool            `json:"utilizeCommitments,omitempty"`
+	MinimumInstanceLifetime     *int             `json:"minimumInstanceLifetime,omitempty"`
+	ConsiderODPricing           *bool            `json:"considerODPricing,omitempty"`
+	ImmediateODRecoverThreshold *int             `json:"immediateODRecoverThreshold,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3485,6 +3486,13 @@ func (o *Strategy) SetRisk(v *float64) *Strategy {
 func (o *Strategy) SetOnDemandCount(v *int) *Strategy {
 	if o.OnDemandCount = v; o.OnDemandCount == nil {
 		o.nullFields = append(o.nullFields, "OnDemandCount")
+	}
+	return o
+}
+
+func (o *Strategy) SetImmediateODRecoverThreshold(v *int) *Strategy {
+	if o.ImmediateODRecoverThreshold = v; o.ImmediateODRecoverThreshold == nil {
+		o.nullFields = append(o.nullFields, "ImmediateODRecoverThreshold")
 	}
 	return o
 }

@@ -38,9 +38,10 @@ func main() {
 				Target: spotinst.Int(5),
 			},
 			Strategy: &aws.Strategy{
-				Risk:               spotinst.Float64(100),
-				FallbackToOnDemand: spotinst.Bool(true),
-				ConsiderODPricing:  spotinst.Bool(true),
+				Risk:                        spotinst.Float64(100),
+				FallbackToOnDemand:          spotinst.Bool(true),
+				ConsiderODPricing:           spotinst.Bool(true),
+				ImmediateODRecoverThreshold: spotinst.Int(25),
 			},
 			Compute: &aws.Compute{
 				Product: spotinst.String(aws.ProductName[aws.ProductLinuxUnix]),
