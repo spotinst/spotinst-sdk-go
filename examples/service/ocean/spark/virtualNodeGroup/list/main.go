@@ -8,6 +8,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/spark"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -24,15 +25,21 @@ func main() {
 	// service specific configuration.
 	svc := ocean.New(sess)
 
-	// Detach VNG.
+	// Create a new context.
 	ctx := context.Background()
 
-	// Detach Ocean VNG
-	_, err := svc.Spark().DetachVirtualNodeGroup(ctx, &spark.DetachVngInput{
-		ClusterID: spotinst.String("osc-12345"),
-		VngID:     spotinst.String("ols-12345"),
-	})
+	// List dedicated VNGs.
+	out, err := svc.Spark().ListVirtualNodeGroups(ctx, &spark.ListVngsInput{})
 	if err != nil {
-		log.Fatalf("spotinst: failed to detach VNG: %v", err)
+		log.Fatalf("spotinst: failed to list VNGs: %v", err)
+	}
+
+	// Output dedicated VNGs, if any.
+	if len(out.VirtualNodeGroups) > 0 {
+		for _, vng := range out.VirtualNodeGroups {
+			log.Printf("VNG %q: %s",
+				spotinst.StringValue(vng.VngID),
+				stringutil.Stringify(vng))
+		}
 	}
 }
