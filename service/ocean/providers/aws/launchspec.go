@@ -121,6 +121,7 @@ type Taint struct {
 type AutoScale struct {
 	Headrooms              []*AutoScaleHeadroom `json:"headrooms,omitempty"`
 	AutoHeadroomPercentage *int                 `json:"autoHeadroomPercentage,omitempty"`
+	Down                   *AutoScalerDownVNG   `json:"down,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -134,6 +135,31 @@ type AutoScaleHeadroom struct {
 
 	forceSendFields []string
 	nullFields      []string
+}
+type AutoScalerDownVNG struct {
+	MaxScaleDownPercentage *float64 `json:"maxScaleDownPercentage,omitempty"`
+	forceSendFields        []string
+	nullFields             []string
+}
+
+func (o *AutoScalerDownVNG) SetMaxScaleDownPercentage(v *float64) *AutoScalerDownVNG {
+	if o.MaxScaleDownPercentage = v; o.MaxScaleDownPercentage == nil {
+		o.nullFields = append(o.nullFields, "MaxScaleDownPercentage")
+	}
+	return o
+}
+
+func (o *AutoScale) SetAutoScalerDownVNG(v *AutoScalerDownVNG) *AutoScale {
+	if o.Down = v; o.Down == nil {
+		o.nullFields = append(o.nullFields, "Down")
+	}
+	return o
+}
+
+func (o AutoScalerDownVNG) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScalerDownVNG
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
 type ElasticIPPool struct {
