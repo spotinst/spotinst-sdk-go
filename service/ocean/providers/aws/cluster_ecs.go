@@ -47,13 +47,38 @@ type ECSCluster struct {
 }
 
 type ECSStrategy struct {
-	DrainingTimeout          *int  `json:"drainingTimeout,omitempty"`
-	UtilizeReservedInstances *bool `json:"utilizeReservedInstances,omitempty"`
-	UtilizeCommitments       *bool `json:"utilizeCommitments,omitempty"`
-	SpotPercentage           *int  `json:"spotPercentage,omitempty"`
+	DrainingTimeout          *int                   `json:"drainingTimeout,omitempty"`
+	UtilizeReservedInstances *bool                  `json:"utilizeReservedInstances,omitempty"`
+	UtilizeCommitments       *bool                  `json:"utilizeCommitments,omitempty"`
+	SpotPercentage           *int                   `json:"spotPercentage,omitempty"`
+	ClusterOrientation       *ECSClusterOrientation `json:"clusterOrientation,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
+}
+type ECSClusterOrientation struct {
+	AvailabilityVsCost *string `json:"availabilityVsCost,omitempty"`
+	forceSendFields    []string
+	nullFields         []string
+}
+
+func (o *ECSClusterOrientation) SetECSAvailabilityVsCost(v *string) *ECSClusterOrientation {
+	if o.AvailabilityVsCost = v; o.AvailabilityVsCost == nil {
+		o.nullFields = append(o.nullFields, "AvailabilityVsCost")
+	}
+	return o
+}
+
+func (o *ECSStrategy) SetECSClusterOrientation(v *ECSClusterOrientation) *ECSStrategy {
+	if o.ClusterOrientation = v; o.ClusterOrientation == nil {
+		o.nullFields = append(o.nullFields, "ClusterOrientation")
+	}
+	return o
+}
+func (o ECSClusterOrientation) MarshalJSON() ([]byte, error) {
+	type noMethod ECSClusterOrientation
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
 type ECSScheduling struct {
