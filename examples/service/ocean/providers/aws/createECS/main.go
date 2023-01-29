@@ -38,6 +38,9 @@ func main() {
 			},
 			Strategy: &aws.ECSStrategy{
 				SpotPercentage: spotinst.Int(100),
+				ClusterOrientation: &aws.ECSClusterOrientation{
+					AvailabilityVsCost: spotinst.String("balanced"),
+				},
 			},
 			Compute: &aws.ECSCompute{
 				InstanceTypes: &aws.ECSInstanceTypes{
