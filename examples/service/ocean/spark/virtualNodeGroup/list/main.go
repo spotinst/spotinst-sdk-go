@@ -29,7 +29,9 @@ func main() {
 	ctx := context.Background()
 
 	// List dedicated VNGs.
-	out, err := svc.Spark().ListVirtualNodeGroups(ctx, &spark.ListVngsInput{})
+	out, err := svc.Spark().ListVirtualNodeGroups(ctx, &spark.ListVngsInput{
+		ClusterID: spotinst.String("osc-12345"),
+	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to list VNGs: %v", err)
 	}
