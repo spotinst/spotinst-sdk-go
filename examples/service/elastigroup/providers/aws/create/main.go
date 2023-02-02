@@ -60,6 +60,10 @@ func main() {
 					ImageID:          spotinst.String("ami-12345"),
 					Monitoring:       spotinst.Bool(false),
 					SecurityGroupIDs: []string{"sg-foo"},
+					MetadataOptions: &aws.MetadataOptions{
+						HTTPTokens:              spotinst.String("optional"),
+						HTTPPutResponseHopLimit: spotinst.Int(20),
+					},
 				},
 			},
 		},
