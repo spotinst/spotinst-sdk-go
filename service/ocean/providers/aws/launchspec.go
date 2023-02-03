@@ -15,28 +15,29 @@ import (
 )
 
 type LaunchSpec struct {
-	ID                       *string               `json:"id,omitempty"`
-	Name                     *string               `json:"name,omitempty"`
-	OceanID                  *string               `json:"oceanId,omitempty"`
-	ImageID                  *string               `json:"imageId,omitempty"`
-	UserData                 *string               `json:"userData,omitempty"`
-	RootVolumeSize           *int                  `json:"rootVolumeSize,omitempty"`
-	SecurityGroupIDs         []string              `json:"securityGroupIds,omitempty"`
-	SubnetIDs                []string              `json:"subnetIds,omitempty"`
-	InstanceTypes            []string              `json:"instanceTypes,omitempty"`
-	PreferredSpotTypes       []string              `json:"preferredSpotTypes,omitempty"`
-	Strategy                 *LaunchSpecStrategy   `json:"strategy,omitempty"`
-	ResourceLimits           *ResourceLimits       `json:"resourceLimits,omitempty"`
-	IAMInstanceProfile       *IAMInstanceProfile   `json:"iamInstanceProfile,omitempty"`
-	AutoScale                *AutoScale            `json:"autoScale,omitempty"`
-	ElasticIPPool            *ElasticIPPool        `json:"elasticIpPool,omitempty"`
-	BlockDeviceMappings      []*BlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
-	Labels                   []*Label              `json:"labels,omitempty"`
-	Taints                   []*Taint              `json:"taints,omitempty"`
-	Tags                     []*Tag                `json:"tags,omitempty"`
-	AssociatePublicIPAddress *bool                 `json:"associatePublicIpAddress,omitempty"`
-	RestrictScaleDown        *bool                 `json:"restrictScaleDown,omitempty"`
-	LaunchSpecScheduling     *LaunchSpecScheduling `json:"scheduling,omitempty"`
+	ID                       *string                            `json:"id,omitempty"`
+	Name                     *string                            `json:"name,omitempty"`
+	OceanID                  *string                            `json:"oceanId,omitempty"`
+	ImageID                  *string                            `json:"imageId,omitempty"`
+	UserData                 *string                            `json:"userData,omitempty"`
+	RootVolumeSize           *int                               `json:"rootVolumeSize,omitempty"`
+	SecurityGroupIDs         []string                           `json:"securityGroupIds,omitempty"`
+	SubnetIDs                []string                           `json:"subnetIds,omitempty"`
+	InstanceTypes            []string                           `json:"instanceTypes,omitempty"`
+	PreferredSpotTypes       []string                           `json:"preferredSpotTypes,omitempty"`
+	Strategy                 *LaunchSpecStrategy                `json:"strategy,omitempty"`
+	ResourceLimits           *ResourceLimits                    `json:"resourceLimits,omitempty"`
+	IAMInstanceProfile       *IAMInstanceProfile                `json:"iamInstanceProfile,omitempty"`
+	AutoScale                *AutoScale                         `json:"autoScale,omitempty"`
+	ElasticIPPool            *ElasticIPPool                     `json:"elasticIpPool,omitempty"`
+	BlockDeviceMappings      []*BlockDeviceMapping              `json:"blockDeviceMappings,omitempty"`
+	Labels                   []*Label                           `json:"labels,omitempty"`
+	Taints                   []*Taint                           `json:"taints,omitempty"`
+	Tags                     []*Tag                             `json:"tags,omitempty"`
+	AssociatePublicIPAddress *bool                              `json:"associatePublicIpAddress,omitempty"`
+	RestrictScaleDown        *bool                              `json:"restrictScaleDown,omitempty"`
+	LaunchSpecScheduling     *LaunchSpecScheduling              `json:"scheduling,omitempty"`
+	InstanceMetadataOptions  *LaunchspecInstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -58,6 +59,44 @@ type LaunchSpec struct {
 	// This may be used to include null fields in Patch requests.
 	nullFields []string
 }
+
+// region InstanceMetadataOptions
+
+type LaunchspecInstanceMetadataOptions struct {
+	HTTPTokens              *string `json:"httpTokens,omitempty"`
+	HTTPPutResponseHopLimit *int    `json:"httpPutResponseHopLimit,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o *LaunchspecInstanceMetadataOptions) SetHTTPTokens(v *string) *LaunchspecInstanceMetadataOptions {
+	if o.HTTPTokens = v; o.HTTPTokens == nil {
+		o.nullFields = append(o.nullFields, "HTTPTokens")
+	}
+	return o
+}
+
+func (o *LaunchspecInstanceMetadataOptions) SetHTTPPutResponseHopLimit(v *int) *LaunchspecInstanceMetadataOptions {
+	if o.HTTPPutResponseHopLimit = v; o.HTTPPutResponseHopLimit == nil {
+		o.nullFields = append(o.nullFields, "HTTPPutResponseHopLimit")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetLaunchspecInstanceMetadataOptions(v *LaunchspecInstanceMetadataOptions) *LaunchSpec {
+	if o.InstanceMetadataOptions = v; o.InstanceMetadataOptions == nil {
+		o.nullFields = append(o.nullFields, "InstanceMetadataOptions")
+	}
+	return o
+}
+func (o LaunchspecInstanceMetadataOptions) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchspecInstanceMetadataOptions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// endregion
 
 type ResourceLimits struct {
 	MaxInstanceCount *int `json:"maxInstanceCount,omitempty"`
