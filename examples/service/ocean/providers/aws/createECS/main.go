@@ -42,6 +42,21 @@ func main() {
 					AvailabilityVsCost: spotinst.String("balanced"),
 				},
 			},
+			AutoScaler: &aws.ECSAutoScaler{
+				IsEnabled:    spotinst.Bool(false),
+				IsAutoConfig: spotinst.Bool(false),
+				Cooldown:     spotinst.Int(300),
+
+				Down: &aws.ECSAutoScalerDown{
+					MaxScaleDownPercentage: spotinst.Float64(20),
+				},
+				ShouldScaleDownNonServiceTasks: spotinst.Bool(true),
+
+				ResourceLimits: &aws.ECSAutoScalerResourceLimits{
+					MaxVCPU:      spotinst.Int(1024),
+					MaxMemoryGiB: spotinst.Int(20),
+				},
+			},
 			Compute: &aws.ECSCompute{
 				InstanceTypes: &aws.ECSInstanceTypes{
 					Filters: &aws.ECSFilters{
