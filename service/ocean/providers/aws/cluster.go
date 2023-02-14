@@ -55,6 +55,7 @@ type Strategy struct {
 	GracePeriod              *int                `json:"gracePeriod,omitempty"`
 	UtilizeCommitments       *bool               `json:"utilizeCommitments,omitempty"`
 	ClusterOrientation       *ClusterOrientation `json:"clusterOrientation,omitempty"`
+	SpreadNodesBy            *string             `json:"spreadNodesBy,omitempty"`
 	forceSendFields          []string
 	nullFields               []string
 }
@@ -1200,6 +1201,13 @@ func (o *Strategy) SetGracePeriod(v *int) *Strategy {
 func (o *Strategy) SetUtilizeCommitments(v *bool) *Strategy {
 	if o.UtilizeCommitments = v; o.UtilizeCommitments == nil {
 		o.nullFields = append(o.nullFields, "UtilizeCommitments")
+	}
+	return o
+}
+
+func (o *Strategy) SetSpreadNodesBy(v *string) *Strategy {
+	if o.SpreadNodesBy = v; o.SpreadNodesBy == nil {
+		o.nullFields = append(o.nullFields, "SpreadNodesBy")
 	}
 	return o
 }
