@@ -42,6 +42,7 @@ func main() {
 				ClusterOrientation: &aws.ClusterOrientation{
 					AvailabilityVsCost: spotinst.String("cheapest"),
 				},
+				SpreadNodesBy: spotinst.String("vcpu"),
 			},
 			Compute: &aws.Compute{
 				InstanceTypes: &aws.InstanceTypes{
