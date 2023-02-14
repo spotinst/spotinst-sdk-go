@@ -68,6 +68,13 @@ func main() {
 						2000,
 					}),
 				},
+				Spark: &spark.SparkConfig{
+					AppNamespaces: spotinst.StringSlice([]string{
+						"spark-apps",
+						"spark-apps-extra-ns-1",
+						"spark-apps-extra-ns-2",
+					}),
+				},
 			},
 		},
 	})
