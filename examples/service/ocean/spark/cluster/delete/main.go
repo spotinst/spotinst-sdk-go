@@ -29,7 +29,8 @@ func main() {
 
 	// Delete an existing cluster.
 	_, err := svc.Spark().DeleteCluster(ctx, &spark.DeleteClusterInput{
-		ClusterID: spotinst.String("osc-12345"),
+		ClusterID:   spotinst.String("osc-12345"),
+		ForceDelete: spotinst.Bool(false),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete cluster: %v", err)
