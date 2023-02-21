@@ -15,17 +15,17 @@ import (
 )
 
 type Cluster struct {
-	ID                   *string               `json:"id,omitempty"`
-	ControllerClusterID  *string               `json:"controllerClusterId,omitempty"`
-	Name                 *string               `json:"name,omitempty"`
-	Region               *string               `json:"region,omitempty"`
-	Strategy             *Strategy             `json:"strategy,omitempty"`
-	Capacity             *Capacity             `json:"capacity,omitempty"`
-	Compute              *Compute              `json:"compute,omitempty"`
-	Scheduling           *Scheduling           `json:"scheduling,omitempty"`
-	AutoScaler           *AutoScaler           `json:"autoScaler,omitempty"`
-	Logging              *Logging              `json:"logging,omitempty"`
-	LaunchSpecScheduling *LaunchSpecScheduling `json:"scheduling,omitempty"`
+	ID                  *string     `json:"id,omitempty"`
+	ControllerClusterID *string     `json:"controllerClusterId,omitempty"`
+	Name                *string     `json:"name,omitempty"`
+	Region              *string     `json:"region,omitempty"`
+	Strategy            *Strategy   `json:"strategy,omitempty"`
+	Capacity            *Capacity   `json:"capacity,omitempty"`
+	Compute             *Compute    `json:"compute,omitempty"`
+	Scheduling          *Scheduling `json:"scheduling,omitempty"`
+	AutoScaler          *AutoScaler `json:"autoScaler,omitempty"`
+	Logging             *Logging    `json:"logging,omitempty"`
+
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
@@ -1150,13 +1150,6 @@ func (o *Cluster) SetAutoScaler(v *AutoScaler) *Cluster {
 func (o *Cluster) SetLogging(v *Logging) *Cluster {
 	if o.Logging = v; o.Logging == nil {
 		o.nullFields = append(o.nullFields, "Logging")
-	}
-	return o
-}
-
-func (o *Cluster) SetLaunchSpecScheduling(v *LaunchSpecScheduling) *Cluster {
-	if o.LaunchSpecScheduling = v; o.LaunchSpecScheduling == nil {
-		o.nullFields = append(o.nullFields, "LaunchSpecScheduling")
 	}
 	return o
 }
