@@ -34,10 +34,10 @@ func main() {
 			Name:                spotinst.String("AKS2.0-Cluster"),
 			ControllerClusterID: spotinst.String("AKS2.0-Cluster"),
 			AKS: &azure_np.AKS{
-				ClusterName:                     spotinst.String("node-pool-test"),
-				ResourceGroupName:               spotinst.String("AutomationResourceGroup"),
-				Region:                          spotinst.String("eastus"),
-				InfrastructureResourceGroupName: spotinst.String("MC_AutomationResourceGroup_node-pool-test_eastus"),
+				ClusterName:                     spotinst.String("foo"),
+				ResourceGroupName:               spotinst.String("foo"),
+				Region:                          spotinst.String("foo"),
+				InfrastructureResourceGroupName: spotinst.String("foo"),
 			},
 			AutoScaler: &azure_np.AutoScaler{
 				IsEnabled: spotinst.Bool(true),
@@ -74,12 +74,23 @@ func main() {
 					SpotPercentage: spotinst.Int(100),
 					FallbackToOD:   spotinst.Bool(true),
 				},
-				/*Taints:[]&azure.Taint{
-					Key: spotinst.String("test"),
-					Value: spotinst.String("new"),
-					Effect: spotinst.String("Running"),
-				},*/
+				Tags: &azure_np.Tag{
+					Key:   spotinst.String("creator"),
+					Value: spotinst.String("test"),
+				},
 
+				Labels: &azure_np.Label{
+					Key:   spotinst.String("test"),
+					Value: spotinst.String("aks"),
+				},
+
+				Taints: []*azure_np.Taint{
+					{
+						Key:    spotinst.String("test"),
+						Value:  spotinst.String("veryMuch"),
+						Effect: spotinst.String("NoSchedule"),
+					},
+				},
 			},
 		},
 	})
