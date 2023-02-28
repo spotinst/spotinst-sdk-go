@@ -79,7 +79,7 @@ type ResourceLimits struct {
 }
 
 type Down struct {
-	MaxScaleDownPercentage *float64 `json:"maxScaleDownPercentage,omitempty"`
+	MaxScaleDownPercentage *int `json:"maxScaleDownPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -532,7 +532,7 @@ func (o Down) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Down) SetMaxScaleDownPercentage(v *float64) *Down {
+func (o *Down) SetMaxScaleDownPercentage(v *int) *Down {
 	if o.MaxScaleDownPercentage = v; o.MaxScaleDownPercentage == nil {
 		o.nullFields = append(o.nullFields, "MaxScaleDownPercentage")
 	}
