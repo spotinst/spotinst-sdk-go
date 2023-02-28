@@ -46,7 +46,7 @@ func main() {
 					MaxMemoryGib: spotinst.Int(120),
 				},
 				Down: &azure_np.Down{
-					MaxScaleDownPercentage: spotinst.Float64(30.5),
+					MaxScaleDownPercentage: spotinst.Int(30),
 				},
 				Headroom: &azure_np.Headroom{
 					Automatic: &azure_np.Automatic{
