@@ -29,7 +29,7 @@ func main() {
 
 	// Delete an existing cluster.
 	_, err := svc.CloudProviderAzureNP().DeleteCluster(ctx, &azure_np.DeleteClusterInput{
-		ClusterID: spotinst.String("o-66d1f10c"),
+		ClusterID: spotinst.String("clusterId"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete cluster: %v", err)

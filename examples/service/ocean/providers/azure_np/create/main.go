@@ -31,8 +31,8 @@ func main() {
 	// Create a new cluster.
 	out, err := svc.CloudProviderAzureNP().CreateCluster(ctx, &azure_np.CreateClusterInput{
 		Cluster: &azure_np.Cluster{
-			Name:                spotinst.String("AKS2.0-Cluster"),
-			ControllerClusterID: spotinst.String("AKS2.0-Cluster"),
+			Name:                spotinst.String("foo"),
+			ControllerClusterID: spotinst.String("foo"),
 			AKS: &azure_np.AKS{
 				ClusterName:                     spotinst.String("foo"),
 				ResourceGroupName:               spotinst.String("foo"),

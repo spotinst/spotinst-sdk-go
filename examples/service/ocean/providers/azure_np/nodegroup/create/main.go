@@ -30,16 +30,16 @@ func main() {
 	// Create a new cluster.
 	out, err := svc.CloudProviderAzureNP().CreateVirtualNodeGroup(ctx, &azure_np.CreateVirtualNodeGroupInput{
 		VirtualNodeGroup: &azure_np.VirtualNodeGroup{
-			OceanID: spotinst.String("o-1430eda2"),
-			Name:    spotinst.String("aks2.0-vng"),
+			OceanID: spotinst.String("foo"),
+			Name:    spotinst.String("foo"),
 			AvailabilityZones: []string{"1",
 				"2"},
-			/*Labels: []*azure_np.Label{
+			Labels: []*azure_np.Label{
 				{
 					Key:   spotinst.String("label-key"),
 					Value: spotinst.String("label-value"),
 				},
-			},*/
+			},
 			Taints: []*azure_np.Taint{
 				{
 					Key:    spotinst.String("taint-key"),

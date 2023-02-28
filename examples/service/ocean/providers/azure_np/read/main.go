@@ -30,7 +30,7 @@ func main() {
 
 	// Read cluster configuration.
 	out, err := svc.CloudProviderAzureNP().ReadCluster(ctx, &azure_np.ReadClusterInput{
-		ClusterID: spotinst.String("o-12345"),
+		ClusterID: spotinst.String("clusterId"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read cluster: %v", err)

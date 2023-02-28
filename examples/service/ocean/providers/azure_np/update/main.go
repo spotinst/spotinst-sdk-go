@@ -31,7 +31,7 @@ func main() {
 	// Update cluster configuration.
 	out, err := svc.CloudProviderAzureNP().UpdateCluster(ctx, &azure_np.UpdateClusterInput{
 		Cluster: &azure_np.Cluster{
-			ID: spotinst.String("o-12345"),
+			ID: spotinst.String("clusterId"),
 		},
 	})
 	if err != nil {

@@ -28,7 +28,7 @@ func main() {
 
 	// Create a new cluster.
 	_, err := svc.CloudProviderAzureNP().DeleteVirtualNodeGroup(ctx, &azure_np.DeleteVirtualNodeGroupInput{
-		VirtualNodeGroupID: spotinst.String("vng-21faad0f"),
+		VirtualNodeGroupID: spotinst.String("vng-id"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to create virtual node group: %v", err)
