@@ -155,7 +155,8 @@ type UpdateClusterRequest struct {
 type UpdateClusterOutput struct{}
 
 type DeleteClusterInput struct {
-	ClusterID *string `json:"clusterId,omitempty"`
+	ForceDelete *bool   `json:"-"`
+	ClusterID   *string `json:"clusterId,omitempty"`
 }
 
 type DeleteClusterOutput struct{}
