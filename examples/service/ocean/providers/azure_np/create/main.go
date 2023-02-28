@@ -36,7 +36,7 @@ func main() {
 			AKS: &azure_np.AKS{
 				ClusterName:                     spotinst.String("foo"),
 				ResourceGroupName:               spotinst.String("foo"),
-				Region:                          spotinst.String("foo"),
+				Region:                          spotinst.String("eastus"),
 				InfrastructureResourceGroupName: spotinst.String("foo"),
 			},
 			AutoScaler: &azure_np.AutoScaler{
@@ -46,7 +46,7 @@ func main() {
 					MaxMemoryGib: spotinst.Int(120),
 				},
 				Down: &azure_np.Down{
-					MaxScaleDownPercentage: spotinst.Float64(30),
+					MaxScaleDownPercentage: spotinst.Float64(30.5),
 				},
 				Headroom: &azure_np.Headroom{
 					Automatic: &azure_np.Automatic{
