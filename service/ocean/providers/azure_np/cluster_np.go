@@ -62,8 +62,8 @@ type VirtualNodeGroupTemplate struct {
 	NodePoolProperties *NodePoolProperties `json:"nodePoolProperties,omitempty"`
 	NodeCountLimits    *NodeCountLimits    `json:"nodeCountLimits,omitempty"`
 	Strategy           *Strategy           `json:"strategy,omitempty"`
-	Labels             *Label              `json:"labels,omitempty"`
-	Tags               *Tag                `json:"tags,omitempty"`
+	Labels             *map[string]string  `json:"labels,omitempty"`
+	Tags               *map[string]string  `json:"tags,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
 
 	forceSendFields []string
@@ -618,7 +618,7 @@ func (o *VirtualNodeGroupTemplate) SetStrategy(v *Strategy) *VirtualNodeGroupTem
 	return o
 }
 
-func (o *VirtualNodeGroupTemplate) SetLabels(v *Label) *VirtualNodeGroupTemplate {
+func (o *VirtualNodeGroupTemplate) SetLabels(v *map[string]string) *VirtualNodeGroupTemplate {
 	if o.Labels = v; o.Labels == nil {
 		o.nullFields = append(o.nullFields, "Labels")
 	}
@@ -632,7 +632,7 @@ func (o *VirtualNodeGroupTemplate) SetTaints(v []*Taint) *VirtualNodeGroupTempla
 	return o
 }
 
-func (o *VirtualNodeGroupTemplate) SetTags(v *Tag) *VirtualNodeGroupTemplate {
+func (o *VirtualNodeGroupTemplate) SetTags(v *map[string]string) *VirtualNodeGroupTemplate {
 	if o.Tags = v; o.Tags == nil {
 		o.nullFields = append(o.nullFields, "Tags")
 	}

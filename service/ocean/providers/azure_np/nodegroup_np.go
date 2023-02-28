@@ -17,9 +17,9 @@ type VirtualNodeGroup struct {
 	ID                 *string             `json:"id,omitempty"`
 	OceanID            *string             `json:"oceanId,omitempty"`
 	Name               *string             `json:"name,omitempty"`
-	Labels             []*Label            `json:"labels,omitempty"`
+	Labels             *map[string]string  `json:"labels,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
-	Tags               []*Tag              `json:"tags,omitempty"`
+	Tags               *map[string]string  `json:"tags,omitempty"`
 	Strategy           *Strategy           `json:"strategy,omitempty"`
 	AvailabilityZones  []string            `json:"availabilityZones,omitempty"`
 	NodePoolProperties *NodePoolProperties `json:"nodePoolProperties,omitempty"`
@@ -258,7 +258,7 @@ func (o *VirtualNodeGroup) SetName(v *string) *VirtualNodeGroup {
 	return o
 }
 
-func (o *VirtualNodeGroup) SetLabels(v []*Label) *VirtualNodeGroup {
+func (o *VirtualNodeGroup) SetLabels(v *map[string]string) *VirtualNodeGroup {
 	if o.Labels = v; o.Labels == nil {
 		o.nullFields = append(o.nullFields, "Labels")
 	}
@@ -300,7 +300,7 @@ func (o *VirtualNodeGroup) SetNodeCountLimits(v *NodeCountLimits) *VirtualNodeGr
 	return o
 }
 
-func (o *VirtualNodeGroup) SetTags(v []*Tag) *VirtualNodeGroup {
+func (o *VirtualNodeGroup) SetTags(v *map[string]string) *VirtualNodeGroup {
 	if o.Tags = v; o.Tags == nil {
 		o.nullFields = append(o.nullFields, "Tags")
 	}
