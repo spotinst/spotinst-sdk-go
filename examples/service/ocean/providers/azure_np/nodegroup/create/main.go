@@ -34,11 +34,9 @@ func main() {
 			Name:    spotinst.String("foo"),
 			AvailabilityZones: []string{"1",
 				"2"},
-			Labels: []*azure_np.Label{
-				{
-					Key:   spotinst.String("label-key"),
-					Value: spotinst.String("label-value"),
-				},
+			Labels: &map[string]string{
+				"Key":   "label-key",
+				"Value": "label-value",
 			},
 			Taints: []*azure_np.Taint{
 				{
