@@ -60,6 +60,14 @@ func main() {
 				SpotPercentage: spotinst.Int(100),
 				FallbackToOD:   spotinst.Bool(true),
 			},
+			/*AutoScale: &azure_np.AutoScale{
+				Headrooms: &azure_np.Headrooms{
+					CpuPerUnit:    spotinst.Int(10),
+					MemoryPerUnit: spotinst.Int(30),
+					GpuPerUnit:    spotinst.Int(5),
+					NumberOfUnits: spotinst.Int(2),
+				},
+			},*/
 		},
 	})
 	if err != nil {
