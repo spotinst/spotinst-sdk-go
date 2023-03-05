@@ -74,14 +74,16 @@ func main() {
 					SpotPercentage: spotinst.Int(100),
 					FallbackToOD:   spotinst.Bool(true),
 				},
-				Tags: &azure_np.Tag{
-					Key:   spotinst.String("creator"),
-					Value: spotinst.String("test"),
+				Tags: &map[string]string{
+					"key1":  "creator",
+					"test":  "ocean",
+					"test3": "ocean-aks",
 				},
 
-				Labels: &azure_np.Label{
-					Key:   spotinst.String("test"),
-					Value: spotinst.String("aks"),
+				Labels: &map[string]string{
+					"creator": "automation",
+					"test":    "aks",
+					"test1":   "aks1",
 				},
 
 				Taints: []*azure_np.Taint{
