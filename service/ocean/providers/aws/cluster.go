@@ -175,6 +175,7 @@ type LaunchSpecification struct {
 	EBSOptimized             *bool                    `json:"ebsOptimized,omitempty"`
 	UseAsTemplateOnly        *bool                    `json:"useAsTemplateOnly,omitempty"`
 	InstanceMetadataOptions  *InstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
+	LaunchSpecScheduling     *LaunchSpecScheduling    `json:"scheduling,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
