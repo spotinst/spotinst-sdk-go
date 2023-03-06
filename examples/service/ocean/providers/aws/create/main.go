@@ -73,9 +73,10 @@ func main() {
 					"subnet-67890",
 				},
 				LaunchSpecification: &aws.LaunchSpecification{
-					ImageID:          spotinst.String("ami-12345"),
-					Monitoring:       spotinst.Bool(false),
-					SecurityGroupIDs: []string{"sg-foo"},
+					ImageID:              spotinst.String("ami-12345"),
+					Monitoring:           spotinst.Bool(false),
+					SecurityGroupIDs:     []string{"sg-foo"},
+					AssociateIPv6Address: spotinst.Bool(true),
 				},
 			},
 		},
