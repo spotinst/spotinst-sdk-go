@@ -163,6 +163,7 @@ type Filters struct {
 
 type LaunchSpecification struct {
 	AssociatePublicIPAddress *bool                    `json:"associatePublicIpAddress,omitempty"`
+	AssociateIPv6Address     *bool                    `json:"associateIpv6Address,omitempty"`
 	SecurityGroupIDs         []string                 `json:"securityGroupIds,omitempty"`
 	ImageID                  *string                  `json:"imageId,omitempty"`
 	KeyPair                  *string                  `json:"keyPair,omitempty"`
@@ -175,6 +176,7 @@ type LaunchSpecification struct {
 	EBSOptimized             *bool                    `json:"ebsOptimized,omitempty"`
 	UseAsTemplateOnly        *bool                    `json:"useAsTemplateOnly,omitempty"`
 	InstanceMetadataOptions  *InstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
+	LaunchSpecScheduling     *LaunchSpecScheduling    `json:"scheduling,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1397,6 +1399,13 @@ func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
 func (o *LaunchSpecification) SetAssociatePublicIPAddress(v *bool) *LaunchSpecification {
 	if o.AssociatePublicIPAddress = v; o.AssociatePublicIPAddress == nil {
 		o.nullFields = append(o.nullFields, "AssociatePublicIPAddress")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetAssociateIPv6Address(v *bool) *LaunchSpecification {
+	if o.AssociateIPv6Address = v; o.AssociateIPv6Address == nil {
+		o.nullFields = append(o.nullFields, "AssociateIPv6Address")
 	}
 	return o
 }
