@@ -30,7 +30,7 @@ func main() {
 	// Create a new cluster.
 	out, err := svc.CloudProviderAzureNP().CreateVirtualNodeGroup(ctx, &azure_np.CreateVirtualNodeGroupInput{
 		VirtualNodeGroup: &azure_np.VirtualNodeGroup{
-			OceanID: spotinst.String("foo"),
+			OceanID: spotinst.String("oceanId"),
 			Name:    spotinst.String("foo"),
 			AvailabilityZones: []string{"1",
 				"2"},
@@ -60,14 +60,16 @@ func main() {
 				SpotPercentage: spotinst.Int(100),
 				FallbackToOD:   spotinst.Bool(true),
 			},
-			/*AutoScale: &azure_np.AutoScale{
-				Headrooms: &azure_np.Headrooms{
-					CpuPerUnit:    spotinst.Int(10),
-					MemoryPerUnit: spotinst.Int(30),
-					GpuPerUnit:    spotinst.Int(5),
-					NumberOfUnits: spotinst.Int(2),
+			AutoScale: &azure_np.VirtualNodeGroupAutoScale{
+				Headrooms: []*azure_np.VirtualNodeGroupHeadrooms{
+					{
+						CpuPerUnit:    spotinst.Int(10),
+						MemoryPerUnit: spotinst.Int(30),
+						GpuPerUnit:    spotinst.Int(5),
+						NumberOfUnits: spotinst.Int(2),
+					},
 				},
-			},*/
+			},
 		},
 	})
 	if err != nil {
