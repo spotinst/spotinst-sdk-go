@@ -736,8 +736,9 @@ type MetadataOptions struct {
 	HTTPTokens              *string `json:"httpTokens,omitempty"`
 	HTTPPutResponseHopLimit *int    `json:"httpPutResponseHopLimit,omitempty"`
 	InstanceMetadataTags    *string `json:"instanceMetadataTags,omitempty"`
-	forceSendFields         []string
-	nullFields              []string
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type CPUOptions struct {
