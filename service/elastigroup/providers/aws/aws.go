@@ -735,9 +735,9 @@ type Matcher struct {
 type MetadataOptions struct {
 	HTTPTokens              *string `json:"httpTokens,omitempty"`
 	HTTPPutResponseHopLimit *int    `json:"httpPutResponseHopLimit,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
+	InstanceMetadataTags    *string `json:"instanceMetadataTags,omitempty"`
+	forceSendFields         []string
+	nullFields              []string
 }
 
 type CPUOptions struct {
@@ -5124,6 +5124,13 @@ func (o *MetadataOptions) SetHTTPTokens(v *string) *MetadataOptions {
 func (o *MetadataOptions) SetHTTPPutResponseHopLimit(v *int) *MetadataOptions {
 	if o.HTTPPutResponseHopLimit = v; o.HTTPPutResponseHopLimit == nil {
 		o.nullFields = append(o.nullFields, "HTTPPutResponseHopLimit")
+	}
+	return o
+}
+
+func (o *MetadataOptions) SetInstanceMetadataTags(v *string) *MetadataOptions {
+	if o.InstanceMetadataTags = v; o.InstanceMetadataTags == nil {
+		o.nullFields = append(o.nullFields, "InstanceMetadataTags")
 	}
 	return o
 }
