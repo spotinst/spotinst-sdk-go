@@ -63,6 +63,7 @@ func main() {
 					MetadataOptions: &aws.MetadataOptions{
 						HTTPTokens:              spotinst.String("optional"),
 						HTTPPutResponseHopLimit: spotinst.Int(20),
+						InstanceMetadataTags:    spotinst.String("enabled"),
 					},
 				},
 			},
