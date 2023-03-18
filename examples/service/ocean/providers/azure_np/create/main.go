@@ -42,25 +42,25 @@ func main() {
 			AutoScaler: &azure_np.AutoScaler{
 				IsEnabled: spotinst.Bool(true),
 				ResourceLimits: &azure_np.ResourceLimits{
-					MaxVCPU:      spotinst.Int(120),
-					MaxMemoryGib: spotinst.Int(120),
+					MaxVCPU:      spotinst.Int(20000),
+					MaxMemoryGib: spotinst.Int(100000),
 				},
 				Down: &azure_np.Down{
-					MaxScaleDownPercentage: spotinst.Int(30),
+					MaxScaleDownPercentage: spotinst.Int(10),
 				},
 				Headroom: &azure_np.Headroom{
 					Automatic: &azure_np.Automatic{
 						IsEnabled:  spotinst.Bool(true),
-						Percentage: spotinst.Int(10),
+						Percentage: spotinst.Int(5),
 					},
 				},
 			},
 			Health: &azure_np.Health{
-				GracePeriod: spotinst.Int(300),
+				GracePeriod: spotinst.Int(600),
 			},
 			VirtualNodeGroupTemplate: &azure_np.VirtualNodeGroupTemplate{
 				NodePoolProperties: &azure_np.NodePoolProperties{
-					MaxPodsPerNode:     spotinst.Int(100),
+					MaxPodsPerNode:     spotinst.Int(110),
 					EnableNodePublicIP: spotinst.Bool(false),
 					OsDiskSizeGB:       spotinst.Int(128),
 					OsDiskType:         spotinst.String("Managed"),
@@ -68,11 +68,21 @@ func main() {
 				},
 				NodeCountLimits: &azure_np.NodeCountLimits{
 					MinCount: spotinst.Int(0),
-					MaxCount: spotinst.Int(100),
+					MaxCount: spotinst.Int(1000),
 				},
 				Strategy: &azure_np.Strategy{
 					SpotPercentage: spotinst.Int(100),
 					FallbackToOD:   spotinst.Bool(true),
+				},
+				AutoScale: &azure_np.AutoScale{
+					Headrooms: []*azure_np.Headrooms{
+						{
+							CpuPerUnit:    spotinst.Int(10),
+							MemoryPerUnit: spotinst.Int(30),
+							GpuPerUnit:    spotinst.Int(5),
+							NumberOfUnits: spotinst.Int(2),
+						},
+					},
 				},
 				Tags: &map[string]string{
 					"key1":  "creator",
