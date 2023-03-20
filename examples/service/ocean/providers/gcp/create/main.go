@@ -30,8 +30,8 @@ func main() {
 	// Create a new cluster.
 	out, err := svc.CloudProviderGCP().CreateCluster(ctx, &gcp.CreateClusterInput{
 		Cluster: &gcp.Cluster{
-			Name:                spotinst.String("terraform-cluster-3"),
-			ControllerClusterID: spotinst.String("terraform-cluster-3-a1de28dd"),
+			Name:                spotinst.String("foo"),
+			ControllerClusterID: spotinst.String("foo"),
 			Scheduling: &gcp.Scheduling{
 				Tasks: []*gcp.Task{
 					{
@@ -61,11 +61,11 @@ func main() {
 				},
 				LaunchSpecification: &gcp.LaunchSpecification{
 					ServiceAccount: spotinst.String("serviceAccount"),
-					SourceImage:    spotinst.String("https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1249-gke3200-cos-97-16919-235-1-v230120-c-pre"),
-					Tags:           []string{"gke-terraform-cluster-3-dab431c8-node"},
+					SourceImage:    spotinst.String("sourceImage"),
+					Tags:           []string{"tags"},
 					Metadata: []*gcp.Metadata{
 						{
-							Key:   spotinst.String("google-compute-enable-pcid"),
+							Key:   spotinst.String("key"),
 							Value: spotinst.String("true")},
 					},
 				},
@@ -73,8 +73,8 @@ func main() {
 					{
 						AccessConfigs: []*gcp.AccessConfig{
 							{
-								Name: spotinst.String("external-nat"),
-								Type: spotinst.String("ONE_TO_ONE_NAT"),
+								Name: spotinst.String("name"),
+								Type: spotinst.String("type"),
 							},
 						},
 						Network: spotinst.String("default"),
