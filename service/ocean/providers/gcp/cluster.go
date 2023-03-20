@@ -1437,7 +1437,23 @@ func (o *LaunchSpecShieldedInstanceConfig) SetEnableSecureBoot(v *bool) *LaunchS
 
 //endregion
 
-//region cluster clusterRoll
+//region cluster/scheduling/task/parameters
+
+func (o *Parameters) SetClusterRoll(v *ClusterRoll) *Parameters {
+	if o.ClusterRoll = v; o.ClusterRoll == nil {
+		o.nullFields = append(o.nullFields, "RespectPdb")
+	}
+	return o
+}
+func (o Parameters) MarshalJSON() ([]byte, error) {
+	type noMethod Parameters
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// endregion
+
+//region cluster/scheduling/task/parameters/clusterRoll
 
 func (o *ClusterRoll) SetBatchMinHealthyPercentage(v *int) *ClusterRoll {
 	if o.BatchMinHealthyPercentage = v; o.BatchMinHealthyPercentage == nil {
@@ -1466,22 +1482,6 @@ func (o *ClusterRoll) SetRespectPdb(v *bool) *ClusterRoll {
 }
 func (o ClusterRoll) MarshalJSON() ([]byte, error) {
 	type noMethod ClusterRoll
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-// endregion
-
-//region cluster/scheduling/task/parameters
-
-func (o *Parameters) SetClusterRoll(v *ClusterRoll) *Parameters {
-	if o.ClusterRoll = v; o.ClusterRoll == nil {
-		o.nullFields = append(o.nullFields, "RespectPdb")
-	}
-	return o
-}
-func (o Parameters) MarshalJSON() ([]byte, error) {
-	type noMethod Parameters
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }

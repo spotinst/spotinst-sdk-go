@@ -60,7 +60,7 @@ func main() {
 					Whitelist: []string{"e2-micro"},
 				},
 				LaunchSpecification: &gcp.LaunchSpecification{
-					ServiceAccount: spotinst.String("493916419393-compute@developer.gserviceaccount.com"),
+					ServiceAccount: spotinst.String("serviceAccount"),
 					SourceImage:    spotinst.String("https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1249-gke3200-cos-97-16919-235-1-v230120-c-pre"),
 					Tags:           []string{"gke-terraform-cluster-3-dab431c8-node"},
 					Metadata: []*gcp.Metadata{
