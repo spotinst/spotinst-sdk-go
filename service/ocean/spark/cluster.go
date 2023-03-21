@@ -30,6 +30,7 @@ type Config struct {
 	Webhook       *WebhookConfig       `json:"webhook,omitempty"`
 	Compute       *ComputeConfig       `json:"compute,omitempty"`
 	LogCollection *LogCollectionConfig `json:"logCollection,omitempty"`
+	Spark         *SparkConfig         `json:"spark,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -53,6 +54,13 @@ type ComputeConfig struct {
 type WebhookConfig struct {
 	UseHostNetwork   *bool  `json:"useHostNetwork,omitempty"`
 	HostNetworkPorts []*int `json:"hostNetworkPorts,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type SparkConfig struct {
+	AppNamespaces []*string `json:"appNamespaces,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -147,7 +155,8 @@ type UpdateClusterRequest struct {
 type UpdateClusterOutput struct{}
 
 type DeleteClusterInput struct {
-	ClusterID *string `json:"clusterId,omitempty"`
+	ForceDelete *bool   `json:"-"`
+	ClusterID   *string `json:"clusterId,omitempty"`
 }
 
 type DeleteClusterOutput struct{}
@@ -201,6 +210,13 @@ func (c *Config) SetCompute(v *ComputeConfig) *Config {
 func (c *Config) SetLogCollection(v *LogCollectionConfig) *Config {
 	if c.LogCollection = v; c.LogCollection == nil {
 		c.nullFields = append(c.nullFields, "LogCollection")
+	}
+	return c
+}
+
+func (c *Config) SetSpark(v *SparkConfig) *Config {
+	if c.Spark = v; c.Spark == nil {
+		c.nullFields = append(c.nullFields, "Spark")
 	}
 	return c
 }
@@ -416,6 +432,23 @@ func (l *LogCollectionConfig) SetCollectDriverLogs(v *bool) *LogCollectionConfig
 		l.nullFields = append(l.nullFields, "CollectDriverLogs")
 	}
 	return l
+}
+
+// endregion
+
+// region Spark
+
+func (s SparkConfig) MarshalJSON() ([]byte, error) {
+	type noMethod SparkConfig
+	raw := noMethod(s)
+	return jsonutil.MarshalJSON(raw, s.forceSendFields, s.nullFields)
+}
+
+func (s *SparkConfig) SetAppNamespaces(v []*string) *SparkConfig {
+	if s.AppNamespaces = v; s.AppNamespaces == nil {
+		s.nullFields = append(s.nullFields, "AppNamespaces")
+	}
+	return s
 }
 
 // endregion

@@ -1248,7 +1248,7 @@ func (o *InstanceGroup) SetEBSConfiguration(v *EBSConfiguration) *InstanceGroup 
 
 //endregion
 
-//region InstanceGroupCapacity
+// region InstanceGroupCapacity
 func (o InstanceGroupCapacity) MarshalJSON() ([]byte, error) {
 	type noMethod InstanceGroupCapacity
 	raw := noMethod(o)
@@ -1285,7 +1285,7 @@ func (o *InstanceGroupCapacity) SetUnit(v *string) *InstanceGroupCapacity {
 
 //endregion
 
-//region EBSConfiguration
+// region EBSConfiguration
 func (o EBSConfiguration) MarshalJSON() ([]byte, error) {
 	type noMethod EBSConfiguration
 	raw := noMethod(o)
@@ -1308,7 +1308,7 @@ func (o *EBSConfiguration) SetBlockDeviceConfigs(v []*BlockDeviceConfig) *EBSCon
 
 //endregion
 
-//region BlockDeviceConfig
+// region BlockDeviceConfig
 func (o BlockDeviceConfig) MarshalJSON() ([]byte, error) {
 	type noMethod BlockDeviceConfig
 	raw := noMethod(o)
@@ -1331,7 +1331,7 @@ func (o *BlockDeviceConfig) SetVolumeSpecification(v *VolumeSpecification) *Bloc
 
 //endregion
 
-//region VolumeSpecification
+// region VolumeSpecification
 func (o VolumeSpecification) MarshalJSON() ([]byte, error) {
 	type noMethod VolumeSpecification
 	raw := noMethod(o)
@@ -1617,7 +1617,7 @@ func (o *Steps) SetFile(v *S3File) *Steps {
 
 //endregion
 
-//region S3File
+// region S3File
 func (o S3File) MarshalJSON() ([]byte, error) {
 	type noMethod S3File
 	raw := noMethod(o)

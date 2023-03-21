@@ -27,7 +27,7 @@ func main() {
 	// Detach VNG.
 	ctx := context.Background()
 
-	// Delete an existing cluster.
+	// Detach Ocean VNG
 	_, err := svc.Spark().DetachVirtualNodeGroup(ctx, &spark.DetachVngInput{
 		ClusterID: spotinst.String("osc-12345"),
 		VngID:     spotinst.String("ols-12345"),

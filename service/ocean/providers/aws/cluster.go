@@ -48,15 +48,40 @@ type Cluster struct {
 }
 
 type Strategy struct {
-	SpotPercentage           *float64 `json:"spotPercentage,omitempty"`
-	UtilizeReservedInstances *bool    `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool    `json:"fallbackToOd,omitempty"`
-	DrainingTimeout          *int     `json:"drainingTimeout,omitempty"`
-	GracePeriod              *int     `json:"gracePeriod,omitempty"`
-	UtilizeCommitments       *bool    `json:"utilizeCommitments,omitempty"`
+	SpotPercentage           *float64            `json:"spotPercentage,omitempty"`
+	UtilizeReservedInstances *bool               `json:"utilizeReservedInstances,omitempty"`
+	FallbackToOnDemand       *bool               `json:"fallbackToOd,omitempty"`
+	DrainingTimeout          *int                `json:"drainingTimeout,omitempty"`
+	GracePeriod              *int                `json:"gracePeriod,omitempty"`
+	UtilizeCommitments       *bool               `json:"utilizeCommitments,omitempty"`
+	ClusterOrientation       *ClusterOrientation `json:"clusterOrientation,omitempty"`
+	SpreadNodesBy            *string             `json:"spreadNodesBy,omitempty"`
+	forceSendFields          []string
+	nullFields               []string
+}
+type ClusterOrientation struct {
+	AvailabilityVsCost *string `json:"availabilityVsCost,omitempty"`
+	forceSendFields    []string
+	nullFields         []string
+}
 
-	forceSendFields []string
-	nullFields      []string
+func (o *ClusterOrientation) SetAvailabilityVsCost(v *string) *ClusterOrientation {
+	if o.AvailabilityVsCost = v; o.AvailabilityVsCost == nil {
+		o.nullFields = append(o.nullFields, "AvailabilityVsCost")
+	}
+	return o
+}
+
+func (o *Strategy) SetClusterOrientation(v *ClusterOrientation) *Strategy {
+	if o.ClusterOrientation = v; o.ClusterOrientation == nil {
+		o.nullFields = append(o.nullFields, "ClusterOrientation")
+	}
+	return o
+}
+func (o ClusterOrientation) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterOrientation
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
 type Capacity struct {
@@ -138,6 +163,7 @@ type Filters struct {
 
 type LaunchSpecification struct {
 	AssociatePublicIPAddress *bool                        `json:"associatePublicIpAddress,omitempty"`
+	AssociateIPv6Address     *bool                        `json:"associateIpv6Address,omitempty"`
 	SecurityGroupIDs         []string                     `json:"securityGroupIds,omitempty"`
 	ImageID                  *string                      `json:"imageId,omitempty"`
 	KeyPair                  *string                      `json:"keyPair,omitempty"`
@@ -151,6 +177,7 @@ type LaunchSpecification struct {
 	UseAsTemplateOnly        *bool                        `json:"useAsTemplateOnly,omitempty"`
 	InstanceMetadataOptions  *InstanceMetadataOptions     `json:"instanceMetadataOptions,omitempty"`
 	BlockDeviceMappings      []*ClusterBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
+	LaunchSpecScheduling     *LaunchSpecScheduling        `json:"scheduling,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1181,6 +1208,13 @@ func (o *Strategy) SetUtilizeCommitments(v *bool) *Strategy {
 	return o
 }
 
+func (o *Strategy) SetSpreadNodesBy(v *string) *Strategy {
+	if o.SpreadNodesBy = v; o.SpreadNodesBy == nil {
+		o.nullFields = append(o.nullFields, "SpreadNodesBy")
+	}
+	return o
+}
+
 // endregion
 
 // region Capacity
@@ -1366,6 +1400,13 @@ func (o LaunchSpecification) MarshalJSON() ([]byte, error) {
 func (o *LaunchSpecification) SetAssociatePublicIPAddress(v *bool) *LaunchSpecification {
 	if o.AssociatePublicIPAddress = v; o.AssociatePublicIPAddress == nil {
 		o.nullFields = append(o.nullFields, "AssociatePublicIPAddress")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetAssociateIPv6Address(v *bool) *LaunchSpecification {
+	if o.AssociateIPv6Address = v; o.AssociateIPv6Address == nil {
+		o.nullFields = append(o.nullFields, "AssociateIPv6Address")
 	}
 	return o
 }

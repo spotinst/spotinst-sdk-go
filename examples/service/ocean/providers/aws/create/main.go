@@ -39,6 +39,10 @@ func main() {
 			Strategy: &aws.Strategy{
 				SpotPercentage:     spotinst.Float64(100),
 				FallbackToOnDemand: spotinst.Bool(true),
+				ClusterOrientation: &aws.ClusterOrientation{
+					AvailabilityVsCost: spotinst.String("cheapest"),
+				},
+				SpreadNodesBy: spotinst.String("vcpu"),
 			},
 			Compute: &aws.Compute{
 				InstanceTypes: &aws.InstanceTypes{
@@ -91,6 +95,7 @@ func main() {
 							},
 						},
 					},
+					AssociateIPv6Address: spotinst.Bool(true),
 				},
 			},
 		},
