@@ -82,6 +82,7 @@ func main() {
 								Throughput:          spotinst.Int(125),
 								VolumeType:          spotinst.String("gp3"),
 								SnapshotID:          spotinst.String("snap-12345"),
+								VolumeSize:          spotinst.Int(35),
 								DynamicVolumeSize: &aws.ClusterDynamicVolumeSize{
 									BaseSize:            spotinst.Int(20),
 									Resource:            spotinst.String("CPU"),
