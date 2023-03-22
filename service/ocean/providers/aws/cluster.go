@@ -162,22 +162,22 @@ type Filters struct {
 }
 
 type LaunchSpecification struct {
-	AssociatePublicIPAddress *bool                        `json:"associatePublicIpAddress,omitempty"`
-	AssociateIPv6Address     *bool                        `json:"associateIpv6Address,omitempty"`
-	SecurityGroupIDs         []string                     `json:"securityGroupIds,omitempty"`
-	ImageID                  *string                      `json:"imageId,omitempty"`
-	KeyPair                  *string                      `json:"keyPair,omitempty"`
-	UserData                 *string                      `json:"userData,omitempty"`
-	IAMInstanceProfile       *IAMInstanceProfile          `json:"iamInstanceProfile,omitempty"`
-	Tags                     []*Tag                       `json:"tags,omitempty"`
-	LoadBalancers            []*LoadBalancer              `json:"loadBalancers,omitempty"`
-	RootVolumeSize           *int                         `json:"rootVolumeSize,omitempty"`
-	Monitoring               *bool                        `json:"monitoring,omitempty"`
-	EBSOptimized             *bool                        `json:"ebsOptimized,omitempty"`
-	UseAsTemplateOnly        *bool                        `json:"useAsTemplateOnly,omitempty"`
-	InstanceMetadataOptions  *InstanceMetadataOptions     `json:"instanceMetadataOptions,omitempty"`
-	BlockDeviceMappings      []*ClusterBlockDeviceMapping `json:"blockDeviceMappings,omitempty"`
-	LaunchSpecScheduling     *LaunchSpecScheduling        `json:"scheduling,omitempty"`
+	AssociatePublicIPAddress *bool                         `json:"associatePublicIpAddress,omitempty"`
+	AssociateIPv6Address     *bool                         `json:"associateIpv6Address,omitempty"`
+	SecurityGroupIDs         []string                      `json:"securityGroupIds,omitempty"`
+	ImageID                  *string                       `json:"imageId,omitempty"`
+	KeyPair                  *string                       `json:"keyPair,omitempty"`
+	UserData                 *string                       `json:"userData,omitempty"`
+	IAMInstanceProfile       *IAMInstanceProfile           `json:"iamInstanceProfile,omitempty"`
+	Tags                     []*Tag                        `json:"tags,omitempty"`
+	LoadBalancers            []*LoadBalancer               `json:"loadBalancers,omitempty"`
+	RootVolumeSize           *int                          `json:"rootVolumeSize,omitempty"`
+	Monitoring               *bool                         `json:"monitoring,omitempty"`
+	EBSOptimized             *bool                         `json:"ebsOptimized,omitempty"`
+	UseAsTemplateOnly        *bool                         `json:"useAsTemplateOnly,omitempty"`
+	InstanceMetadataOptions  *InstanceMetadataOptions      `json:"instanceMetadataOptions,omitempty"`
+	BlockDeviceMappings      []*ClusterBlockDeviceMappings `json:"blockDeviceMappings,omitempty"`
+	LaunchSpecScheduling     *LaunchSpecScheduling         `json:"scheduling,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2032,18 +2032,16 @@ func (o *Filters) SetVirtualizationTypes(v []string) *Filters {
 	return o
 }
 
-func (o *LaunchSpecification) SetClusterBlockDeviceMappings(v []*ClusterBlockDeviceMapping) *LaunchSpecification {
+func (o *LaunchSpecification) SetClusterBlockDeviceMappings(v []*ClusterBlockDeviceMappings) *LaunchSpecification {
 	if o.BlockDeviceMappings = v; o.BlockDeviceMappings == nil {
 		o.nullFields = append(o.nullFields, "BlockDeviceMappings")
 	}
 	return o
 }
 
-type ClusterBlockDeviceMapping struct {
-	DeviceName  *string     `json:"deviceName,omitempty"`
-	NoDevice    *string     `json:"noDevice,omitempty"`
-	VirtualName *string     `json:"virtualName,omitempty"`
-	EBS         *ClusterEBS `json:"ebs,omitempty"`
+type ClusterBlockDeviceMappings struct {
+	DeviceName *string     `json:"deviceName,omitempty"`
+	EBS        *ClusterEBS `json:"ebs,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2073,34 +2071,20 @@ type ClusterDynamicVolumeSize struct {
 
 // region BlockDeviceMapping
 
-func (o ClusterBlockDeviceMapping) MarshalJSON() ([]byte, error) {
-	type noMethod ClusterBlockDeviceMapping
+func (o ClusterBlockDeviceMappings) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterBlockDeviceMappings
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ClusterBlockDeviceMapping) SetDeviceName(v *string) *ClusterBlockDeviceMapping {
+func (o *ClusterBlockDeviceMappings) SetDeviceName(v *string) *ClusterBlockDeviceMappings {
 	if o.DeviceName = v; o.DeviceName == nil {
 		o.nullFields = append(o.nullFields, "DeviceName")
 	}
 	return o
 }
 
-func (o *ClusterBlockDeviceMapping) SetNoDevice(v *string) *ClusterBlockDeviceMapping {
-	if o.NoDevice = v; o.NoDevice == nil {
-		o.nullFields = append(o.nullFields, "NoDevice")
-	}
-	return o
-}
-
-func (o *ClusterBlockDeviceMapping) SetVirtualName(v *string) *ClusterBlockDeviceMapping {
-	if o.VirtualName = v; o.VirtualName == nil {
-		o.nullFields = append(o.nullFields, "VirtualName")
-	}
-	return o
-}
-
-func (o *ClusterBlockDeviceMapping) SetEBS(v *ClusterEBS) *ClusterBlockDeviceMapping {
+func (o *ClusterBlockDeviceMappings) SetEBS(v *ClusterEBS) *ClusterBlockDeviceMappings {
 	if o.EBS = v; o.EBS == nil {
 		o.nullFields = append(o.nullFields, "EBS")
 	}
