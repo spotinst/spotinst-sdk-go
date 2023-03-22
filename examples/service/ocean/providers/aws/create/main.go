@@ -76,8 +76,8 @@ func main() {
 					ImageID:          spotinst.String("ami-12345"),
 					Monitoring:       spotinst.Bool(false),
 					SecurityGroupIDs: []string{"sg-foo"},
-					BlockDeviceMappings: []*aws.ClusterBlockDeviceMapping{
-						&aws.ClusterBlockDeviceMapping{
+					BlockDeviceMappings: []*aws.ClusterBlockDeviceMappings{
+						&aws.ClusterBlockDeviceMappings{
 							DeviceName: spotinst.String("/dev/sdf"),
 							EBS: &aws.ClusterEBS{
 								DeleteOnTermination: spotinst.Bool(true),
