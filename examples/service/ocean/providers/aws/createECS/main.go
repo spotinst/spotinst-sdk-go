@@ -51,7 +51,7 @@ func main() {
 					MaxScaleDownPercentage: spotinst.Float64(20),
 				},
 				ShouldScaleDownNonServiceTasks:   spotinst.Bool(true),
-				EnableAutomaticAndManualHeadroom: spotinst.Bool(false),
+				EnableAutomaticAndManualHeadroom: spotinst.Bool(true),
 
 				ResourceLimits: &aws.ECSAutoScalerResourceLimits{
 					MaxVCPU:      spotinst.Int(1024),

@@ -34,8 +34,8 @@ func main() {
 			Name:        spotinst.String("TF_GCP_EG"),
 			Description: spotinst.String("terraform"),
 			Capacity: &gcp.Capacity{
-				Target:  spotinst.Int(0),
-				Maximum: spotinst.Int(0),
+				Target:  spotinst.Int(1),
+				Maximum: spotinst.Int(2),
 				Minimum: spotinst.Int(0),
 			},
 			Strategy: &gcp.Strategy{
