@@ -946,7 +946,7 @@ func (o VNGAccessConfig) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VNGAccessConfig) SetName(v *string) *VNGAccessConfig {
+func (o *VNGAccessConfig) SetVNGName(v *string) *VNGAccessConfig {
 	if o.VNGName = v; o.VNGName == nil {
 		o.nullFields = append(o.nullFields, "VNGName")
 	}
