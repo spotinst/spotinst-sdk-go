@@ -161,8 +161,8 @@ type VNGNetworkInterface struct {
 }
 
 type VNGAccessConfig struct {
-	Name *string `json:"name,omitempty"`
-	Type *string `json:"type,omitempty"`
+	VNGName *string `json:"name,omitempty"`
+	Type    *string `json:"type,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -940,8 +940,8 @@ func (o VNGAccessConfig) MarshalJSON() ([]byte, error) {
 }
 
 func (o *VNGAccessConfig) SetName(v *string) *VNGAccessConfig {
-	if o.Name = v; o.Name == nil {
-		o.nullFields = append(o.nullFields, "Name")
+	if o.VNGName = v; o.VNGName == nil {
+		o.nullFields = append(o.nullFields, "VNGName")
 	}
 	return o
 }
