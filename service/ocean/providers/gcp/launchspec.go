@@ -871,6 +871,13 @@ func (o *GKELaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *GKELaunchSpecTaskHead
 
 // region NetworkInterface
 
+func (o *LaunchSpec) SetVNGNetworkInterfaces(v []*VNGNetworkInterface) *LaunchSpec {
+	if o.VNGNetworkInterfaces = v; o.VNGNetworkInterfaces == nil {
+		o.nullFields = append(o.nullFields, "VNGNetworkInterfaces")
+	}
+	return o
+}
+
 func (o VNGNetworkInterface) MarshalJSON() ([]byte, error) {
 	type noMethod VNGNetworkInterface
 	raw := noMethod(o)
