@@ -32,6 +32,7 @@ type LaunchSpec struct {
 	ResourceLimits         *ResourceLimits          `json:"resourceLimits,omitempty"`
 	LaunchSpecScheduling   *GKELaunchSpecScheduling `json:"scheduling,omitempty"`
 	LaunchSpecTags         []string                 `json:"tags,omitempty"`
+	VNGNetworkInterfaces   []*VNGNetworkInterface   `json:"networkInterfaces,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -144,6 +145,32 @@ type GKELaunchSpecTaskHeadroom struct {
 	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
 	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
 	NumOfUnits    *int `json:"numOfUnits,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type VNGNetworkInterface struct {
+	VNGAccessConfigs []*VNGAccessConfig `json:"accessConfigs,omitempty"`
+	VNGAliasIPRanges []*VNGAliasIPRange `json:"aliasIpRanges,omitempty"`
+	Network          *string            `json:"network,omitempty"`
+	ProjectID        *string            `json:"projectId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type VNGAccessConfig struct {
+	Name *string `json:"name,omitempty"`
+	Type *string `json:"type,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type VNGAliasIPRange struct {
+	IPCIDRRange         *string `json:"ipCidrRange,omitempty"`
+	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -836,6 +863,92 @@ func (o *GKELaunchSpecTaskHeadroom) SetMemoryPerUnit(v *int) *GKELaunchSpecTaskH
 func (o *GKELaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *GKELaunchSpecTaskHeadroom {
 	if o.NumOfUnits = v; o.NumOfUnits == nil {
 		o.nullFields = append(o.nullFields, "NumOfUnits")
+	}
+	return o
+}
+
+// endregion
+
+// region NetworkInterface
+
+func (o VNGNetworkInterface) MarshalJSON() ([]byte, error) {
+	type noMethod VNGNetworkInterface
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VNGNetworkInterface) SetVNGAccessConfigs(v []*VNGAccessConfig) *VNGNetworkInterface {
+	if o.VNGAccessConfigs = v; o.VNGAccessConfigs == nil {
+		o.nullFields = append(o.nullFields, "VNGAccessConfigs")
+	}
+	return o
+}
+
+func (o *VNGNetworkInterface) SetVNGAliasIPRanges(v []*VNGAliasIPRange) *VNGNetworkInterface {
+	if o.VNGAliasIPRanges = v; o.VNGAliasIPRanges == nil {
+		o.nullFields = append(o.nullFields, "VNGAliasIPRanges")
+	}
+	return o
+}
+
+func (o *VNGNetworkInterface) SetNetwork(v *string) *VNGNetworkInterface {
+	if o.Network = v; o.Network == nil {
+		o.nullFields = append(o.nullFields, "Network")
+	}
+	return o
+}
+
+func (o *VNGNetworkInterface) SetProjectId(v *string) *VNGNetworkInterface {
+	if o.ProjectID = v; o.ProjectID == nil {
+		o.nullFields = append(o.nullFields, "ProjectID")
+	}
+	return o
+}
+
+// endregion
+
+// region AliasIPRange
+
+func (o VNGAliasIPRange) MarshalJSON() ([]byte, error) {
+	type noMethod VNGAliasIPRange
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VNGAliasIPRange) SetIPCIDRRange(v *string) *VNGAliasIPRange {
+	if o.IPCIDRRange = v; o.IPCIDRRange == nil {
+		o.nullFields = append(o.nullFields, "IPCIDRRange")
+	}
+	return o
+}
+
+func (o *VNGAliasIPRange) SetSubnetworkRangeName(v *string) *VNGAliasIPRange {
+	if o.SubnetworkRangeName = v; o.SubnetworkRangeName == nil {
+		o.nullFields = append(o.nullFields, "SubnetworkRangeName")
+	}
+	return o
+}
+
+// endregion
+
+// region AccessConfig
+
+func (o VNGAccessConfig) MarshalJSON() ([]byte, error) {
+	type noMethod VNGAccessConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VNGAccessConfig) SetName(v *string) *VNGAccessConfig {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *VNGAccessConfig) SetType(v *string) *VNGAccessConfig {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
 	}
 	return o
 }
