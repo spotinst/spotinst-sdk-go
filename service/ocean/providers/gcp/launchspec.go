@@ -161,11 +161,10 @@ type LaunchSpecNetworkInterfaces struct {
 }
 
 type LaunchSpecAccessConfigs struct {
-	VNGName *string `json:"name,omitempty"`
-	Type    *string `json:"type,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
+	LaunchSpecAccessConfigsName *string `json:"name,omitempty"`
+	Type                        *string `json:"type,omitempty"`
+	forceSendFields             []string
+	nullFields                  []string
 }
 
 type LaunchSpecAliasIPRanges struct {
@@ -871,9 +870,9 @@ func (o *GKELaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *GKELaunchSpecTaskHead
 
 // region NetworkInterface
 
-func (o *LaunchSpec) SetVNGNetworkInterfaces(v []*LaunchSpecNetworkInterfaces) *LaunchSpec {
+func (o *LaunchSpec) SetLaunchSpecNetworkInterfaces(v []*LaunchSpecNetworkInterfaces) *LaunchSpec {
 	if o.LaunchSpecNetworkInterfaces = v; o.LaunchSpecNetworkInterfaces == nil {
-		o.nullFields = append(o.nullFields, "VNGNetworkInterfaces")
+		o.nullFields = append(o.nullFields, "LaunchSpecNetworkInterfaces")
 	}
 	return o
 }
@@ -884,16 +883,16 @@ func (o LaunchSpecNetworkInterfaces) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecNetworkInterfaces) SetVNGAccessConfigs(v []*LaunchSpecAccessConfigs) *LaunchSpecNetworkInterfaces {
+func (o *LaunchSpecNetworkInterfaces) SetLaunchSpecAccessConfigs(v []*LaunchSpecAccessConfigs) *LaunchSpecNetworkInterfaces {
 	if o.LaunchSpecAccessConfigs = v; o.LaunchSpecAccessConfigs == nil {
-		o.nullFields = append(o.nullFields, "VNGAccessConfigs")
+		o.nullFields = append(o.nullFields, "LaunchSpecAccessConfigs")
 	}
 	return o
 }
 
-func (o *LaunchSpecNetworkInterfaces) SetVNGAliasIPRanges(v []*LaunchSpecAliasIPRanges) *LaunchSpecNetworkInterfaces {
+func (o *LaunchSpecNetworkInterfaces) SetLaunchSpecAliasIPRanges(v []*LaunchSpecAliasIPRanges) *LaunchSpecNetworkInterfaces {
 	if o.LaunchSpecAliasIPRanges = v; o.LaunchSpecAliasIPRanges == nil {
-		o.nullFields = append(o.nullFields, "VNGAliasIPRanges")
+		o.nullFields = append(o.nullFields, "LaunchSpecAliasIPRanges")
 	}
 	return o
 }
@@ -946,9 +945,9 @@ func (o LaunchSpecAccessConfigs) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *LaunchSpecAccessConfigs) SetVNGName(v *string) *LaunchSpecAccessConfigs {
-	if o.VNGName = v; o.VNGName == nil {
-		o.nullFields = append(o.nullFields, "VNGName")
+func (o *LaunchSpecAccessConfigs) SetLaunchSpecAccessConfigsName(v *string) *LaunchSpecAccessConfigs {
+	if o.LaunchSpecAccessConfigsName = v; o.LaunchSpecAccessConfigsName == nil {
+		o.nullFields = append(o.nullFields, "LaunchSpecAccessConfigsName")
 	}
 	return o
 }
