@@ -13,26 +13,26 @@ import (
 )
 
 type LaunchSpec struct {
-	ID                     *string                  `json:"id,omitempty"`
-	Name                   *string                  `json:"name,omitempty"`
-	OceanID                *string                  `json:"oceanId,omitempty"`
-	SourceImage            *string                  `json:"sourceImage,omitempty"`
-	Metadata               []*Metadata              `json:"metadata,omitempty"`
-	Labels                 []*Label                 `json:"labels,omitempty"`
-	Taints                 []*Taint                 `json:"taints,omitempty"`
-	AutoScale              *AutoScale               `json:"autoScale,omitempty"`
-	RestrictScaleDown      *bool                    `json:"restrictScaleDown,omitempty"`
-	Strategy               *LaunchSpecStrategy      `json:"strategy,omitempty"`
-	RootVolumeSizeInGB     *int                     `json:"rootVolumeSizeInGb,omitempty"`
-	RootVolumeType         *string                  `json:"rootVolumeType,omitempty"`
-	ShieldedInstanceConfig *ShieldedInstanceConfig  `json:"shieldedInstanceConfig,omitempty"`
-	ServiceAccount         *string                  `json:"serviceAccount,omitempty"`
-	InstanceTypes          []string                 `json:"instanceTypes,omitempty"`
-	Storage                *Storage                 `json:"storage,omitempty"`
-	ResourceLimits         *ResourceLimits          `json:"resourceLimits,omitempty"`
-	LaunchSpecScheduling   *GKELaunchSpecScheduling `json:"scheduling,omitempty"`
-	LaunchSpecTags         []string                 `json:"tags,omitempty"`
-	VNGNetworkInterfaces   []*VNGNetworkInterface   `json:"networkInterfaces,omitempty"`
+	ID                          *string                        `json:"id,omitempty"`
+	Name                        *string                        `json:"name,omitempty"`
+	OceanID                     *string                        `json:"oceanId,omitempty"`
+	SourceImage                 *string                        `json:"sourceImage,omitempty"`
+	Metadata                    []*Metadata                    `json:"metadata,omitempty"`
+	Labels                      []*Label                       `json:"labels,omitempty"`
+	Taints                      []*Taint                       `json:"taints,omitempty"`
+	AutoScale                   *AutoScale                     `json:"autoScale,omitempty"`
+	RestrictScaleDown           *bool                          `json:"restrictScaleDown,omitempty"`
+	Strategy                    *LaunchSpecStrategy            `json:"strategy,omitempty"`
+	RootVolumeSizeInGB          *int                           `json:"rootVolumeSizeInGb,omitempty"`
+	RootVolumeType              *string                        `json:"rootVolumeType,omitempty"`
+	ShieldedInstanceConfig      *ShieldedInstanceConfig        `json:"shieldedInstanceConfig,omitempty"`
+	ServiceAccount              *string                        `json:"serviceAccount,omitempty"`
+	InstanceTypes               []string                       `json:"instanceTypes,omitempty"`
+	Storage                     *Storage                       `json:"storage,omitempty"`
+	ResourceLimits              *ResourceLimits                `json:"resourceLimits,omitempty"`
+	LaunchSpecScheduling        *GKELaunchSpecScheduling       `json:"scheduling,omitempty"`
+	LaunchSpecTags              []string                       `json:"tags,omitempty"`
+	LaunchSpecNetworkInterfaces []*LaunchSpecNetworkInterfaces `json:"networkInterfaces,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -150,17 +150,17 @@ type GKELaunchSpecTaskHeadroom struct {
 	nullFields      []string
 }
 
-type VNGNetworkInterface struct {
-	VNGAccessConfigs []*VNGAccessConfig `json:"accessConfigs,omitempty"`
-	VNGAliasIPRanges []*VNGAliasIPRange `json:"aliasIpRanges,omitempty"`
-	Network          *string            `json:"network,omitempty"`
-	ProjectID        *string            `json:"projectId,omitempty"`
+type LaunchSpecNetworkInterfaces struct {
+	LaunchSpecAccessConfigs []*LaunchSpecAccessConfigs `json:"accessConfigs,omitempty"`
+	LaunchSpecAliasIPRanges []*LaunchSpecAliasIPRanges `json:"aliasIpRanges,omitempty"`
+	Network                 *string                    `json:"network,omitempty"`
+	ProjectID               *string                    `json:"projectId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type VNGAccessConfig struct {
+type LaunchSpecAccessConfigs struct {
 	VNGName *string `json:"name,omitempty"`
 	Type    *string `json:"type,omitempty"`
 
@@ -168,8 +168,8 @@ type VNGAccessConfig struct {
 	nullFields      []string
 }
 
-type VNGAliasIPRange struct {
-	IPCIDRRange         *string `json:"ipCidrRange,omitempty"`
+type LaunchSpecAliasIPRanges struct {
+	IPCidrRange         *string `json:"ipCidrRange,omitempty"`
 	SubnetworkRangeName *string `json:"subnetworkRangeName,omitempty"`
 
 	forceSendFields []string
@@ -871,41 +871,41 @@ func (o *GKELaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *GKELaunchSpecTaskHead
 
 // region NetworkInterface
 
-func (o *LaunchSpec) SetVNGNetworkInterfaces(v []*VNGNetworkInterface) *LaunchSpec {
-	if o.VNGNetworkInterfaces = v; o.VNGNetworkInterfaces == nil {
+func (o *LaunchSpec) SetVNGNetworkInterfaces(v []*LaunchSpecNetworkInterfaces) *LaunchSpec {
+	if o.LaunchSpecNetworkInterfaces = v; o.LaunchSpecNetworkInterfaces == nil {
 		o.nullFields = append(o.nullFields, "VNGNetworkInterfaces")
 	}
 	return o
 }
 
-func (o VNGNetworkInterface) MarshalJSON() ([]byte, error) {
-	type noMethod VNGNetworkInterface
+func (o LaunchSpecNetworkInterfaces) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecNetworkInterfaces
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VNGNetworkInterface) SetVNGAccessConfigs(v []*VNGAccessConfig) *VNGNetworkInterface {
-	if o.VNGAccessConfigs = v; o.VNGAccessConfigs == nil {
+func (o *LaunchSpecNetworkInterfaces) SetVNGAccessConfigs(v []*LaunchSpecAccessConfigs) *LaunchSpecNetworkInterfaces {
+	if o.LaunchSpecAccessConfigs = v; o.LaunchSpecAccessConfigs == nil {
 		o.nullFields = append(o.nullFields, "VNGAccessConfigs")
 	}
 	return o
 }
 
-func (o *VNGNetworkInterface) SetVNGAliasIPRanges(v []*VNGAliasIPRange) *VNGNetworkInterface {
-	if o.VNGAliasIPRanges = v; o.VNGAliasIPRanges == nil {
+func (o *LaunchSpecNetworkInterfaces) SetVNGAliasIPRanges(v []*LaunchSpecAliasIPRanges) *LaunchSpecNetworkInterfaces {
+	if o.LaunchSpecAliasIPRanges = v; o.LaunchSpecAliasIPRanges == nil {
 		o.nullFields = append(o.nullFields, "VNGAliasIPRanges")
 	}
 	return o
 }
 
-func (o *VNGNetworkInterface) SetNetwork(v *string) *VNGNetworkInterface {
+func (o *LaunchSpecNetworkInterfaces) SetNetwork(v *string) *LaunchSpecNetworkInterfaces {
 	if o.Network = v; o.Network == nil {
 		o.nullFields = append(o.nullFields, "Network")
 	}
 	return o
 }
 
-func (o *VNGNetworkInterface) SetProjectId(v *string) *VNGNetworkInterface {
+func (o *LaunchSpecNetworkInterfaces) SetProjectId(v *string) *LaunchSpecNetworkInterfaces {
 	if o.ProjectID = v; o.ProjectID == nil {
 		o.nullFields = append(o.nullFields, "ProjectID")
 	}
@@ -916,20 +916,20 @@ func (o *VNGNetworkInterface) SetProjectId(v *string) *VNGNetworkInterface {
 
 // region AliasIPRange
 
-func (o VNGAliasIPRange) MarshalJSON() ([]byte, error) {
-	type noMethod VNGAliasIPRange
+func (o LaunchSpecAliasIPRanges) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecAliasIPRanges
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VNGAliasIPRange) SetIPCIDRRange(v *string) *VNGAliasIPRange {
-	if o.IPCIDRRange = v; o.IPCIDRRange == nil {
+func (o *LaunchSpecAliasIPRanges) SetIPCidrRange(v *string) *LaunchSpecAliasIPRanges {
+	if o.IPCidrRange = v; o.IPCidrRange == nil {
 		o.nullFields = append(o.nullFields, "IPCIDRRange")
 	}
 	return o
 }
 
-func (o *VNGAliasIPRange) SetSubnetworkRangeName(v *string) *VNGAliasIPRange {
+func (o *LaunchSpecAliasIPRanges) SetSubnetworkRangeName(v *string) *LaunchSpecAliasIPRanges {
 	if o.SubnetworkRangeName = v; o.SubnetworkRangeName == nil {
 		o.nullFields = append(o.nullFields, "SubnetworkRangeName")
 	}
@@ -940,20 +940,20 @@ func (o *VNGAliasIPRange) SetSubnetworkRangeName(v *string) *VNGAliasIPRange {
 
 // region AccessConfig
 
-func (o VNGAccessConfig) MarshalJSON() ([]byte, error) {
-	type noMethod VNGAccessConfig
+func (o LaunchSpecAccessConfigs) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecAccessConfigs
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *VNGAccessConfig) SetVNGName(v *string) *VNGAccessConfig {
+func (o *LaunchSpecAccessConfigs) SetVNGName(v *string) *LaunchSpecAccessConfigs {
 	if o.VNGName = v; o.VNGName == nil {
 		o.nullFields = append(o.nullFields, "VNGName")
 	}
 	return o
 }
 
-func (o *VNGAccessConfig) SetType(v *string) *VNGAccessConfig {
+func (o *LaunchSpecAccessConfigs) SetType(v *string) *LaunchSpecAccessConfigs {
 	if o.Type = v; o.Type == nil {
 		o.nullFields = append(o.nullFields, "Type")
 	}
