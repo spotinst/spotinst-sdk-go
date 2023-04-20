@@ -34,7 +34,7 @@ func main() {
 			OceanClusterID: spotinst.String("o-12345"),
 			Config: &spark.Config{
 				LogCollection: &spark.LogCollectionConfig{
-					CollectDriverLogs: spotinst.Bool(true),
+					CollectAppLogs: spotinst.Bool(true),
 				},
 				Compute: &spark.ComputeConfig{
 					UseTaints:  spotinst.Bool(true),
