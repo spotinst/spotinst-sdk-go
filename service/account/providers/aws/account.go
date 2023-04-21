@@ -132,3 +132,10 @@ func (s *ServiceOp) DeleteAccount(ctx context.Context, input *DeleteAccountInput
 
 	return &DeleteAccountOutput{}, nil
 }
+
+type ReadAccountInput struct {
+	AccountID *string `json:"accountId,omitempty"`
+}
+type ReadAccountOutput struct {
+	Account *Account `json:"account,omitempty"`
+}
