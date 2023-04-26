@@ -13,8 +13,9 @@ import (
 )
 
 type Account struct {
-	ID   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+	ID             *string `json:"id,omitempty"`
+	Name           *string `json:"name,omitempty"`
+	OrganizationId *string `json:"organizationId,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -138,4 +139,86 @@ type ReadAccountInput struct {
 }
 type ReadAccountOutput struct {
 	Account *Account `json:"account,omitempty"`
+}
+
+func (s *ServiceOp) ReadAccount(ctx context.Context, input *ReadAccountInput) (*ReadAccountOutput, error) {
+	path, err := uritemplates.Expand("/setup/account", uritemplates.Values{
+		"accountId": spotinst.StringValue(input.AccountID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := accountsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ReadAccountOutput)
+	if len(gs) > 0 {
+		output.Account = gs[0]
+	}
+
+	return output, nil
+}
+
+type UpdateAccountInput struct {
+	Account *Account `json:"account,omitempty"`
+}
+
+type UpdateAccountOutput struct {
+	Account *Account `json:"account,omitempty"`
+}
+
+func (s *ServiceOp) UpdateAccount(ctx context.Context, input *UpdateAccountInput) (*UpdateAccountOutput, error) {
+	path, err := uritemplates.Expand("/setup/account/{accountId}", uritemplates.Values{
+		"accountId": spotinst.StringValue(input.Account.ID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do NOT need the ID anymore, so let's drop it.
+	input.Account.ID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := accountsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(UpdateAccountOutput)
+	if len(gs) > 0 {
+		output.Account = gs[0]
+	}
+
+	return output, nil
+}
+
+func (o *Account) SetId(v *string) *Account {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+func (o *Account) SetName(v *string) *Account {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
 }
