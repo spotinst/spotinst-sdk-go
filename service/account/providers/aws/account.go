@@ -38,6 +38,17 @@ type Account struct {
 	nullFields []string
 }
 
+type ListAccounts struct {
+	AccountId          *string `json:"accountId,omitempty"`
+	Name               *string `json:"name,omitempty"`
+	OrganizationId     *string `json:"organizationId,omitempty"`
+	ProviderExternalId *string `json:"providerExternalId,omitempty"`
+	CloudAccountId     *string `json:"cloudAccountId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
 func (o Account) MarshalJSON() ([]byte, error) {
 	type noMethod Account
 	raw := noMethod(o)
@@ -221,4 +232,81 @@ func (o *Account) SetName(v *string) *Account {
 		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
+}
+
+func (o ListAccounts) MarshalJSON() ([]byte, error) {
+	type noMethod ListAccounts
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ListAccounts) SetCloudAccountId(v *string) *ListAccounts {
+	if o.CloudAccountId = v; o.CloudAccountId == nil {
+		o.nullFields = append(o.nullFields, "CloudAccountId")
+	}
+	return o
+}
+
+type ListAccountsInput struct {
+	ListAccounts *ListAccounts `json:"account,omitempty"`
+}
+type ListAccountsOutput struct {
+	ListAccounts []*ListAccounts `json:"account,omitempty"`
+}
+
+func (s *ServiceOp) ListAccounts(ctx context.Context, input *ListAccountsInput) (*ListAccountsOutput, error) {
+	r := client.NewRequest(http.MethodGet, "/setup/account")
+	r.Obj = input
+
+	if input.ListAccounts.CloudAccountId != nil {
+		r.Params.Set("cloudAccountId", spotinst.StringValue(input.ListAccounts.CloudAccountId))
+	}
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := getAccountsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return &ListAccountsOutput{ListAccounts: gs}, nil
+}
+
+func getAccountsFromHttpResponse(resp *http.Response) ([]*ListAccounts, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return getAccountsFromJSON(body)
+}
+
+func getAccountsFromJSON(in []byte) ([]*ListAccounts, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*ListAccounts, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := getAccountFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func getAccountFromJSON(in []byte) (*ListAccounts, error) {
+	b := new(ListAccounts)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
 }

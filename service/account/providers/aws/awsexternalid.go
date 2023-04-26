@@ -47,8 +47,8 @@ type CreateAWSAccountExternalIdOutput struct {
 	AWSAccountExternalId *AwsAccountExternalId `json:"AWSAccountExternalId,omitempty"`
 }
 
-func (s *ServiceOp) CreateAWSAccountExternalId(ctx context.Context, input CreateAWSAccountExternalIdInput) (*CreateAWSAccountExternalIdOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws/externalId")
+func (s *ServiceOp) CreateAwsAccountExternalId(ctx context.Context, input CreateAWSAccountExternalIdInput) (*CreateAWSAccountExternalIdOutput, error) {
+	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws/externalid")
 	//r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))

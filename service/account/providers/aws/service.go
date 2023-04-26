@@ -21,6 +21,7 @@ type serviceAccount interface {
 	ReadAccount(context.Context, *ReadAccountInput) (*ReadAccountOutput, error)
 	DeleteAccount(context.Context, *DeleteAccountInput) (*DeleteAccountOutput, error)
 	UpdateAccount(context.Context, *UpdateAccountInput) (*UpdateAccountOutput, error)
+	ListAccounts(context.Context, *ListAccountsInput) (*ListAccountsOutput, error)
 }
 type serviceCredential interface {
 	CreateCredential(context.Context, *CreateCredentialInput) (*CreateCredentialOutput, error)
