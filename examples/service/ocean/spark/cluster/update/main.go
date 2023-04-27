@@ -33,7 +33,7 @@ func main() {
 		Cluster: &spark.UpdateClusterRequest{
 			Config: &spark.Config{
 				LogCollection: &spark.LogCollectionConfig{
-					CollectDriverLogs: spotinst.Bool(true),
+					CollectAppLogs: spotinst.Bool(true),
 				},
 				Compute: &spark.ComputeConfig{
 					UseTaints:  spotinst.Bool(true),
