@@ -73,9 +73,28 @@ func main() {
 					"subnet-67890",
 				},
 				LaunchSpecification: &aws.LaunchSpecification{
-					ImageID:              spotinst.String("ami-12345"),
-					Monitoring:           spotinst.Bool(false),
-					SecurityGroupIDs:     []string{"sg-foo"},
+					ImageID:          spotinst.String("ami-12345"),
+					Monitoring:       spotinst.Bool(false),
+					SecurityGroupIDs: []string{"sg-foo"},
+					BlockDeviceMappings: []*aws.ClusterBlockDeviceMappings{
+						&aws.ClusterBlockDeviceMappings{
+							DeviceName: spotinst.String("/dev/sdf"),
+							EBS: &aws.ClusterEBS{
+								DeleteOnTermination: spotinst.Bool(true),
+								Encrypted:           spotinst.Bool(false),
+								IOPS:                spotinst.Int(100),
+								Throughput:          spotinst.Int(125),
+								VolumeType:          spotinst.String("gp3"),
+								SnapshotID:          spotinst.String("snap-12345"),
+								VolumeSize:          spotinst.Int(35),
+								DynamicVolumeSize: &aws.ClusterDynamicVolumeSize{
+									BaseSize:            spotinst.Int(20),
+									Resource:            spotinst.String("CPU"),
+									SizePerResourceUnit: spotinst.Int(2),
+								},
+							},
+						},
+					},
 					AssociateIPv6Address: spotinst.Bool(true),
 				},
 			},
