@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -13,7 +14,6 @@ import (
 type Service interface {
 	serviceAccount
 	serviceCredential
-	serviceAwsAccountExternalId
 }
 
 type serviceAccount interface {
@@ -24,11 +24,7 @@ type serviceAccount interface {
 	ListAccounts(context.Context, *ListAccountsInput) (*ListAccountsOutput, error)
 }
 type serviceCredential interface {
-	CreateCredential(context.Context, *CreateCredentialInput) (*CreateCredentialOutput, error)
-}
-
-type serviceAwsAccountExternalId interface {
-	CreateAwsAccountExternalId(context.Context, CreateAWSAccountExternalIdInput) (*CreateAWSAccountExternalIdOutput, error)
+	SetCredential(context.Context, *SetCredentialInput) error
 }
 
 type ServiceOp struct {

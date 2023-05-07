@@ -2,17 +2,17 @@ package aws
 
 import (
 	"context"
-	"encoding/json"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
-	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/spotinst/spotinst-sdk-go/spotinst"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 )
 
-type Credential struct {
-	ID   *string `json:"id,omitempty"`
-	Name *string `json:"name,omitempty"`
+type Credentials struct {
+	IamRole   *string `json:"iamRole,omitempty"`
+	AccountId *string `json:"accountId,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -35,73 +35,28 @@ type Credential struct {
 	nullFields []string
 }
 
-func (o Credential) MarshalJSON() ([]byte, error) {
-	type noMethod Credential
+func (o Credentials) MarshalJSON() ([]byte, error) {
+	type noMethod Credentials
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-type CreateCredentialInput struct {
-	Credential *Credential `json:"credential,omitempty"`
+type SetCredentialInput struct {
+	Credential *Credentials `json:"credentials,omitempty"`
 }
-type CreateCredentialOutput struct {
-	Credential *Credential `json:"Credential,omitempty"`
+type SetCredentialOutput struct {
+	Credential *Credentials `json:"Credentials,omitempty"`
 }
 
-func (s *ServiceOp) CreateCredential(ctx context.Context, input *CreateCredentialInput) (*CreateCredentialOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/setup/account")
+func (s *ServiceOp) SetCredential(ctx context.Context, input *SetCredentialInput) error {
+	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
+	r.Params.Set("accountId", spotinst.StringValue(input.Credential.AccountId))
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
-
-	gs, err := credentialsFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	output := new(CreateCredentialOutput)
-	if len(gs) > 0 {
-		output.Credential = gs[0]
-	}
-
-	return output, nil
-}
-
-func credentialsFromHttpResponse(resp *http.Response) ([]*Credential, error) {
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	return credentialsFromJSON(body)
-}
-
-func credentialsFromJSON(in []byte) ([]*Credential, error) {
-	var rw client.Response
-	if err := json.Unmarshal(in, &rw); err != nil {
-		return nil, err
-	}
-	out := make([]*Credential, len(rw.Response.Items))
-	if len(out) == 0 {
-		return out, nil
-	}
-	for i, rb := range rw.Response.Items {
-		b, err := credentialFromJSON(rb)
-		if err != nil {
-			return nil, err
-		}
-		out[i] = b
-	}
-	return out, nil
-}
-
-func credentialFromJSON(in []byte) (*Credential, error) {
-	b := new(Credential)
-	if err := json.Unmarshal(in, b); err != nil {
-		return nil, err
-	}
-	return b, nil
+	return nil
 }

@@ -3,15 +3,17 @@ package aws
 import (
 	"context"
 	"encoding/json"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/spotinst/spotinst-sdk-go/spotinst"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 )
 
 type AwsAccountExternalId struct {
-	ID *string `json:"externalId,omitempty"`
+	ExternalId *string `json:"externalId,omitempty"`
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
@@ -40,16 +42,15 @@ func (o AwsAccountExternalId) MarshalJSON() ([]byte, error) {
 }
 
 type CreateAWSAccountExternalIdInput struct {
-	//AWSAccountExternalId *AwsAccountExternalId `json:"AWSAccountExternalId,omitempty"`
-	AWSAccountExternalId map[string]string `json:"AWSAccountExternalId,omitempty"`
+	AWSAccountExternalId *string `json:"AWSAccountExternalId,omitempty"`
 }
 type CreateAWSAccountExternalIdOutput struct {
 	AWSAccountExternalId *AwsAccountExternalId `json:"AWSAccountExternalId,omitempty"`
 }
 
-func (s *ServiceOp) CreateAwsAccountExternalId(ctx context.Context, input CreateAWSAccountExternalIdInput) (*CreateAWSAccountExternalIdOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws/externalid")
-	//r.Obj = input
+func (s *ServiceOp) CreateAwsAccountExternalId(ctx context.Context, input *string) (*CreateAWSAccountExternalIdOutput, error) {
+	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws/externalId")
+	r.Params.Set("accountId", spotinst.StringValue(input))
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {

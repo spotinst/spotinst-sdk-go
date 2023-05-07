@@ -3,22 +3,26 @@ package aws
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"time"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
 type Account struct {
-	ID             *string `json:"id,omitempty"`
-	Name           *string `json:"name,omitempty"`
-	OrganizationId *string `json:"organizationId,omitempty"`
+	ID                 *string `json:"id,omitempty"`
+	Name               *string `json:"name,omitempty"`
+	OrganizationId     *string `json:"organizationId,omitempty"`
+	AccountId          *string `json:"accountId,omitempty"`
+	ProviderExternalId *string `json:"providerExternalId,omitempty"`
+	CloudAccountId     *string `json:"cloudAccountId,omitempty"`
+	ExternalId         *string `json:"externalId,omitempty"`
 
 	// Read-only fields.
-	CreatedAt *time.Time `json:"createdAt,omitempty"`
 	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
@@ -81,6 +85,9 @@ func (s *ServiceOp) CreateAccount(ctx context.Context, input *CreateAccountInput
 	if len(gs) > 0 {
 		output.Account = gs[0]
 	}
+
+	output1, err := s.CreateAwsAccountExternalId(ctx, output.Account.ID)
+	output.Account.ExternalId = output1.AWSAccountExternalId.ExternalId
 
 	return output, nil
 }
@@ -153,14 +160,7 @@ type ReadAccountOutput struct {
 }
 
 func (s *ServiceOp) ReadAccount(ctx context.Context, input *ReadAccountInput) (*ReadAccountOutput, error) {
-	path, err := uritemplates.Expand("/setup/account", uritemplates.Values{
-		"accountId": spotinst.StringValue(input.AccountID),
-	})
-	if err != nil {
-		return nil, err
-	}
-
-	r := client.NewRequest(http.MethodGet, path)
+	r := client.NewRequest(http.MethodGet, "/setup/account")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
@@ -174,7 +174,12 @@ func (s *ServiceOp) ReadAccount(ctx context.Context, input *ReadAccountInput) (*
 
 	output := new(ReadAccountOutput)
 	if len(gs) > 0 {
-		output.Account = gs[0]
+		for i, value := range gs {
+			if spotinst.StringValue(input.AccountID) == spotinst.StringValue(value.AccountId) {
+				output.Account = gs[i]
+				break
+			}
+		}
 	}
 
 	return output, nil
@@ -195,8 +200,6 @@ func (s *ServiceOp) UpdateAccount(ctx context.Context, input *UpdateAccountInput
 	if err != nil {
 		return nil, err
 	}
-
-	// We do NOT need the ID anymore, so let's drop it.
 	input.Account.ID = nil
 
 	r := client.NewRequest(http.MethodPut, path)
