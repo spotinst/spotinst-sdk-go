@@ -1,7 +1,13 @@
 package main
 
 import (
+	"context"
+	"github.com/spotinst/spotinst-sdk-go/service/account"
+	"github.com/spotinst/spotinst-sdk-go/service/account/providers/aws"
+	"github.com/spotinst/spotinst-sdk-go/spotinst"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
+	"log"
 )
 
 func main() {
