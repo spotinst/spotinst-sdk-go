@@ -48,6 +48,19 @@ type SetCredentialOutput struct {
 	Credential *Credentials `json:"Credentials,omitempty"`
 }
 
+func (o *Credentials) SetIamRole(v *string) *Credentials {
+	if o.IamRole = v; o.IamRole == nil {
+		o.nullFields = append(o.nullFields, "IamRole")
+	}
+	return o
+}
+func (o *Credentials) SetAccountId(v *string) *Credentials {
+	if o.AccountId = v; o.AccountId == nil {
+		o.nullFields = append(o.nullFields, "AccountId")
+	}
+	return o
+}
+
 func (s *ServiceOp) SetCredential(ctx context.Context, input *SetCredentialInput) error {
 	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
 	r.Params.Set("accountId", spotinst.StringValue(input.Credential.AccountId))
