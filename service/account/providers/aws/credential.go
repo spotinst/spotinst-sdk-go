@@ -2,10 +2,10 @@ package aws
 
 import (
 	"context"
+	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"net/http"
 	"time"
 
-	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 )
@@ -64,8 +64,8 @@ func (o *Credentials) SetAccountId(v *string) *Credentials {
 func (s *ServiceOp) SetCredential(ctx context.Context, input *SetCredentialInput) error {
 	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
 	r.Params.Set("accountId", spotinst.StringValue(input.Credential.AccountId))
+	input.Credential.AccountId = nil
 	r.Obj = input
-
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return err
