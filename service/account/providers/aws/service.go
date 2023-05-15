@@ -13,18 +13,13 @@ import (
 // the service.
 type Service interface {
 	serviceAccount
-	serviceCredential
 }
 
 type serviceAccount interface {
 	CreateAccount(context.Context, *CreateAccountInput) (*CreateAccountOutput, error)
 	ReadAccount(context.Context, *ReadAccountInput) (*ReadAccountOutput, error)
 	DeleteAccount(context.Context, *DeleteAccountInput) (*DeleteAccountOutput, error)
-	UpdateAccount(context.Context, *UpdateAccountInput) (*UpdateAccountOutput, error)
 	ListAccounts(context.Context, *ListAccountsInput) (*ListAccountsOutput, error)
-}
-type serviceCredential interface {
-	SetCredential(context.Context, *SetCredentialInput) error
 }
 
 type ServiceOp struct {

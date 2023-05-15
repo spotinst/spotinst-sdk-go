@@ -185,45 +185,6 @@ func (s *ServiceOp) ReadAccount(ctx context.Context, input *ReadAccountInput) (*
 	return output, nil
 }
 
-type UpdateAccountInput struct {
-	Account *Account `json:"account,omitempty"`
-}
-
-type UpdateAccountOutput struct {
-	Account *Account `json:"account,omitempty"`
-}
-
-func (s *ServiceOp) UpdateAccount(ctx context.Context, input *UpdateAccountInput) (*UpdateAccountOutput, error) {
-	path, err := uritemplates.Expand("/setup/account/{accountId}", uritemplates.Values{
-		"accountId": spotinst.StringValue(input.Account.ID),
-	})
-	if err != nil {
-		return nil, err
-	}
-	input.Account.ID = nil
-
-	r := client.NewRequest(http.MethodPut, path)
-	r.Obj = input
-
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	gs, err := accountsFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	output := new(UpdateAccountOutput)
-	if len(gs) > 0 {
-		output.Account = gs[0]
-	}
-
-	return output, nil
-}
-
 func (o *Account) SetId(v *string) *Account {
 	if o.ID = v; o.ID == nil {
 		o.nullFields = append(o.nullFields, "ID")
