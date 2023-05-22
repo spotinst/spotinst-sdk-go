@@ -85,6 +85,7 @@ type LaunchSpecification struct {
 	Login                    *Login                    `json:"login,omitempty"`
 	CustomData               *string                   `json:"customData,omitempty"`
 	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
+	Tags                     []*Tag                    `json:"tags,omitempty"`
 	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
 	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
 
@@ -184,6 +185,14 @@ type ApplicationSecurityGroup struct {
 type ManagedServiceIdentity struct {
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 	Name              *string `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Tag struct {
+	TagKey   *string `json:"tagKey,omitempty"`
+	TagValue *string `json:"tagValue,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -623,6 +632,13 @@ func (o *LaunchSpecification) SetLoadBalancersConfig(v *LoadBalancersConfig) *La
 func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification {
 	if o.ShutdownScript = v; o.ShutdownScript == nil {
 		o.nullFields = append(o.nullFields, "ShutdownScript")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
+	if o.Tags = v; o.Tags == nil {
+		o.nullFields = append(o.nullFields, "Tags")
 	}
 	return o
 }
