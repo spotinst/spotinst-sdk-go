@@ -85,7 +85,7 @@ type LaunchSpecification struct {
 	Login                    *Login                    `json:"login,omitempty"`
 	CustomData               *string                   `json:"customData,omitempty"`
 	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
-	Tags                     []*Tag                    `json:"tags,omitempty"`
+	Tags                     []*Tags                   `json:"tags,omitempty"`
 	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
 	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
 
@@ -190,7 +190,7 @@ type ManagedServiceIdentity struct {
 	nullFields      []string
 }
 
-type Tag struct {
+type Tags struct {
 	TagKey   *string `json:"tagKey,omitempty"`
 	TagValue *string `json:"tagValue,omitempty"`
 
@@ -636,7 +636,7 @@ func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification 
 	return o
 }
 
-func (o *LaunchSpecification) SetTags(v []*Tag) *LaunchSpecification {
+func (o *LaunchSpecification) SetTags(v []*Tags) *LaunchSpecification {
 	if o.Tags = v; o.Tags == nil {
 		o.nullFields = append(o.nullFields, "Tags")
 	}
@@ -701,6 +701,30 @@ func (o *MarketPlaceImage) SetSKU(v *string) *MarketPlaceImage {
 func (o *MarketPlaceImage) SetVersion(v *string) *MarketPlaceImage {
 	if o.Version = v; o.Version == nil {
 		o.nullFields = append(o.nullFields, "Version")
+	}
+	return o
+}
+
+// endregion
+
+// region Tags
+
+func (o Tags) MarshalJSON() ([]byte, error) {
+	type noMethod Tags
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Tags) SetTagKey(v *string) *Tags {
+	if o.TagKey = v; o.TagKey == nil {
+		o.nullFields = append(o.nullFields, "TagKey")
+	}
+	return o
+}
+
+func (o *Tags) SetTagValue(v *string) *Tags {
+	if o.TagValue = v; o.TagValue == nil {
+		o.nullFields = append(o.nullFields, "TagValue")
 	}
 	return o
 }
