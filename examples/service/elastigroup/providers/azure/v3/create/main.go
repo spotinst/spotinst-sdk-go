@@ -84,7 +84,7 @@ func main() {
 							},
 						},
 					},
-					Tags: []*azurev3.Tag{
+					Tags: []*azurev3.Tags{
 						{
 							TagKey:   spotinst.String("key1"),
 							TagValue: spotinst.String("value1"),
