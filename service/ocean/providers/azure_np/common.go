@@ -158,3 +158,125 @@ func (o *Taint) SetEffect(v *string) *Taint {
 }
 
 // endregion
+
+//region AutoScale
+
+type AutoScale struct {
+	Headrooms []*Headrooms `json:"headrooms,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Headrooms struct {
+	CpuPerUnit    *int `json:"cpuPerUnit,omitempty"`
+	MemoryPerUnit *int `json:"memoryPerUnit,omitempty"`
+	GpuPerUnit    *int `json:"gpuPerUnit,omitempty"`
+	NumberOfUnits *int `json:"numOfUnits,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o AutoScale) MarshalJSON() ([]byte, error) {
+	type noMethod AutoScale
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoScale) SetHeadrooms(v []*Headrooms) *AutoScale {
+	if o.Headrooms = v; o.Headrooms == nil {
+		o.nullFields = append(o.nullFields, "Headrooms")
+	}
+	return o
+}
+
+//end region
+
+//region Headrooms
+
+func (o Headrooms) MarshalJSON() ([]byte, error) {
+	type noMethod Headrooms
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Headrooms) SetCpuPerUnit(v *int) *Headrooms {
+	if o.CpuPerUnit = v; o.CpuPerUnit == nil {
+		o.nullFields = append(o.nullFields, "CpuPerUnit")
+	}
+	return o
+}
+
+func (o *Headrooms) SetMemoryPerUnit(v *int) *Headrooms {
+	if o.MemoryPerUnit = v; o.MemoryPerUnit == nil {
+		o.nullFields = append(o.nullFields, "MemoryPerUnit")
+	}
+	return o
+}
+
+func (o *Headrooms) SetGpuPerUnit(v *int) *Headrooms {
+	if o.GpuPerUnit = v; o.GpuPerUnit == nil {
+		o.nullFields = append(o.nullFields, "GpuPerUnit")
+	}
+	return o
+}
+
+func (o *Headrooms) SetNumOfUnits(v *int) *Headrooms {
+	if o.NumberOfUnits = v; o.NumberOfUnits == nil {
+		o.nullFields = append(o.nullFields, "NumberOfUnits")
+	}
+	return o
+}
+
+// endregion
+
+//region Scheduling
+
+type Scheduling struct {
+	ShutdownHours *ShutdownHours `json:"shutdownHours,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ShutdownHours struct {
+	TimeWindows []string `json:"timeWindows,omitempty"`
+	IsEnabled   *bool    `json:"isEnabled,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o Scheduling) MarshalJSON() ([]byte, error) {
+	type noMethod Scheduling
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Scheduling) SetShutdownHours(v *ShutdownHours) *Scheduling {
+	if o.ShutdownHours = v; o.ShutdownHours == nil {
+		o.nullFields = append(o.nullFields, "ShutdownHours")
+	}
+	return o
+}
+
+func (o ShutdownHours) MarshalJSON() ([]byte, error) {
+	type noMethod ShutdownHours
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ShutdownHours) SetTimeWindows(v []string) *ShutdownHours {
+	if o.TimeWindows = v; o.TimeWindows == nil {
+		o.nullFields = append(o.nullFields, "TimeWindows")
+	}
+	return o
+}
+
+func (o *ShutdownHours) SetIsEnabled(v *bool) *ShutdownHours {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}

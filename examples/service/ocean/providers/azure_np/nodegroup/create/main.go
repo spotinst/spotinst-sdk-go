@@ -30,7 +30,7 @@ func main() {
 	// Create a new cluster.
 	out, err := svc.CloudProviderAzureNP().CreateVirtualNodeGroup(ctx, &azure_np.CreateVirtualNodeGroupInput{
 		VirtualNodeGroup: &azure_np.VirtualNodeGroup{
-			OceanID: spotinst.String("oceanId"),
+			OceanID: spotinst.String("OceanId"),
 			Name:    spotinst.String("foo"),
 			AvailabilityZones: []string{"1",
 				"2"},
@@ -46,7 +46,7 @@ func main() {
 				},
 			},
 			NodePoolProperties: &azure_np.NodePoolProperties{
-				MaxPodsPerNode:     spotinst.Int(100),
+				MaxPodsPerNode:     spotinst.Int(110),
 				EnableNodePublicIP: spotinst.Bool(false),
 				OsDiskSizeGB:       spotinst.Int(128),
 				OsDiskType:         spotinst.String("Managed"),
@@ -54,14 +54,14 @@ func main() {
 			},
 			NodeCountLimits: &azure_np.NodeCountLimits{
 				MinCount: spotinst.Int(0),
-				MaxCount: spotinst.Int(20),
+				MaxCount: spotinst.Int(1000),
 			},
 			Strategy: &azure_np.Strategy{
 				SpotPercentage: spotinst.Int(100),
 				FallbackToOD:   spotinst.Bool(true),
 			},
-			AutoScale: &azure_np.VirtualNodeGroupAutoScale{
-				Headrooms: []*azure_np.VirtualNodeGroupHeadrooms{
+			AutoScale: &azure_np.AutoScale{
+				Headrooms: []*azure_np.Headrooms{
 					{
 						CpuPerUnit:    spotinst.Int(10),
 						MemoryPerUnit: spotinst.Int(30),
