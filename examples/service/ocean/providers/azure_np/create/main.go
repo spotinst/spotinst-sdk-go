@@ -55,6 +55,15 @@ func main() {
 					},
 				},
 			},
+			Scheduling: &azure_np.Scheduling{
+				ShutdownHours: &azure_np.ShutdownHours{
+					TimeWindows: []string{
+						"Sat:08:00-Sun:08:00",
+						"Mon:08:00-Tue:08:00",
+					},
+					IsEnabled: spotinst.Bool(true),
+				},
+			},
 			Health: &azure_np.Health{
 				GracePeriod: spotinst.Int(600),
 			},
