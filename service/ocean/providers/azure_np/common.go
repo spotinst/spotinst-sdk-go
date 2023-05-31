@@ -280,3 +280,93 @@ func (o *ShutdownHours) SetIsEnabled(v *bool) *ShutdownHours {
 	}
 	return o
 }
+
+// end region
+
+// region vmSizes
+
+type VmSizes struct {
+	Filters *Filters `json:"filters,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Filters struct {
+	MinVcpu       *int     `json:"minVcpu,omitempty"`
+	MaxVcpu       *int     `json:"maxVcpu,omitempty"`
+	MinMemoryGiB  *float64 `json:"minMemoryGiB,omitempty"`
+	MaxMemoryGiB  *float64 `json:"maxMemoryGiB,omitempty"`
+	Series        []string `json:"series,omitempty"`
+	Architectures []string `json:"architectures,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o VmSizes) MarshalJSON() ([]byte, error) {
+	type noMethod VmSizes
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VmSizes) SetFilters(v *Filters) *VmSizes {
+	if o.Filters = v; o.Filters == nil {
+		o.nullFields = append(o.nullFields, "Filters")
+	}
+	return o
+}
+
+// end region
+
+//region filters
+
+func (o Filters) MarshalJSON() ([]byte, error) {
+	type noMethod Filters
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Filters) SetMinVcpu(v *int) *Filters {
+	if o.MinVcpu = v; o.MinVcpu == nil {
+		o.nullFields = append(o.nullFields, "MinVcpu")
+	}
+	return o
+}
+
+func (o *Filters) SetMaxVcpu(v *int) *Filters {
+	if o.MaxVcpu = v; o.MaxVcpu == nil {
+		o.nullFields = append(o.nullFields, "MaxVcpu")
+	}
+	return o
+}
+
+func (o *Filters) SetMinMemoryGiB(v *float64) *Filters {
+	if o.MinMemoryGiB = v; o.MinMemoryGiB == nil {
+		o.nullFields = append(o.nullFields, "MinMemoryGiB")
+	}
+	return o
+}
+
+func (o *Filters) SetMaxMemoryGiB(v *float64) *Filters {
+	if o.MaxMemoryGiB = v; o.MaxMemoryGiB == nil {
+		o.nullFields = append(o.nullFields, "MaxMemoryGiB")
+	}
+	return o
+}
+
+func (o *Filters) SetSeries(v []string) *Filters {
+	if o.Series = v; o.Series == nil {
+		o.nullFields = append(o.nullFields, "Series")
+	}
+	return o
+}
+
+func (o *Filters) SetArchitectures(v []string) *Filters {
+	if o.Architectures = v; o.Architectures == nil {
+		o.nullFields = append(o.nullFields, "Architectures")
+	}
+	return o
+}
+
+//end region

@@ -67,6 +67,7 @@ type VirtualNodeGroupTemplate struct {
 	Tags               *map[string]string  `json:"tags,omitempty"`
 	Taints             []*Taint            `json:"taints,omitempty"`
 	AutoScale          *AutoScale          `json:"autoScale,omitempty"`
+	VmSizes            *VmSizes            `json:"vmSizes,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -651,6 +652,13 @@ func (o *VirtualNodeGroupTemplate) SetTags(v *map[string]string) *VirtualNodeGro
 func (o *VirtualNodeGroupTemplate) SetAutoScale(v *AutoScale) *VirtualNodeGroupTemplate {
 	if o.AutoScale = v; o.AutoScale == nil {
 		o.nullFields = append(o.nullFields, "AutoScale")
+	}
+	return o
+}
+
+func (o *VirtualNodeGroupTemplate) SetVmSizes(v *VmSizes) *VirtualNodeGroupTemplate {
+	if o.VmSizes = v; o.VmSizes == nil {
+		o.nullFields = append(o.nullFields, "VmSizes")
 	}
 	return o
 }

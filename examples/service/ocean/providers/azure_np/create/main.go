@@ -112,6 +112,22 @@ func main() {
 						Effect: spotinst.String("NoSchedule"),
 					},
 				},
+				VmSizes: &azure_np.VmSizes{
+					Filters: &azure_np.Filters{
+						MinVcpu:      spotinst.Int(2),
+						MaxVcpu:      spotinst.Int(16),
+						MinMemoryGiB: spotinst.Float64(8),
+						MaxMemoryGiB: spotinst.Float64(16),
+						Architectures: []string{
+							"X86_64",
+						},
+						Series: []string{
+							"D v3",
+							"F",
+							"E v4",
+						},
+					},
+				},
 			},
 		},
 	})
