@@ -293,8 +293,8 @@ type VmSizes struct {
 }
 
 type Filters struct {
-	MinVcpu       *int     `json:"minVcpu,omitempty"`
-	MaxVcpu       *int     `json:"maxVcpu,omitempty"`
+	MinVcpu       *int     `json:"minVCpu,omitempty"`
+	MaxVcpu       *int     `json:"maxVCpu,omitempty"`
 	MinMemoryGiB  *float64 `json:"minMemoryGiB,omitempty"`
 	MaxMemoryGiB  *float64 `json:"maxMemoryGiB,omitempty"`
 	Series        []string `json:"series,omitempty"`
