@@ -217,7 +217,7 @@ type NetworkInterface struct {
 	PublicIPSku                *string                      `json:"publicIpSku,omitempty"`
 	NetworkSecurityGroup       *NetworkSecurityGroup        `json:"networkSecurityGroup,omitempty"`
 	EnableIPForwarding         *bool                        `json:"enableIPForwarding,omitempty"`
-	PrivateIPAddresses         []string                     `json:"privateIPAddresses,omitempty"`
+	PrivateIPAddresses         []string                     `json:"privateIpAddresses,omitempty"`
 	AdditionalIPConfigurations []*AdditionalIPConfiguration `json:"additionalIpConfigurations,omitempty"`
 	PublicIPs                  []*PublicIP                  `json:"publicIps,omitempty"`
 	ApplicationSecurityGroups  []*ApplicationSecurityGroup  `json:"applicationSecurityGroups,omitempty"`
