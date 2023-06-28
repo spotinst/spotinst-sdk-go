@@ -216,8 +216,8 @@ type NetworkInterface struct {
 	IsPrimary                  *bool                        `json:"isPrimary,omitempty"`
 	PublicIPSku                *string                      `json:"publicIpSku,omitempty"`
 	NetworkSecurityGroup       *NetworkSecurityGroup        `json:"networkSecurityGroup,omitempty"`
-	EnableIPForwarding         *bool                        `json:"enableIPForwarding,omitempty"`
-	PrivateIPAddresses         []string                     `json:"privateIPAddresses,omitempty"`
+	EnableIPForwarding         *bool                        `json:"enableIpForwarding,omitempty"`
+	PrivateIPAddresses         []string                     `json:"privateIpAddresses,omitempty"`
 	AdditionalIPConfigurations []*AdditionalIPConfiguration `json:"additionalIpConfigurations,omitempty"`
 	PublicIPs                  []*PublicIP                  `json:"publicIps,omitempty"`
 	ApplicationSecurityGroups  []*ApplicationSecurityGroup  `json:"applicationSecurityGroups,omitempty"`
