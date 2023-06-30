@@ -106,6 +106,7 @@ type LaunchSpecification struct {
 	DataDisks                []*DataDisk               `json:"dataDisks,omitempty"`
 	Secrets                  []*Secret                 `json:"secrets,omitempty"`
 	BootDiagnostics          *BootDiagnostics          `json:"bootDiagnostics,omitempty"`
+	UserData                 *string                   `json:"userData,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1300,6 +1301,13 @@ func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIde
 func (o *LaunchSpecification) SetExtensions(v []*Extension) *LaunchSpecification {
 	if o.Extensions = v; o.Extensions == nil {
 		o.nullFields = append(o.nullFields, "Extensions")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetUserData(v *string) *LaunchSpecification {
+	if o.UserData = v; o.UserData == nil {
+		o.nullFields = append(o.nullFields, "UserData")
 	}
 	return o
 }
