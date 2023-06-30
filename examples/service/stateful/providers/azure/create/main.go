@@ -121,6 +121,7 @@ func main() {
 							TagValue: spotinst.String("Tamiry@netapp.com"),
 						},
 					},
+					UserData: spotinst.String("VGhpcyBpcyBhIHZhbGlkIGJhc2UgNjQgdXNlciBkYXRhIHNjcmlwdA=="),
 				},
 			},
 			Scheduling: &azure.Scheduling{

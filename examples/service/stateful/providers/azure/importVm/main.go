@@ -51,6 +51,7 @@ func main() {
 								TagValue: spotinst.String("bar"),
 							},
 						},
+						UserData: spotinst.String("VGhpcyBpcyBhIHZhbGlkIGJhc2UgNjQgdXNlciBkYXRhIHNjcmlwdA=="),
 					},
 				},
 				Health: &azure.Health{
