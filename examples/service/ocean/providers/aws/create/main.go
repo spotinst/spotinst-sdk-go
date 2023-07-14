@@ -96,6 +96,11 @@ func main() {
 						},
 					},
 					AssociateIPv6Address: spotinst.Bool(true),
+					ResourceTagSpecification: &aws.ResourceTagSpecification{
+						Volumes: &aws.Volumes{
+							ShouldTag: spotinst.Bool(true),
+						},
+					},
 				},
 			},
 		},

@@ -178,6 +178,7 @@ type LaunchSpecification struct {
 	InstanceMetadataOptions  *InstanceMetadataOptions      `json:"instanceMetadataOptions,omitempty"`
 	BlockDeviceMappings      []*ClusterBlockDeviceMappings `json:"blockDeviceMappings,omitempty"`
 	LaunchSpecScheduling     *LaunchSpecScheduling         `json:"scheduling,omitempty"`
+	ResourceTagSpecification *ResourceTagSpecification     `json:"resourceTagSpecification,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -258,6 +259,20 @@ type Logging struct {
 
 type Export struct {
 	S3 *S3 `json:"s3,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ResourceTagSpecification struct {
+	Volumes *Volumes `json:"volumes,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Volumes struct {
+	ShouldTag *bool `json:"shouldTag,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1495,6 +1510,13 @@ func (o *LaunchSpecification) SetInstanceMetadataOptions(v *InstanceMetadataOpti
 	return o
 }
 
+func (o *LaunchSpecification) SetResourceTagSpecification(v *ResourceTagSpecification) *LaunchSpecification {
+	if o.ResourceTagSpecification = v; o.ResourceTagSpecification == nil {
+		o.nullFields = append(o.nullFields, "ResourceTagSpecification")
+	}
+	return o
+}
+
 // endregion
 
 // region LoadBalancer
@@ -2191,6 +2213,38 @@ func (o *ClusterDynamicVolumeSize) SetResource(v *string) *ClusterDynamicVolumeS
 func (o *ClusterDynamicVolumeSize) SetSizePerResourceUnit(v *int) *ClusterDynamicVolumeSize {
 	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
 		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+// endregion
+
+// region ResourceTagSpecification
+
+func (o ResourceTagSpecification) MarshalJSON() ([]byte, error) {
+	type noMethod ResourceTagSpecification
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ResourceTagSpecification) SetVolumes(v *Volumes) *ResourceTagSpecification {
+	if o.Volumes = v; o.Volumes == nil {
+		o.nullFields = append(o.nullFields, "Volumes")
+	}
+	return o
+}
+
+// region Volumes
+
+func (o Volumes) MarshalJSON() ([]byte, error) {
+	type noMethod Volumes
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Volumes) SetShouldTag(v *bool) *Volumes {
+	if o.ShouldTag = v; o.ShouldTag == nil {
+		o.nullFields = append(o.nullFields, "ShouldTag")
 	}
 	return o
 }
