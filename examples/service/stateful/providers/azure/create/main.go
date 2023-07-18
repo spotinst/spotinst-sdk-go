@@ -122,6 +122,7 @@ func main() {
 						},
 					},
 					UserData: spotinst.String("base64 user data script"),
+					VMName:   spotinst.String("nameOfVM"),
 				},
 			},
 			Scheduling: &azure.Scheduling{
