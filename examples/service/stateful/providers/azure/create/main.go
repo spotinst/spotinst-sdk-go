@@ -123,6 +123,22 @@ func main() {
 					},
 					UserData: spotinst.String("base64 user data script"),
 					VMName:   spotinst.String("nameOfVM"),
+					LoadBalancersConfig: &azure.LoadBalancersConfig{
+						LoadBalancers: []*azure.LoadBalancer{
+							{
+								BackendPoolNames:  []string{"foo"},
+								SKU:               spotinst.String("Standard"),
+								Name:              spotinst.String("foo"),
+								ResourceGroupName: spotinst.String("foo"),
+								Type:              spotinst.String("foo"),
+							},
+						},
+					},
+					Security: &azure.Security{
+						SecureBootEnabled: spotinst.Bool(false),
+						SecurityType:      spotinst.String("Standard"),
+						VTpmEnabled:       spotinst.Bool(false),
+					},
 				},
 			},
 			Scheduling: &azure.Scheduling{
