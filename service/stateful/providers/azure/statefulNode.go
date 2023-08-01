@@ -1940,7 +1940,7 @@ func (o *LoadBalancer) SetSKU(v *string) *LoadBalancer {
 	return o
 }
 
-func (o *LoadBalancer) SeBackendPoolNames(v []string) *LoadBalancer {
+func (o *LoadBalancer) SetBackendPoolNames(v []string) *LoadBalancer {
 	if o.BackendPoolNames = v; o.BackendPoolNames == nil {
 		o.nullFields = append(o.nullFields, "BackendPoolNames")
 	}
