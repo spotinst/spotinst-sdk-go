@@ -14,6 +14,7 @@ import (
 type Service interface {
 	ListUsers(context.Context, *ListUsersInput) (*ListUsersOutput, error)
 	CreateUser(context.Context, *User, *bool) (*CreateUserOutput, error)
+	//CreateProgUser(context.Context, *ProgrammaticUser) (*CreateProgrammaticUserOutput, error)
 	ReadUser(context.Context, *ReadUserInput) (*ReadUserOutput, error)
 	//Update(context.Context, *UpdateUserInput) (*UpdateUserOutput, error)
 	DeleteUser(context.Context, *DeleteUserInput) (*DeleteUserOutput, error)
