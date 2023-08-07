@@ -50,7 +50,8 @@ func main() {
 				EnableNodePublicIP: spotinst.Bool(false),
 				OsDiskSizeGB:       spotinst.Int(128),
 				OsDiskType:         spotinst.String("Managed"),
-				OsType:             spotinst.String("Linux"),
+				OsType:             spotinst.String("Windows"),
+				OsSKU:              spotinst.String("Windows2022"),
 			},
 			NodeCountLimits: &azure_np.NodeCountLimits{
 				MinCount: spotinst.Int(0),
@@ -83,6 +84,10 @@ func main() {
 						"D v3",
 						"F",
 						"E v4",
+					},
+					ExcludeSeries: []string{
+						"Bs",
+						"Da v4",
 					},
 				},
 			},

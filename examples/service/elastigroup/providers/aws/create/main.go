@@ -36,6 +36,7 @@ func main() {
 			Region:      spotinst.String("us-west-2"),
 			Capacity: &aws.Capacity{
 				Target: spotinst.Int(5),
+				Unit:   spotinst.String("weight"),
 			},
 			Strategy: &aws.Strategy{
 				Risk:                        spotinst.Float64(100),
@@ -46,10 +47,45 @@ func main() {
 			Compute: &aws.Compute{
 				Product: spotinst.String(aws.ProductName[aws.ProductLinuxUnix]),
 				InstanceTypes: &aws.InstanceTypes{
-					OnDemand: spotinst.String("c3.large"),
-					Spot: []string{
+					//OnDemand: spotinst.String("c3.large"),
+					/*Spot: []string{
 						"c3.large",
 						"c4.large",
+					},*/
+					OnDemandTypes: []string{
+						"c3.large",
+					},
+					/*PreferredSpot: []string{
+						"c3.large",
+					},*/
+					Weights: []*aws.InstanceTypeWeight{
+						{
+							InstanceType: spotinst.String("c3.large"),
+							Weight:       spotinst.Int(8),
+						},
+					},
+					ResourceRequirements: &aws.ResourceRequirements{
+						ExcludedInstanceTypes: []string{
+							"m3.large",
+						},
+						ExcludedInstanceFamilies: []string{
+							"a", "m",
+						},
+						ExcludedInstanceGenerations: []string{
+							"1", "2",
+						},
+						RequiredGpu: &aws.RequiredGpu{
+							Maximum: spotinst.Int(16),
+							Minimum: spotinst.Int(2),
+						},
+						RequiredVCpu: &aws.RequiredVCpu{
+							Minimum: spotinst.Int(1),
+							Maximum: spotinst.Int(64),
+						},
+						RequiredMemory: &aws.RequiredMemory{
+							Minimum: spotinst.Int(1),
+							Maximum: spotinst.Int(512),
+						},
 					},
 				},
 				SubnetIDs: []string{
