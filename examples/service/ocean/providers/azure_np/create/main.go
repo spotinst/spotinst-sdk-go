@@ -73,7 +73,8 @@ func main() {
 					EnableNodePublicIP: spotinst.Bool(false),
 					OsDiskSizeGB:       spotinst.Int(128),
 					OsDiskType:         spotinst.String("Managed"),
-					OsType:             spotinst.String("Linux"),
+					OsType:             spotinst.String("Windows"),
+					OsSKU:              spotinst.String("Windows2019"),
 				},
 				NodeCountLimits: &azure_np.NodeCountLimits{
 					MinCount: spotinst.Int(0),
@@ -118,6 +119,10 @@ func main() {
 						MaxVcpu:      spotinst.Int(16),
 						MinMemoryGiB: spotinst.Float64(8),
 						MaxMemoryGiB: spotinst.Float64(16),
+						ExcludeSeries: []string{
+							"Bs",
+							"Da v4",
+						},
 						Architectures: []string{
 							"X86_64",
 						},

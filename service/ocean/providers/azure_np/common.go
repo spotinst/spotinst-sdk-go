@@ -9,6 +9,7 @@ type NodePoolProperties struct {
 	OsDiskSizeGB       *int    `json:"osDiskSizeGB,omitempty"`
 	OsDiskType         *string `json:"osDiskType,omitempty"`
 	OsType             *string `json:"osType,omitempty"`
+	OsSKU              *string `json:"osSKU,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -51,6 +52,13 @@ func (o *NodePoolProperties) SetOsDiskType(v *string) *NodePoolProperties {
 func (o *NodePoolProperties) SetOsType(v *string) *NodePoolProperties {
 	if o.OsType = v; o.OsType == nil {
 		o.nullFields = append(o.nullFields, "OsType")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetOsSKU(v *string) *NodePoolProperties {
+	if o.OsSKU = v; o.OsSKU == nil {
+		o.nullFields = append(o.nullFields, "OsSKU")
 	}
 	return o
 }
@@ -299,6 +307,7 @@ type Filters struct {
 	MaxMemoryGiB  *float64 `json:"maxMemoryGiB,omitempty"`
 	Series        []string `json:"series,omitempty"`
 	Architectures []string `json:"architectures,omitempty"`
+	ExcludeSeries []string `json:"excludeSeries,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -365,6 +374,13 @@ func (o *Filters) SetSeries(v []string) *Filters {
 func (o *Filters) SetArchitectures(v []string) *Filters {
 	if o.Architectures = v; o.Architectures == nil {
 		o.nullFields = append(o.nullFields, "Architectures")
+	}
+	return o
+}
+
+func (o *Filters) SetExcludeSeries(v []string) *Filters {
+	if o.ExcludeSeries = v; o.ExcludeSeries == nil {
+		o.nullFields = append(o.nullFields, "ExcludeSeries")
 	}
 	return o
 }
