@@ -108,6 +108,7 @@ type LaunchSpecification struct {
 	BootDiagnostics          *BootDiagnostics          `json:"bootDiagnostics,omitempty"`
 	UserData                 *string                   `json:"userData,omitempty"`
 	VMName                   *string                   `json:"vmName,omitempty"`
+	Security                 *Security                 `json:"security,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -280,7 +281,7 @@ type LoadBalancer struct {
 	Type              *string  `json:"type,omitempty"`
 	ResourceGroupName *string  `json:"resourceGroupName,omitempty"`
 	Name              *string  `json:"name,omitempty"`
-	SKU               *string  `json:"sku,omitempty"`
+	SKU               *string  `json:"loadBalancerSku,omitempty"`
 	BackendPoolNames  []string `json:"backendPoolNames,omitempty"`
 
 	forceSendFields []string
@@ -346,6 +347,15 @@ type Health struct {
 	GracePeriod       *int     `json:"gracePeriod,omitempty"`
 	UnhealthyDuration *int     `json:"unhealthyDuration,omitempty"`
 	AutoHealing       *bool    `json:"autoHealing,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Security struct {
+	SecureBootEnabled *bool   `json:"secureBootEnabled,omitempty"`
+	SecurityType      *string `json:"securityType,omitempty"`
+	VTpmEnabled       *bool   `json:"vTpmEnabled,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1320,6 +1330,13 @@ func (o *LaunchSpecification) SetVMName(v *string) *LaunchSpecification {
 	return o
 }
 
+func (o *LaunchSpecification) SetSecurity(v *Security) *LaunchSpecification {
+	if o.Security = v; o.Security == nil {
+		o.nullFields = append(o.nullFields, "Security")
+	}
+	return o
+}
+
 // endregion
 
 // region Secret
@@ -1923,7 +1940,7 @@ func (o *LoadBalancer) SetSKU(v *string) *LoadBalancer {
 	return o
 }
 
-func (o *LoadBalancer) SeBackendPoolNames(v []string) *LoadBalancer {
+func (o *LoadBalancer) SetBackendPoolNames(v []string) *LoadBalancer {
 	if o.BackendPoolNames = v; o.BackendPoolNames == nil {
 		o.nullFields = append(o.nullFields, "BackendPoolNames")
 	}
@@ -2017,3 +2034,34 @@ func (o *BootDiagnostics) SetStorageURL(v *string) *BootDiagnostics {
 }
 
 // endregion
+
+//security region
+
+func (o Security) MarshalJSON() ([]byte, error) {
+	type noMethod Security
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Security) SetSecureBootEnabled(v *bool) *Security {
+	if o.SecureBootEnabled = v; o.SecureBootEnabled == nil {
+		o.nullFields = append(o.nullFields, "SecureBootEnabled")
+	}
+	return o
+}
+
+func (o *Security) SetSecurityType(v *string) *Security {
+	if o.SecurityType = v; o.SecurityType == nil {
+		o.nullFields = append(o.nullFields, "SecurityType")
+	}
+	return o
+}
+
+func (o *Security) SetVTpmEnabled(v *bool) *Security {
+	if o.VTpmEnabled = v; o.VTpmEnabled == nil {
+		o.nullFields = append(o.nullFields, "VTpmEnabled")
+	}
+	return o
+}
+
+//end region
