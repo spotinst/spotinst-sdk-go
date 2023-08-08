@@ -21,7 +21,7 @@ type Service interface {
 
 	ListPolicies(context.Context, *ListPoliciesInput) (*ListPoliciesOutput, error)
 	CreatePolicy(context.Context, *CreatePolicyInput) (*CreatePolicyOutput, error)
-	//ReadPolicy(context.Context, *ReadPolicyInput) (*ReadPolicyOutput, error)
+	ReadPolicy(context.Context, *ReadPolicyInput) (*ReadPolicyOutput, error)
 	UpdatePolicy(context.Context, *UpdatePolicyInput) (*UpdatePolicyOutput, error)
 	DeletePolicy(context.Context, *DeletePolicyInput) (*DeletePolicyOutput, error)
 

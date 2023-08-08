@@ -162,28 +162,27 @@ func (s *ServiceOp) CreatePolicy(ctx context.Context, input *CreatePolicyInput) 
 }
 
 func (s *ServiceOp) ReadPolicy(ctx context.Context, input *ReadPolicyInput) (*ReadPolicyOutput, error) {
-	path, err := uritemplates.Expand("/setup/access/policy/{policyId}", uritemplates.Values{
-		"policyId": spotinst.StringValue(input.PolicyID),
-	})
-	if err != nil {
-		return nil, err
-	}
 
-	r := client.NewRequest(http.MethodGet, path)
+	r := client.NewRequest(http.MethodGet, "/setup/organization/policy")
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	ss, err := policiesFromHttpResponse(resp)
+	gs, err := policiesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(ReadPolicyOutput)
-	if len(ss) > 0 {
-		output.Policy = ss[0]
+	if len(gs) > 0 {
+		for i, value := range gs {
+			if spotinst.StringValue(input.PolicyID) == spotinst.StringValue(value.PolicyID) {
+				output.Policy = gs[i]
+				break
+			}
+		}
 	}
 
 	return output, nil
