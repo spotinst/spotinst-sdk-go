@@ -43,9 +43,9 @@ type PolicyContent struct {
 }
 
 type Statement struct {
-	Actions   []*string `json:"actions,omitempty"`
-	Effect    *string   `json:"effect,omitempty"`
-	Resources []*string `json:"resources,omitempty"`
+	Actions   []string `json:"actions,omitempty"`
+	Effect    *string  `json:"effect,omitempty"`
+	Resources []string `json:"resources,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -298,14 +298,14 @@ func (o *Statement) SetEffect(v *string) *Statement {
 	return o
 }
 
-func (o *Statement) SetResources(v []*string) *Statement {
+func (o *Statement) SetResources(v []string) *Statement {
 	if o.Resources = v; o.Resources == nil {
 		o.nullFields = append(o.nullFields, "Resources")
 	}
 	return o
 }
 
-func (o *Statement) SetActions(v []*string) *Statement {
+func (o *Statement) SetActions(v []string) *Statement {
 	if o.Actions = v; o.Actions == nil {
 		o.nullFields = append(o.nullFields, "Actions")
 	}

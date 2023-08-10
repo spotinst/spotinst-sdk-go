@@ -35,14 +35,14 @@ func main() {
 			PolicyContent: &administration.PolicyContent{
 				Statements: []*administration.Statement{
 					{
-						Actions: spotinst.StringSlice([]string{
+						Actions: []string{
 							"ocean:deleteCluster",
 							"ocean:updateCluster",
-						}),
+						},
 						Effect: spotinst.String("ALLOW"),
-						Resources: spotinst.StringSlice([]string{
+						Resources: []string{
 							"*",
-						}),
+						},
 					},
 				},
 			},

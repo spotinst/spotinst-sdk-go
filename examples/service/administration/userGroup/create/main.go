@@ -33,9 +33,9 @@ func main() {
 		Name:        spotinst.String("Pritish"),
 		Policies: []*administration.UserGroupPolicy{
 			{
-				AccountIds: spotinst.StringSlice([]string{
+				AccountIds: []string{
 					"act-7c46c6df",
-				}),
+				},
 				PolicyId: spotinst.String("pol-c063c6c9"),
 			},
 		},

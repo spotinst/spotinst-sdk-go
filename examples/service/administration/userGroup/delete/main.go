@@ -26,11 +26,11 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Delete an existing group.
-	_, err := svc.DeletePolicy(ctx, &administration.DeletePolicyInput{
-		PolicyID: spotinst.String("pol-c75d8c06"),
+	// Delete an existing user group.
+	_, err := svc.DeleteUserGroup(ctx, &administration.DeleteUserGroupInput{
+		UserGroupID: spotinst.String("ugr-9141021f"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to delete policy: %v", err)
+		log.Fatalf("spotinst: failed to delete user group: %v", err)
 	}
 }

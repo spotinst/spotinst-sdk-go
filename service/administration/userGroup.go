@@ -16,7 +16,7 @@ type UserGroup struct {
 	Description *string            `json:"description,omitempty"`
 	Name        *string            `json:"name,omitempty"`
 	Policies    []*UserGroupPolicy `json:"policies,omitempty"`
-	UserIds     []*string          `json:"userIds,omitempty"`
+	UserIds     []string           `json:"userIds,omitempty"`
 	UserGroupId *string            `json:"id,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
@@ -37,8 +37,8 @@ type UserGroup struct {
 }
 
 type UserGroupPolicy struct {
-	AccountIds []*string `json:"accountIds,omitempty"`
-	PolicyId   *string   `json:"policyId,omitempty"`
+	AccountIds []string `json:"accountIds,omitempty"`
+	PolicyId   *string  `json:"policyId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -261,7 +261,7 @@ func (o *UserGroup) SetPolicies(v []*UserGroupPolicy) *UserGroup {
 	return o
 }
 
-func (o *UserGroup) SetUserIds(v []*string) *UserGroup {
+func (o *UserGroup) SetUserIds(v []string) *UserGroup {
 	if o.UserIds = v; o.UserIds == nil {
 		o.nullFields = append(o.nullFields, "UserIds")
 	}
@@ -283,7 +283,7 @@ func (o *UserGroupPolicy) SetPolicyId(v *string) *UserGroupPolicy {
 	return o
 }
 
-func (o *UserGroupPolicy) SetAccountIds(v []*string) *UserGroupPolicy {
+func (o *UserGroupPolicy) SetAccountIds(v []string) *UserGroupPolicy {
 	if o.AccountIds = v; o.AccountIds == nil {
 		o.nullFields = append(o.nullFields, "AccountIds")
 	}

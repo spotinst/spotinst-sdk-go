@@ -68,8 +68,8 @@ type ProgrammaticUser struct {
 }
 
 type ProgPolicy struct {
-	PolicyId   *string   `json:"policyId,omitempty"`
-	AccountIds []*string `json:"accountIds,omitempty"`
+	PolicyId   *string  `json:"policyId,omitempty"`
+	AccountIds []string `json:"accountIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -120,6 +120,10 @@ type ReadUserInput struct {
 
 type ReadUserOutput struct {
 	User *User `json:"user,omitempty"`
+}
+
+type ReadProgUserOutput struct {
+	ProgUser *ProgrammaticUser `json:"user,omitempty"`
 }
 
 type DeleteUserInput struct {
@@ -290,6 +294,34 @@ func (s *ServiceOp) ReadUser(ctx context.Context, input *ReadUserInput) (*ReadUs
 	return output, nil
 }
 
+func (s *ServiceOp) ReadProgUser(ctx context.Context, input *ReadUserInput) (*ReadProgUserOutput, error) {
+	path, err := uritemplates.Expand("/setup/user/{userId}", uritemplates.Values{
+		"userId": spotinst.StringValue(input.UserID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	ss, err := progUsersFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ReadProgUserOutput)
+	if len(ss) > 0 {
+		output.ProgUser = ss[0]
+	}
+
+	return output, nil
+}
+
 func (s *ServiceOp) DeleteUser(ctx context.Context, input *DeleteUserInput) (*DeleteUserOutput, error) {
 	path, err := uritemplates.Expand("/setup/user/{userId}", uritemplates.Values{
 		"userId": spotinst.StringValue(input.UserID),
@@ -397,7 +429,7 @@ func (o ProgPolicy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ProgPolicy) SetAccountIds(v []*string) *ProgPolicy {
+func (o *ProgPolicy) SetAccountIds(v []string) *ProgPolicy {
 	if o.AccountIds = v; o.AccountIds == nil {
 		o.nullFields = append(o.nullFields, "AccountIds")
 	}

@@ -40,10 +40,9 @@ func main() {
 		Policies: []*administration.ProgPolicy{
 			{
 				PolicyId: spotinst.String("pol-c75d8c06"),
-				AccountIds: spotinst.StringSlice(
-					[]string{
-						"act-7c46c6df",
-					}),
+				AccountIds: []string{
+					"act-7c46c6df",
+				},
 			},
 		},
 	})
