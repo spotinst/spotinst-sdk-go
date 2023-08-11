@@ -28,17 +28,17 @@ func main() {
 	ctx := context.Background()
 
 	// Read group configuration.
-	out, err := svc.ReadUser(ctx, &administration.ReadUserInput{
-		UserID: spotinst.String("u-989ac40c"),
+	out, err := svc.ReadPolicy(ctx, &administration.ReadPolicyInput{
+		PolicyID: spotinst.String("pol-abc123xyz"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to read group: %v", err)
+		log.Fatalf("spotinst: failed to read policy: %v", err)
 	}
 
 	// Output.
-	if out.User != nil {
+	if out.Policy != nil {
 		log.Printf("User %q: %s",
-			spotinst.StringValue(out.User.UserID),
-			stringutil.Stringify(out.User))
+			spotinst.StringValue(out.Policy.PolicyID),
+			stringutil.Stringify(out.Policy))
 	}
 }
