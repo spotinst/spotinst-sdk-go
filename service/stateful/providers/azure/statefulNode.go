@@ -46,12 +46,13 @@ type StatefulNode struct {
 }
 
 type Strategy struct {
-	PreferredLifecycle  *string       `json:"preferredLifecycle,omitempty"`
-	Signals             []*Signal     `json:"signals,omitempty"`
-	FallbackToOnDemand  *bool         `json:"fallbackToOd,omitempty"`
-	DrainingTimeout     *int          `json:"drainingTimeout,omitempty"`
-	RevertToSpot        *RevertToSpot `json:"revertToSpot,omitempty"`
-	OptimizationWindows []string      `json:"optimizationWindows,omitempty"`
+	PreferredLifecycle  *string              `json:"preferredLifecycle,omitempty"`
+	Signals             []*Signal            `json:"signals,omitempty"`
+	FallbackToOnDemand  *bool                `json:"fallbackToOd,omitempty"`
+	DrainingTimeout     *int                 `json:"drainingTimeout,omitempty"`
+	RevertToSpot        *RevertToSpot        `json:"revertToSpot,omitempty"`
+	OptimizationWindows []string             `json:"optimizationWindows,omitempty"`
+	CapacityReservation *CapacityReservation `json:"capacityReservation,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -67,6 +68,24 @@ type Signal struct {
 
 type RevertToSpot struct {
 	PerformAt *string `json:"performAt,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CapacityReservation struct {
+	ShouldUtilize             *bool                       `json:"shouldUtilize,omitempty"`
+	UtilizationStrategy       *string                     `json:"utilizationStrategy,omitempty"`
+	CapacityReservationGroups []*CapacityReservationGroup `json:"capacityReservationGroups,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CapacityReservationGroup struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+	ShouldPrioritize  *bool   `json:"shouldPrioritize,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -959,6 +978,13 @@ func (o *Strategy) SetRevertToSpot(v *RevertToSpot) *Strategy {
 	return o
 }
 
+func (o *Strategy) SetCapacityReservation(v *CapacityReservation) *Strategy {
+	if o.CapacityReservation = v; o.CapacityReservation == nil {
+		o.nullFields = append(o.nullFields, "CapacityReservation")
+	}
+	return o
+}
+
 func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
 	if o.OptimizationWindows = v; o.OptimizationWindows == nil {
 		o.nullFields = append(o.nullFields, "OptimizationWindows")
@@ -1003,6 +1029,68 @@ func (o RevertToSpot) MarshalJSON() ([]byte, error) {
 func (o *RevertToSpot) SetPerformAt(v *string) *RevertToSpot {
 	if o.PerformAt = v; o.PerformAt == nil {
 		o.nullFields = append(o.nullFields, "PerformAt")
+	}
+	return o
+}
+
+// endregion
+
+// region CapacityReservation
+
+func (o CapacityReservation) MarshalJSON() ([]byte, error) {
+	type noMethod CapacityReservation
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *CapacityReservation) SetShouldUtilize(v *bool) *CapacityReservation {
+	if o.ShouldUtilize = v; o.ShouldUtilize == nil {
+		o.nullFields = append(o.nullFields, "ShouldUtilize")
+	}
+	return o
+}
+
+func (o *CapacityReservation) SetUtilizationStrategy(v *string) *CapacityReservation {
+	if o.UtilizationStrategy = v; o.UtilizationStrategy == nil {
+		o.nullFields = append(o.nullFields, "UtilizationStrategy")
+	}
+	return o
+}
+
+func (o *CapacityReservation) SetCapacityReservationGroups(v []*CapacityReservationGroup) *CapacityReservation {
+	if o.CapacityReservationGroups = v; o.CapacityReservationGroups == nil {
+		o.nullFields = append(o.nullFields, "CapacityReservationGroups")
+	}
+	return o
+}
+
+// endregion
+
+// region CapacityReservationGroup
+
+func (o CapacityReservationGroup) MarshalJSON() ([]byte, error) {
+	type noMethod CapacityReservationGroup
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *CapacityReservationGroup) SetCRGName(v *string) *CapacityReservationGroup {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *CapacityReservationGroup) SetCRGResourceGroupName(v *string) *CapacityReservationGroup {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *CapacityReservationGroup) SetShouldPrioritize(v *bool) *CapacityReservationGroup {
+	if o.ShouldPrioritize = v; o.ShouldPrioritize == nil {
+		o.nullFields = append(o.nullFields, "ShouldPrioritize")
 	}
 	return o
 }

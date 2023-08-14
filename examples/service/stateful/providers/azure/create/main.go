@@ -48,6 +48,17 @@ func main() {
 				OptimizationWindows: []string{
 					"Tue:19:46-Tue:20:46",
 				},
+				CapacityReservation: &azure.CapacityReservation{
+					ShouldUtilize:       spotinst.Bool(true),
+					UtilizationStrategy: spotinst.String("utilizeOverOD"),
+					CapacityReservationGroups: []*azure.CapacityReservationGroup{
+						{
+							Name:              spotinst.String("TestCRG"),
+							ResourceGroupName: spotinst.String("foo"),
+							ShouldPrioritize:  spotinst.Bool(true),
+						},
+					},
+				},
 			},
 			Compute: &azure.Compute{
 				OS: spotinst.String("Linux"),
