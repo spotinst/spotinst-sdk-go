@@ -31,7 +31,7 @@ func main() {
 	out, err := svc.UpdatePolicy(ctx, &administration.UpdatePolicyInput{
 		Policy: &administration.Policy{
 			PolicyID: spotinst.String("pol-c75d8c06"),
-			Name:     spotinst.String("PritishUpdated"),
+			Name:     spotinst.String("Automation-Policy-Updated"),
 		},
 	})
 

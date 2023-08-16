@@ -29,14 +29,14 @@ func main() {
 
 	// Create a new group.
 	out, err := svc.CreateProgUser(ctx, &administration.ProgrammaticUser{
-		Name:        spotinst.String("pritish"),
+		Name:        spotinst.String("test-programmatic-user"),
 		Description: spotinst.String("description"),
 		/*Accounts: []*administration.Account{
 			{
 				Id:   spotinst.String("act-7c46c6df"),
 				Role: spotinst.String("viewer"),
 			},
-		},*/
+		},*/ //Accounts and Policies are exclusive
 		Policies: []*administration.ProgPolicy{
 			{
 				PolicyId: spotinst.String("pol-c75d8c06"),

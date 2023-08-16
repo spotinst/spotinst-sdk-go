@@ -30,7 +30,10 @@ func main() {
 	// Create a new group.
 	out, err := svc.CreateUserGroup(ctx, &administration.UserGroup{
 		Description: spotinst.String("TFUserGroup"),
-		Name:        spotinst.String("Pritish"),
+		Name:        spotinst.String("test-user-group"),
+		UserIds: []string{
+			"u-7575c9bf",
+		},
 		Policies: []*administration.UserGroupPolicy{
 			{
 				AccountIds: []string{

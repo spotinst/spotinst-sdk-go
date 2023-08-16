@@ -30,8 +30,8 @@ func main() {
 	// Create a new group.
 	out, err := svc.CreatePolicy(ctx, &administration.CreatePolicyInput{
 		Policy: &administration.Policy{
-			Description: spotinst.String("TFPolicy"),
-			Name:        spotinst.String("Pritish"),
+			Description: spotinst.String("Automation Policy by Terraform"),
+			Name:        spotinst.String("AutomationPolicy"),
 			PolicyContent: &administration.PolicyContent{
 				Statements: []*administration.Statement{
 					{
