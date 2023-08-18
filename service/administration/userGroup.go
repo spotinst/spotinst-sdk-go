@@ -60,9 +60,6 @@ type ListUserGroupsOutput struct {
 	UserGroups []*UserGroup `json:"userGroups,omitempty"`
 }
 
-type CreateUserGroupInput struct {
-}
-
 type CreateUserGroupOutput struct {
 	UserGroup *UserGroup `json:"userGroup,omitempty"`
 }

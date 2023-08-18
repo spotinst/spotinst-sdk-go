@@ -41,7 +41,7 @@ func main() {
 			{
 				PolicyId: spotinst.String("pol-c75d8c06"),
 				AccountIds: []string{
-					"act-7c46c6df",
+					"act-a1b2c3d4",
 				},
 			},
 		},

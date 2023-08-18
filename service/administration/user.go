@@ -28,6 +28,8 @@ type User struct {
 	Id                  *int          `json:"id,omitempty"`
 	GroupNames          []*string     `json:"groupNames,omitempty"`
 	Groups              []*Group      `json:"groups,omitempty"`
+	DisplayName         *string       `json:"displayName,omitempty"`
+	OrganizationId      *int          `json:"organizationId,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -109,14 +111,8 @@ type ListUsersOutput struct {
 	Users []*User `json:"users,omitempty"`
 }
 
-type CreateUserInput struct {
-}
-
 type CreateUserOutput struct {
 	User *User `json:"user,omitempty"`
-}
-
-type CreateProgrammaticUserInput struct {
 }
 
 type CreateProgrammaticUserOutput struct {
