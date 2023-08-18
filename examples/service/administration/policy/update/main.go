@@ -30,7 +30,7 @@ func main() {
 	// Create a new group.
 	out, err := svc.UpdatePolicy(ctx, &administration.UpdatePolicyInput{
 		Policy: &administration.Policy{
-			PolicyID: spotinst.String("pol-c75d8c06"),
+			PolicyID: spotinst.String("pol-abcd1234"),
 			Name:     spotinst.String("Automation-Policy-Updated"),
 		},
 	})

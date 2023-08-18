@@ -29,7 +29,7 @@ func main() {
 
 	// Read group configuration.
 	out, err := svc.ReadPolicy(ctx, &administration.ReadPolicyInput{
-		PolicyID: spotinst.String("pol-abc123xyz"),
+		PolicyID: spotinst.String("pol-abcd1234"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read policy: %v", err)

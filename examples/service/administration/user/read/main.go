@@ -29,7 +29,7 @@ func main() {
 
 	// Read group configuration.
 	out, err := svc.ReadUser(ctx, &administration.ReadUserInput{
-		UserID: spotinst.String("u-884d32d7"),
+		UserID: spotinst.String("u-abcd1234"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read group: %v", err)

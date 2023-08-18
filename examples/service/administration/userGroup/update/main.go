@@ -29,7 +29,7 @@ func main() {
 
 	// Create a new group.
 	out, err := svc.UpdateUserGroup(ctx, &administration.UserGroup{
-		UserGroupId: spotinst.String("ugr-953a00ac"),
+		UserGroupId: spotinst.String("pol-abcd1234"),
 		Name:        spotinst.String("test-user-group-updated"),
 	})
 

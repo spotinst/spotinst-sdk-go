@@ -28,7 +28,7 @@ func main() {
 
 	// Delete an existing user group.
 	_, err := svc.DeleteUserGroup(ctx, &administration.DeleteUserGroupInput{
-		UserGroupID: spotinst.String("ugr-c5fe2310"),
+		UserGroupID: spotinst.String("ugr-abcd1234"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete user group: %v", err)

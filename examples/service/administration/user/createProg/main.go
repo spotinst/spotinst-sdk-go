@@ -31,20 +31,20 @@ func main() {
 	out, err := svc.CreateProgUser(ctx, &administration.ProgrammaticUser{
 		Name:        spotinst.String("test-programmatic-user"),
 		Description: spotinst.String("description"),
-		/*Accounts: []*administration.Account{
+		Accounts: []*administration.Account{
 			{
-				Id:   spotinst.String("act-7c46c6df"),
+				Id:   spotinst.String("act-a1b2c3d4"),
 				Role: spotinst.String("viewer"),
 			},
-		},*/ //Accounts and Policies are exclusive
-		Policies: []*administration.ProgPolicy{
+		}, //Accounts and Policies are exclusive
+		/*Policies: []*administration.ProgPolicy{
 			{
-				PolicyId: spotinst.String("pol-c75d8c06"),
+				PolicyId: spotinst.String("pol-abcd1234"),
 				AccountIds: []string{
 					"act-a1b2c3d4",
 				},
 			},
-		},
+		},*/
 	})
 
 	if err != nil {

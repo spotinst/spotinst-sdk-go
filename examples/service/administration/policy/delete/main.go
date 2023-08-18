@@ -28,7 +28,7 @@ func main() {
 
 	// Delete an existing group.
 	_, err := svc.DeletePolicy(ctx, &administration.DeletePolicyInput{
-		PolicyID: spotinst.String("pol-937ac696"),
+		PolicyID: spotinst.String("pol-abcd1234"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete policy: %v", err)
