@@ -32,13 +32,13 @@ func main() {
 		Description: spotinst.String("TFUserGroup"),
 		Name:        spotinst.String("test-user-group"),
 		UserIds: []string{
-			"u-7575c9bf",
+			"u-884d32d7",
 		},
-		Policies: []*administration.UserGroupPolicy{
+		Policies: []*administration.UserPolicy{
 			{
-				AccountIds: []string{
+				AccountIds: spotinst.StringSlice([]string{
 					"act-7c46c6df",
-				},
+				}),
 				PolicyId: spotinst.String("pol-c063c6c9"),
 			},
 		},

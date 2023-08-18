@@ -3,15 +3,13 @@ package administration
 import (
 	"context"
 	"encoding/json"
-	"io/ioutil"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
+	"io/ioutil"
+	"net/http"
+	"strconv"
 )
 
 type User struct {
@@ -28,6 +26,8 @@ type User struct {
 	Tokens              []*Token      `json:"tokens,omitempty"`
 	PersonalAccessToken *string       `json:"personalAccessToken,omitempty"`
 	Id                  *int          `json:"id,omitempty"`
+	GroupNames          []*string     `json:"groupNames,omitempty"`
+	Groups              []*Group      `json:"groups,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -47,9 +47,10 @@ type User struct {
 }
 
 type UserPolicy struct {
-	PolicyId   *string `json:"policyId,omitempty"`
-	PolicyName *string `json:"policyName,omitempty"`
-	PolicyType *string `json:"policyType,omitempty"`
+	PolicyId   *string   `json:"policyId,omitempty"`
+	PolicyName *string   `json:"policyName,omitempty"`
+	PolicyType *string   `json:"policyType,omitempty"`
+	AccountIds []*string `json:"accountIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -84,11 +85,19 @@ type Account struct {
 }
 
 type Token struct {
-	Name            *string    `json:"name,omitempty"`
-	CreatedAt       *time.Time `json:"createdAt,omitempty"`
-	PolicyType      *string    `json:"policyType,omitempty"`
-	TokenId         *int       `json:"tokenId,omitempty"`
-	TokenLastDigits *string    `json:"tokenLastDigits,omitempty"`
+	Name            *string `json:"name,omitempty"`
+	CreatedAt       *string `json:"createdAt,omitempty"`
+	TokenId         *int    `json:"tokenId,omitempty"`
+	TokenLastDigits *string `json:"tokenLastDigits,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Group struct {
+	Id          *string   `json:"id,omitempty"`
+	Name        *string   `json:"name,omitempty"`
+	PolicyNames []*string `json:"policyNames,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string

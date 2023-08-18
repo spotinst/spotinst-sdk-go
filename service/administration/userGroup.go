@@ -13,11 +13,12 @@ import (
 )
 
 type UserGroup struct {
-	Description *string            `json:"description,omitempty"`
-	Name        *string            `json:"name,omitempty"`
-	Policies    []*UserGroupPolicy `json:"policies,omitempty"`
-	UserIds     []string           `json:"userIds,omitempty"`
-	UserGroupId *string            `json:"id,omitempty"`
+	Description *string          `json:"description,omitempty"`
+	Name        *string          `json:"name,omitempty"`
+	Policies    []*UserPolicy    `json:"policies,omitempty"`
+	UserIds     []string         `json:"userIds,omitempty"`
+	UserGroupId *string          `json:"id,omitempty"`
+	Users       []*UserGroupUser `json:"users,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -39,6 +40,15 @@ type UserGroup struct {
 type UserGroupPolicy struct {
 	AccountIds []string `json:"accountIds,omitempty"`
 	PolicyId   *string  `json:"policyId,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type UserGroupUser struct {
+	Type     *string `json:"type,omitempty"`
+	UserId   *string `json:"userId,omitempty"`
+	UserName *string `json:"userName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -254,7 +264,7 @@ func (o *UserGroup) SetName(v *string) *UserGroup {
 	return o
 }
 
-func (o *UserGroup) SetPolicies(v []*UserGroupPolicy) *UserGroup {
+func (o *UserGroup) SetPolicies(v []*UserPolicy) *UserGroup {
 	if o.Policies = v; o.Policies == nil {
 		o.nullFields = append(o.nullFields, "Policies")
 	}
