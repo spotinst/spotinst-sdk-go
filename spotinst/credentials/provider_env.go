@@ -40,7 +40,7 @@ func NewEnvCredentials() *Credentials {
 // Retrieve retrieves the keys from the environment.
 func (e *EnvProvider) Retrieve() (Value, error) {
 	value := Value{
-		Token:        "d31949623321d13a43d49176d854cf3fc2b3682cab2604b2d92565af439f6cc8", //os.Getenv(EnvCredentialsVarToken),
+		Token:        os.Getenv(EnvCredentialsVarToken),
 		Account:      os.Getenv(EnvCredentialsVarAccount),
 		ProviderName: EnvCredentialsProviderName,
 	}
