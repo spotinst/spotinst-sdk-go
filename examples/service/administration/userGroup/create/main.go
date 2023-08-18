@@ -34,11 +34,11 @@ func main() {
 		UserIds: []string{
 			"u-884d32d7",
 		},
-		Policies: []*administration.UserPolicy{
+		Policies: []*administration.UserGroupPolicy{
 			{
-				AccountIds: spotinst.StringSlice([]string{
-					"act-7c46c6df",
-				}),
+				AccountIds: []string{
+					"act-a1b2c3d4",
+				},
 				PolicyId: spotinst.String("pol-c063c6c9"),
 			},
 		},

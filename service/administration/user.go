@@ -49,10 +49,10 @@ type User struct {
 }
 
 type UserPolicy struct {
-	PolicyId   *string   `json:"policyId,omitempty"`
-	PolicyName *string   `json:"policyName,omitempty"`
-	PolicyType *string   `json:"policyType,omitempty"`
-	AccountIds []*string `json:"accountIds,omitempty"`
+	PolicyId   *string  `json:"policyId,omitempty"`
+	PolicyName *string  `json:"policyName,omitempty"`
+	PolicyType *string  `json:"policyType,omitempty"`
+	AccountIds []string `json:"accountIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
