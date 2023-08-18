@@ -18,7 +18,7 @@ type UserGroup struct {
 	Policies    []*UserGroupPolicy `json:"policies,omitempty"`
 	UserIds     []string           `json:"userIds,omitempty"`
 	UserGroupId *string            `json:"id,omitempty"`
-	Users       []*UserGroupUser   `json:"users,omitempty"`
+	Users       []*GetGroupUser    `json:"users,omitempty"`
 	CreatedAt   *string            `json:"createdAt,omitempty"`
 	PolicyNames []string           `json:"policyNames,omitempty"`
 	UsersCount  *int               `json:"usersCount,omitempty"`
@@ -50,7 +50,7 @@ type UserGroupPolicy struct {
 	nullFields      []string
 }
 
-type UserGroupUser struct {
+type GetGroupUser struct {
 	Type     *string `json:"type,omitempty"`
 	UserId   *string `json:"userId,omitempty"`
 	UserName *string `json:"userName,omitempty"`
@@ -79,10 +79,6 @@ type ReadUserGroupOutput struct {
 
 type UpdateUserGroupInput struct {
 	UserGroupID *string `json:"id,omitempty"`
-}
-
-type UpdateUserGroupOutput struct {
-	UserGroup *UserGroup `json:"userGroup,omitempty"`
 }
 
 type DeleteUserGroupInput struct {
@@ -193,12 +189,12 @@ func (s *ServiceOp) ReadUserGroup(ctx context.Context, input *ReadUserGroupInput
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateUserGroup(ctx context.Context, input *UserGroup) (*UpdateUserGroupOutput, error) {
+func (s *ServiceOp) UpdateUserGroup(ctx context.Context, input *UserGroup) error {
 	path, err := uritemplates.Expand("/setup/access/userGroup/{userGroupId}", uritemplates.Values{
 		"userGroupId": spotinst.StringValue(input.UserGroupId),
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	// We do not need the ID anymore so let's drop it.
@@ -209,21 +205,11 @@ func (s *ServiceOp) UpdateUserGroup(ctx context.Context, input *UserGroup) (*Upd
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
 
-	ss, err := userGroupsFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	output := new(UpdateUserGroupOutput)
-	if len(ss) > 0 {
-		output.UserGroup = ss[0]
-	}
-
-	return output, nil
+	return nil
 }
 
 func (s *ServiceOp) DeleteUserGroup(ctx context.Context, input *DeleteUserGroupInput) (*DeleteUserGroupOutput, error) {

@@ -7,7 +7,6 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/administration"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -28,8 +27,8 @@ func main() {
 	ctx := context.Background()
 
 	// Create a new group.
-	out, err := svc.UpdateUserGroup(ctx, &administration.UserGroup{
-		UserGroupId: spotinst.String("pol-abcd1234"),
+	err := svc.UpdateUserGroup(ctx, &administration.UserGroup{
+		UserGroupId: spotinst.String("ugr-525a30dc"),
 		Name:        spotinst.String("test-user-group-updated"),
 	})
 
@@ -37,10 +36,4 @@ func main() {
 		log.Fatalf("spotinst: failed to update user group: %v", err)
 	}
 
-	// Output.
-	if out.UserGroup != nil {
-		log.Printf("UserGroup %q: %s",
-			spotinst.StringValue(out.UserGroup.UserGroupId),
-			stringutil.Stringify(out.UserGroup))
-	}
 }

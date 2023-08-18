@@ -29,7 +29,7 @@ type Service interface {
 	ListUserGroups(context.Context, *ListUserGroupsInput) (*ListUserGroupsOutput, error)
 	CreateUserGroup(context.Context, *UserGroup) (*CreateUserGroupOutput, error)
 	ReadUserGroup(context.Context, *ReadUserGroupInput) (*ReadUserGroupOutput, error)
-	UpdateUserGroup(context.Context, *UserGroup) (*UpdateUserGroupOutput, error)
+	UpdateUserGroup(context.Context, *UserGroup) error
 	DeleteUserGroup(context.Context, *DeleteUserGroupInput) (*DeleteUserGroupOutput, error)
 }
 
