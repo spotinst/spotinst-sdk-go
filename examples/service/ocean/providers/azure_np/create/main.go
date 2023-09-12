@@ -75,6 +75,7 @@ func main() {
 					OsDiskType:         spotinst.String("Managed"),
 					OsType:             spotinst.String("Windows"),
 					OsSKU:              spotinst.String("Windows2019"),
+					KubernetesVersion:  spotinst.String("1.26"),
 				},
 				NodeCountLimits: &azure_np.NodeCountLimits{
 					MinCount: spotinst.Int(0),

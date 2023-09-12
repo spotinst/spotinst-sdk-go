@@ -10,6 +10,7 @@ type NodePoolProperties struct {
 	OsDiskType         *string `json:"osDiskType,omitempty"`
 	OsType             *string `json:"osType,omitempty"`
 	OsSKU              *string `json:"osSKU,omitempty"`
+	KubernetesVersion  *string `json:"kubernetesVersion,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -59,6 +60,13 @@ func (o *NodePoolProperties) SetOsType(v *string) *NodePoolProperties {
 func (o *NodePoolProperties) SetOsSKU(v *string) *NodePoolProperties {
 	if o.OsSKU = v; o.OsSKU == nil {
 		o.nullFields = append(o.nullFields, "OsSKU")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetKubernetesVersion(v *string) *NodePoolProperties {
+	if o.KubernetesVersion = v; o.KubernetesVersion == nil {
+		o.nullFields = append(o.nullFields, "KubernetesVersion")
 	}
 	return o
 }
