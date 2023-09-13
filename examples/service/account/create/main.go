@@ -16,7 +16,7 @@ func main() {
 	ctx := context.Background()
 	out, err := svc.CloudProviderAWS().CreateAccount(ctx, &aws.CreateAccountInput{
 		&aws.Account{
-			Name: spotinst.String("testTerraformAcct_123"),
+			Name: spotinst.String("testAcct_123"),
 		},
 	})
 

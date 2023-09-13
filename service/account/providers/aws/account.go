@@ -41,6 +41,19 @@ type Account struct {
 	nullFields []string
 }
 
+func (o *Account) SetId(v *string) *Account {
+	if o.ID = v; o.ID == nil {
+		o.nullFields = append(o.nullFields, "ID")
+	}
+	return o
+}
+func (o *Account) SetName(v *string) *Account {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
 func (o Account) MarshalJSON() ([]byte, error) {
 	type noMethod Account
 	raw := noMethod(o)
@@ -58,7 +71,7 @@ func (s *ServiceOp) CreateAccount(ctx context.Context, input *CreateAccountInput
 	r := client.NewRequest(http.MethodPost, "/setup/account")
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -85,11 +98,11 @@ type ReadAccountOutput struct {
 }
 
 func (s *ServiceOp) ReadAccount(ctx context.Context, input *ReadAccountInput) (*ReadAccountOutput, error) {
-	acctid := spotinst.StringValue(input.AccountID)
-	r := client.NewRequest(http.MethodGet, "/setup/account/"+acctid)
+	path, err := uritemplates.Expand("/setup/account/{acctId}", uritemplates.Values{"acctId": spotinst.StringValue(input.AccountID)})
+	r := client.NewRequest(http.MethodGet, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +172,7 @@ func (s *ServiceOp) DeleteAccount(ctx context.Context, input *DeleteAccountInput
 
 	r := client.NewRequest(http.MethodDelete, path)
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}

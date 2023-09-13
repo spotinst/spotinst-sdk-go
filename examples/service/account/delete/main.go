@@ -14,7 +14,7 @@ func main() {
 	svc := account.New(sess)
 	ctx := context.Background()
 	_, err := svc.CloudProviderAWS().DeleteAccount(ctx, &aws.DeleteAccountInput{
-		spotinst.String("act-7926f067"),
+		spotinst.String("act-123456"),
 	})
 
 	if err != nil {
