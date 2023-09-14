@@ -51,15 +51,11 @@ type CreateCredentialOutput struct {
 
 func (s *ServiceOp) SetCredential(ctx context.Context, input *CreateCredentialInput) (*CreateCredentialOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
-	/*r.Obj = input
-	if input != nil {
-		r.Params.Set("accountId", spotinst.StringValue(input.Credential.AccountId))
-	}*/
 
 	if input != nil {
 		r.Params.Set("accountId", spotinst.StringValue(input.Credential.AccountId))
 	}
-	//input.Credential.AccountId = nil
+	input.Credential.AccountId = nil
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
@@ -89,10 +85,12 @@ type ReadCredentialOutput struct {
 }
 
 func (s *ServiceOp) ReadCredential(ctx context.Context, input *ReadCredentialInput) (*ReadCredentialOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
-	r.Obj = input
+	r := client.NewRequest(http.MethodGet, "/setup/credentials/aws")
+	if input != nil {
+		r.Params.Set("accountId", spotinst.StringValue(input.AccountId))
+	}
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
