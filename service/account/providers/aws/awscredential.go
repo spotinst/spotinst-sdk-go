@@ -143,22 +143,3 @@ func credentialFromJSON(in []byte) (*Credential, error) {
 	}
 	return b, nil
 }
-
-/*
-type IamRole struct {
-	IamRole *string `json:"iamRole,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-func (o *Credential) SetIamRole(v *string) *Credential {
-	if o.IamRole = v; o.IamRole == nil {
-		o.nullFields = append(o.nullFields, "IamRole")
-	}
-	return o
-}
-func (o IamRole) MarshalJSON() ([]byte, error) {
-	type noMethod IamRole
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}*/
