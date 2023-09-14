@@ -42,14 +42,27 @@ func (o Credential) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-type CreateCredentialInput struct {
+func (o *Credential) SetIamRole(v *string) *Credential {
+	if o.IamRole = v; o.IamRole == nil {
+		o.nullFields = append(o.nullFields, "IamRole")
+	}
+	return o
+}
+func (o *Credential) SetAccountId(v *string) *Credential {
+	if o.AccountId = v; o.AccountId == nil {
+		o.nullFields = append(o.nullFields, "AccountId")
+	}
+	return o
+}
+
+type SetCredentialInput struct {
 	Credential *Credential `json:"credentials,omitempty"`
 }
-type CreateCredentialOutput struct {
+type SetCredentialOutput struct {
 	Credential *Credential `json:"Credential,omitempty"`
 }
 
-func (s *ServiceOp) SetCredential(ctx context.Context, input *CreateCredentialInput) (*CreateCredentialOutput, error) {
+func (s *ServiceOp) SetCredential(ctx context.Context, input *SetCredentialInput) (*SetCredentialOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
 
 	if input != nil {
@@ -69,7 +82,7 @@ func (s *ServiceOp) SetCredential(ctx context.Context, input *CreateCredentialIn
 		return nil, err
 	}
 
-	output := new(CreateCredentialOutput)
+	output := new(SetCredentialOutput)
 	if len(gs) > 0 {
 		output.Credential = gs[0]
 	}

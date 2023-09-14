@@ -27,7 +27,7 @@ type serviceAwsAccountExternalId interface {
 	ReadAWSAccountExternalId(context.Context, *ReadAWSAccountExternalIdInput) (*ReadAWSAccountExternalIdOutput, error)
 }
 type serviceCredential interface {
-	SetCredential(context.Context, *CreateCredentialInput) (*CreateCredentialOutput, error)
+	SetCredential(context.Context, *SetCredentialInput) (*SetCredentialOutput, error)
 	ReadCredential(context.Context, *ReadCredentialInput) (*ReadCredentialOutput, error)
 }
 type ServiceOp struct {
