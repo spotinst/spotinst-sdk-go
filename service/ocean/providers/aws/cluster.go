@@ -2078,11 +2078,21 @@ type ClusterEBS struct {
 	VolumeSize          *int                      `json:"volumeSize,omitempty"`
 	Throughput          *int                      `json:"throughput,omitempty"`
 	DynamicVolumeSize   *ClusterDynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+	DynamicIops         *ClusterDynamicIops       `json:"dynamicIops,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 type ClusterDynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ClusterDynamicIops struct {
 	BaseSize            *int    `json:"baseSize,omitempty"`
 	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
 	Resource            *string `json:"resource,omitempty"`
@@ -2186,6 +2196,13 @@ func (o *ClusterEBS) SetThroughput(v *int) *ClusterEBS {
 	return o
 }
 
+func (o *ClusterEBS) SetDynamicIops(v *ClusterDynamicIops) *ClusterEBS {
+	if o.DynamicIops = v; o.DynamicIops == nil {
+		o.nullFields = append(o.nullFields, "DynamicIops")
+	}
+	return o
+}
+
 // endregion
 
 // region DynamicVolumeSize
@@ -2211,6 +2228,37 @@ func (o *ClusterDynamicVolumeSize) SetResource(v *string) *ClusterDynamicVolumeS
 }
 
 func (o *ClusterDynamicVolumeSize) SetSizePerResourceUnit(v *int) *ClusterDynamicVolumeSize {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+// endregion
+
+// region DynamicIops
+
+func (o ClusterDynamicIops) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterDynamicIops
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ClusterDynamicIops) SetBaseSize(v *int) *ClusterDynamicIops {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *ClusterDynamicIops) SetResource(v *string) *ClusterDynamicIops {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *ClusterDynamicIops) SetSizePerResourceUnit(v *int) *ClusterDynamicIops {
 	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
 		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
 	}
