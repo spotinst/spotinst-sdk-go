@@ -2,12 +2,11 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"log"
 
+	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -27,18 +26,27 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// List all groups.
-	out, err := svc.ListUsers(ctx, &organization.ListUsersInput{})
+	// Create a new group.
+	err := svc.UpdatePolicyMappingOfUser(ctx, &organization.UpdatePolicyMappingOfUserInput{
+		UserID: spotinst.String("u-0628514b"),
+		Policies: []*organization.ProgPolicy{
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("pol-abcd1234"),
+				AccountIds: []string{
+					"act-1234abcd",
+				},
+			},
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("pol-xyzw1234"),
+				AccountIds: []string{
+					"act-abcd1234",
+				},
+			},
+		},
+	})
+
 	if err != nil {
-		log.Fatalf("spotinst: failed to list users: %v", err)
+		log.Fatalf("spotinst: failed to update policy: %v", err)
 	}
 
-	// Output all groups, if any.
-	if len(out.Users) > 0 {
-		for _, User := range out.Users {
-			log.Printf("User %q: %s",
-				spotinst.StringValue(User.UserID),
-				stringutil.Stringify(User))
-		}
-	}
 }

@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/administration"
+	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
@@ -21,13 +21,13 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := administration.New(sess)
+	svc := organization.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Delete an existing group.
-	_, err := svc.DeleteUser(ctx, &administration.DeleteUserInput{
+	_, err := svc.DeleteUser(ctx, &organization.DeleteUserInput{
 		UserID: spotinst.String("pu-abcd1234"),
 	})
 	if err != nil {

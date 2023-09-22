@@ -7,7 +7,6 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -28,33 +27,38 @@ func main() {
 	ctx := context.Background()
 
 	// Create a new group.
-	out, err := svc.CreateProgUser(ctx, &organization.ProgrammaticUser{
-		Name:        spotinst.String("test-programmatic-user"),
-		Description: spotinst.String("description"),
-		Accounts: []*organization.Account{
-			{
-				Id:   spotinst.String("act-a1b2c3d4"),
-				Role: spotinst.String("viewer"),
-			},
-		}, //Accounts and Policies are exclusive
-		/*Policies: []*organization.ProgPolicy{
-			{
-				PolicyId: spotinst.String("pol-abcd1234"),
+	err := svc.UpdatePolicyMappingOfUserGroup(ctx, &organization.UpdatePolicyMappingOfUserGroupInput{
+		UserGroupId: spotinst.String("ugr-17ae43d9"),
+		Policies: []*organization.ProgPolicy{
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("pol-b236db1f"),
 				AccountIds: []string{
-					"act-a1b2c3d4",
+					"act-7c46c6df",
 				},
 			},
-		},*/
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("pol-08715c90"),
+				AccountIds: []string{
+					"act-7c46c6df",
+				},
+			},
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("3"),
+				AccountIds: []string{
+					"act-7c46c6df",
+				},
+			},
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("pol-c75d8c06"),
+				AccountIds: []string{
+					"act-7c46c6df",
+				},
+			},
+		},
 	})
 
 	if err != nil {
-		log.Fatalf("spotinst: failed to create user: %v", err)
+		log.Fatalf("spotinst: failed to update user group: %v", err)
 	}
 
-	// Output.
-	if out.ProgrammaticUser != nil {
-		log.Printf("User %q: %s",
-			spotinst.StringValue(out.ProgrammaticUser.ProgUserId),
-			stringutil.Stringify(out.ProgrammaticUser))
-	}
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/spotinst/spotinst-sdk-go/service/administration"
+	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
@@ -22,18 +22,18 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := administration.New(sess)
+	svc := organization.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Create a new group.
-	out, err := svc.CreatePolicy(ctx, &administration.CreatePolicyInput{
-		Policy: &administration.Policy{
+	out, err := svc.CreatePolicy(ctx, &organization.CreatePolicyInput{
+		Policy: &organization.Policy{
 			Description: spotinst.String("Automation Policy by Terraform"),
 			Name:        spotinst.String("AutomationPolicy"),
-			PolicyContent: &administration.PolicyContent{
-				Statements: []*administration.Statement{
+			PolicyContent: &organization.PolicyContent{
+				Statements: []*organization.Statement{
 					{
 						Actions: []string{
 							"ocean:deleteCluster",

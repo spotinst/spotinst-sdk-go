@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/spotinst/spotinst-sdk-go/service/administration"
+	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
@@ -22,13 +22,13 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := administration.New(sess)
+	svc := organization.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Create a new group.
-	out, err := svc.CreateUser(ctx, &administration.User{
+	out, err := svc.CreateUser(ctx, &organization.User{
 		Email:     spotinst.String("testautomation@netapp.com"),
 		FirstName: spotinst.String("test"),
 		LastName:  spotinst.String("user"),

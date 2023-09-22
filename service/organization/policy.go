@@ -1,4 +1,4 @@
-package administration
+package organization
 
 import (
 	"context"

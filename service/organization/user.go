@@ -1,4 +1,4 @@
-package administration
+package organization
 
 import (
 	"context"
@@ -30,6 +30,7 @@ type User struct {
 	Groups              []*Group      `json:"groups,omitempty"`
 	DisplayName         *string       `json:"displayName,omitempty"`
 	OrganizationId      *int          `json:"organizationId,omitempty"`
+	UserGroupIds        []string      `json:"userGroupIds,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -65,6 +66,7 @@ type ProgrammaticUser struct {
 	Accounts    []*Account    `json:"accounts,omitempty"`
 	Token       *string       `json:"token,omitempty"`
 	ProgUserId  *string       `json:"id,omitempty"`
+	UserGroupIds []string     `json:"userGroupIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -327,6 +329,64 @@ func (s *ServiceOp) ReadProgUser(ctx context.Context, input *ReadUserInput) (*Re
 	return output, nil
 }
 
+type UpdatePolicyMappingOfUserInput struct {
+	UserID   *string       `json:"userId,omitempty"`
+	Policies []*UserPolicy `json:"policies,omitempty"`
+}
+
+func (s *ServiceOp) UpdatePolicyMappingOfUser(ctx context.Context, input *UpdatePolicyMappingOfUserInput) error {
+	path, err := uritemplates.Expand("/setup/user/{userId}/policyMapping", uritemplates.Values{
+		"userId": spotinst.StringValue(input.UserID),
+	})
+
+	if err != nil {
+		return err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.UserID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	return nil
+}
+
+type UpdateUserGroupMappingOfUserInput struct {
+	UserID       *string  `json:"userId,omitempty"`
+	UserGroupIds []string `json:"userGroupIds,omitempty"`
+}
+
+func (s *ServiceOp) UpdateUserGroupMappingOfUser(ctx context.Context, input *UpdateUserGroupMappingOfUserInput) error {
+	path, err := uritemplates.Expand("/setup/user/{userId}/userGroupMapping", uritemplates.Values{
+		"userId": spotinst.StringValue(input.UserID),
+	})
+
+	if err != nil {
+		return err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.UserID = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	return nil
+}
+
 func (s *ServiceOp) DeleteUser(ctx context.Context, input *DeleteUserInput) (*DeleteUserOutput, error) {
 	path, err := uritemplates.Expand("/setup/user/{userId}", uritemplates.Values{
 		"userId": spotinst.StringValue(input.UserID),
@@ -388,6 +448,13 @@ func (o *User) SetRole(v *string) *User {
 	return o
 }
 
+func (o *User) SetUserGroupIds(v []string) *User {
+	if o.UserGroupIds = v; o.UserGroupIds == nil {
+		o.nullFields = append(o.nullFields, "UserGroupIds")
+	}
+	return o
+}
+
 // endregion
 
 // region ProgrammaticUser
@@ -419,9 +486,23 @@ func (o *ProgrammaticUser) SetPolicies(v []*ProgPolicy) *ProgrammaticUser {
 	return o
 }
 
+func (o *User) SetUserPolicies(v []*UserPolicy) *User {
+	if o.Policies = v; o.Policies == nil {
+		o.nullFields = append(o.nullFields, "Policies")
+	}
+	return o
+}
+
 func (o *ProgrammaticUser) SetAccounts(v []*Account) *ProgrammaticUser {
 	if o.Accounts = v; o.Accounts == nil {
 		o.nullFields = append(o.nullFields, "Accounts")
+	}
+	return o
+}
+
+func (o *ProgrammaticUser) SetProgUserGroupIds(v []string) *ProgrammaticUser {
+	if o.UserGroupIds = v; o.UserGroupIds == nil {
+		o.nullFields = append(o.nullFields, "UserGroupIds")
 	}
 	return o
 }
@@ -442,6 +523,28 @@ func (o *ProgPolicy) SetAccountIds(v []string) *ProgPolicy {
 }
 
 func (o *ProgPolicy) SetPolicyId(v *string) *ProgPolicy {
+	if o.PolicyId = v; o.PolicyId == nil {
+		o.nullFields = append(o.nullFields, "PolicyId")
+	}
+	return o
+}
+
+//end region
+
+func (o UserPolicy) MarshalJSON() ([]byte, error) {
+	type noMethod UserPolicy
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *UserPolicy) SetUserPolicyAccountIds(v []string) *UserPolicy {
+	if o.AccountIds = v; o.AccountIds == nil {
+		o.nullFields = append(o.nullFields, "AccountIds")
+	}
+	return o
+}
+
+func (o *UserPolicy) SetUserPolicyId(v *string) *UserPolicy {
 	if o.PolicyId = v; o.PolicyId == nil {
 		o.nullFields = append(o.nullFields, "PolicyId")
 	}

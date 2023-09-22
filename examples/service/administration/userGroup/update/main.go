@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/spotinst/spotinst-sdk-go/service/administration"
+	"github.com/spotinst/spotinst-sdk-go/service/organization"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 )
@@ -21,13 +21,13 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := administration.New(sess)
+	svc := organization.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Create a new group.
-	err := svc.UpdateUserGroup(ctx, &administration.UserGroup{
+	err := svc.UpdateUserGroup(ctx, &organization.UserGroup{
 		UserGroupId: spotinst.String("ugr-525a30dc"),
 		Name:        spotinst.String("test-user-group-updated"),
 	})

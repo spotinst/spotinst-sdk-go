@@ -1,4 +1,4 @@
-package administration
+package organization
 
 import (
 	"context"
@@ -212,6 +212,62 @@ func (s *ServiceOp) UpdateUserGroup(ctx context.Context, input *UserGroup) error
 	return nil
 }
 
+type UpdateUserMappingOfUserGroupInput struct {
+	UserGroupId *string  `json:"userGroupId,omitempty"`
+	UserIds     []string `json:"userIds,omitempty"`
+}
+
+func (s *ServiceOp) UpdateUserMappingOfUserGroup(ctx context.Context, input *UpdateUserMappingOfUserGroupInput) error {
+	path, err := uritemplates.Expand("/setup/access/userGroup/{userGroupId}/userMapping", uritemplates.Values{
+		"userGroupId": spotinst.StringValue(input.UserGroupId),
+	})
+	if err != nil {
+		return err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.UserGroupId = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	return nil
+}
+
+type UpdatePolicyMappingOfUserGroupInput struct {
+	UserGroupId *string       `json:"userGroupId,omitempty"`
+	Policies    []*ProgPolicy `json:"policies,omitempty"`
+}
+
+func (s *ServiceOp) UpdatePolicyMappingOfUserGroup(ctx context.Context, input *UpdatePolicyMappingOfUserGroupInput) error {
+	path, err := uritemplates.Expand("/setup/access/userGroup/{userGroupId}/policyMapping", uritemplates.Values{
+		"userGroupId": spotinst.StringValue(input.UserGroupId),
+	})
+	if err != nil {
+		return err
+	}
+
+	// We do not need the ID anymore so let's drop it.
+	input.UserGroupId = nil
+
+	r := client.NewRequest(http.MethodPut, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	return nil
+}
+
 func (s *ServiceOp) DeleteUserGroup(ctx context.Context, input *DeleteUserGroupInput) (*DeleteUserGroupOutput, error) {
 	path, err := uritemplates.Expand("/setup/access/userGroup/{userGroupId}", uritemplates.Values{
 		"userGroupId": spotinst.StringValue(input.UserGroupID),
@@ -229,8 +285,6 @@ func (s *ServiceOp) DeleteUserGroup(ctx context.Context, input *DeleteUserGroupI
 
 	return &DeleteUserGroupOutput{}, nil
 }
-
-// region User
 
 func (o UserGroup) MarshalJSON() ([]byte, error) {
 	type noMethod UserGroup

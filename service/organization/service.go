@@ -1,4 +1,4 @@
-package administration
+package organization
 
 import (
 	"context"
@@ -17,7 +17,8 @@ type Service interface {
 	CreateProgUser(context.Context, *ProgrammaticUser) (*CreateProgrammaticUserOutput, error)
 	ReadUser(context.Context, *ReadUserInput) (*ReadUserOutput, error)
 	ReadProgUser(context.Context, *ReadUserInput) (*ReadProgUserOutput, error)
-	//Update(context.Context, *UpdateUserInput) (*UpdateUserOutput, error)
+	UpdatePolicyMappingOfUser(context.Context, *UpdatePolicyMappingOfUserInput) error
+	UpdateUserGroupMappingOfUser(context.Context, *UpdateUserGroupMappingOfUserInput) error
 	DeleteUser(context.Context, *DeleteUserInput) (*DeleteUserOutput, error)
 
 	ListPolicies(context.Context, *ListPoliciesInput) (*ListPoliciesOutput, error)
@@ -30,6 +31,8 @@ type Service interface {
 	CreateUserGroup(context.Context, *UserGroup) (*CreateUserGroupOutput, error)
 	ReadUserGroup(context.Context, *ReadUserGroupInput) (*ReadUserGroupOutput, error)
 	UpdateUserGroup(context.Context, *UserGroup) error
+	UpdateUserMappingOfUserGroup(context.Context, *UpdateUserMappingOfUserGroupInput) error
+	UpdatePolicyMappingOfUserGroup(context.Context, *UpdatePolicyMappingOfUserGroupInput) error
 	DeleteUserGroup(context.Context, *DeleteUserGroupInput) (*DeleteUserGroupOutput, error)
 }
 
