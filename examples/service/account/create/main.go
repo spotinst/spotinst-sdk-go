@@ -15,7 +15,7 @@ func main() {
 	svc := account.New(sess)
 	ctx := context.Background()
 	out, err := svc.CloudProviderAWS().CreateAccount(ctx, &aws.CreateAccountInput{
-		&aws.Account{
+		Account: &aws.Account{
 			Name: spotinst.String("testAcct_123"),
 		},
 	})
