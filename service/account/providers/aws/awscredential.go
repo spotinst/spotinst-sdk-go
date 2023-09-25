@@ -14,10 +14,6 @@ type Credential struct {
 	IamRole   *string `json:"iamRole,omitempty"`
 	AccountId *string `json:"accountId,omitempty"`
 
-	// Read-only fields.
-	//CreatedAt *time.Time `json:"createdAt,omitempty"`
-	//UpdatedAt *time.Time `json:"updatedAt,omitempty"`
-
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
 	// empty values are omitted from API requests. However, any non-pointer,
