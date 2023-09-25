@@ -8,7 +8,6 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"io/ioutil"
 	"net/http"
-	"time"
 )
 
 type Credential struct {
@@ -16,8 +15,8 @@ type Credential struct {
 	AccountId *string `json:"accountId,omitempty"`
 
 	// Read-only fields.
-	CreatedAt *time.Time `json:"createdAt,omitempty"`
-	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
+	//CreatedAt *time.Time `json:"createdAt,omitempty"`
+	//UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
