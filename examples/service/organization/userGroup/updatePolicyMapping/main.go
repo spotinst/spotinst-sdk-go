@@ -27,17 +27,29 @@ func main() {
 	ctx := context.Background()
 
 	// Create a new group.
-	err := svc.UpdatePolicyMappingOfUser(ctx, &organization.UpdatePolicyMappingOfUserInput{
-		UserID: spotinst.String("u-0628514b"),
+	err := svc.UpdatePolicyMappingOfUserGroup(ctx, &organization.UpdatePolicyMappingOfUserGroupInput{
+		UserGroupId: spotinst.String("ugr-17ae43d9"),
 		Policies: []*organization.ProgPolicy{
 			&organization.ProgPolicy{
-				PolicyId: spotinst.String("pol-abcd1234"),
+				PolicyId: spotinst.String("pol-b236db1f"),
 				AccountIds: []string{
-					"act-1234abcd",
+					"act-abcd1234",
 				},
 			},
 			&organization.ProgPolicy{
-				PolicyId: spotinst.String("pol-xyzw1234"),
+				PolicyId: spotinst.String("pol-08715c90"),
+				AccountIds: []string{
+					"act-abcd1234",
+				},
+			},
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("3"),
+				AccountIds: []string{
+					"act-abcd1234",
+				},
+			},
+			&organization.ProgPolicy{
+				PolicyId: spotinst.String("pol-c75d8c06"),
 				AccountIds: []string{
 					"act-abcd1234",
 				},
@@ -46,7 +58,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("spotinst: failed to update policy: %v", err)
+		log.Fatalf("spotinst: failed to update user group: %v", err)
 	}
 
 }
