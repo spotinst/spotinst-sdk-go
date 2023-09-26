@@ -60,13 +60,13 @@ type UserPolicy struct {
 }
 
 type ProgrammaticUser struct {
-	Name        *string       `json:"name,omitempty"`
-	Description *string       `json:"description,omitempty"`
-	Policies    []*ProgPolicy `json:"policies,omitempty"`
-	Accounts    []*Account    `json:"accounts,omitempty"`
-	Token       *string       `json:"token,omitempty"`
-	ProgUserId  *string       `json:"id,omitempty"`
-	UserGroupIds []string     `json:"userGroupIds,omitempty"`
+	Name         *string       `json:"name,omitempty"`
+	Description  *string       `json:"description,omitempty"`
+	Policies     []*ProgPolicy `json:"policies,omitempty"`
+	Accounts     []*Account    `json:"accounts,omitempty"`
+	Token        *string       `json:"token,omitempty"`
+	ProgUserId   *string       `json:"id,omitempty"`
+	UserGroupIds []string      `json:"userGroupIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
