@@ -14,6 +14,7 @@ import (
 type Service interface {
 	serviceAccount
 	serviceCredential
+	serviceAwsAccountExternalId
 }
 
 type serviceAccount interface {
@@ -24,6 +25,10 @@ type serviceAccount interface {
 type serviceCredential interface {
 	SetCredential(context.Context, *SetCredentialInput) (*SetCredentialOutput, error)
 	ReadCredential(context.Context, *ReadCredentialInput) (*ReadCredentialOutput, error)
+}
+type serviceAwsAccountExternalId interface {
+	CreateAWSAccountExternalId(context.Context, *CreateAWSAccountExternalIdInput) (*CreateAWSAccountExternalIdOutput, error)
+	ReadAWSAccountExternalId(context.Context, *ReadAWSAccountExternalIdInput) (*ReadAWSAccountExternalIdOutput, error)
 }
 type ServiceOp struct {
 	Client *client.Client
