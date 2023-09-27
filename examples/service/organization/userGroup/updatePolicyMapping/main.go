@@ -29,26 +29,26 @@ func main() {
 	// Create a new group.
 	err := svc.UpdatePolicyMappingOfUserGroup(ctx, &organization.UpdatePolicyMappingOfUserGroupInput{
 		UserGroupId: spotinst.String("ugr-17ae43d9"),
-		Policies: []*organization.ProgPolicy{
-			&organization.ProgPolicy{
+		Policies: []*organization.UserPolicy{
+			&organization.UserPolicy{
 				PolicyId: spotinst.String("pol-b236db1f"),
 				AccountIds: []string{
 					"act-abcd1234",
 				},
 			},
-			&organization.ProgPolicy{
+			&organization.UserPolicy{
 				PolicyId: spotinst.String("pol-08715c90"),
 				AccountIds: []string{
 					"act-abcd1234",
 				},
 			},
-			&organization.ProgPolicy{
+			&organization.UserPolicy{
 				PolicyId: spotinst.String("3"),
 				AccountIds: []string{
 					"act-abcd1234",
 				},
 			},
-			&organization.ProgPolicy{
+			&organization.UserPolicy{
 				PolicyId: spotinst.String("pol-c75d8c06"),
 				AccountIds: []string{
 					"act-abcd1234",

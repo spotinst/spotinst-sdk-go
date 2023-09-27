@@ -124,7 +124,7 @@ func userGroupsFromHttpResponse(resp *http.Response) ([]*UserGroup, error) {
 
 func (s *ServiceOp) ListUserGroups(ctx context.Context, input *ListUserGroupsInput) (*ListUserGroupsOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/setup/access/userGroup")
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (s *ServiceOp) CreateUserGroup(ctx context.Context, input *UserGroup) (*Cre
 	r := client.NewRequest(http.MethodPost, "/setup/access/userGroup")
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -170,7 +170,7 @@ func (s *ServiceOp) ReadUserGroup(ctx context.Context, input *ReadUserGroupInput
 	}
 
 	r := client.NewRequest(http.MethodGet, path)
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -203,7 +203,7 @@ func (s *ServiceOp) UpdateUserGroup(ctx context.Context, input *UserGroup) error
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return err
 	}
@@ -231,7 +231,7 @@ func (s *ServiceOp) UpdateUserMappingOfUserGroup(ctx context.Context, input *Upd
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return err
 	}
@@ -242,7 +242,7 @@ func (s *ServiceOp) UpdateUserMappingOfUserGroup(ctx context.Context, input *Upd
 
 type UpdatePolicyMappingOfUserGroupInput struct {
 	UserGroupId *string       `json:"userGroupId,omitempty"`
-	Policies    []*ProgPolicy `json:"policies,omitempty"`
+	Policies    []*UserPolicy `json:"policies,omitempty"`
 }
 
 func (s *ServiceOp) UpdatePolicyMappingOfUserGroup(ctx context.Context, input *UpdatePolicyMappingOfUserGroupInput) error {
@@ -259,7 +259,7 @@ func (s *ServiceOp) UpdatePolicyMappingOfUserGroup(ctx context.Context, input *U
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return err
 	}
@@ -277,7 +277,7 @@ func (s *ServiceOp) DeleteUserGroup(ctx context.Context, input *DeleteUserGroupI
 	}
 
 	r := client.NewRequest(http.MethodDelete, path)
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}

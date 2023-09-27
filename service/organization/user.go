@@ -211,7 +211,7 @@ func progUsersFromHttpResponse(resp *http.Response) ([]*ProgrammaticUser, error)
 
 func (s *ServiceOp) ListUsers(ctx context.Context, input *ListUsersInput) (*ListUsersOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/setup/organization/user")
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -231,7 +231,7 @@ func (s *ServiceOp) CreateUser(ctx context.Context, input *User, generateToken *
 	r.Params.Set("generateToken", genToken)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -254,7 +254,7 @@ func (s *ServiceOp) CreateProgUser(ctx context.Context, input *ProgrammaticUser)
 	r := client.NewRequest(http.MethodPost, "/setup/user/programmatic")
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -282,7 +282,7 @@ func (s *ServiceOp) ReadUser(ctx context.Context, input *ReadUserInput) (*ReadUs
 	}
 
 	r := client.NewRequest(http.MethodGet, path)
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -310,7 +310,7 @@ func (s *ServiceOp) ReadProgUser(ctx context.Context, input *ReadUserInput) (*Re
 	}
 
 	r := client.NewRequest(http.MethodGet, path)
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -349,7 +349,7 @@ func (s *ServiceOp) UpdatePolicyMappingOfUser(ctx context.Context, input *Update
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return err
 	}
@@ -378,7 +378,7 @@ func (s *ServiceOp) UpdateUserGroupMappingOfUser(ctx context.Context, input *Upd
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return err
 	}
@@ -396,7 +396,7 @@ func (s *ServiceOp) DeleteUser(ctx context.Context, input *DeleteUserInput) (*De
 	}
 
 	r := client.NewRequest(http.MethodDelete, path)
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}

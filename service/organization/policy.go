@@ -124,7 +124,7 @@ func policiesFromHttpResponse(resp *http.Response) ([]*Policy, error) {
 
 func (s *ServiceOp) ListPolicies(ctx context.Context, input *ListPoliciesInput) (*ListPoliciesOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/setup/organization/policy")
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +142,7 @@ func (s *ServiceOp) CreatePolicy(ctx context.Context, input *CreatePolicyInput) 
 	r := client.NewRequest(http.MethodPost, "/setup/access/policy")
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,7 @@ func (s *ServiceOp) CreatePolicy(ctx context.Context, input *CreatePolicyInput) 
 func (s *ServiceOp) ReadPolicy(ctx context.Context, input *ReadPolicyInput) (*ReadPolicyOutput, error) {
 
 	r := client.NewRequest(http.MethodGet, "/setup/organization/policy")
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -202,7 +202,7 @@ func (s *ServiceOp) UpdatePolicy(ctx context.Context, input *UpdatePolicyInput) 
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
@@ -230,7 +230,7 @@ func (s *ServiceOp) DeletePolicy(ctx context.Context, input *DeletePolicyInput) 
 	}
 
 	r := client.NewRequest(http.MethodDelete, path)
-	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
