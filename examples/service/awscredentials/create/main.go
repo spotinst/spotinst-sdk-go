@@ -16,8 +16,8 @@ func main() {
 	ctx := context.Background()
 	_, err := svc.CloudProviderAWS().Credentials(ctx, &aws.SetCredentialsInput{
 		Credentials: &aws.Credentials{
-			AccountId: spotinst.String("act-12345"),
-			IamRole:   spotinst.String("arn:aws:iam::12345:role/test-role"),
+			AccountId: spotinst.String("act-c4842ba3"),
+			IamRole:   spotinst.String("arn:aws:iam::253244684816:role/terraform-role-sept"),
 		},
 	})
 

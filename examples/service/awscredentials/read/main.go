@@ -16,7 +16,7 @@ func main() {
 	svc := account.New(sess)
 	ctx := context.Background()
 	out, err := svc.CloudProviderAWS().ReadCredentials(ctx, &aws.ReadCredentialsInput{
-		AccountId: spotinst.String("act-12345"),
+		AccountId: spotinst.String("act-c4842ba3"),
 	})
 
 	if err != nil {
