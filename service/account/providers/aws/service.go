@@ -13,7 +13,7 @@ import (
 // the service.
 type Service interface {
 	serviceAccount
-	serviceCredential
+	serviceCredentials
 	serviceAwsAccountExternalId
 }
 
@@ -22,9 +22,9 @@ type serviceAccount interface {
 	DeleteAccount(context.Context, *DeleteAccountInput) (*DeleteAccountOutput, error)
 	ReadAccount(context.Context, *ReadAccountInput) (*ReadAccountOutput, error)
 }
-type serviceCredential interface {
-	SetCredential(context.Context, *SetCredentialInput) (*SetCredentialOutput, error)
-	ReadCredential(context.Context, *ReadCredentialInput) (*ReadCredentialOutput, error)
+type serviceCredentials interface {
+	Credentials(context.Context, *SetCredentialsInput) (*SetCredentialsOutput, error)
+	ReadCredentials(context.Context, *ReadCredentialsInput) (*ReadCredentialsOutput, error)
 }
 type serviceAwsAccountExternalId interface {
 	CreateAWSAccountExternalId(context.Context, *CreateAWSAccountExternalIdInput) (*CreateAWSAccountExternalIdOutput, error)
