@@ -10,7 +10,7 @@ import (
 	"net/http"
 )
 
-type Credential struct {
+type Credentials struct {
 	IamRole   *string `json:"iamRole,omitempty"`
 	AccountId *string `json:"accountId,omitempty"`
 
@@ -19,39 +19,39 @@ type Credential struct {
 	nullFields []string
 }
 
-func (o Credential) MarshalJSON() ([]byte, error) {
-	type noMethod Credential
+func (o Credentials) MarshalJSON() ([]byte, error) {
+	type noMethod Credentials
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Credential) SetIamRole(v *string) *Credential {
+func (o *Credentials) SetIamRole(v *string) *Credentials {
 	if o.IamRole = v; o.IamRole == nil {
 		o.nullFields = append(o.nullFields, "IamRole")
 	}
 	return o
 }
-func (o *Credential) SetAccountId(v *string) *Credential {
+func (o *Credentials) SetAccountId(v *string) *Credentials {
 	if o.AccountId = v; o.AccountId == nil {
 		o.nullFields = append(o.nullFields, "AccountId")
 	}
 	return o
 }
 
-type SetCredentialInput struct {
-	Credential *Credential `json:"credentials,omitempty"`
+type SetCredentialsInput struct {
+	Credentials *Credentials `json:"credentials,omitempty"`
 }
-type SetCredentialOutput struct {
-	Credential *Credential `json:"Credential,omitempty"`
+type SetCredentialsOutput struct {
+	Credentials *Credentials `json:"Credentials,omitempty"`
 }
 
-func (s *ServiceOp) SetCredential(ctx context.Context, input *SetCredentialInput) (*SetCredentialOutput, error) {
+func (s *ServiceOp) Credentials(ctx context.Context, input *SetCredentialsInput) (*SetCredentialsOutput, error) {
 	r := client.NewRequest(http.MethodPost, "/setup/credentials/aws")
 
 	if input != nil {
-		r.Params.Set("accountId", spotinst.StringValue(input.Credential.AccountId))
+		r.Params.Set("accountId", spotinst.StringValue(input.Credentials.AccountId))
 	}
-	input.Credential.AccountId = nil
+	input.Credentials.AccountId = nil
 	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
@@ -65,22 +65,22 @@ func (s *ServiceOp) SetCredential(ctx context.Context, input *SetCredentialInput
 		return nil, err
 	}
 
-	output := new(SetCredentialOutput)
+	output := new(SetCredentialsOutput)
 	if len(gs) > 0 {
-		output.Credential = gs[0]
+		output.Credentials = gs[0]
 	}
 
 	return output, nil
 }
 
-type ReadCredentialInput struct {
+type ReadCredentialsInput struct {
 	AccountId *string `json:"accountId,omitempty"`
 }
-type ReadCredentialOutput struct {
-	Credential *Credential `json:"Credential,omitempty"`
+type ReadCredentialsOutput struct {
+	Credentials *Credentials `json:"Credentials,omitempty"`
 }
 
-func (s *ServiceOp) ReadCredential(ctx context.Context, input *ReadCredentialInput) (*ReadCredentialOutput, error) {
+func (s *ServiceOp) ReadCredentials(ctx context.Context, input *ReadCredentialsInput) (*ReadCredentialsOutput, error) {
 	r := client.NewRequest(http.MethodGet, "/setup/credentials/aws")
 	if input != nil {
 		r.Params.Set("accountId", spotinst.StringValue(input.AccountId))
@@ -97,15 +97,15 @@ func (s *ServiceOp) ReadCredential(ctx context.Context, input *ReadCredentialInp
 		return nil, err
 	}
 
-	output := new(ReadCredentialOutput)
+	output := new(ReadCredentialsOutput)
 	if len(gs) > 0 {
-		output.Credential = gs[0]
+		output.Credentials = gs[0]
 	}
 
 	return output, nil
 }
 
-func credentialsFromHttpResponse(resp *http.Response) ([]*Credential, error) {
+func credentialsFromHttpResponse(resp *http.Response) ([]*Credentials, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -113,12 +113,12 @@ func credentialsFromHttpResponse(resp *http.Response) ([]*Credential, error) {
 	return credentialsFromJSON(body)
 }
 
-func credentialsFromJSON(in []byte) ([]*Credential, error) {
+func credentialsFromJSON(in []byte) ([]*Credentials, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*Credential, len(rw.Response.Items))
+	out := make([]*Credentials, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
@@ -132,8 +132,8 @@ func credentialsFromJSON(in []byte) ([]*Credential, error) {
 	return out, nil
 }
 
-func credentialFromJSON(in []byte) (*Credential, error) {
-	b := new(Credential)
+func credentialFromJSON(in []byte) (*Credentials, error) {
+	b := new(Credentials)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}

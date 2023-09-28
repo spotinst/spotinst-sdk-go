@@ -14,8 +14,8 @@ func main() {
 	sess := session.New()
 	svc := account.New(sess)
 	ctx := context.Background()
-	_, err := svc.CloudProviderAWS().SetCredential(ctx, &aws.SetCredentialInput{
-		Credential: &aws.Credential{
+	_, err := svc.CloudProviderAWS().Credentials(ctx, &aws.SetCredentialsInput{
+		Credentials: &aws.Credentials{
 			AccountId: spotinst.String("act-12345"),
 			IamRole:   spotinst.String("arn:aws:iam::12345:role/test-role"),
 		},
