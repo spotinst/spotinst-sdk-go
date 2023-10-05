@@ -673,6 +673,12 @@ func (o *LaunchSpec) SetScheduling(v *LaunchSpecScheduling) *LaunchSpec {
 	}
 	return o
 }
+func (o *LaunchSpec) SetInstanceTypesFilters(v *InstanceTypesFilters) *LaunchSpec {
+	if o.InstanceTypesFilters = v; o.InstanceTypesFilters == nil {
+		o.nullFields = append(o.nullFields, "InstanceTypesFilters")
+	}
+	return o
+}
 
 // endregion
 
@@ -1175,7 +1181,8 @@ func (o *Images) SetImageId(v *string) *Images {
 }
 
 // endregion
-// region Filters
+
+// region InstanceTypesFilters
 
 func (o InstanceTypesFilters) MarshalJSON() ([]byte, error) {
 	type noMethod InstanceTypesFilters
