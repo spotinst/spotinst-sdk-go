@@ -68,6 +68,7 @@ func main() {
 				GracePeriod: spotinst.Int(600),
 			},
 			VirtualNodeGroupTemplate: &azure_np.VirtualNodeGroupTemplate{
+				AvailabilityZones: []string{"1", "2"},
 				NodePoolProperties: &azure_np.NodePoolProperties{
 					MaxPodsPerNode:     spotinst.Int(110),
 					EnableNodePublicIP: spotinst.Bool(false),
@@ -76,6 +77,8 @@ func main() {
 					OsType:             spotinst.String("Windows"),
 					OsSKU:              spotinst.String("Windows2019"),
 					KubernetesVersion:  spotinst.String("1.26"),
+					PodSubnetIDs:       []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
+					VnetSubnetIDs:      []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
 				},
 				NodeCountLimits: &azure_np.NodeCountLimits{
 					MinCount: spotinst.Int(0),

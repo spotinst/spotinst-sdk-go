@@ -53,6 +53,8 @@ func main() {
 				OsType:             spotinst.String("Windows"),
 				OsSKU:              spotinst.String("Windows2022"),
 				KubernetesVersion:  spotinst.String("1.26"),
+				PodSubnetIDs:       []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
+				VnetSubnetIDs:      []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
 			},
 			NodeCountLimits: &azure_np.NodeCountLimits{
 				MinCount: spotinst.Int(0),
