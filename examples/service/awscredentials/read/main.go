@@ -15,8 +15,8 @@ func main() {
 	sess := session.New()
 	svc := account.New(sess)
 	ctx := context.Background()
-	out, err := svc.CloudProviderAWS().ReadCredential(ctx, &aws.ReadCredentialInput{
-		AccountId: spotinst.String("act-12345"),
+	out, err := svc.CloudProviderAWS().ReadCredentials(ctx, &aws.ReadCredentialsInput{
+		AccountId: spotinst.String("act-c4842ba3"),
 	})
 
 	if err != nil {
@@ -24,8 +24,8 @@ func main() {
 	}
 	if out != nil {
 		log.Printf("credential %q: %s",
-			spotinst.StringValue(out.Credential.AccountId),
-			stringutil.Stringify(out.Credential.IamRole))
+			spotinst.StringValue(out.Credentials.AccountId),
+			stringutil.Stringify(out.Credentials.IamRole))
 	}
 
 }
