@@ -309,13 +309,14 @@ type VmSizes struct {
 }
 
 type Filters struct {
-	MinVcpu       *int     `json:"minVCpu,omitempty"`
-	MaxVcpu       *int     `json:"maxVCpu,omitempty"`
-	MinMemoryGiB  *float64 `json:"minMemoryGiB,omitempty"`
-	MaxMemoryGiB  *float64 `json:"maxMemoryGiB,omitempty"`
-	Series        []string `json:"series,omitempty"`
-	Architectures []string `json:"architectures,omitempty"`
-	ExcludeSeries []string `json:"excludeSeries,omitempty"`
+	MinVcpu               *int     `json:"minVCpu,omitempty"`
+	MaxVcpu               *int     `json:"maxVCpu,omitempty"`
+	MinMemoryGiB          *float64 `json:"minMemoryGiB,omitempty"`
+	MaxMemoryGiB          *float64 `json:"maxMemoryGiB,omitempty"`
+	Series                []string `json:"series,omitempty"`
+	Architectures         []string `json:"architectures,omitempty"`
+	ExcludeSeries         []string `json:"excludeSeries,omitempty"`
+	AcceleratedNetworking *string  `json:"acceleratedNetworking,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -388,6 +389,13 @@ func (o *Filters) SetArchitectures(v []string) *Filters {
 
 func (o *Filters) SetExcludeSeries(v []string) *Filters {
 	if o.ExcludeSeries = v; o.ExcludeSeries == nil {
+		o.nullFields = append(o.nullFields, "ExcludeSeries")
+	}
+	return o
+}
+
+func (o *Filters) SetAcceleratedNetworking(v *string) *Filters {
+	if o.AcceleratedNetworking = v; o.AcceleratedNetworking == nil {
 		o.nullFields = append(o.nullFields, "ExcludeSeries")
 	}
 	return o
