@@ -4,13 +4,15 @@ import "github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 
 // NodePoolProperties region
 type NodePoolProperties struct {
-	MaxPodsPerNode     *int    `json:"maxPodsPerNode,omitempty"`
-	EnableNodePublicIP *bool   `json:"enableNodePublicIP,omitempty"`
-	OsDiskSizeGB       *int    `json:"osDiskSizeGB,omitempty"`
-	OsDiskType         *string `json:"osDiskType,omitempty"`
-	OsType             *string `json:"osType,omitempty"`
-	OsSKU              *string `json:"osSKU,omitempty"`
-	KubernetesVersion  *string `json:"kubernetesVersion,omitempty"`
+	MaxPodsPerNode     *int     `json:"maxPodsPerNode,omitempty"`
+	EnableNodePublicIP *bool    `json:"enableNodePublicIP,omitempty"`
+	OsDiskSizeGB       *int     `json:"osDiskSizeGB,omitempty"`
+	OsDiskType         *string  `json:"osDiskType,omitempty"`
+	OsType             *string  `json:"osType,omitempty"`
+	OsSKU              *string  `json:"osSKU,omitempty"`
+	KubernetesVersion  *string  `json:"kubernetesVersion,omitempty"`
+	PodSubnetIDs       []string `json:"podSubnetIDs,omitempty"`
+	VnetSubnetIDs      []string `json:"vnetSubnetIDs,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -67,6 +69,20 @@ func (o *NodePoolProperties) SetOsSKU(v *string) *NodePoolProperties {
 func (o *NodePoolProperties) SetKubernetesVersion(v *string) *NodePoolProperties {
 	if o.KubernetesVersion = v; o.KubernetesVersion == nil {
 		o.nullFields = append(o.nullFields, "KubernetesVersion")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetPodSubnetIDs(v []string) *NodePoolProperties {
+	if o.PodSubnetIDs = v; o.PodSubnetIDs == nil {
+		o.nullFields = append(o.nullFields, "PodSubnetIDs")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetVnetSubnetIDs(v []string) *NodePoolProperties {
+	if o.VnetSubnetIDs = v; o.VnetSubnetIDs == nil {
+		o.nullFields = append(o.nullFields, "VnetSubnetIDs")
 	}
 	return o
 }
