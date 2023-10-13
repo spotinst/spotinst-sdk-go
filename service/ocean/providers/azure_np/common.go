@@ -325,13 +325,20 @@ type VmSizes struct {
 }
 
 type Filters struct {
-	MinVcpu       *int     `json:"minVCpu,omitempty"`
-	MaxVcpu       *int     `json:"maxVCpu,omitempty"`
-	MinMemoryGiB  *float64 `json:"minMemoryGiB,omitempty"`
-	MaxMemoryGiB  *float64 `json:"maxMemoryGiB,omitempty"`
-	Series        []string `json:"series,omitempty"`
-	Architectures []string `json:"architectures,omitempty"`
-	ExcludeSeries []string `json:"excludeSeries,omitempty"`
+	MinVcpu               *int     `json:"minVCpu,omitempty"`
+	MaxVcpu               *int     `json:"maxVCpu,omitempty"`
+	MinMemoryGiB          *float64 `json:"minMemoryGiB,omitempty"`
+	MaxMemoryGiB          *float64 `json:"maxMemoryGiB,omitempty"`
+	Series                []string `json:"series,omitempty"`
+	Architectures         []string `json:"architectures,omitempty"`
+	ExcludeSeries         []string `json:"excludeSeries,omitempty"`
+	AcceleratedNetworking *string  `json:"acceleratedNetworking,omitempty"`
+	DiskPerformance       *string  `json:"diskPerformance,omitempty"`
+	MinGpu                *float64 `json:"minGpu,omitempty"`
+	MaxGpu                *float64 `json:"maxGpu,omitempty"`
+	MinNICs               *int     `json:"minNICs,omitempty"`
+	VmTypes               []string `json:"vmTypes,omitempty"`
+	MinData               *int     `json:"minData,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -405,6 +412,55 @@ func (o *Filters) SetArchitectures(v []string) *Filters {
 func (o *Filters) SetExcludeSeries(v []string) *Filters {
 	if o.ExcludeSeries = v; o.ExcludeSeries == nil {
 		o.nullFields = append(o.nullFields, "ExcludeSeries")
+	}
+	return o
+}
+
+func (o *Filters) SetAcceleratedNetworking(v *string) *Filters {
+	if o.AcceleratedNetworking = v; o.AcceleratedNetworking == nil {
+		o.nullFields = append(o.nullFields, "AcceleratedNetworking")
+	}
+	return o
+}
+
+func (o *Filters) SetDiskPerformance(v *string) *Filters {
+	if o.DiskPerformance = v; o.DiskPerformance == nil {
+		o.nullFields = append(o.nullFields, "DiskPerformance")
+	}
+	return o
+}
+
+func (o *Filters) SetMinGpu(v *float64) *Filters {
+	if o.MinGpu = v; o.MinGpu == nil {
+		o.nullFields = append(o.nullFields, "MinGpu")
+	}
+	return o
+}
+
+func (o *Filters) SetMaxGpu(v *float64) *Filters {
+	if o.MaxGpu = v; o.MaxGpu == nil {
+		o.nullFields = append(o.nullFields, "MaxGpu")
+	}
+	return o
+}
+
+func (o *Filters) SetMinNICs(v *int) *Filters {
+	if o.MinNICs = v; o.MinNICs == nil {
+		o.nullFields = append(o.nullFields, "MinNICs")
+	}
+	return o
+}
+
+func (o *Filters) SetVmTypes(v []string) *Filters {
+	if o.VmTypes = v; o.VmTypes == nil {
+		o.nullFields = append(o.nullFields, "VmTypes")
+	}
+	return o
+}
+
+func (o *Filters) SetMinData(v *int) *Filters {
+	if o.MinData = v; o.MinData == nil {
+		o.nullFields = append(o.nullFields, "MinData")
 	}
 	return o
 }
