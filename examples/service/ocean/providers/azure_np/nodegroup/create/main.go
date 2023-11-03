@@ -101,7 +101,7 @@ func main() {
 						"generalPurpose",
 						"GPU",
 					},
-					MinData: spotinst.Int(2),
+					MinDisk: spotinst.Int(2),
 				},
 			},
 		},

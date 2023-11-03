@@ -295,7 +295,7 @@ func (s *ServiceOp) UpdateCluster(ctx context.Context, input *UpdateClusterInput
 
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
-
+	input.Cluster.AKS = nil
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
