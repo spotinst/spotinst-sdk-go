@@ -96,8 +96,7 @@ type Headroom struct {
 }
 
 type Automatic struct {
-	IsEnabled  *bool `json:"isEnabled,omitempty"`
-	Percentage *int  `json:"percentage,omitempty"`
+	Percentage *int `json:"percentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
