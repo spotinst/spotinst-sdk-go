@@ -96,8 +96,7 @@ type Headroom struct {
 }
 
 type Automatic struct {
-	IsEnabled  *bool `json:"isEnabled,omitempty"`
-	Percentage *int  `json:"percentage,omitempty"`
+	Percentage *int `json:"percentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -574,13 +573,6 @@ func (o Automatic) MarshalJSON() ([]byte, error) {
 	type noMethod Automatic
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *Automatic) SetIsEnabled(v *bool) *Automatic {
-	if o.IsEnabled = v; o.IsEnabled == nil {
-		o.nullFields = append(o.nullFields, "IsEnabled")
-	}
-	return o
 }
 
 func (o *Automatic) SetPercentage(v *int) *Automatic {
