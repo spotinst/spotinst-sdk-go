@@ -576,13 +576,6 @@ func (o Automatic) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Automatic) SetIsEnabled(v *bool) *Automatic {
-	if o.IsEnabled = v; o.IsEnabled == nil {
-		o.nullFields = append(o.nullFields, "IsEnabled")
-	}
-	return o
-}
-
 func (o *Automatic) SetPercentage(v *int) *Automatic {
 	if o.Percentage = v; o.Percentage == nil {
 		o.nullFields = append(o.nullFields, "Percentage")
