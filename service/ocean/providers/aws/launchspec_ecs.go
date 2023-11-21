@@ -236,7 +236,7 @@ type ECSImages struct {
 
 func (o *ECSLaunchSpec) SetECSImages(v []*ECSImages) *ECSLaunchSpec {
 	if o.Images = v; o.Images == nil {
-		o.nullFields = append(o.nullFields, "ECSImages")
+		o.nullFields = append(o.nullFields, "Images")
 	}
 	return o
 }
