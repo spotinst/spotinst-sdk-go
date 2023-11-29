@@ -29,9 +29,9 @@ func main() {
 	// Read stateful node configuration.
 	out, err := svc.Create(ctx, &azure.CreateStatefulNodeInput{
 		StatefulNode: &azure.StatefulNode{
-			Name:              spotinst.String("foo"),
+			Name:              spotinst.String("Sobh_test_StatefulNode"),
 			Region:            spotinst.String("eastus"),
-			ResourceGroupName: spotinst.String("foo"),
+			ResourceGroupName: spotinst.String("AutomationResourceGroup"),
 			Description:       spotinst.String("foo"),
 			Strategy: &azure.Strategy{
 				Signals: []*azure.Signal{
@@ -48,17 +48,17 @@ func main() {
 				OptimizationWindows: []string{
 					"Tue:19:46-Tue:20:46",
 				},
-				CapacityReservation: &azure.CapacityReservation{
+				/*CapacityReservation: &azure.CapacityReservation{
 					ShouldUtilize:       spotinst.Bool(true),
 					UtilizationStrategy: spotinst.String("utilizeOverOD"),
 					CapacityReservationGroups: []*azure.CapacityReservationGroup{
 						{
 							Name:              spotinst.String("TestCRG"),
-							ResourceGroupName: spotinst.String("foo"),
+							ResourceGroupName: spotinst.String("AutomationResourceGroup"),
 							ShouldPrioritize:  spotinst.Bool(true),
 						},
 					},
-				},
+				},*/
 			},
 			Compute: &azure.Compute{
 				OS: spotinst.String("Linux"),
@@ -74,10 +74,10 @@ func main() {
 						"standard_ds2_v2",
 					},
 				},
-				Zones: []string{
+				/*Zones: []string{
 					"1",
 					"2",
-				},
+				}*/
 				PreferredZone: spotinst.String("2"),
 				LaunchSpecification: &azure.LaunchSpecification{
 					Image: &azure.Image{
@@ -89,17 +89,23 @@ func main() {
 						},
 					},
 					Network: &azure.Network{
-						ResourceGroupName:  spotinst.String("foo"),
-						VirtualNetworkName: spotinst.String("foo"),
+						ResourceGroupName:  spotinst.String("AutomationResourceGroup"),
+						VirtualNetworkName: spotinst.String("Automation-VirtualNetwork"),
 						NetworkInterfaces: []*azure.NetworkInterface{
 							{
 								IsPrimary:      spotinst.Bool(true),
-								SubnetName:     spotinst.String("default"),
+								SubnetName:     spotinst.String("Automation-PrivateSubnet"),
 								AssignPublicIP: spotinst.Bool(true),
 								PublicIPSku:    spotinst.String("Standard"),
+								PublicIPs: []*azure.PublicIP{
+									{
+										Name:              spotinst.String("Automation-LB-PublicIP"),
+										ResourceGroupName: spotinst.String("AutomationResourceGroup"),
+									},
+								},
 								NetworkSecurityGroup: &azure.NetworkSecurityGroup{
-									ResourceGroupName: spotinst.String("foo"),
-									Name:              spotinst.String("foo"),
+									ResourceGroupName: spotinst.String("AutomationResourceGroup"),
+									Name:              spotinst.String("Automation-NSG-PrivateSubnet"),
 								},
 							},
 						},
@@ -123,8 +129,8 @@ func main() {
 						},
 					},
 					Login: &azure.Login{
-						UserName: spotinst.String("foo"),
-						Password: spotinst.String("bar"),
+						UserName: spotinst.String("ubuntu"),
+						Password: spotinst.String("Netapp@234"),
 					},
 					Tags: []*azure.Tag{
 						{
@@ -132,23 +138,29 @@ func main() {
 							TagValue: spotinst.String("Tamiry@netapp.com"),
 						},
 					},
-					UserData: spotinst.String("base64 user data script"),
+					UserData: spotinst.String("dXNlcmJhc2g2NGVuY29kZWQ="),
 					VMName:   spotinst.String("nameOfVM"),
 					LoadBalancersConfig: &azure.LoadBalancersConfig{
 						LoadBalancers: []*azure.LoadBalancer{
 							{
-								BackendPoolNames:  []string{"foo"},
+								BackendPoolNames:  []string{"Automation-Lb-BackendPool"},
 								SKU:               spotinst.String("Standard"),
-								Name:              spotinst.String("foo"),
-								ResourceGroupName: spotinst.String("foo"),
-								Type:              spotinst.String("foo"),
+								Name:              spotinst.String("Automation-Lb"),
+								ResourceGroupName: spotinst.String("AutomationResourceGroup"),
+								Type:              spotinst.String("loadBalancer"),
 							},
 						},
 					},
-					Security: &azure.Security{
+					/*Security: &azure.Security{
 						SecureBootEnabled: spotinst.Bool(false),
 						SecurityType:      spotinst.String("Standard"),
 						VTpmEnabled:       spotinst.Bool(false),
+					},*/
+					ProximityPlacementGroups: []*azure.ProximityPlacementGroups{
+						{
+							Name:              spotinst.String("TestTerraformProximityPlacementGroup"),
+							ResourceGroupName: spotinst.String("AutomationResourceGroup"),
+						},
 					},
 				},
 			},
