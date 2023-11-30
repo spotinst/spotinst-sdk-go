@@ -97,6 +97,12 @@ func main() {
 								SubnetName:     spotinst.String("default"),
 								AssignPublicIP: spotinst.Bool(true),
 								PublicIPSku:    spotinst.String("Standard"),
+								PublicIPs: []*azure.PublicIP{
+									{
+										Name:              spotinst.String("foo"),
+										ResourceGroupName: spotinst.String("foo"),
+									},
+								},
 								NetworkSecurityGroup: &azure.NetworkSecurityGroup{
 									ResourceGroupName: spotinst.String("foo"),
 									Name:              spotinst.String("foo"),
@@ -149,6 +155,12 @@ func main() {
 						SecureBootEnabled: spotinst.Bool(false),
 						SecurityType:      spotinst.String("Standard"),
 						VTpmEnabled:       spotinst.Bool(false),
+					},
+					ProximityPlacementGroups: []*azure.ProximityPlacementGroups{
+						{
+							Name:              spotinst.String("foo"),
+							ResourceGroupName: spotinst.String("foo"),
+						},
 					},
 				},
 			},

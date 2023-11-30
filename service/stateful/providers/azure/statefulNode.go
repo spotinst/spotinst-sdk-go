@@ -112,22 +112,30 @@ type VMSizes struct {
 }
 
 type LaunchSpecification struct {
-	Image                    *Image                    `json:"image,omitempty"`
-	Network                  *Network                  `json:"network,omitempty"`
-	Login                    *Login                    `json:"login,omitempty"`
-	CustomData               *string                   `json:"customData,omitempty"`
-	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
-	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
-	Tags                     []*Tag                    `json:"tags,omitempty"`
-	ManagedServiceIdentities []*ManagedServiceIdentity `json:"managedServiceIdentities,omitempty"`
-	Extensions               []*Extension              `json:"extensions,omitempty"`
-	OSDisk                   *OSDisk                   `json:"osDisk,omitempty"`
-	DataDisks                []*DataDisk               `json:"dataDisks,omitempty"`
-	Secrets                  []*Secret                 `json:"secrets,omitempty"`
-	BootDiagnostics          *BootDiagnostics          `json:"bootDiagnostics,omitempty"`
-	UserData                 *string                   `json:"userData,omitempty"`
-	VMName                   *string                   `json:"vmName,omitempty"`
-	Security                 *Security                 `json:"security,omitempty"`
+	Image                    *Image                      `json:"image,omitempty"`
+	Network                  *Network                    `json:"network,omitempty"`
+	Login                    *Login                      `json:"login,omitempty"`
+	CustomData               *string                     `json:"customData,omitempty"`
+	ShutdownScript           *string                     `json:"shutdownScript,omitempty"`
+	LoadBalancersConfig      *LoadBalancersConfig        `json:"loadBalancersConfig,omitempty"`
+	Tags                     []*Tag                      `json:"tags,omitempty"`
+	ManagedServiceIdentities []*ManagedServiceIdentity   `json:"managedServiceIdentities,omitempty"`
+	Extensions               []*Extension                `json:"extensions,omitempty"`
+	OSDisk                   *OSDisk                     `json:"osDisk,omitempty"`
+	DataDisks                []*DataDisk                 `json:"dataDisks,omitempty"`
+	Secrets                  []*Secret                   `json:"secrets,omitempty"`
+	BootDiagnostics          *BootDiagnostics            `json:"bootDiagnostics,omitempty"`
+	UserData                 *string                     `json:"userData,omitempty"`
+	VMName                   *string                     `json:"vmName,omitempty"`
+	Security                 *Security                   `json:"security,omitempty"`
+	ProximityPlacementGroups []*ProximityPlacementGroups `json:"proximityPlacementGroups,omitempty"`
+	forceSendFields          []string
+	nullFields               []string
+}
+
+type ProximityPlacementGroups struct {
+	Name              *string `json:"name,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1397,6 +1405,13 @@ func (o *LaunchSpecification) SetManagedServiceIdentities(v []*ManagedServiceIde
 	return o
 }
 
+func (o *LaunchSpecification) SetProximityPlacementGroups(v []*ProximityPlacementGroups) *LaunchSpecification {
+	if o.ProximityPlacementGroups = v; o.ProximityPlacementGroups == nil {
+		o.nullFields = append(o.nullFields, "ProximityPlacementGroups")
+	}
+	return o
+}
+
 func (o *LaunchSpecification) SetExtensions(v []*Extension) *LaunchSpecification {
 	if o.Extensions = v; o.Extensions == nil {
 		o.nullFields = append(o.nullFields, "Extensions")
@@ -2153,3 +2168,27 @@ func (o *Security) SetVTpmEnabled(v *bool) *Security {
 }
 
 //end region
+
+// region Proximity Placement Group
+
+func (o ProximityPlacementGroups) MarshalJSON() ([]byte, error) {
+	type noMethod ProximityPlacementGroups
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ProximityPlacementGroups) SetName(v *string) *ProximityPlacementGroups {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *ProximityPlacementGroups) SetResourceGroupName(v *string) *ProximityPlacementGroups {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+// endregion
