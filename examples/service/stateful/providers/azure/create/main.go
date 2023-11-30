@@ -130,7 +130,7 @@ func main() {
 					},
 					Login: &azure.Login{
 						UserName: spotinst.String("foo"),
-						Password: spotinst.String("foo"),
+						Password: spotinst.String("bar"),
 					},
 					Tags: []*azure.Tag{
 						{
