@@ -1202,7 +1202,7 @@ type Export struct {
 	nullFields      []string
 }
 type S3 struct {
-	ID *string `json:"id,omitempty"`
+	Id *string `json:"id,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -5573,8 +5573,8 @@ func (o S3) MarshalJSON() ([]byte, error) {
 }
 
 func (o *S3) SetId(v *string) *S3 {
-	if o.ID = v; o.ID == nil {
-		o.nullFields = append(o.nullFields, "ID")
+	if o.Id = v; o.Id == nil {
+		o.nullFields = append(o.nullFields, "Id")
 	}
 	return o
 }
