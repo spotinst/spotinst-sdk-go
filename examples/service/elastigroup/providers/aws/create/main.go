@@ -106,7 +106,7 @@ func main() {
 			Logging: &aws.Logging{
 				Export: &aws.Export{
 					S3: &aws.S3{
-						ID: spotinst.String("di-123456"),
+						Id: spotinst.String("di-123456"),
 					},
 				},
 			},
