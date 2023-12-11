@@ -50,6 +50,7 @@ func main() {
 				},
 				Headroom: &azure_np.Headroom{
 					Automatic: &azure_np.Automatic{
+						IsEnabled:  spotinst.Bool(true),
 						Percentage: spotinst.Int(5),
 					},
 				},
