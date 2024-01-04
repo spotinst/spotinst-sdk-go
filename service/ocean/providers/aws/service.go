@@ -50,6 +50,8 @@ type serviceKubernetes interface {
 	ReadClusterNodes(context.Context, *ReadClusterNodeInput) (*ReadClusterNodeOutput, error)
 
 	ListMigrations(context.Context, *ReadMigrationInput) (*ReadMigrationOutput, error)
+
+	MigrationStatus(context.Context, *ReadMigrationStatusInput) (*ReadMigrationStatusOutput, error)
 }
 
 type serviceECS interface {

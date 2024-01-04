@@ -51,7 +51,9 @@ type ClusterNodes struct {
 	nullFields []string
 }
 type ReadClusterNodeInput struct {
-	ClusterID *string `json:"clusterId,omitempty"`
+	ClusterID    *string `json:"clusterId,omitempty"`
+	LaunchSpecId *string `json:"launchSpecId,omitempty"`
+	InstanceId   *string `json:"instanceId,omitempty"`
 }
 
 type ReadClusterNodeOutput struct {
@@ -66,6 +68,12 @@ func (s *ServiceOp) ReadClusterNodes(ctx context.Context, input *ReadClusterNode
 		return nil, err
 	}
 	r := client.NewRequest(http.MethodGet, path)
+	if input.LaunchSpecId != nil {
+		r.Params["launchSpecId"] = []string{spotinst.StringValue(input.LaunchSpecId)}
+	}
+	if input.InstanceId != nil {
+		r.Params["instanceId"] = []string{spotinst.StringValue(input.InstanceId)}
+	}
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err

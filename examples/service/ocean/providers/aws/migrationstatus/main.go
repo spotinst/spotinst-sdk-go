@@ -27,19 +27,19 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Lists nodes.
-	out, err := svc.CloudProviderAWS().ReadClusterNodes(ctx, &aws.ReadClusterNodeInput{
-		ClusterID:    spotinst.String("o-12345"),
-		LaunchSpecId: spotinst.String("ols-12345"),
+	//Lists migration status
+	out, err := svc.CloudProviderAWS().MigrationStatus(ctx, &aws.ReadMigrationStatusInput{
+		ClusterID:   spotinst.String("o-12345"),
+		MigrationID: spotinst.String("owm-12345678"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to list nodes: %v", err)
+		log.Fatalf("spotinst: failed to fetch migration status: %v", err)
 	}
 
-	// Output all nodes, if any.
-	if len(out.ClusterNode) > 0 {
-		for _, node := range out.ClusterNode {
-			log.Printf("Node %s",
+	// Output showing migration status, if any.
+	if len(out.MigrationStatus) > 0 {
+		for _, node := range out.MigrationStatus {
+			log.Printf("MigrationStatus %s",
 				stringutil.Stringify(node))
 		}
 	}

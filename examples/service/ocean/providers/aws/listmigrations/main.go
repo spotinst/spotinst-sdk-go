@@ -27,15 +27,15 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// List eks clusters.
+	// Lists migrations.
 	out, err := svc.CloudProviderAWS().ListMigrations(ctx, &aws.ReadMigrationInput{
 		ClusterID: spotinst.String("o-12345"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to list nodes: %v", err)
+		log.Fatalf("spotinst: failed to list migrations: %v", err)
 	}
 
-	// Output all clusters, if any.
+	// Output all migrations, if any.
 	if len(out.Migration) > 0 {
 		for _, node := range out.Migration {
 			log.Printf("Migration %s",
