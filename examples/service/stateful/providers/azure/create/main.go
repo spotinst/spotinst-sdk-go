@@ -135,7 +135,7 @@ func main() {
 					Tags: []*azure.Tag{
 						{
 							TagKey:   spotinst.String("Creator"),
-							TagValue: spotinst.String("Tamiry@netapp.com"),
+							TagValue: spotinst.String("Terraform-Example"),
 						},
 					},
 					UserData: spotinst.String("base64 user data script"),
