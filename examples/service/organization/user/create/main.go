@@ -29,10 +29,10 @@ func main() {
 
 	// Create a new group.
 	out, err := svc.CreateUser(ctx, &organization.User{
-		Email:     spotinst.String("testautomation@netapp.com"),
+		Email:     spotinst.String("your-username"),
 		FirstName: spotinst.String("test"),
 		LastName:  spotinst.String("user"),
-		Password:  spotinst.String("testUser@123"),
+		Password:  spotinst.String("your-password"),
 		Role:      spotinst.String("viewer"),
 	}, spotinst.Bool(true))
 
