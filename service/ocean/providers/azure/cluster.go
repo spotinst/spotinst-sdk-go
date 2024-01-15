@@ -271,7 +271,7 @@ type Progress struct {
 }
 
 type RollNodes struct {
-	rollNodes []*NodeStatus `json:"rollNodes,omitempty"`
+	RollNodes []*NodeStatus `json:"rollNodes,omitempty"`
 }
 
 type NodeStatus struct {
