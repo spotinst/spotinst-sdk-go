@@ -38,6 +38,7 @@ func main() {
 			BatchMinHealthyPercentage: spotinst.Int(100),
 			NodeNames:                 []string{"node123"},
 			VngIds:                    []string{"vng-123"},
+			NodePoolNames:             []string{"nodepool12345", "nodepool67890"},
 		},
 	})
 	if err != nil {

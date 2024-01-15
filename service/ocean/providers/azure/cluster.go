@@ -231,17 +231,17 @@ type ManagedServiceIdentity struct {
 }
 
 type RollSpec struct {
-	ID                           *string  `json:"id,omitempty"`
-	ClusterID                    *string  `json:"clusterId,omitempty"`
-	Comment                      *string  `json:"comment,omitempty"`
-	Status                       *string  `json:"status,omitempty"`
-	BatchSizePercentage          *int     `json:"batchSizePercentage,omitempty"`
-	BatchMinHealthyPercentage    *int     `json:"batchMinHealthyPercentage,omitempty"`
-	RespectPDB                   *bool    `json:"respectPdb,omitempty"`
-	DisableLaunchSpecAutoScaling *bool    `json:"disableLaunchSpecAutoScaling,omitempty"`
-	VngIds                       []string `json:"vngIds,omitempty"`
-	RespectRestrictScaleDown     *bool    `json:"respectRestrictScaleDown,omitempty"`
-	NodeNames                    []string `json:"nodeNames,omitempty"`
+	ID                        *string  `json:"id,omitempty"`
+	ClusterID                 *string  `json:"clusterId,omitempty"`
+	Comment                   *string  `json:"comment,omitempty"`
+	Status                    *string  `json:"status,omitempty"`
+	BatchSizePercentage       *int     `json:"batchSizePercentage,omitempty"`
+	BatchMinHealthyPercentage *int     `json:"batchMinHealthyPercentage,omitempty"`
+	RespectPDB                *bool    `json:"respectPdb,omitempty"`
+	NodePoolNames             []string `json:"nodePoolNames,omitempty"`
+	VngIds                    []string `json:"vngIds,omitempty"`
+	RespectRestrictScaleDown  *bool    `json:"respectRestrictScaleDown,omitempty"`
+	NodeNames                 []string `json:"nodeNames,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
