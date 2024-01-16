@@ -46,6 +46,12 @@ type serviceKubernetes interface {
 	Roll(context.Context, *RollClusterInput) (*RollClusterOutput, error)
 
 	GetClusterAggregatedCosts(context.Context, *ClusterAggregatedCostInput) (*ClusterAggregatedCostOutput, error)
+
+	ReadClusterNodes(context.Context, *ReadClusterNodeInput) (*ReadClusterNodeOutput, error)
+
+	ListMigrations(context.Context, *ReadMigrationInput) (*ReadMigrationOutput, error)
+
+	MigrationStatus(context.Context, *ReadMigrationStatusInput) (*ReadMigrationStatusOutput, error)
 }
 
 type serviceECS interface {

@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"log"
-
-	"github.com/spotinst/spotinst-sdk-go/service/organization"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
+	"log"
 )
 
 func main() {
@@ -22,28 +22,25 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := organization.New(sess)
+	svc := ocean.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
-	// Create a new group.
-	out, err := svc.CreateUser(ctx, &organization.User{
-		Email:     spotinst.String("your-username"),
-		FirstName: spotinst.String("test"),
-		LastName:  spotinst.String("user"),
-		Password:  spotinst.String("your-password"),
-		Role:      spotinst.String("viewer"),
-	}, spotinst.Bool(true))
-
+	//Lists migration status
+	out, err := svc.CloudProviderAWS().MigrationStatus(ctx, &aws.ReadMigrationStatusInput{
+		ClusterID:   spotinst.String("o-12345"),
+		MigrationID: spotinst.String("owm-12345678"),
+	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to create user: %v", err)
+		log.Fatalf("spotinst: failed to fetch migration status: %v", err)
 	}
 
-	// Output.
-	if out.User != nil {
-		log.Printf("User %q: %s",
-			spotinst.StringValue(out.User.UserID),
-			stringutil.Stringify(out.User))
+	// Output showing migration status, if any.
+	if len(out.MigrationStatus) > 0 {
+		for _, node := range out.MigrationStatus {
+			log.Printf("MigrationStatus %s",
+				stringutil.Stringify(node))
+		}
 	}
 }
