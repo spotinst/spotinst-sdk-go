@@ -103,6 +103,27 @@ func main() {
 					},
 				},
 			},
+			Scheduling: &aws.Scheduling{
+				Tasks: []*aws.Task{
+					{
+						IsEnabled: spotinst.Bool(true),
+						Parameter: &aws.Parameter{
+							AmiAutoUpdate: &aws.AmiAutoUpdate{
+								ApplyRoll: spotinst.Bool(false),
+								ClusterRoll: &aws.ClusterRoll{
+									BatchMinHealthyPercentage: spotinst.Int(50),
+									BatchSizePercentage:       spotinst.Int(1),
+									Comment:                   spotinst.String("Test Description"),
+									RespectPdb:                spotinst.Bool(false),
+								},
+								MinorVersion: spotinst.Bool(true),
+								Patch:        spotinst.Bool(true),
+							},
+						},
+						Type: spotinst.String("amiAutoUpdate"),
+					},
+				},
+			},
 		},
 	})
 	if err != nil {
