@@ -119,11 +119,10 @@ type ShutdownHours struct {
 }
 
 type Task struct {
-	IsEnabled      *bool          `json:"isEnabled,omitempty"`
-	Type           *string        `json:"taskType,omitempty"`
-	CronExpression *string        `json:"cronExpression,omitempty"`
-	Parameter      *Parameter     `json:"parameters,omitempty"`
-	AmiAutoUpdate  *AmiAutoUpdate `json:"amiAutoUpdate,omitempty"`
+	IsEnabled      *bool      `json:"isEnabled,omitempty"`
+	Type           *string    `json:"taskType,omitempty"`
+	CronExpression *string    `json:"cronExpression,omitempty"`
+	Parameter      *Parameter `json:"parameters,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -131,6 +130,7 @@ type Task struct {
 
 type Parameter struct {
 	AmiAutoUpdate *AmiAutoUpdate `json:"amiAutoUpdate,omitempty"`
+	ClusterRoll   *ClusterRoll   `json:"clusterRoll,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1390,6 +1390,13 @@ func (o *Task) SetCronExpression(v *string) *Task {
 func (o *Task) SetParameter(v *Parameter) *Task {
 	if o.Parameter = v; o.Parameter == nil {
 		o.nullFields = append(o.nullFields, "Parameter")
+	}
+	return o
+}
+
+func (o *Parameter) SetClusterRoll(v *ClusterRoll) *Parameter {
+	if o.ClusterRoll = v; o.ClusterRoll == nil {
+		o.nullFields = append(o.nullFields, "ClusterRoll")
 	}
 	return o
 }
