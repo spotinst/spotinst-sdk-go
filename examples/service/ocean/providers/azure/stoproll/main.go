@@ -28,27 +28,20 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Trigger cluster roll.
-	out, err := svc.CloudProviderAzure().CreateRoll(ctx, &azure.CreateRollInput{
-		Roll: &azure.RollSpec{
-			ClusterID:                 spotinst.String("o-12345"),
-			BatchSizePercentage:       spotinst.Int(20),
-			Comment:                   spotinst.String("Comment to describe roll."),
-			RespectPDB:                spotinst.Bool(true),
-			BatchMinHealthyPercentage: spotinst.Int(100),
-			NodeNames:                 []string{"node123"},
-			VngIds:                    []string{"vng-123"},
-			NodePoolNames:             []string{"nodepool12345", "nodepool67890"},
-			RespectRestrictScaleDown:  spotinst.Bool(true),
-		},
+	// Stop cluster roll.
+	out, err := svc.CloudProviderAzure().StopRoll(ctx, &azure.StopRollInput{
+		ClusterID: spotinst.String("o-12345"),
+		RollID:    spotinst.String("scr-7890"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to roll cluster: %v", err)
+		log.Fatalf("spotinst: failed to stop roll: %v", err)
 	}
 
-	if (out.Roll) != nil {
-		log.Printf("Roll details: %q: %s",
-			spotinst.StringValue(out.Roll.ID),
-			stringutil.Stringify(out))
+	if len(out.Rolls) > 0 {
+		for _, roll := range out.Rolls {
+			log.Printf("Roll %q: %s",
+				spotinst.StringValue(roll.ID),
+				stringutil.Stringify(roll))
+		}
 	}
 }

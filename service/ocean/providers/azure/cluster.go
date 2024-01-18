@@ -248,21 +248,19 @@ type RollSpec struct {
 }
 
 type RollStatus struct {
-	ID                        *string    `json:"id,omitempty"`
-	ClusterID                 *string    `json:"oceanId,omitempty"`
-	Scope                     *string    `json:"scope,omitempty"`
-	Comment                   *string    `json:"comment,omitempty"`
-	Status                    *string    `json:"status,omitempty"`
-	Progress                  *Progress  `json:"progress,omitempty"`
-	RespectPDB                *bool      `json:"respectPdb,omitempty"`
-	RespectRestrictScaleDown  *bool      `json:"respectRestrictScaleDown,omitempty"`
-	BatchMinHealthyPercentage *int       `json:"batchMinHealthyPercentage,omitempty"`
-	CurrentBatch              *int       `json:"currentBatch,omitempty"`
-	NumOfBatches              *int       `json:"numOfBatches,omitempty"`
-	LaunchSpecIDs             []string   `json:"launchSpecIds,omitempty"`
-	InstanceIDs               []string   `json:"instanceIds,omitempty"`
-	CreatedAt                 *time.Time `json:"createdAt,omitempty"`
-	UpdatedAt                 *time.Time `json:"updatedAt,omitempty"`
+	ID                        *string   `json:"id,omitempty"`
+	ClusterID                 *string   `json:"oceanId,omitempty"`
+	Scope                     *string   `json:"scope,omitempty"`
+	Comment                   *string   `json:"comment,omitempty"`
+	Status                    *string   `json:"status,omitempty"`
+	Progress                  *Progress `json:"progress,omitempty"`
+	RespectPDB                *bool     `json:"respectPdb,omitempty"`
+	RespectRestrictScaleDown  *bool     `json:"respectRestrictScaleDown,omitempty"`
+	BatchMinHealthyPercentage *int      `json:"batchMinHealthyPercentage,omitempty"`
+	CurrentBatch              *int      `json:"currentBatch,omitempty"`
+	NumOfBatches              *int      `json:"numOfBatches,omitempty"`
+	CreatedAt                 *string   `json:"createdAt,omitempty"`
+	UpdatedAt                 *string   `json:"updatedAt,omitempty"`
 }
 
 type Progress struct {
@@ -294,6 +292,23 @@ type ReadRollInput struct {
 
 type ReadRollOutput struct {
 	Roll *RollStatus `json:"roll,omitempty"`
+}
+
+type ListRollsInput struct {
+	ClusterID *string `json:"clusterId,omitempty"`
+}
+
+type ListRollsOutput struct {
+	Rolls []*RollStatus `json:"rolls,omitempty"`
+}
+
+type StopRollInput struct {
+	ClusterID *string `json:"clusterId,omitempty"`
+	RollID    *string `json:"rollId,omitempty"`
+}
+
+type StopRollOutput struct {
+	Rolls []*RollStatus `json:"rolls,omitempty"`
 }
 
 type ListClustersInput struct{}
@@ -1399,6 +1414,63 @@ func (s *ServiceOp) ReadRoll(ctx context.Context, input *ReadRollInput) (*ReadRo
 	output := new(ReadRollOutput)
 	if len(v) > 0 {
 		output.Roll = v[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ListRolls(ctx context.Context, input *ListRollsInput) (*ListRollsOutput, error) {
+	path, err := uritemplates.Expand("/ocean/azure/np/cluster/{oceanClusterId}/roll", uritemplates.Values{
+		"oceanClusterId": spotinst.StringValue(input.ClusterID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	v, err := rollStatusesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ListRollsOutput)
+	if len(v) > 0 {
+		output.Rolls = v
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) StopRoll(ctx context.Context, input *StopRollInput) (*StopRollOutput, error) {
+	path, err := uritemplates.Expand("/ocean/azure/np/cluster/{oceanClusterId}/roll/{rollId}/stop", uritemplates.Values{
+		"oceanClusterId": spotinst.StringValue(input.ClusterID),
+		"rollId":         spotinst.StringValue(input.RollID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodPut, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	v, err := rollStatusesFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(StopRollOutput)
+	if len(v) > 0 {
+		output.Rolls = v
 	}
 
 	return output, nil

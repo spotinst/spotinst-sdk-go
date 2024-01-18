@@ -20,6 +20,8 @@ type Service interface {
 	ImportCluster(context.Context, *ImportClusterInput) (*ImportClusterOutput, error)
 	CreateRoll(context.Context, *CreateRollInput) (*CreateRollOutput, error)
 	ReadRoll(ctx context.Context, input *ReadRollInput) (*ReadRollOutput, error)
+	ListRolls(ctx context.Context, input *ListRollsInput) (*ListRollsOutput, error)
+	StopRoll(ctx context.Context, input *StopRollInput) (*StopRollOutput, error)
 
 	ListVirtualNodeGroups(context.Context, *ListVirtualNodeGroupsInput) (*ListVirtualNodeGroupsOutput, error)
 	CreateVirtualNodeGroup(context.Context, *CreateVirtualNodeGroupInput) (*CreateVirtualNodeGroupOutput, error)
