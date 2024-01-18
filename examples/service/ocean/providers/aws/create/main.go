@@ -110,7 +110,7 @@ func main() {
 						Parameter: &aws.Parameter{
 							AmiAutoUpdate: &aws.AmiAutoUpdate{
 								ApplyRoll: spotinst.Bool(false),
-								ClusterRoll: &aws.ClusterRoll{
+								AmiAutoUpdateClusterRoll: &aws.AmiAutoUpdateClusterRoll{
 									BatchMinHealthyPercentage: spotinst.Int(50),
 									BatchSizePercentage:       spotinst.Int(1),
 									Comment:                   spotinst.String("Test Description"),

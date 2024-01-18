@@ -129,24 +129,34 @@ type Task struct {
 }
 
 type Parameter struct {
-	AmiAutoUpdate *AmiAutoUpdate `json:"amiAutoUpdate,omitempty"`
-	ClusterRoll   *ClusterRoll   `json:"clusterRoll,omitempty"`
+	AmiAutoUpdate *AmiAutoUpdate        `json:"amiAutoUpdate,omitempty"`
+	ClusterRoll   *ParameterClusterRoll `json:"clusterRoll,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type AmiAutoUpdate struct {
-	ApplyRoll    *bool        `json:"applyRoll,omitempty"`
-	ClusterRoll  *ClusterRoll `json:"clusterRoll,omitempty"`
-	MinorVersion *bool        `json:"minorVersion,omitempty"`
-	Patch        *bool        `json:"patch,omitempty"`
+	ApplyRoll                *bool                     `json:"applyRoll,omitempty"`
+	AmiAutoUpdateClusterRoll *AmiAutoUpdateClusterRoll `json:"clusterRoll,omitempty"`
+	MinorVersion             *bool                     `json:"minorVersion,omitempty"`
+	Patch                    *bool                     `json:"patch,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type ClusterRoll struct {
+type AmiAutoUpdateClusterRoll struct {
+	BatchMinHealthyPercentage *int    `json:"batchMinHealthyPercentage,omitempty"`
+	BatchSizePercentage       *int    `json:"batchSizePercentage,omitempty"`
+	Comment                   *string `json:"comment,omitempty"`
+	RespectPdb                *bool   `json:"respectPdb,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ParameterClusterRoll struct {
 	BatchMinHealthyPercentage *int    `json:"batchMinHealthyPercentage,omitempty"`
 	BatchSizePercentage       *int    `json:"batchSizePercentage,omitempty"`
 	Comment                   *string `json:"comment,omitempty"`
@@ -1394,7 +1404,7 @@ func (o *Task) SetParameter(v *Parameter) *Task {
 	return o
 }
 
-func (o *Parameter) SetClusterRoll(v *ClusterRoll) *Parameter {
+func (o *Parameter) SetClusterRoll(v *ParameterClusterRoll) *Parameter {
 	if o.ClusterRoll = v; o.ClusterRoll == nil {
 		o.nullFields = append(o.nullFields, "ClusterRoll")
 	}
@@ -1410,8 +1420,8 @@ func (o *AmiAutoUpdate) SetApplyRoll(v *bool) *AmiAutoUpdate {
 	return o
 }
 
-func (o *AmiAutoUpdate) SetClusterRoll(v *ClusterRoll) *AmiAutoUpdate {
-	if o.ClusterRoll = v; o.ClusterRoll == nil {
+func (o *AmiAutoUpdate) SetClusterRoll(v *AmiAutoUpdateClusterRoll) *AmiAutoUpdate {
+	if o.AmiAutoUpdateClusterRoll = v; o.AmiAutoUpdateClusterRoll == nil {
 		o.nullFields = append(o.nullFields, "ClusterRoll")
 	}
 	return o
@@ -1433,30 +1443,62 @@ func (o *AmiAutoUpdate) SetPatch(v *bool) *AmiAutoUpdate {
 
 // endregion
 
-// region ClusterRoll
+// region ParameterClusterRoll
 
-func (o *ClusterRoll) SetBatchMinHealthyPercentage(v *int) *ClusterRoll {
+func (o *ParameterClusterRoll) SetBatchMinHealthyPercentage(v *int) *ParameterClusterRoll {
 	if o.BatchMinHealthyPercentage = v; o.BatchMinHealthyPercentage == nil {
 		o.nullFields = append(o.nullFields, "BatchMinHealthyPercentage")
 	}
 	return o
 }
 
-func (o *ClusterRoll) SetBatchSizePercentage(v *int) *ClusterRoll {
+func (o *ParameterClusterRoll) SetBatchSizePercentage(v *int) *ParameterClusterRoll {
 	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
 		o.nullFields = append(o.nullFields, "BatchSizePercentage")
 	}
 	return o
 }
 
-func (o *ClusterRoll) SetComment(v *string) *ClusterRoll {
+func (o *ParameterClusterRoll) SetComment(v *string) *ParameterClusterRoll {
 	if o.Comment = v; o.Comment == nil {
 		o.nullFields = append(o.nullFields, "Comment")
 	}
 	return o
 }
 
-func (o *ClusterRoll) SetRespectPdb(v *bool) *ClusterRoll {
+func (o *ParameterClusterRoll) SetRespectPdb(v *bool) *ParameterClusterRoll {
+	if o.RespectPdb = v; o.RespectPdb == nil {
+		o.nullFields = append(o.nullFields, "RespectPdb")
+	}
+	return o
+}
+
+// endregion
+
+// region ParameterClusterRoll
+
+func (o *AmiAutoUpdateClusterRoll) SetBatchMinHealthyPercentage(v *int) *AmiAutoUpdateClusterRoll {
+	if o.BatchMinHealthyPercentage = v; o.BatchMinHealthyPercentage == nil {
+		o.nullFields = append(o.nullFields, "BatchMinHealthyPercentage")
+	}
+	return o
+}
+
+func (o *AmiAutoUpdateClusterRoll) SetBatchSizePercentage(v *int) *AmiAutoUpdateClusterRoll {
+	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
+		o.nullFields = append(o.nullFields, "BatchSizePercentage")
+	}
+	return o
+}
+
+func (o *AmiAutoUpdateClusterRoll) SetComment(v *string) *AmiAutoUpdateClusterRoll {
+	if o.Comment = v; o.Comment == nil {
+		o.nullFields = append(o.nullFields, "Comment")
+	}
+	return o
+}
+
+func (o *AmiAutoUpdateClusterRoll) SetRespectPdb(v *bool) *AmiAutoUpdateClusterRoll {
 	if o.RespectPdb = v; o.RespectPdb == nil {
 		o.nullFields = append(o.nullFields, "RespectPdb")
 	}
