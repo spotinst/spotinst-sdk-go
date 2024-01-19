@@ -1379,13 +1379,6 @@ func (o *Task) SetType(v *string) *Task {
 	return o
 }
 
-func (o *Parameter) SetAmiAutoUpdate(v *AmiAutoUpdate) *Parameter {
-	if o.AmiAutoUpdate = v; o.AmiAutoUpdate == nil {
-		o.nullFields = append(o.nullFields, "AmiAutoUpdate")
-	}
-	return o
-}
-
 func (o *Task) SetCronExpression(v *string) *Task {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
@@ -1400,6 +1393,13 @@ func (o *Task) SetCronExpression(v *string) *Task {
 func (o *Task) SetParameter(v *Parameter) *Task {
 	if o.Parameter = v; o.Parameter == nil {
 		o.nullFields = append(o.nullFields, "Parameter")
+	}
+	return o
+}
+
+func (o *Parameter) SetAmiAutoUpdate(v *AmiAutoUpdate) *Parameter {
+	if o.AmiAutoUpdate = v; o.AmiAutoUpdate == nil {
+		o.nullFields = append(o.nullFields, "AmiAutoUpdate")
 	}
 	return o
 }
