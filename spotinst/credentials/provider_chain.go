@@ -68,8 +68,12 @@ func (c *ChainProvider) Retrieve() (Value, error) {
 			errs = append(errs, err)
 		}
 	}
+	if value.Enabled == "false" {
+		err := errors.New("parameter 'enabled' set as false, resource creation cancelled")
+		return Value{ProviderName: c.String()}, err
+	}
 
-	if value.Token == "" {
+	if value.Token == "" && (value.Enabled == "true" || value.Enabled == "") {
 		err := ErrNoValidProvidersFoundInChain
 		if len(errs) > 0 {
 			err = errs

@@ -40,12 +40,14 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "enabled",
 						Token:   "token",
 						Account: "account",
 					},
 				},
 			},
 			want: Value{
+				Enabled: "enabled",
 				Token:   "token",
 				Account: "account",
 			},
@@ -54,6 +56,7 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "",
 						Account: "",
 					},
@@ -67,18 +70,21 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "enabled",
 						Token:   "token1",
 						Account: "account1",
 					},
 				},
 				&mockProvider{
 					creds: Value{
+						Enabled: "enabled",
 						Token:   "token2",
 						Account: "account2",
 					},
 				},
 			},
 			want: Value{
+				Enabled: "enabled",
 				Token:   "token1",
 				Account: "account1",
 			},
@@ -87,12 +93,14 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "",
 						Account: "",
 					},
 				},
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "",
 						Account: "",
 					},
@@ -107,12 +115,14 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "",
 						Account: "account1",
 					},
 				},
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "token2",
 						Account: "account2",
 					},
@@ -127,12 +137,14 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "token1",
 						Account: "",
 					},
 				},
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "token2",
 						Account: "account2",
 					},
@@ -140,6 +152,7 @@ func TestChainCredentials(t *testing.T) {
 			},
 			features: "MergeCredentialsChain=false",
 			want: Value{
+				Enabled: "true",
 				Token:   "token1",
 				Account: "",
 			},
@@ -148,12 +161,14 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "",
 						Account: "account1",
 					},
 				},
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "token2",
 						Account: "account2",
 					},
@@ -161,6 +176,7 @@ func TestChainCredentials(t *testing.T) {
 			},
 			features: "MergeCredentialsChain=true",
 			want: Value{
+				Enabled: "true",
 				Token:   "token2",
 				Account: "account1",
 			},
@@ -169,12 +185,14 @@ func TestChainCredentials(t *testing.T) {
 			providers: []Provider{
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "token1",
 						Account: "",
 					},
 				},
 				&mockProvider{
 					creds: Value{
+						Enabled: "true",
 						Token:   "token2",
 						Account: "account2",
 					},
@@ -182,6 +200,7 @@ func TestChainCredentials(t *testing.T) {
 			},
 			features: "MergeCredentialsChain=true",
 			want: Value{
+				Enabled: "true",
 				Token:   "token1",
 				Account: "account2",
 			},
@@ -256,6 +275,7 @@ func TestFileCredentials(t *testing.T) {
 			filename: filenameINI,
 			profile:  "partial_credentials",
 			want: Value{
+				Enabled:      "true",
 				ProviderName: FileCredentialsProviderName,
 				Token:        "partial_credentials_token",
 			},
@@ -265,6 +285,7 @@ func TestFileCredentials(t *testing.T) {
 			profile:  "partial_credentials_with_default",
 			want: Value{
 				ProviderName: FileCredentialsProviderName,
+				Enabled:      "true",
 				Token:        "default_token",
 				Account:      "partial_credentials_with_default_account",
 			},
@@ -274,6 +295,7 @@ func TestFileCredentials(t *testing.T) {
 			profile:  "complete_credentials",
 			want: Value{
 				ProviderName: FileCredentialsProviderName,
+				Enabled:      "true",
 				Token:        "complete_credentials_token",
 				Account:      "complete_credentials_account",
 			},
@@ -282,6 +304,7 @@ func TestFileCredentials(t *testing.T) {
 			filename: filenameJSON,
 			want: Value{
 				ProviderName: FileCredentialsProviderName,
+				Enabled:      "enabled",
 				Token:        "token",
 				Account:      "account",
 			},
@@ -334,26 +357,31 @@ func TestEnvCredentials(t *testing.T) {
 		},
 		"only_account": {
 			env: map[string]string{
-				"SPOTINST_ACCOUNT": "account",
+				"SPOTINST_CREDENTIALS_ENABLED": "true",
+				"SPOTINST_ACCOUNT":             "account",
 			},
 			err: ErrNoValidTokenFound,
 		},
 		"only_token": {
 			env: map[string]string{
-				"SPOTINST_TOKEN": "token",
+				"SPOTINST_CREDENTIALS_ENABLED": "true",
+				"SPOTINST_TOKEN":               "token",
 			},
 			want: Value{
 				ProviderName: EnvCredentialsProviderName,
+				Enabled:      "true",
 				Token:        "token",
 			},
 		},
 		"all_variables": {
 			env: map[string]string{
-				"SPOTINST_ACCOUNT": "account",
-				"SPOTINST_TOKEN":   "token",
+				"SPOTINST_CREDENTIALS_ENABLED": "true",
+				"SPOTINST_ACCOUNT":             "account",
+				"SPOTINST_TOKEN":               "token",
 			},
 			want: Value{
 				ProviderName: EnvCredentialsProviderName,
+				Enabled:      "true",
 				Account:      "account",
 				Token:        "token",
 			},
@@ -387,33 +415,40 @@ func TestEnvCredentials(t *testing.T) {
 
 func TestStaticCredentials(t *testing.T) {
 	tests := map[string]struct {
+		enabled string
 		token   string
 		account string
 		want    Value
 		err     error
 	}{
 		"empty_credentials": {
+			enabled: "true",
 			account: "",
 			token:   "",
 			err:     errors.New("spotinst: static credentials are empty"),
 		},
 		"empty_token": {
+			enabled: "true",
 			account: "account",
 			token:   "",
 			err:     ErrNoValidTokenFound,
 		},
 		"empty_account": {
-			token: "token",
+			enabled: "true",
+			token:   "token",
 			want: Value{
 				ProviderName: StaticCredentialsProviderName,
+				Enabled:      "true",
 				Token:        "token",
 			},
 		},
 		"full_credentials": {
+			enabled: "true",
 			account: "account",
 			token:   "token",
 			want: Value{
 				ProviderName: StaticCredentialsProviderName,
+				Enabled:      "true",
 				Account:      "account",
 				Token:        "token",
 			},
