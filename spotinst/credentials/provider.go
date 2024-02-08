@@ -4,6 +4,9 @@ import "fmt"
 
 // A Value is the Spotinst credentials value for individual credential fields.
 type Value struct {
+	// Provider will verify credentials required or not
+	Enabled string `ini:"enabled" json:"enabled"`
+
 	// Spotinst API token.
 	Token string `ini:"token" json:"token"`
 
@@ -28,10 +31,14 @@ type Provider interface {
 }
 
 // IsEmpty if all fields of a Value are empty.
-func (v *Value) IsEmpty() bool { return v.Token == "" && v.Account == "" }
+func (v *Value) IsEmpty() bool {
+	return (v.Enabled == "true" || v.Enabled == "") && v.Token == "" && v.Account == ""
+}
 
 // IsComplete if all fields of a Value are set.
-func (v *Value) IsComplete() bool { return v.Token != "" && v.Account != "" }
+func (v *Value) IsComplete() bool {
+	return (v.Enabled == "true" || v.Enabled == "") && v.Token != "" && v.Account != ""
+}
 
 // Merge merges the passed in Value into the existing Value object.
 func (v *Value) Merge(v2 Value) {
@@ -40,5 +47,8 @@ func (v *Value) Merge(v2 Value) {
 	}
 	if v.Account == "" {
 		v.Account = v2.Account
+	}
+	if v.Enabled == "" {
+		v.Enabled = v2.Enabled
 	}
 }

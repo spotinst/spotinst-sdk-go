@@ -11,6 +11,10 @@ const (
 
 	// EnvCredentialsVarToken specifies the name of the environment variable
 	// points to the Spotinst Token.
+	EnvCredentialsVarCredentialsEnabled = "SPOTINST_ENABLED"
+
+	// EnvCredentialsVarToken specifies the name of the environment variable
+	// points to the Spotinst Token.
 	EnvCredentialsVarToken = "SPOTINST_TOKEN"
 
 	// EnvCredentialsVarAccount specifies the name of the environment variable
@@ -40,6 +44,7 @@ func NewEnvCredentials() *Credentials {
 // Retrieve retrieves the keys from the environment.
 func (e *EnvProvider) Retrieve() (Value, error) {
 	value := Value{
+		Enabled:      os.Getenv(EnvCredentialsVarCredentialsEnabled),
 		Token:        os.Getenv(EnvCredentialsVarToken),
 		Account:      os.Getenv(EnvCredentialsVarAccount),
 		ProviderName: EnvCredentialsProviderName,
