@@ -1369,7 +1369,7 @@ func (s *ServiceOp) CreateRoll(ctx context.Context, input *CreateRollInput) (*Cr
 	input.Roll.ClusterID = nil
 
 	r := client.NewRequest(http.MethodPost, path)
-	r.Obj = input
+	r.Obj = input.Roll
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
