@@ -274,8 +274,16 @@ type AutoScalerResourceLimits struct {
 }
 
 type AutoScalerDown struct {
-	EvaluationPeriods      *int     `json:"evaluationPeriods,omitempty"`
-	MaxScaleDownPercentage *float64 `json:"maxScaleDownPercentage,omitempty"`
+	EvaluationPeriods      *int                 `json:"evaluationPeriods,omitempty"`
+	MaxScaleDownPercentage *float64             `json:"maxScaleDownPercentage,omitempty"`
+	AggressiveScaleDown    *AggressiveScaleDown `json:"aggressiveScaleDown,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AggressiveScaleDown struct {
+	IsEnabled *bool `json:"isEnabled,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1883,7 +1891,27 @@ func (o *AutoScalerDown) SetMaxScaleDownPercentage(v *float64) *AutoScalerDown {
 	return o
 }
 
+func (o *AutoScalerDown) SetAggressiveScaleDown(v *AggressiveScaleDown) *AutoScalerDown {
+	if o.AggressiveScaleDown = v; o.AggressiveScaleDown == nil {
+		o.nullFields = append(o.nullFields, "AggressiveScaleDown")
+	}
+	return o
+}
+
 // endregion
+
+func (o AggressiveScaleDown) MarshalJSON() ([]byte, error) {
+	type noMethod AggressiveScaleDown
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AggressiveScaleDown) SetIsEnabled(v *bool) *AggressiveScaleDown {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
 
 // region Roll
 
