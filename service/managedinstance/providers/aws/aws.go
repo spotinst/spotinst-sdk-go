@@ -177,6 +177,9 @@ type EBS struct {
 	IOPS                *int    `json:"iops,omitempty"`
 	VolumeSize          *int    `json:"volumeSize,omitempty"`
 	Throughput          *int    `json:"throughput,omitempty"`
+	Encrypted           *bool   `json:"encrypted,omitempty"`
+	KmsKeyId            *string `json:"kmsKeyId,omitempty"`
+	SnapshotID          *string `json:"snapshotId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1564,6 +1567,27 @@ func (o *EBS) SetVolumeType(v *string) *EBS {
 func (o *EBS) SetDeleteOnTermination(v *bool) *EBS {
 	if o.DeleteOnTermination = v; o.DeleteOnTermination == nil {
 		o.nullFields = append(o.nullFields, "DeleteOnTermination")
+	}
+	return o
+}
+
+func (o *EBS) SetEncrypted(v *bool) *EBS {
+	if o.Encrypted = v; o.Encrypted == nil {
+		o.nullFields = append(o.nullFields, "Encrypted")
+	}
+	return o
+}
+
+func (o *EBS) SetKmsKeyId(v *string) *EBS {
+	if o.KmsKeyId = v; o.KmsKeyId == nil {
+		o.nullFields = append(o.nullFields, "KmsKeyId")
+	}
+	return o
+}
+
+func (o *EBS) SetSnapshotId(v *string) *EBS {
+	if o.SnapshotID = v; o.SnapshotID == nil {
+		o.nullFields = append(o.nullFields, "SnapshotID")
 	}
 	return o
 }
