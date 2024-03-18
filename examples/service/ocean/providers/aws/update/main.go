@@ -41,6 +41,9 @@ func main() {
 						Categories: []string{"General_purpose", "Compute_optimized"},
 					},
 				},
+				LaunchSpecification: &aws.LaunchSpecification{
+					HealthCheckUnhealthyDurationBeforeReplacement: spotinst.Int(60),
+				},
 			},
 		},
 	})

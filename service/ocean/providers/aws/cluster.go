@@ -201,23 +201,24 @@ type Filters struct {
 }
 
 type LaunchSpecification struct {
-	AssociatePublicIPAddress *bool                         `json:"associatePublicIpAddress,omitempty"`
-	AssociateIPv6Address     *bool                         `json:"associateIpv6Address,omitempty"`
-	SecurityGroupIDs         []string                      `json:"securityGroupIds,omitempty"`
-	ImageID                  *string                       `json:"imageId,omitempty"`
-	KeyPair                  *string                       `json:"keyPair,omitempty"`
-	UserData                 *string                       `json:"userData,omitempty"`
-	IAMInstanceProfile       *IAMInstanceProfile           `json:"iamInstanceProfile,omitempty"`
-	Tags                     []*Tag                        `json:"tags,omitempty"`
-	LoadBalancers            []*LoadBalancer               `json:"loadBalancers,omitempty"`
-	RootVolumeSize           *int                          `json:"rootVolumeSize,omitempty"`
-	Monitoring               *bool                         `json:"monitoring,omitempty"`
-	EBSOptimized             *bool                         `json:"ebsOptimized,omitempty"`
-	UseAsTemplateOnly        *bool                         `json:"useAsTemplateOnly,omitempty"`
-	InstanceMetadataOptions  *InstanceMetadataOptions      `json:"instanceMetadataOptions,omitempty"`
-	BlockDeviceMappings      []*ClusterBlockDeviceMappings `json:"blockDeviceMappings,omitempty"`
-	LaunchSpecScheduling     *LaunchSpecScheduling         `json:"scheduling,omitempty"`
-	ResourceTagSpecification *ResourceTagSpecification     `json:"resourceTagSpecification,omitempty"`
+	AssociatePublicIPAddress                      *bool                         `json:"associatePublicIpAddress,omitempty"`
+	AssociateIPv6Address                          *bool                         `json:"associateIpv6Address,omitempty"`
+	SecurityGroupIDs                              []string                      `json:"securityGroupIds,omitempty"`
+	ImageID                                       *string                       `json:"imageId,omitempty"`
+	KeyPair                                       *string                       `json:"keyPair,omitempty"`
+	UserData                                      *string                       `json:"userData,omitempty"`
+	IAMInstanceProfile                            *IAMInstanceProfile           `json:"iamInstanceProfile,omitempty"`
+	Tags                                          []*Tag                        `json:"tags,omitempty"`
+	LoadBalancers                                 []*LoadBalancer               `json:"loadBalancers,omitempty"`
+	RootVolumeSize                                *int                          `json:"rootVolumeSize,omitempty"`
+	HealthCheckUnhealthyDurationBeforeReplacement *int                          `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
+	Monitoring                                    *bool                         `json:"monitoring,omitempty"`
+	EBSOptimized                                  *bool                         `json:"ebsOptimized,omitempty"`
+	UseAsTemplateOnly                             *bool                         `json:"useAsTemplateOnly,omitempty"`
+	InstanceMetadataOptions                       *InstanceMetadataOptions      `json:"instanceMetadataOptions,omitempty"`
+	BlockDeviceMappings                           []*ClusterBlockDeviceMappings `json:"blockDeviceMappings,omitempty"`
+	LaunchSpecScheduling                          *LaunchSpecScheduling         `json:"scheduling,omitempty"`
+	ResourceTagSpecification                      *ResourceTagSpecification     `json:"resourceTagSpecification,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1679,6 +1680,13 @@ func (o *LaunchSpecification) SetInstanceMetadataOptions(v *InstanceMetadataOpti
 func (o *LaunchSpecification) SetResourceTagSpecification(v *ResourceTagSpecification) *LaunchSpecification {
 	if o.ResourceTagSpecification = v; o.ResourceTagSpecification == nil {
 		o.nullFields = append(o.nullFields, "ResourceTagSpecification")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetHealthCheckUnhealthyDurationBeforeReplacement(v *int) *LaunchSpecification {
+	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
 	}
 	return o
 }
