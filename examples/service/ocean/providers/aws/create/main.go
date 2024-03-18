@@ -76,6 +76,7 @@ func main() {
 					ImageID:          spotinst.String("ami-12345"),
 					Monitoring:       spotinst.Bool(false),
 					SecurityGroupIDs: []string{"sg-foo"},
+					HealthCheckUnhealthyDurationBeforeReplacement: spotinst.Int(180),
 					BlockDeviceMappings: []*aws.ClusterBlockDeviceMappings{
 						&aws.ClusterBlockDeviceMappings{
 							DeviceName: spotinst.String("/dev/sdf"),
