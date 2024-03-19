@@ -29,7 +29,7 @@ func NewRequest(method, path string) *Request {
 		url: &url.URL{
 			Path: path,
 		},
-		header: make(http.Header),
+		Header: make(http.Header),
 		Params: make(url.Values),
 	}
 }
