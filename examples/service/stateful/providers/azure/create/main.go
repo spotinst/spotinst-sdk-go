@@ -40,6 +40,8 @@ func main() {
 						Timeout: spotinst.Int(20),
 					},
 				},
+				AvailabilityVsCost: spotinst.Int(100),
+				OdWindows:          []string{"Mon:19:46-Mon:20:46"},
 				FallbackToOnDemand: spotinst.Bool(true),
 				DrainingTimeout:    spotinst.Int(12),
 				RevertToSpot: &azure.RevertToSpot{
@@ -88,6 +90,7 @@ func main() {
 							Version:   spotinst.String("latest"),
 						},
 					},
+					LicenseType: spotinst.String("SLES_BYOS"),
 					Network: &azure.Network{
 						ResourceGroupName:  spotinst.String("foo"),
 						VirtualNetworkName: spotinst.String("foo"),
@@ -117,6 +120,11 @@ func main() {
 							Type:   spotinst.String("Standard_LRS"),
 						},
 					},
+					OSDisk: &azure.OSDisk{
+						SizeGB:  spotinst.Int(64),
+						Type:    spotinst.String("Standard_LRS"),
+						Caching: spotinst.String("ReadOnly"),
+					},
 					Extensions: []*azure.Extension{
 						{
 							Name:                    spotinst.String("foo"),
@@ -138,8 +146,9 @@ func main() {
 							TagValue: spotinst.String("Terraform-Example"),
 						},
 					},
-					UserData: spotinst.String("base64 user data script"),
-					VMName:   spotinst.String("nameOfVM"),
+					UserData:     spotinst.String("base64 user data script"),
+					VMName:       spotinst.String("nameOfVM"),
+					VMNamePrefix: spotinst.String("PrefixnameOfVM"),
 					LoadBalancersConfig: &azure.LoadBalancersConfig{
 						LoadBalancers: []*azure.LoadBalancer{
 							{
