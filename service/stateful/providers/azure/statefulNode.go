@@ -53,6 +53,8 @@ type Strategy struct {
 	RevertToSpot        *RevertToSpot        `json:"revertToSpot,omitempty"`
 	OptimizationWindows []string             `json:"optimizationWindows,omitempty"`
 	CapacityReservation *CapacityReservation `json:"capacityReservation,omitempty"`
+	AvailabilityVsCost  *int                 `json:"availabilityVsCost,omitempty"`
+	OdWindows           []string             `json:"odWindows,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -129,6 +131,8 @@ type LaunchSpecification struct {
 	VMName                   *string                     `json:"vmName,omitempty"`
 	Security                 *Security                   `json:"security,omitempty"`
 	ProximityPlacementGroups []*ProximityPlacementGroups `json:"proximityPlacementGroups,omitempty"`
+	LicenseType              *string                     `json:"licenseType,omitempty"`
+	VMNamePrefix             *string                     `json:"vmNamePrefix,omitempty"`
 	forceSendFields          []string
 	nullFields               []string
 }
@@ -316,8 +320,9 @@ type LoadBalancer struct {
 }
 
 type OSDisk struct {
-	SizeGB *int    `json:"sizeGB,omitempty"`
-	Type   *string `json:"type,omitempty"`
+	SizeGB  *int    `json:"sizeGB,omitempty"`
+	Type    *string `json:"type,omitempty"`
+	Caching *string `json:"caching,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1000,6 +1005,20 @@ func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
 	return o
 }
 
+func (o *Strategy) SetOdWindows(v []string) *Strategy {
+	if o.OdWindows = v; o.OdWindows == nil {
+		o.nullFields = append(o.nullFields, "OdWindows")
+	}
+	return o
+}
+
+func (o *Strategy) SetAvailabilityVsCost(v *int) *Strategy {
+	if o.AvailabilityVsCost = v; o.AvailabilityVsCost == nil {
+		o.nullFields = append(o.nullFields, "AvailabilityVsCost")
+	}
+	return o
+}
+
 // endregion
 
 // region Signal
@@ -1436,6 +1455,20 @@ func (o *LaunchSpecification) SetVMName(v *string) *LaunchSpecification {
 func (o *LaunchSpecification) SetSecurity(v *Security) *LaunchSpecification {
 	if o.Security = v; o.Security == nil {
 		o.nullFields = append(o.nullFields, "Security")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetVMNamePrefix(v *string) *LaunchSpecification {
+	if o.VMNamePrefix = v; o.VMNamePrefix == nil {
+		o.nullFields = append(o.nullFields, "VMNamePrefix")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetLicenseType(v *string) *LaunchSpecification {
+	if o.LicenseType = v; o.LicenseType == nil {
+		o.nullFields = append(o.nullFields, "LicenseType")
 	}
 	return o
 }
@@ -2070,6 +2103,13 @@ func (o *OSDisk) SetSizeGB(v *int) *OSDisk {
 func (o *OSDisk) SetType(v *string) *OSDisk {
 	if o.Type = v; o.Type == nil {
 		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *OSDisk) SetCaching(v *string) *OSDisk {
+	if o.Caching = v; o.Caching == nil {
+		o.nullFields = append(o.nullFields, "Caching")
 	}
 	return o
 }
