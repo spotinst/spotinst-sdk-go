@@ -31,6 +31,7 @@ type LaunchSpec struct {
 	AutoScale                *AutoScale                         `json:"autoScale,omitempty"`
 	ElasticIPPool            *ElasticIPPool                     `json:"elasticIpPool,omitempty"`
 	BlockDeviceMappings      []*BlockDeviceMapping              `json:"blockDeviceMappings,omitempty"`
+	EphemeralStorage         *EphemeralStorage                  `json:"ephemeralStorage,omitempty"`
 	Labels                   []*Label                           `json:"labels,omitempty"`
 	Taints                   []*Taint                           `json:"taints,omitempty"`
 	Tags                     []*Tag                             `json:"tags,omitempty"`
@@ -294,6 +295,13 @@ type InstanceTypesFilters struct {
 	MinVcpu               *int     `json:"minVcpu,omitempty"`
 	RootDeviceTypes       []string `json:"rootDeviceTypes,omitempty"`
 	VirtualizationTypes   []string `json:"virtualizationTypes,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type EphemeralStorage struct {
+	DeviceName *string `json:"deviceName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -676,6 +684,12 @@ func (o *LaunchSpec) SetScheduling(v *LaunchSpecScheduling) *LaunchSpec {
 func (o *LaunchSpec) SetInstanceTypesFilters(v *InstanceTypesFilters) *LaunchSpec {
 	if o.InstanceTypesFilters = v; o.InstanceTypesFilters == nil {
 		o.nullFields = append(o.nullFields, "InstanceTypesFilters")
+	}
+	return o
+}
+func (o *LaunchSpec) SetEphemeralStorage(v *EphemeralStorage) *LaunchSpec {
+	if o.EphemeralStorage = v; o.EphemeralStorage == nil {
+		o.nullFields = append(o.nullFields, "EphemeralStorage")
 	}
 	return o
 }
@@ -1314,6 +1328,23 @@ func (o *InstanceTypesFilters) SetVirtualizationTypes(v []string) *InstanceTypes
 		o.nullFields = append(o.nullFields, "VirtualizationTypes")
 	}
 	return o
+}
+
+// endregion
+
+// region EphemeralStorage
+
+func (o *EphemeralStorage) SetDeviceName(v *string) *EphemeralStorage {
+	if o.DeviceName = v; o.DeviceName == nil {
+		o.nullFields = append(o.nullFields, "DeviceName")
+	}
+	return o
+}
+
+func (o EphemeralStorage) MarshalJSON() ([]byte, error) {
+	type noMethod EphemeralStorage
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
 // endregion
