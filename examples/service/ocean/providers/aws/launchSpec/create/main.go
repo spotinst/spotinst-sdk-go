@@ -54,6 +54,22 @@ func main() {
 				RootDeviceTypes:       []string{"ebs"},
 				MaxNetworkPerformance: spotinst.Int(20),
 				MinNetworkPerformance: spotinst.Int(2),
+			},
+			BlockDeviceMappings: []*aws.BlockDeviceMapping{
+				&aws.BlockDeviceMapping{
+					DeviceName: spotinst.String("/dev/xvdb"),
+					EBS: &aws.EBS{
+						DeleteOnTermination: spotinst.Bool(true),
+						Encrypted:           spotinst.Bool(false),
+						IOPS:                spotinst.Int(100),
+						Throughput:          spotinst.Int(125),
+						VolumeType:          spotinst.String("gp3"),
+						SnapshotID:          spotinst.String("snap-12345"),
+						VolumeSize:          spotinst.Int(35),
+					},
+				}},
+			EphemeralStorage: &aws.EphemeralStorage{
+				DeviceName: spotinst.String("/dev/xvdb"),
 			}},
 	})
 	if err != nil {
