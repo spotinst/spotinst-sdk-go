@@ -339,6 +339,7 @@ type Filters struct {
 	MinNICs               *int     `json:"minNICs,omitempty"`
 	VmTypes               []string `json:"vmTypes,omitempty"`
 	MinDisk               *int     `json:"minDisk,omitempty"`
+	GpuTypes              []string `json:"gpuTypes,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -461,6 +462,13 @@ func (o *Filters) SetVmTypes(v []string) *Filters {
 func (o *Filters) SetMinDisk(v *int) *Filters {
 	if o.MinDisk = v; o.MinDisk == nil {
 		o.nullFields = append(o.nullFields, "MinDisk")
+	}
+	return o
+}
+
+func (o *Filters) SetGpuTypes(v []string) *Filters {
+	if o.GpuTypes = v; o.GpuTypes == nil {
+		o.nullFields = append(o.nullFields, "GpuTypes")
 	}
 	return o
 }
