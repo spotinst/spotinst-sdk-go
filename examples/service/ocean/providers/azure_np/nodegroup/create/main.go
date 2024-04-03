@@ -102,6 +102,10 @@ func main() {
 						"GPU",
 					},
 					MinDisk: spotinst.Int(2),
+					GpuTypes: []string{
+						"nvidia-tesla-t4",
+						"nvidia-tesla-a100",
+					},
 				},
 			},
 		},
