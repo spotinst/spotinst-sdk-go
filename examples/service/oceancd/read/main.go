@@ -27,44 +27,17 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Create a new group.
-	out, err := svc.CreateVerificationProvider(ctx, &oceancd.CreateVerificationProviderInput{
-		VerificationProvider: &oceancd.VerificationProvider{
-			CloudWatch: &oceancd.CloudWatch{
-				IAmArn: spotinst.String("Test"),
-			},
-			ClusterIDs: []string{"Foo", "Foo"},
-			DataDog: &oceancd.DataDog{
-				Address: spotinst.String("Foo"),
-				ApiKey:  spotinst.String("Foo"),
-				AppKey:  spotinst.String("Foo"),
-			},
-			Jenkins: &oceancd.Jenkins{
-				ApiToken: spotinst.String("foo"),
-				BaseUrl:  spotinst.String("Foo"),
-				UserName: spotinst.String("foo"),
-			},
-			Name: spotinst.String("Foo"),
-			NewRelic: &oceancd.NewRelic{
-				AccountId:        spotinst.String("foo"),
-				BaseUrlNerdGraph: spotinst.String("foo"),
-				BaseUrlRest:      spotinst.String("foo"),
-				PersonalApiKey:   spotinst.String("foo"),
-				Region:           spotinst.String("eastus"),
-			},
-			Prometheus: &oceancd.Prometheus{
-				Address: spotinst.String("foo"),
-			},
-		},
+	// Read Verification Provider configuration.
+	out, err := svc.ReadVerificationProvider(ctx, &oceancd.ReadVerificationProviderInput{
+		Name: spotinst.String("name"),
 	})
-
 	if err != nil {
-		log.Fatalf("spotinst: failed to create policy: %v", err)
+		log.Fatalf("spotinst: failed to read Verification Provider: %v", err)
 	}
 
 	// Output.
 	if out.VerificationProvider != nil {
-		log.Printf("VerificationProvider %q: %s",
+		log.Printf("Verification Provider %q: %s",
 			spotinst.StringValue(out.VerificationProvider.Name),
 			stringutil.Stringify(out.VerificationProvider))
 	}
