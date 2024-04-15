@@ -28,7 +28,7 @@ func main() {
 
 	// Delete an existing cluster.
 	_, err := svc.DeleteVerificationProvider(ctx, &oceancd.DeleteVerificationProviderInput{
-		Name: spotinst.String("name"),
+		Name: spotinst.String("Foo"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete Verification Provider: %v", err)

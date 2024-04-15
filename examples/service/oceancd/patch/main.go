@@ -28,10 +28,10 @@ func main() {
 	ctx := context.Background()
 
 	// Update Verification Provider configuration.
-	out, err := svc.UpdateVerificationProvider(ctx, &oceancd.UpdateVerificationProviderInput{
+	out, err := svc.PatchVerificationProvider(ctx, &oceancd.PatchVerificationProviderInput{
 		VerificationProvider: &oceancd.VerificationProvider{
-			Name:       spotinst.String("name"),
-			ClusterIDs: []string{"Cluster-Id,Cluster-Id"},
+			Name:       spotinst.String("Foo"),
+			ClusterIDs: []string{"Automation-Canary-Rollout"},
 		},
 	})
 	if err != nil {

@@ -103,6 +103,14 @@ type UpdateVerificationProviderOutput struct {
 	VerificationProvider *VerificationProvider `json:"verificationProvider,omitempty"`
 }
 
+type PatchVerificationProviderInput struct {
+	VerificationProvider *VerificationProvider `json:"verificationProvider,omitempty"`
+}
+
+type PatchVerificationProviderOutput struct {
+	VerificationProvider *VerificationProvider `json:"verificationProvider,omitempty"`
+}
+
 type DeleteVerificationProviderInput struct {
 	Name *string `json:"name,omitempty"`
 }
@@ -223,7 +231,7 @@ func (s *ServiceOp) UpdateVerificationProvider(ctx context.Context, input *Updat
 		return nil, err
 	}
 
-	// We do NOT need the ID anymore, so let's drop it.
+	// We do NOT need the Name anymore, so let's drop it.
 	input.VerificationProvider.Name = nil
 
 	r := client.NewRequest(http.MethodPut, path)
@@ -241,6 +249,39 @@ func (s *ServiceOp) UpdateVerificationProvider(ctx context.Context, input *Updat
 	}
 
 	output := new(UpdateVerificationProviderOutput)
+	if len(gs) > 0 {
+		output.VerificationProvider = gs[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) PatchVerificationProvider(ctx context.Context, input *PatchVerificationProviderInput) (*PatchVerificationProviderOutput, error) {
+	path, err := uritemplates.Expand("/ocean/cd/verificationProvider/{name}", uritemplates.Values{
+		"name": spotinst.StringValue(input.VerificationProvider.Name),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// We do NOT need the Name anymore, so let's drop it.
+	input.VerificationProvider.Name = nil
+
+	r := client.NewRequest(http.MethodPatch, path)
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := verificationProvidersFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(PatchVerificationProviderOutput)
 	if len(gs) > 0 {
 		output.VerificationProvider = gs[0]
 	}

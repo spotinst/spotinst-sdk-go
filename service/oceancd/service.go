@@ -15,6 +15,7 @@ type Service interface {
 	CreateVerificationProvider(context.Context, *CreateVerificationProviderInput) (*CreateVerificationProviderOutput, error)
 	ReadVerificationProvider(context.Context, *ReadVerificationProviderInput) (*ReadVerificationProviderOutput, error)
 	UpdateVerificationProvider(context.Context, *UpdateVerificationProviderInput) (*UpdateVerificationProviderOutput, error)
+	PatchVerificationProvider(context.Context, *PatchVerificationProviderInput) (*PatchVerificationProviderOutput, error)
 	DeleteVerificationProvider(context.Context, *DeleteVerificationProviderInput) (*DeleteVerificationProviderOutput, error)
 }
 
