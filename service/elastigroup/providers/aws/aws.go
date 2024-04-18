@@ -101,7 +101,6 @@ type Integration struct {
 	Rancher             *RancherIntegration             `json:"rancher,omitempty"`
 	Kubernetes          *KubernetesIntegration          `json:"kubernetes,omitempty"`
 	Mesosphere          *MesosphereIntegration          `json:"mesosphere,omitempty"`
-	Multai              *MultaiIntegration              `json:"mlbRuntime,omitempty"`
 	Nomad               *NomadIntegration               `json:"nomad,omitempty"`
 	Chef                *ChefIntegration                `json:"chef,omitempty"`
 	Gitlab              *GitlabIntegration              `json:"gitlab,omitempty"`
@@ -313,13 +312,6 @@ type KubernetesIntegration struct {
 
 type MesosphereIntegration struct {
 	Server *string `json:"apiServer,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type MultaiIntegration struct {
-	DeploymentID *string `json:"deploymentId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2199,13 +2191,6 @@ func (o *Integration) SetMesosphere(v *MesosphereIntegration) *Integration {
 	return o
 }
 
-func (o *Integration) SetMultai(v *MultaiIntegration) *Integration {
-	if o.Multai = v; o.Multai == nil {
-		o.nullFields = append(o.nullFields, "Multai")
-	}
-	return o
-}
-
 func (o *Integration) SetNomad(v *NomadIntegration) *Integration {
 	if o.Nomad = v; o.Nomad == nil {
 		o.nullFields = append(o.nullFields, "Nomad")
@@ -2827,23 +2812,6 @@ func (o MesosphereIntegration) MarshalJSON() ([]byte, error) {
 func (o *MesosphereIntegration) SetServer(v *string) *MesosphereIntegration {
 	if o.Server = v; o.Server == nil {
 		o.nullFields = append(o.nullFields, "Server")
-	}
-	return o
-}
-
-// endregion
-
-// region MultaiIntegration
-
-func (o MultaiIntegration) MarshalJSON() ([]byte, error) {
-	type noMethod MultaiIntegration
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *MultaiIntegration) SetDeploymentId(v *string) *MultaiIntegration {
-	if o.DeploymentID = v; o.DeploymentID == nil {
-		o.nullFields = append(o.nullFields, "DeploymentID")
 	}
 	return o
 }
