@@ -73,8 +73,6 @@ type Prometheus struct {
 	nullFields      []string
 }
 
-type ListVerificationProvidersInput struct{}
-
 type ListVerificationProvidersOutput struct {
 	VerificationProviders []*VerificationProvider `json:"verificationProvider,omitempty"`
 }
@@ -164,12 +162,12 @@ func (s *ServiceOp) ListVerificationProviders(ctx context.Context) (*ListVerific
 	}
 	defer resp.Body.Close()
 
-	gs, err := verificationProvidersFromHttpResponse(resp)
+	vp, err := verificationProvidersFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ListVerificationProvidersOutput{VerificationProviders: gs}, nil
+	return &ListVerificationProvidersOutput{VerificationProviders: vp}, nil
 }
 
 func (s *ServiceOp) CreateVerificationProvider(ctx context.Context, input *CreateVerificationProviderInput) (*CreateVerificationProviderOutput, error) {
@@ -182,14 +180,14 @@ func (s *ServiceOp) CreateVerificationProvider(ctx context.Context, input *Creat
 	}
 	defer resp.Body.Close()
 
-	gs, err := verificationProvidersFromHttpResponse(resp)
+	vp, err := verificationProvidersFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(CreateVerificationProviderOutput)
-	if len(gs) > 0 {
-		output.VerificationProvider = gs[0]
+	if len(vp) > 0 {
+		output.VerificationProvider = vp[0]
 	}
 
 	return output, nil
@@ -210,14 +208,14 @@ func (s *ServiceOp) ReadVerificationProvider(ctx context.Context, input *ReadVer
 	}
 	defer resp.Body.Close()
 
-	gs, err := verificationProvidersFromHttpResponse(resp)
+	vp, err := verificationProvidersFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(ReadVerificationProviderOutput)
-	if len(gs) > 0 {
-		output.VerificationProvider = gs[0]
+	if len(vp) > 0 {
+		output.VerificationProvider = vp[0]
 	}
 
 	return output, nil
@@ -243,14 +241,14 @@ func (s *ServiceOp) UpdateVerificationProvider(ctx context.Context, input *Updat
 	}
 	defer resp.Body.Close()
 
-	gs, err := verificationProvidersFromHttpResponse(resp)
+	vp, err := verificationProvidersFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(UpdateVerificationProviderOutput)
-	if len(gs) > 0 {
-		output.VerificationProvider = gs[0]
+	if len(vp) > 0 {
+		output.VerificationProvider = vp[0]
 	}
 
 	return output, nil
@@ -276,14 +274,14 @@ func (s *ServiceOp) PatchVerificationProvider(ctx context.Context, input *PatchV
 	}
 	defer resp.Body.Close()
 
-	gs, err := verificationProvidersFromHttpResponse(resp)
+	vp, err := verificationProvidersFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(PatchVerificationProviderOutput)
-	if len(gs) > 0 {
-		output.VerificationProvider = gs[0]
+	if len(vp) > 0 {
+		output.VerificationProvider = vp[0]
 	}
 
 	return output, nil

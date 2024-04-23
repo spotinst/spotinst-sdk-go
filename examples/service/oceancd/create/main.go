@@ -59,7 +59,7 @@ func main() {
 	})
 
 	if err != nil {
-		log.Fatalf("spotinst: failed to create policy: %v", err)
+		log.Fatalf("spotinst: failed to create verification provider: %v", err)
 	}
 
 	// Output.

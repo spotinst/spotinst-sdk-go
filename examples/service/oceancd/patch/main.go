@@ -31,11 +31,11 @@ func main() {
 	out, err := svc.PatchVerificationProvider(ctx, &oceancd.PatchVerificationProviderInput{
 		VerificationProvider: &oceancd.VerificationProvider{
 			Name:       spotinst.String("Foo"),
-			ClusterIDs: []string{"Automation-Canary-Rollout"},
+			ClusterIDs: []string{"Test-Rollout"},
 		},
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to list Verification Provider: %v", err)
+		log.Fatalf("spotinst: failed to patch Verification Provider: %v", err)
 	}
 
 	// Output.

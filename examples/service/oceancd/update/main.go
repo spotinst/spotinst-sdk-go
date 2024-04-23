@@ -35,7 +35,7 @@ func main() {
 		},
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to list Verification Provider: %v", err)
+		log.Fatalf("spotinst: failed to update Verification Provider: %v", err)
 	}
 
 	// Output.
