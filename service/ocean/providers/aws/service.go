@@ -76,6 +76,11 @@ type serviceCommon interface {
 	// Deprecated: ListResourceSuggestions is obsolete, exists for backward compatibility only,
 	// and should not be used. Please use ListOceanResourceSuggestions instead.
 	ListResourceSuggestions(context.Context, *ListResourceSuggestionsInput) (*ListResourceSuggestionsOutput, error)
+	CreateRightSizingRule(context.Context, *CreateRightSizingRuleInput) (*CreateRightSizingRuleOutput, error)
+	ReadRightSizingRule(context.Context, *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error)
+	ListRightSizingRules(context.Context, *ListRightSizingRulesInput) (*ListRightSizingRulesOutput, error)
+	UpdateRightSizingRule(context.Context, *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error)
+	DeleteRightSizingRules(context.Context, *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error)
 }
 
 type serviceExtendedResourceDefinition interface {
