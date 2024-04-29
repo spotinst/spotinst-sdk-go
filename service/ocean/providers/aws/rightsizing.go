@@ -381,7 +381,7 @@ func (s *ServiceOp) CreateRightSizingRule(ctx context.Context, input *CreateRigh
 	// We do NOT need the ID anymore, so let's drop it.
 	input.RightSizingRule.OceanId = nil
 	r := client.NewRequest(http.MethodPost, path)
-	r.Obj = input
+	r.Obj = input.RightSizingRule
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -403,7 +403,7 @@ func (s *ServiceOp) CreateRightSizingRule(ctx context.Context, input *CreateRigh
 }
 
 func (s *ServiceOp) ReadRightSizingRule(ctx context.Context, input *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error) {
-	path, err := uritemplates.Expand("/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
 		"oceanId":  spotinst.StringValue(input.RightSizingRule.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
 	})
@@ -433,7 +433,7 @@ func (s *ServiceOp) ReadRightSizingRule(ctx context.Context, input *ReadRightSiz
 }
 
 func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error) {
-	path, err := uritemplates.Expand("/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
 		"oceanId":  spotinst.StringValue(input.RightSizingRule.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
 	})
@@ -445,7 +445,7 @@ func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRigh
 	}
 
 	r := client.NewRequest(http.MethodPut, path)
-	r.Obj = input
+	r.Obj = input.RightSizingRule
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -478,7 +478,7 @@ func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRig
 	input.RightSizingRule = nil
 
 	r := client.NewRequest(http.MethodDelete, path)
-	r.Obj = input
+	r.Obj = input.RuleNames
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
