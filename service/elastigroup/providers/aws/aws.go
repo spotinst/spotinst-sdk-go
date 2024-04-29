@@ -101,7 +101,6 @@ type Integration struct {
 	Rancher             *RancherIntegration             `json:"rancher,omitempty"`
 	Kubernetes          *KubernetesIntegration          `json:"kubernetes,omitempty"`
 	Mesosphere          *MesosphereIntegration          `json:"mesosphere,omitempty"`
-	Multai              *MultaiIntegration              `json:"mlbRuntime,omitempty"`
 	Nomad               *NomadIntegration               `json:"nomad,omitempty"`
 	Chef                *ChefIntegration                `json:"chef,omitempty"`
 	Gitlab              *GitlabIntegration              `json:"gitlab,omitempty"`
@@ -313,13 +312,6 @@ type KubernetesIntegration struct {
 
 type MesosphereIntegration struct {
 	Server *string `json:"apiServer,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
-type MultaiIntegration struct {
-	DeploymentID *string `json:"deploymentId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -840,13 +832,9 @@ type LoadBalancersConfig struct {
 }
 
 type LoadBalancer struct {
-	Name          *string `json:"name,omitempty"`
-	Arn           *string `json:"arn,omitempty"`
-	Type          *string `json:"type,omitempty"`
-	BalancerID    *string `json:"balancerId,omitempty"`
-	TargetSetID   *string `json:"targetSetId,omitempty"`
-	ZoneAwareness *bool   `json:"azAwareness,omitempty"`
-	AutoWeight    *bool   `json:"autoWeight,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Arn  *string `json:"arn,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2199,13 +2187,6 @@ func (o *Integration) SetMesosphere(v *MesosphereIntegration) *Integration {
 	return o
 }
 
-func (o *Integration) SetMultai(v *MultaiIntegration) *Integration {
-	if o.Multai = v; o.Multai == nil {
-		o.nullFields = append(o.nullFields, "Multai")
-	}
-	return o
-}
-
 func (o *Integration) SetNomad(v *NomadIntegration) *Integration {
 	if o.Nomad = v; o.Nomad == nil {
 		o.nullFields = append(o.nullFields, "Nomad")
@@ -2827,23 +2808,6 @@ func (o MesosphereIntegration) MarshalJSON() ([]byte, error) {
 func (o *MesosphereIntegration) SetServer(v *string) *MesosphereIntegration {
 	if o.Server = v; o.Server == nil {
 		o.nullFields = append(o.nullFields, "Server")
-	}
-	return o
-}
-
-// endregion
-
-// region MultaiIntegration
-
-func (o MultaiIntegration) MarshalJSON() ([]byte, error) {
-	type noMethod MultaiIntegration
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *MultaiIntegration) SetDeploymentId(v *string) *MultaiIntegration {
-	if o.DeploymentID = v; o.DeploymentID == nil {
-		o.nullFields = append(o.nullFields, "DeploymentID")
 	}
 	return o
 }
@@ -4595,34 +4559,6 @@ func (o *LoadBalancer) SetArn(v *string) *LoadBalancer {
 func (o *LoadBalancer) SetType(v *string) *LoadBalancer {
 	if o.Type = v; o.Type == nil {
 		o.nullFields = append(o.nullFields, "Type")
-	}
-	return o
-}
-
-func (o *LoadBalancer) SetBalancerId(v *string) *LoadBalancer {
-	if o.BalancerID = v; o.BalancerID == nil {
-		o.nullFields = append(o.nullFields, "BalancerID")
-	}
-	return o
-}
-
-func (o *LoadBalancer) SetTargetSetId(v *string) *LoadBalancer {
-	if o.TargetSetID = v; o.TargetSetID == nil {
-		o.nullFields = append(o.nullFields, "TargetSetID")
-	}
-	return o
-}
-
-func (o *LoadBalancer) SetZoneAwareness(v *bool) *LoadBalancer {
-	if o.ZoneAwareness = v; o.ZoneAwareness == nil {
-		o.nullFields = append(o.nullFields, "ZoneAwareness")
-	}
-	return o
-}
-
-func (o *LoadBalancer) SetAutoWeight(v *bool) *LoadBalancer {
-	if o.AutoWeight = v; o.AutoWeight == nil {
-		o.nullFields = append(o.nullFields, "AutoWeight")
 	}
 	return o
 }
