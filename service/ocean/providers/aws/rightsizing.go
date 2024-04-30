@@ -245,13 +245,6 @@ type Memory struct {
 	nullFields      []string
 }
 
-type RightSizingWorkloads struct {
-	Namespaces []*Namespace `json:"namespaces,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
-}
-
 type Namespace struct {
 	NamespaceName *string     `json:"namespaceName,omitempty"`
 	Workloads     []*Workload `json:"workloads,omitempty"`
@@ -265,31 +258,30 @@ type Workload struct {
 	Name         *string     `json:"name,omitempty"`
 	WorkloadType []*Workload `json:"workloadType,omitempty"`
 	RegexName    *string     `json:"regexName,omitempty"`
-	Namespace    *string     `json:"Namespace,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type ListRightSizingRulesInput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+	OceanId *string `json:"oceanId,omitempty"`
 }
 
 type ListRightSizingRulesOutput struct {
 	RightSizingRules []*RightSizingRule `json:"rightSizingRules,omitempty"`
 }
 
-type CreateRightSizingRuleInput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+type RightSizingAttachDetachInput struct {
+	RuleName   *string      `json:"ruleName,omitempty"`
+	OceanId    *string      `json:"oceanId,omitempty"`
+	Namespaces []*Namespace `json:"namespaces,omitempty"`
 }
 
-type CreateRightSizingRuleOutput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
-}
+type RightSizingAttachDetachOutput struct{}
 
 type ReadRightSizingRuleInput struct {
-	RuleName        *string          `json:"ruleName,omitempty"`
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+	RuleName *string `json:"ruleName,omitempty"`
+	OceanId  *string `json:"oceanId,omitempty"`
 }
 
 type ReadRightSizingRuleOutput struct {
@@ -306,11 +298,19 @@ type UpdateRightSizingRuleOutput struct {
 }
 
 type DeleteRightSizingRuleInput struct {
-	RuleNames       []string         `json:"ruleNames,omitempty"`
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+	RuleNames []string `json:"ruleNames,omitempty"`
+	OceanId   *string  `json:"oceanId,omitempty"`
 }
 
 type DeleteRightSizingRuleOutput struct{}
+
+type CreateRightSizingRuleInput struct {
+	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+}
+
+type CreateRightSizingRuleOutput struct {
+	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+}
 
 func rightSizingRuleFromJSON(in []byte) (*RightSizingRule, error) {
 	b := new(RightSizingRule)
@@ -349,7 +349,7 @@ func rightSizingRulesFromHttpResponse(resp *http.Response) ([]*RightSizingRule, 
 
 func (s *ServiceOp) ListRightSizingRules(ctx context.Context, input *ListRightSizingRulesInput) (*ListRightSizingRulesOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule", uritemplates.Values{
-		"oceanId": spotinst.StringValue(input.RightSizingRule.OceanId),
+		"oceanId": spotinst.StringValue(input.OceanId),
 	})
 	if err != nil {
 		return nil, err
@@ -404,7 +404,7 @@ func (s *ServiceOp) CreateRightSizingRule(ctx context.Context, input *CreateRigh
 
 func (s *ServiceOp) ReadRightSizingRule(ctx context.Context, input *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
-		"oceanId":  spotinst.StringValue(input.RightSizingRule.OceanId),
+		"oceanId":  spotinst.StringValue(input.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
 	})
 
@@ -471,14 +471,14 @@ func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRigh
 
 func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule", uritemplates.Values{
-		"oceanId": spotinst.StringValue(input.RightSizingRule.OceanId),
+		"oceanId": spotinst.StringValue(input.OceanId),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do NOT need the ID anymore, so let's drop it.
-	input.RightSizingRule = nil
+	input.OceanId = nil
 
 	r := client.NewRequest(http.MethodDelete, path)
 	r.Obj = input
@@ -491,9 +491,14 @@ func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRig
 	return &DeleteRightSizingRuleOutput{}, nil
 }
 
-/*func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *AttachWorkloadsToRuleInput) (*AttachWorkloadsToRuleOutput, error) {
-	r := client.NewRequest(http.MethodPost, "/ocean/aws/k8s/cluster")
-	r.Obj = input
+func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
+	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/attachment", uritemplates.Values{
+		"oceanId":  spotinst.StringValue(input.OceanId),
+		"ruleName": spotinst.StringValue(input.RuleName),
+	})
+
+	r := client.NewRequest(http.MethodPost, path)
+	r.Obj = input.Namespaces
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -501,19 +506,26 @@ func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRig
 	}
 	defer resp.Body.Close()
 
-	gs, err := rightSizingRulesFromHttpResponse(resp)
+	return &RightSizingAttachDetachOutput{}, nil
+}
+
+func (s *ServiceOp) DetachWorkloadsToRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
+	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/detachment", uritemplates.Values{
+		"oceanId":  spotinst.StringValue(input.OceanId),
+		"ruleName": spotinst.StringValue(input.RuleName),
+	})
+
+	r := client.NewRequest(http.MethodPost, path)
+	r.Obj = input.Namespaces
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
-	output := new(AttachWorkloadsToRuleOutput)
-	if len(gs) > 0 {
-		output.RightSizingRule = gs[0]
-	}
-
-	return output, nil
+	return &RightSizingAttachDetachOutput{}, nil
 }
-*/
 
 // region RightSizingRule
 
