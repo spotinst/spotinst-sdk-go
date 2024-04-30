@@ -439,6 +439,9 @@ func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRigh
 	})
 
 	input.RightSizingRule.OceanId = nil
+	if input.RightSizingRule.Name == nil {
+		input.RightSizingRule.Name = input.RuleName
+	}
 
 	if err != nil {
 		return nil, err
@@ -478,7 +481,7 @@ func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRig
 	input.RightSizingRule = nil
 
 	r := client.NewRequest(http.MethodDelete, path)
-	r.Obj = input.RuleNames
+	r.Obj = input
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
 		return nil, err
