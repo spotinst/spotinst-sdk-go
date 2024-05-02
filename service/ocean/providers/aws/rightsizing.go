@@ -255,9 +255,9 @@ type Namespace struct {
 }
 
 type Workload struct {
-	Name         *string     `json:"name,omitempty"`
-	WorkloadType []*Workload `json:"workloadType,omitempty"`
-	RegexName    *string     `json:"regexName,omitempty"`
+	Name         *string `json:"name,omitempty"`
+	WorkloadType *string `json:"workloadType,omitempty"`
+	RegexName    *string `json:"regexName,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -498,7 +498,11 @@ func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *RightSizin
 	})
 
 	r := client.NewRequest(http.MethodPost, path)
-	r.Obj = input.Namespaces
+
+	input.OceanId = nil
+	input.RuleName = nil
+
+	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -516,7 +520,11 @@ func (s *ServiceOp) DetachWorkloadsToRule(ctx context.Context, input *RightSizin
 	})
 
 	r := client.NewRequest(http.MethodPost, path)
-	r.Obj = input.Namespaces
+
+	input.OceanId = nil
+	input.RuleName = nil
+
+	r.Obj = input
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
