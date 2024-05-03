@@ -82,7 +82,7 @@ type serviceCommon interface {
 	UpdateRightSizingRule(context.Context, *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error)
 	DeleteRightSizingRules(context.Context, *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error)
 	AttachWorkloadsToRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
-	DetachWorkloadsToRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+	DetachWorkloadsFromRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
 }
 
 type serviceExtendedResourceDefinition interface {

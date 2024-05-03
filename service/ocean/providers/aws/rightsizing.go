@@ -513,7 +513,7 @@ func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *RightSizin
 	return &RightSizingAttachDetachOutput{}, nil
 }
 
-func (s *ServiceOp) DetachWorkloadsToRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
+func (s *ServiceOp) DetachWorkloadsFromRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/detachment", uritemplates.Values{
 		"oceanId":  spotinst.StringValue(input.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),

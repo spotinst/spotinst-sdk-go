@@ -28,7 +28,7 @@ func main() {
 	ctx := context.Background()
 
 	// Detach Workloads from existing Right Sizing Rule
-	_, err := svc.CloudProviderAWS().AttachWorkloadsToRule(ctx, &aws.RightSizingAttachDetachInput{
+	_, err := svc.CloudProviderAWS().DetachWorkloadsFromRule(ctx, &aws.RightSizingAttachDetachInput{
 		RuleName: spotinst.String("tf-rule"),
 		OceanId:  spotinst.String("o-1234abcd"),
 		Namespaces: []*aws.Namespace{
