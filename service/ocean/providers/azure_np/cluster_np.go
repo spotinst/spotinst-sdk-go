@@ -700,4 +700,31 @@ type ImportClusterOutput struct {
 	Cluster *Cluster `json:"cluster,omitempty"`
 }
 
+type LaunchNewNodesInput struct {
+	Adjustment          *int     `json:"adjustment,omitempty"`
+	ApplicableVmSizes   []string `json:"applicableVmSizes,omitempty"`
+	AvailabilityZones   []string `json:"availabilityZones,omitempty"`
+	MinCoresPerNode     *int     `json:"minCoresPerNode,omitempty"`
+	MinMemoryGiBPerNode *float64 `json:"minMemoryGiBPerNode,omitempty"`
+	OceanId             *string  `json:"oceanId,omitempty"`
+	PreferredLifecycle  *string  `json:"preferredLifecycle,omitempty"`
+	VngIds              []string `json:"vngIds,omitempty"`
+}
+
+type LaunchNewNodesOutput struct{}
+
+func (s *ServiceOp) LaunchNewNodes(ctx context.Context,
+	input *LaunchNewNodesInput) (*LaunchNewNodesOutput, error) {
+	r := client.NewRequest(http.MethodPut, "/ocean/azure/np/cluster/launchNewNodes")
+	r.Obj = input
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	return &LaunchNewNodesOutput{}, nil
+}
+
 // endregion
