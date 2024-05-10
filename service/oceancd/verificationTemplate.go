@@ -52,7 +52,7 @@ type SecretKeyRef struct {
 
 type Metrics struct {
 	Baseline              *Baseline `json:"baseline,omitempty"`
-	ConsecutiveErrorLimit *string   `json:"consecutiveErrorLimit,omitempty"`
+	ConsecutiveErrorLimit *int      `json:"consecutiveErrorLimit,omitempty"`
 	Count                 *int      `json:"count,omitempty"`
 	DryRun                *bool     `json:"dryRUn,omitempty"`
 	FailureCondition      *string   `json:"failureCondition,omitempty"`
@@ -184,7 +184,7 @@ type Web struct {
 	Headers        []*Headers `json:"headers,omitempty"`
 	JsonPath       *string    `json:"jsonPath,omitempty"`
 	Method         *string    `json:"method,omitempty"`
-	TimeoutSeconds *string    `json:"TimeoutSeconds,omitempty"`
+	TimeoutSeconds *int       `json:"TimeoutSeconds,omitempty"`
 	Url            *string    `json:"url,omitempty"`
 
 	forceSendFields []string
@@ -551,7 +551,7 @@ func (o *Metrics) SetBaseLine(v *Baseline) *Metrics {
 	return o
 }
 
-func (o *Metrics) SetConsecutiveErrorLimit(v *string) *Metrics {
+func (o *Metrics) SetConsecutiveErrorLimit(v *int) *Metrics {
 	if o.ConsecutiveErrorLimit = v; o.ConsecutiveErrorLimit == nil {
 		o.nullFields = append(o.nullFields, "ConsecutiveErrorLimit")
 	}
@@ -1059,7 +1059,7 @@ func (o *Web) SetMethod(v *string) *Web {
 	return o
 }
 
-func (o *Web) SetTimeoutSeconds(v *string) *Web {
+func (o *Web) SetTimeoutSeconds(v *int) *Web {
 	if o.TimeoutSeconds = v; o.TimeoutSeconds == nil {
 		o.nullFields = append(o.nullFields, "TimeoutSeconds")
 	}
