@@ -789,7 +789,7 @@ func (o *MetricDataQueries) SetReturnData(v *bool) *MetricDataQueries {
 
 //end region
 
-//Region Metric Stat
+//region Metric Stat
 
 func (o MetricStat) MarshalJSON() ([]byte, error) {
 	type noMethod MetricStat
@@ -827,7 +827,7 @@ func (o *MetricStat) SetUnit(v *string) *MetricStat {
 
 //end region
 
-//Region Metric
+//region Metric
 
 func (o Metric) MarshalJSON() ([]byte, error) {
 	type noMethod Metric
@@ -858,7 +858,7 @@ func (o *Metric) SetNamespace(v *string) *Metric {
 
 //end region
 
-//Region Dimensions
+//region Dimensions
 
 func (o Dimensions) MarshalJSON() ([]byte, error) {
 	type noMethod Dimensions
@@ -882,7 +882,7 @@ func (o *Dimensions) SetValue(v *string) *Dimensions {
 
 //end region
 
-//Region Data Dog Provider
+//region Data Dog Provider
 
 func (o DataDogProvider) MarshalJSON() ([]byte, error) {
 	type noMethod DataDogProvider
@@ -906,7 +906,7 @@ func (o *DataDogProvider) SetQuery(v *string) *DataDogProvider {
 
 //end region
 
-//Region Jenkins Provider
+//region Jenkins Provider
 
 func (o JenkinsProvider) MarshalJSON() ([]byte, error) {
 	type noMethod JenkinsProvider
@@ -951,7 +951,7 @@ func (o *JenkinsProvider) SetTLSVerification(v *bool) *JenkinsProvider {
 
 //end region
 
-//Region Parameters
+//region Parameters
 
 func (o Parameters) MarshalJSON() ([]byte, error) {
 	type noMethod Parameters
@@ -975,7 +975,7 @@ func (o *Parameters) SetValue(v *string) *Parameters {
 
 //end region
 
-//Region New Relic Provider
+//region New Relic Provider
 
 func (o NewRelicProvider) MarshalJSON() ([]byte, error) {
 	type noMethod NewRelicProvider
@@ -999,7 +999,7 @@ func (o *NewRelicProvider) SetQuery(v *string) *NewRelicProvider {
 
 //end region
 
-//Region Prometheus Provider
+//region Prometheus Provider
 
 func (o PrometheusProvider) MarshalJSON() ([]byte, error) {
 	type noMethod PrometheusProvider
@@ -1016,7 +1016,7 @@ func (o *PrometheusProvider) SetQuery(v *string) *PrometheusProvider {
 
 //end region
 
-//Region Web
+//region Web
 
 func (o Web) MarshalJSON() ([]byte, error) {
 	type noMethod Web
@@ -1075,7 +1075,7 @@ func (o *Web) SetUrl(v *string) *Web {
 
 //end region
 
-//Region Headers
+//region Headers
 
 func (o Headers) MarshalJSON() ([]byte, error) {
 	type noMethod Headers
