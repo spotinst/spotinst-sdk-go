@@ -168,12 +168,13 @@ func (s *ServiceOp) ListResourceSuggestions(ctx context.Context, input *ListReso
 }
 
 type RightSizingRule struct {
-	Name                                  *string                                `json:"ruleName,omitempty"`
-	OceanId                               *string                                `json:"oceanId,omitempty"`
-	RestartPods                           *bool                                  `json:"restartPods,omitempty"`
-	RecommendationApplicationIntervals    []*RecommendationApplicationInterval   `json:"recommendationApplicationIntervals,omitempty"`
-	RecommendationApplicationMinThreshold *RecommendationApplicationMinThreshold `json:"recommendationApplicationMinThreshold,omitempty"`
-	RecommendationApplicationBoundaries   *RecommendationApplicationBoundaries   `json:"recommendationApplicationBoundaries,omitempty"`
+	Name                                    *string                                  `json:"ruleName,omitempty"`
+	OceanId                                 *string                                  `json:"oceanId,omitempty"`
+	RestartPods                             *bool                                    `json:"restartPods,omitempty"`
+	RecommendationApplicationIntervals      []*RecommendationApplicationInterval     `json:"recommendationApplicationIntervals,omitempty"`
+	RecommendationApplicationMinThreshold   *RecommendationApplicationMinThreshold   `json:"recommendationApplicationMinThreshold,omitempty"`
+	RecommendationApplicationBoundaries     *RecommendationApplicationBoundaries     `json:"recommendationApplicationBoundaries,omitempty"`
+	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues `json:"recommendationApplicationOverheadValues,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -258,6 +259,14 @@ type Workload struct {
 	Name         *string `json:"name,omitempty"`
 	WorkloadType *string `json:"workloadType,omitempty"`
 	RegexName    *string `json:"regexName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RecommendationApplicationOverheadValues struct {
+	CpuPercentage    *float64 `json:"cpuPercentage,omitempty"`
+	MemoryPercentage *float64 `json:"memoryPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -585,6 +594,13 @@ func (o *RightSizingRule) SetRecommendationApplicationMinThreshold(v *Recommenda
 	return o
 }
 
+func (o *RightSizingRule) SetRecommendationApplicationOverheadValues(v *RecommendationApplicationOverheadValues) *RightSizingRule {
+	if o.RecommendationApplicationOverheadValues = v; o.RecommendationApplicationOverheadValues == nil {
+		o.nullFields = append(o.nullFields, "RecommendationApplicationOverheadValues")
+	}
+	return o
+}
+
 // region RecommendationApplicationInterval
 
 func (o RecommendationApplicationInterval) MarshalJSON() ([]byte, error) {
@@ -727,6 +743,22 @@ func (o *RecommendationApplicationMinThreshold) SetCpuPercentage(v *float64) *Re
 }
 
 func (o *RecommendationApplicationMinThreshold) SetMemoryPercentage(v *float64) *RecommendationApplicationMinThreshold {
+	if o.MemoryPercentage = v; o.MemoryPercentage == nil {
+		o.nullFields = append(o.nullFields, "MemoryPercentage")
+	}
+	return o
+}
+
+// region RecommendationApplicationOverheadValues
+
+func (o *RecommendationApplicationOverheadValues) SetOverheadCpuPercentage(v *float64) *RecommendationApplicationOverheadValues {
+	if o.CpuPercentage = v; o.CpuPercentage == nil {
+		o.nullFields = append(o.nullFields, "CpuPercentage")
+	}
+	return o
+}
+
+func (o *RecommendationApplicationOverheadValues) SetOverheadMemoryPercentage(v *float64) *RecommendationApplicationOverheadValues {
 	if o.MemoryPercentage = v; o.MemoryPercentage == nil {
 		o.nullFields = append(o.nullFields, "MemoryPercentage")
 	}
