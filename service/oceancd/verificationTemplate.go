@@ -1180,7 +1180,7 @@ func (o *Spec) SetTemplate(v *Template) *Spec {
 
 //end region
 
-//region Template
+// region Template
 func (o Template) MarshalJSON() ([]byte, error) {
 	type noMethod Template
 	raw := noMethod(o)
