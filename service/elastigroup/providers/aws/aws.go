@@ -1099,20 +1099,15 @@ type RollStatusInput struct {
 	RollID  *string `json:"id,omitempty"`
 }
 
-type BGInstance struct {
-	InstanceID *string `json:"instanceId,omitempty"`
-	Lifecycle  *string `json:"lifecycle,omitempty"`
-	BatchNum   *int    `json:"batchNum,omitempty"`
-	Status     *string `json:"status,omitempty"`
-}
-
-type BGInstances struct {
-	Blue  []*BGInstance `json:"blue,omitempty"`
-	Green []*BGInstance `json:"green,omitempty"`
-}
-
 type RollStatusOutput struct {
-	Instances []*BGInstances `json:"instances,omitempty"`
+	ID              *string   `json:"id,omitempty"`
+	Status          *int      `json:"status,omitempty"`
+	CurrentBatch    *int      `json:"currentBatch,omitempty"`
+	NumberOfBatches *int      `json:"numOfBatches,omitempty"`
+	Progress        *Progress `json:"progress,omitempty"`
+	GracePeriod     *int      `json:"gracePeriod,omitempty"`
+	BlueInstances   *int      `json:"blueInstances,omitempty"`
+	GreenInstances  *int      `json:"greenInstances,omitempty"`
 }
 
 type Roll struct {
