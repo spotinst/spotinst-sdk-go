@@ -54,7 +54,7 @@ type Metrics struct {
 	Baseline              *Baseline `json:"baseline,omitempty"`
 	ConsecutiveErrorLimit *int      `json:"consecutiveErrorLimit,omitempty"`
 	Count                 *int      `json:"count,omitempty"`
-	DryRun                *bool     `json:"dryRUn,omitempty"`
+	DryRun                *bool     `json:"dryRun,omitempty"`
 	FailureCondition      *string   `json:"failureCondition,omitempty"`
 	FailureLimit          *int      `json:"failureLimit,omitempty"`
 	InitialDelay          *string   `json:"initialDelay,omitempty"`
@@ -79,10 +79,11 @@ type Baseline struct {
 
 type Provider struct {
 	CloudWatch *CloudWatchProvider `json:"cloudWatch,omitempty"`
-	DataDog    *DataDogProvider    `json:"dataDog,omitempty"`
+	Datadog    *DataDogProvider    `json:"datadog,omitempty"`
 	Jenkins    *JenkinsProvider    `json:"jenkins,omitempty"`
 	NewRelic   *NewRelicProvider   `json:"newRelic,omitempty"`
 	Prometheus *PrometheusProvider `json:"prometheus,omitempty"`
+	Job        *Job                `json:"job,omitempty"`
 	Web        *Web                `json:"web,omitempty"`
 
 	forceSendFields []string
@@ -101,8 +102,8 @@ type MetricDataQueries struct {
 	Expression *string     `json:"expression,omitempty"`
 	ID         *string     `json:"id,omitempty"`
 	Label      *string     `json:"label,omitempty"`
-	MetricStat *MetricStat `json:"MetricStat,omitempty"`
-	Period     *int        `json:"duration,omitempty"`
+	MetricStat *MetricStat `json:",metricStat,omitempty"`
+	Period     *int        `json:"period,omitempty"`
 	ReturnData *bool       `json:"returnData,omitempty"`
 
 	forceSendFields []string
@@ -110,7 +111,7 @@ type MetricDataQueries struct {
 }
 
 type MetricStat struct {
-	Metric *Metric `json:"address,omitempty"`
+	Metric *Metric `json:"metric,omitempty"`
 	Period *int    `json:"period,omitempty"`
 	Stat   *string `json:"stat,omitempty"`
 	Unit   *string `json:"unit,omitempty"`
@@ -122,7 +123,7 @@ type MetricStat struct {
 type Metric struct {
 	Dimensions []*Dimensions `json:"dimensions,omitempty"`
 	MetricName *string       `json:"metricName,omitempty"`
-	NameSpace  *string       `json:"nameSpace,omitempty"`
+	Namespace  *string       `json:"namespace,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -144,8 +145,47 @@ type DataDogProvider struct {
 	nullFields      []string
 }
 
+type Job struct {
+	Spec *Spec `json:"spec,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Spec struct {
+	BackoffLimit *int      `json:"backoffLimit,omitempty"`
+	Template     *Template `json:"template,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Template struct {
+	Spec *TemplateSpec `json:"spec,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type TemplateSpec struct {
+	RestartPolicy *string       `json:"restartPolicy,omitempty"`
+	Containers    []*Containers `json:"containers,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Containers struct {
+	Command []string `json:"command,omitempty"`
+	Image   *string  `json:"image,omitempty"`
+	Name    *string  `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
 type JenkinsProvider struct {
-	Interval        *string       `json:"address,omitempty"`
+	Interval        *string       `json:"interval,omitempty"`
 	PipelineName    *string       `json:"pipelineName,omitempty"`
 	Parameters      []*Parameters `json:"parameters,omitempty"`
 	Timeout         *string       `json:"timeout,omitempty"`
@@ -184,7 +224,7 @@ type Web struct {
 	Headers        []*Headers `json:"headers,omitempty"`
 	JsonPath       *string    `json:"jsonPath,omitempty"`
 	Method         *string    `json:"method,omitempty"`
-	TimeoutSeconds *int       `json:"TimeoutSeconds,omitempty"`
+	TimeoutSeconds *int       `json:"timeoutSeconds,omitempty"`
 	Url            *string    `json:"url,omitempty"`
 
 	forceSendFields []string
@@ -677,8 +717,8 @@ func (o *Provider) SetCloudWatch(v *CloudWatchProvider) *Provider {
 }
 
 func (o *Provider) SetDataDog(v *DataDogProvider) *Provider {
-	if o.DataDog = v; o.DataDog == nil {
-		o.nullFields = append(o.nullFields, "DataDog")
+	if o.Datadog = v; o.Datadog == nil {
+		o.nullFields = append(o.nullFields, "Datadog")
 	}
 	return o
 }
@@ -850,7 +890,7 @@ func (o *Metric) SetMetricName(v *string) *Metric {
 }
 
 func (o *Metric) SetNamespace(v *string) *Metric {
-	if o.NameSpace = v; o.NameSpace == nil {
+	if o.Namespace = v; o.Namespace == nil {
 		o.nullFields = append(o.nullFields, "Namespace")
 	}
 	return o
@@ -1098,3 +1138,113 @@ func (o *Headers) SetValue(v *string) *Headers {
 }
 
 //end region
+
+//region Job
+
+func (o Job) MarshalJSON() ([]byte, error) {
+	type noMethod Job
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Job) SetSpec(v *Spec) *Job {
+	if o.Spec = v; o.Spec == nil {
+		o.nullFields = append(o.nullFields, "Spec")
+	}
+	return o
+}
+
+//end region
+
+//region Spec
+
+func (o Spec) MarshalJSON() ([]byte, error) {
+	type noMethod Spec
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Spec) SetBackoffLimit(v *int) *Spec {
+	if o.BackoffLimit = v; o.BackoffLimit == nil {
+		o.nullFields = append(o.nullFields, "BackoffLimit")
+	}
+	return o
+}
+
+func (o *Spec) SetTemplate(v *Template) *Spec {
+	if o.Template = v; o.Template == nil {
+		o.nullFields = append(o.nullFields, "Template")
+	}
+	return o
+}
+
+//end region
+
+//region Template
+func (o Template) MarshalJSON() ([]byte, error) {
+	type noMethod Template
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Template) SetSpec(v *TemplateSpec) *Template {
+	if o.Spec = v; o.Spec == nil {
+		o.nullFields = append(o.nullFields, "Spec")
+	}
+	return o
+}
+
+//end region
+
+//region TemplateSpec
+
+func (o TemplateSpec) MarshalJSON() ([]byte, error) {
+	type noMethod TemplateSpec
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *TemplateSpec) SetRestartPolicy(v *string) *TemplateSpec {
+	if o.RestartPolicy = v; o.RestartPolicy == nil {
+		o.nullFields = append(o.nullFields, "RestartPolicy")
+	}
+	return o
+}
+
+func (o *TemplateSpec) SetContainers(v []*Containers) *TemplateSpec {
+	if o.Containers = v; o.Containers == nil {
+		o.nullFields = append(o.nullFields, "Containers")
+	}
+	return o
+}
+
+//end region
+
+//region containers
+
+func (o Containers) MarshalJSON() ([]byte, error) {
+	type noMethod Containers
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Containers) SetCommand(v []string) *Containers {
+	if o.Command = v; o.Command == nil {
+		o.nullFields = append(o.nullFields, "Command")
+	}
+	return o
+}
+
+func (o *Containers) SetImage(v *string) *Containers {
+	if o.Image = v; o.Image == nil {
+		o.nullFields = append(o.nullFields, "Image")
+	}
+	return o
+}
+
+func (o *Containers) SetName(v *string) *Containers {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
