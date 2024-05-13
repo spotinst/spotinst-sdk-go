@@ -28,7 +28,7 @@ func main() {
 
 	// Delete an existing Strategy.
 	_, err := svc.DeleteStrategy(ctx, &oceancd.DeleteStrategyInput{
-		StrategyName: spotinst.String("Foo"),
+		StrategyName: spotinst.String("TestStartegy"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete Strategy: %v", err)

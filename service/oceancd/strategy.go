@@ -266,7 +266,7 @@ func (s *ServiceOp) ReadStrategy(ctx context.Context, input *ReadStrategyInput) 
 }
 
 func (s *ServiceOp) UpdateStrategy(ctx context.Context, input *UpdateStrategyInput) (*UpdateStrategyOutput, error) {
-	path, err := uritemplates.Expand("/ocean/cd/verificationProvider/{strategyName}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/cd/strategy/{strategyName}", uritemplates.Values{
 		"strategyName": spotinst.StringValue(input.Strategy.Name),
 	})
 	if err != nil {
@@ -299,7 +299,7 @@ func (s *ServiceOp) UpdateStrategy(ctx context.Context, input *UpdateStrategyInp
 }
 
 func (s *ServiceOp) PatchStrategy(ctx context.Context, input *PatchStrategyInput) (*PatchStrategyOutput, error) {
-	path, err := uritemplates.Expand("/ocean/cd/verificationProvider/{strategyName}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/cd/strategy/{strategyName}", uritemplates.Values{
 		"strategyName": spotinst.StringValue(input.Strategy.Name),
 	})
 	if err != nil {
@@ -332,7 +332,7 @@ func (s *ServiceOp) PatchStrategy(ctx context.Context, input *PatchStrategyInput
 }
 
 func (s *ServiceOp) DeleteStrategy(ctx context.Context, input *DeleteStrategyInput) (*DeleteStrategyOutput, error) {
-	path, err := uritemplates.Expand("/ocean/cd/verificationProvider/{strategyName}", uritemplates.Values{
+	path, err := uritemplates.Expand("/ocean/cd/strategy/{strategyName}", uritemplates.Values{
 		"strategyName": spotinst.StringValue(input.StrategyName),
 	})
 	if err != nil {
