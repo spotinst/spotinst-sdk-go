@@ -62,7 +62,7 @@ func main() {
 									MetricStat: &oceancd.MetricStat{
 										Metric: &oceancd.Metric{
 											MetricName: spotinst.String("TestName"),
-											NameSpace:  spotinst.String("Test"),
+											Namespace:  spotinst.String("Test"),
 											Dimensions: []*oceancd.Dimensions{
 												{
 													Name:  spotinst.String("Test"),
@@ -81,12 +81,29 @@ func main() {
 								},
 							},
 						},
-						DataDog: &oceancd.DataDogProvider{
+						Datadog: &oceancd.DataDogProvider{
 							Duration: spotinst.String("3s"),
 							Query:    spotinst.String("avg.cpu.utilization"),
 						},
 						Prometheus: &oceancd.PrometheusProvider{
 							Query: spotinst.String("Total_CPU_Test"),
+						},
+						Job: &oceancd.Job{
+							Spec: &oceancd.Spec{
+								BackoffLimit: spotinst.Int(1),
+								Template: &oceancd.Template{
+									Spec: &oceancd.TemplateSpec{
+										RestartPolicy: spotinst.String("never"),
+										Containers: []*oceancd.Containers{
+											{
+												Name:    spotinst.String("Test"),
+												Command: []string{"Test"},
+												Image:   spotinst.String("Test"),
+											},
+										},
+									},
+								},
+							},
 						},
 						NewRelic: &oceancd.NewRelicProvider{
 							Profile: spotinst.String("Test"),
@@ -124,7 +141,7 @@ func main() {
 						MaxRange:  spotinst.Int(30),
 						MinRange:  spotinst.Int(40),
 						Provider: &oceancd.Provider{
-							DataDog: &oceancd.DataDogProvider{
+							Datadog: &oceancd.DataDogProvider{
 								Duration: spotinst.String("3s"),
 								Query:    spotinst.String("avg.cpu.utilization"),
 							},

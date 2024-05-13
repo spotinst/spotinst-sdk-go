@@ -24,13 +24,6 @@ type Service interface {
 	UpdateVerificationTemplate(context.Context, *UpdateVerificationTemplateInput) (*UpdateVerificationTemplateOutput, error)
 	PatchVerificationTemplate(context.Context, *PatchVerificationTemplateInput) (*PatchVerificationTemplateOutput, error)
 	DeleteVerificationTemplate(context.Context, *DeleteVerificationTemplateInput) (*DeleteVerificationTemplateOutput, error)
-
-	ListStrategies(context.Context) (*ListStrategiesOutput, error)
-	CreateStrategy(context.Context, *CreateStrategyInput) (*CreateStrategyOutput, error)
-	ReadStrategy(context.Context, *ReadStrategyInput) (*ReadStrategyOutput, error)
-	UpdateStrategy(context.Context, *UpdateStrategyInput) (*UpdateStrategyOutput, error)
-	PatchStrategy(context.Context, *PatchStrategyInput) (*PatchStrategyOutput, error)
-	DeleteStrategy(context.Context, *DeleteStrategyInput) (*DeleteStrategyOutput, error)
 }
 
 type ServiceOp struct {
