@@ -751,6 +751,13 @@ func (o *Provider) SetWeb(v *Web) *Provider {
 	return o
 }
 
+func (o *Provider) SetJob(v *Job) *Provider {
+	if o.Job = v; o.Job == nil {
+		o.nullFields = append(o.nullFields, "Job")
+	}
+	return o
+}
+
 //end region
 
 //region Cloud Watch Provider
