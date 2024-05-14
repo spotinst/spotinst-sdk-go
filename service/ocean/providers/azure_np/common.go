@@ -4,15 +4,16 @@ import "github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 
 // NodePoolProperties region
 type NodePoolProperties struct {
-	MaxPodsPerNode     *int     `json:"maxPodsPerNode,omitempty"`
-	EnableNodePublicIP *bool    `json:"enableNodePublicIP,omitempty"`
-	OsDiskSizeGB       *int     `json:"osDiskSizeGB,omitempty"`
-	OsDiskType         *string  `json:"osDiskType,omitempty"`
-	OsType             *string  `json:"osType,omitempty"`
-	OsSKU              *string  `json:"osSKU,omitempty"`
-	KubernetesVersion  *string  `json:"kubernetesVersion,omitempty"`
-	PodSubnetIDs       []string `json:"podSubnetIDs,omitempty"`
-	VnetSubnetIDs      []string `json:"vnetSubnetIDs,omitempty"`
+	MaxPodsPerNode     *int           `json:"maxPodsPerNode,omitempty"`
+	EnableNodePublicIP *bool          `json:"enableNodePublicIP,omitempty"`
+	OsDiskSizeGB       *int           `json:"osDiskSizeGB,omitempty"`
+	OsDiskType         *string        `json:"osDiskType,omitempty"`
+	OsType             *string        `json:"osType,omitempty"`
+	OsSKU              *string        `json:"osSKU,omitempty"`
+	KubernetesVersion  *string        `json:"kubernetesVersion,omitempty"`
+	PodSubnetIDs       []string       `json:"podSubnetIDs,omitempty"`
+	VnetSubnetIDs      []string       `json:"vnetSubnetIDs,omitempty"`
+	LinuxOSConfig      *LinuxOSConfig `json:"linuxOSConfig,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -22,6 +23,13 @@ func (o NodePoolProperties) MarshalJSON() ([]byte, error) {
 	type noMethod NodePoolProperties
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *NodePoolProperties) SetLinuxOSConfig(v *LinuxOSConfig) *NodePoolProperties {
+	if o.LinuxOSConfig = v; o.LinuxOSConfig == nil {
+		o.nullFields = append(o.nullFields, "LinuxOSConfig")
+	}
+	return o
 }
 
 func (o *NodePoolProperties) SetMaxPodsPerNode(v *int) *NodePoolProperties {
@@ -88,6 +96,36 @@ func (o *NodePoolProperties) SetVnetSubnetIDs(v []string) *NodePoolProperties {
 }
 
 // endregion
+
+// LinuxOSConfig region
+type LinuxOSConfig struct {
+	Sysctls *Sysctls `json:"sysctls,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o *LinuxOSConfig) SetSysctls(v *Sysctls) *LinuxOSConfig {
+	if o.Sysctls = v; o.Sysctls == nil {
+		o.nullFields = append(o.nullFields, "Sysctls")
+	}
+	return o
+}
+
+// Sysctls region
+type Sysctls struct {
+	VmMaxMapCount *int `json:"vmMaxMapCount,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o *Sysctls) SetVmMaxMapCount(v *int) *Sysctls {
+	if o.VmMaxMapCount = v; o.VmMaxMapCount == nil {
+		o.nullFields = append(o.nullFields, "VmMaxMapCount")
+	}
+	return o
+}
 
 // NodeCountLimits region
 type NodeCountLimits struct {

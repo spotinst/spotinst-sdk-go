@@ -52,6 +52,8 @@ type serviceKubernetes interface {
 	ListMigrations(context.Context, *ReadMigrationInput) (*ReadMigrationOutput, error)
 
 	MigrationStatus(context.Context, *ReadMigrationStatusInput) (*ReadMigrationStatusOutput, error)
+	AttachLoadBalancer(context.Context, *AttachLoadbalancerInput) (*AttachLoadbalancerOutput, error)
+	DetachLoadBalancer(context.Context, *DetachLoadbalancerInput) (*DetachLoadbalancerOutput, error)
 }
 
 type serviceECS interface {
