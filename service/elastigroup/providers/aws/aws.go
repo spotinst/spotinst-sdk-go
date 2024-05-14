@@ -1112,7 +1112,13 @@ type BGInstances struct {
 }
 
 type RollStatusOutput struct {
-	Instances []*BGInstances `json:"instances,omitempty"`
+	Progress        *Progress      `json:"progress,omitempty"`
+	NumberOfBatches *int           `json:"numberOfBatches,omitempty"`
+	CurrentBatch    *int           `json:"currentBatch,omitempty"`
+	GracePeriod     *int           `json:"gracePeriod,omitempty"`
+	StrategyAction  *string        `json:"strategyAction,omitempty"`
+	HealthCheck     *string        `json:"healthCheck,omitempty"`
+	Instances       []*BGInstances `json:"instances,omitempty"`
 }
 
 type Roll struct {
