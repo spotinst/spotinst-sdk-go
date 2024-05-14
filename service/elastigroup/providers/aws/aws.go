@@ -1101,7 +1101,7 @@ type RollStatusInput struct {
 
 type BGInstance struct {
 	InstanceID *string `json:"instanceId,omitempty"`
-	Lifecycle  *string `json:"lifecycle,omitempty"`
+	Lifecycle  *string `json:"lifeCycle,omitempty"`
 	BatchNum   *int    `json:"batchNum,omitempty"`
 	Status     *string `json:"status,omitempty"`
 }
