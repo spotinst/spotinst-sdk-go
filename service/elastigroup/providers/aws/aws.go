@@ -1094,6 +1094,33 @@ type DeploymentStatusInput struct {
 	RollID  *string `json:"id,omitempty"`
 }
 
+type RollStatusInput struct {
+	GroupID *string `json:"groupId,omitempty"`
+	RollID  *string `json:"id,omitempty"`
+}
+
+type BGInstance struct {
+	InstanceID *string `json:"instanceId,omitempty"`
+	Lifecycle  *string `json:"lifeCycle,omitempty"`
+	BatchNum   *int    `json:"batchNum,omitempty"`
+	Status     *string `json:"status,omitempty"`
+}
+
+type BGInstances struct {
+	Blue  []*BGInstance `json:"blue,omitempty"`
+	Green []*BGInstance `json:"green,omitempty"`
+}
+
+type RollStatusOutput struct {
+	Progress        *Progress      `json:"progress,omitempty"`
+	NumberOfBatches *int           `json:"numberOfBatches,omitempty"`
+	CurrentBatch    *int           `json:"currentBatch,omitempty"`
+	GracePeriod     *int           `json:"gracePeriod,omitempty"`
+	StrategyAction  *string        `json:"strategyAction,omitempty"`
+	HealthCheck     *string        `json:"healthCheck,omitempty"`
+	Instances       []*BGInstances `json:"instances,omitempty"`
+}
+
 type Roll struct {
 	Status *string `json:"status,omitempty"`
 }
@@ -1222,13 +1249,44 @@ func deploymentStatusesFromJSON(in []byte) ([]*RollGroupStatus, error) {
 	}
 	return out, nil
 }
-
 func deploymentStatusFromHttpResponse(resp *http.Response) ([]*RollGroupStatus, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
 	return deploymentStatusesFromJSON(body)
+}
+
+func rollStatusOutputFromJSON(in []byte) (*RollStatusOutput, error) {
+	b := new(RollStatusOutput)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
+}
+
+func rollStatusFromJSON(in []byte) (*RollStatusOutput, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	if len(rw.Response.Items) == 0 {
+		return nil, nil
+	}
+	// Only 1 roll allowed at a time
+	rollStatusOutput, err := rollStatusOutputFromJSON(rw.Response.Items[0])
+	if err != nil {
+		return nil, err
+	}
+	return rollStatusOutput, nil
+}
+
+func rollStatusFromHttpResponse(resp *http.Response) (*RollStatusOutput, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return rollStatusFromJSON(body)
 }
 
 func groupFromJSON(in []byte) (*Group, error) {
@@ -1691,6 +1749,31 @@ func (s *ServiceOp) Roll(ctx context.Context, input *RollGroupInput) (*RollGroup
 	}
 
 	return &RollGroupOutput{deployments}, nil
+}
+
+func (s *ServiceOp) RollStatus(ctx context.Context, input *RollStatusInput) (*RollStatusOutput, error) {
+	path, err := uritemplates.Expand("/aws/ec2/group/{groupId}/roll/{rollId}/status", uritemplates.Values{
+		"groupId": spotinst.StringValue(input.GroupID),
+		"rollId":  spotinst.StringValue(input.RollID),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	status, err := rollStatusFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	return status, nil
 }
 
 func (s *ServiceOp) RollECS(ctx context.Context, input *RollECSGroupInput) (*RollGroupOutput, error) {
