@@ -27,7 +27,7 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Create a new group.
+	// Create a new rollout sec.
 	out, err := svc.CreateRolloutSpec(ctx, &oceancd.CreateRolloutSpecInput{
 		RolloutSpec: &oceancd.RolloutSpec{
 			Name: spotinst.String("TestRolloutSpec"),

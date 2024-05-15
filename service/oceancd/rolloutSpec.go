@@ -224,7 +224,7 @@ type DeleteRolloutSpecInput struct {
 
 type DeleteRolloutSpecOutput struct{}
 
-func RolloutSpecFromJSON(in []byte) (*RolloutSpec, error) {
+func rolloutSpecFromJSON(in []byte) (*RolloutSpec, error) {
 	b := new(RolloutSpec)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
@@ -242,7 +242,7 @@ func rolloutSpecsFromJSON(in []byte) ([]*RolloutSpec, error) {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := RolloutSpecFromJSON(rb)
+		b, err := rolloutSpecFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -289,14 +289,14 @@ func (s *ServiceOp) CreateRolloutSpec(ctx context.Context, input *CreateRolloutS
 	}
 	defer resp.Body.Close()
 
-	rolloutSpec, err := rolloutSpecsFromHttpResponse(resp)
+	rs, err := rolloutSpecsFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
 	output := new(CreateRolloutSpecOutput)
-	if len(rolloutSpec) > 0 {
-		output.RolloutSpec = rolloutSpec[0]
+	if len(rs) > 0 {
+		output.RolloutSpec = rs[0]
 	}
 
 	return output, nil
@@ -304,7 +304,7 @@ func (s *ServiceOp) CreateRolloutSpec(ctx context.Context, input *CreateRolloutS
 
 func (s *ServiceOp) ReadRolloutSpec(ctx context.Context, input *ReadRolloutSpecInput) (*ReadRolloutSpecOutput, error) {
 	path, err := uritemplates.Expand("/ocean/cd/rolloutSpec/{rolloutSpecName}", uritemplates.Values{
-		"RolloutSpecName": spotinst.StringValue(input.RolloutSpecName),
+		"rolloutSpecName": spotinst.StringValue(input.RolloutSpecName),
 	})
 	if err != nil {
 		return nil, err
