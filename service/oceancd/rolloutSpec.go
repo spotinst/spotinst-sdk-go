@@ -152,7 +152,7 @@ type TlsRoutes struct {
 type Nginx struct {
 	AdditionalIngressAnnotations *AdditionalIngressAnnotations `json:"additionalIngressAnnotations,omitempty"`
 	AnnotationPrefix             *string                       `json:"annotationPrefix,omitempty"`
-	StableIngress                *string                       `json:"stableIngress"`
+	StableIngress                *string                       `json:"stableIngress,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
