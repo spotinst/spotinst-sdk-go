@@ -102,7 +102,7 @@ type MetricDataQueries struct {
 	Expression *string     `json:"expression,omitempty"`
 	ID         *string     `json:"id,omitempty"`
 	Label      *string     `json:"label,omitempty"`
-	MetricStat *MetricStat `json:",metricStat,omitempty"`
+	MetricStat *MetricStat `json:"metricStat,omitempty"`
 	Period     *int        `json:"period,omitempty"`
 	ReturnData *bool       `json:"returnData,omitempty"`
 
