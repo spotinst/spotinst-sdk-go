@@ -765,7 +765,7 @@ func (o Istio) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Istio) SetDestinationRune(v *DestinationRule) *Istio {
+func (o *Istio) SetDestinationRule(v *DestinationRule) *Istio {
 	if o.DestinationRule = v; o.DestinationRule == nil {
 		o.nullFields = append(o.nullFields, "DestinationRule")
 	}
@@ -789,7 +789,7 @@ func (o DestinationRule) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *DestinationRule) SetCanarySubsetName(v *string) *DestinationRule {
+func (o *DestinationRule) SetCanarySubseme(v *string) *DestinationRule {
 	if o.CanarySubsetName = v; o.CanarySubsetName == nil {
 		o.nullFields = append(o.nullFields, "CanarySubsetName")
 	}
