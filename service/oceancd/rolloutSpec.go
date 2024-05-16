@@ -748,7 +748,7 @@ func (o Ambassador) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Ambassador) SetSteps(v []string) *Ambassador {
+func (o *Ambassador) SetMappings(v []string) *Ambassador {
 	if o.Mappings = v; o.Mappings == nil {
 		o.nullFields = append(o.nullFields, "Mappings")
 	}
