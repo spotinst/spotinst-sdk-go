@@ -789,7 +789,7 @@ func (o DestinationRule) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *DestinationRule) SetCanarySubseme(v *string) *DestinationRule {
+func (o *DestinationRule) SetCanarySubnetName(v *string) *DestinationRule {
 	if o.CanarySubsetName = v; o.CanarySubsetName == nil {
 		o.nullFields = append(o.nullFields, "CanarySubsetName")
 	}
