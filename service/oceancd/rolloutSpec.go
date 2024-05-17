@@ -142,8 +142,8 @@ type VirtualServices struct {
 }
 
 type TlsRoutes struct {
-	Port     *int  `json:"port,omitempty"`
-	SniHosts []int `json:"sniHosts,omitempty"`
+	Port     *int     `json:"port,omitempty"`
+	SniHosts []string `json:"sniHosts,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -858,7 +858,7 @@ func (o *TlsRoutes) SetPort(v *int) *TlsRoutes {
 	return o
 }
 
-func (o *TlsRoutes) SetSniHosts(v []int) *TlsRoutes {
+func (o *TlsRoutes) SetSniHosts(v []string) *TlsRoutes {
 	if o.SniHosts = v; o.SniHosts == nil {
 		o.nullFields = append(o.nullFields, "SniHosts")
 	}
