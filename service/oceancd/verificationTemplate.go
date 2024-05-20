@@ -102,7 +102,7 @@ type MetricDataQueries struct {
 	Expression *string     `json:"expression,omitempty"`
 	ID         *string     `json:"id,omitempty"`
 	Label      *string     `json:"label,omitempty"`
-	MetricStat *MetricStat `json:",metricStat,omitempty"`
+	MetricStat *MetricStat `json:"metricStat,omitempty"`
 	Period     *int        `json:"period,omitempty"`
 	ReturnData *bool       `json:"returnData,omitempty"`
 
@@ -747,6 +747,13 @@ func (o *Provider) SetPrometheus(v *PrometheusProvider) *Provider {
 func (o *Provider) SetWeb(v *Web) *Provider {
 	if o.Web = v; o.Web == nil {
 		o.nullFields = append(o.nullFields, "Web")
+	}
+	return o
+}
+
+func (o *Provider) SetJob(v *Job) *Provider {
+	if o.Job = v; o.Job == nil {
+		o.nullFields = append(o.nullFields, "Job")
 	}
 	return o
 }
