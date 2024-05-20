@@ -31,6 +31,13 @@ type Service interface {
 	UpdateStrategy(context.Context, *UpdateStrategyInput) (*UpdateStrategyOutput, error)
 	PatchStrategy(context.Context, *PatchStrategyInput) (*PatchStrategyOutput, error)
 	DeleteStrategy(context.Context, *DeleteStrategyInput) (*DeleteStrategyOutput, error)
+
+	ListRolloutSpecs(context.Context) (*ListRolloutSpecsOutput, error)
+	CreateRolloutSpec(context.Context, *CreateRolloutSpecInput) (*CreateRolloutSpecOutput, error)
+	ReadRolloutSpec(context.Context, *ReadRolloutSpecInput) (*ReadRolloutSpecOutput, error)
+	UpdateRolloutSpec(context.Context, *UpdateRolloutSpecInput) (*UpdateRolloutSpecOutput, error)
+	PatchRolloutSpec(context.Context, *PatchRolloutSpecInput) (*PatchRolloutSpecOutput, error)
+	DeleteRolloutSpec(context.Context, *DeleteRolloutSpecInput) (*DeleteRolloutSpecOutput, error)
 }
 
 type ServiceOp struct {
