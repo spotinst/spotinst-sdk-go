@@ -305,7 +305,7 @@ func (o *Headrooms) SetNumOfUnits(v *int) *Headrooms {
 
 type Scheduling struct {
 	ShutdownHours *ShutdownHours `json:"shutdownHours,omitempty"`
-	Tasks         []*Task        `json:"tasks,omitempty"`
+	Tasks         []*Tasks       `json:"tasks,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -319,17 +319,17 @@ type ShutdownHours struct {
 	nullFields      []string
 }
 
-type Task struct {
-	IsEnabled      *bool      `json:"isEnabled,omitempty"`
-	Type           *string    `json:"taskType,omitempty"`
-	CronExpression *string    `json:"cronExpression,omitempty"`
-	Parameter      *Parameter `json:"parameters,omitempty"`
+type Tasks struct {
+	IsEnabled      *bool       `json:"isEnabled,omitempty"`
+	TaskType       *string     `json:"taskType,omitempty"`
+	CronExpression *string     `json:"cronExpression,omitempty"`
+	Parameters     *Parameters `json:"parameters,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type Parameter struct {
+type Parameters struct {
 	ClusterRoll *ParameterClusterRoll `json:"clusterRoll,omitempty"`
 
 	forceSendFields []string
@@ -545,34 +545,34 @@ func (o *Filters) SetGpuTypes(v []string) *Filters {
 
 // region Tasks
 
-func (o *Scheduling) SetTasks(v []*Task) *Scheduling {
+func (o *Scheduling) SetTasks(v []*Tasks) *Scheduling {
 	if o.Tasks = v; o.Tasks == nil {
 		o.nullFields = append(o.nullFields, "Tasks")
 	}
 	return o
 }
 
-func (o Task) MarshalJSON() ([]byte, error) {
-	type noMethod Task
+func (o Tasks) MarshalJSON() ([]byte, error) {
+	type noMethod Tasks
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Task) SetIsEnabled(v *bool) *Task {
+func (o *Tasks) SetIsEnabled(v *bool) *Tasks {
 	if o.IsEnabled = v; o.IsEnabled == nil {
 		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
 	return o
 }
 
-func (o *Task) SetType(v *string) *Task {
-	if o.Type = v; o.Type == nil {
+func (o *Tasks) SetTaskType(v *string) *Tasks {
+	if o.TaskType = v; o.TaskType == nil {
 		o.nullFields = append(o.nullFields, "Type")
 	}
 	return o
 }
 
-func (o *Task) SetCronExpression(v *string) *Task {
+func (o *Tasks) SetCronExpression(v *string) *Tasks {
 	if o.CronExpression = v; o.CronExpression == nil {
 		o.nullFields = append(o.nullFields, "CronExpression")
 	}
@@ -581,20 +581,34 @@ func (o *Task) SetCronExpression(v *string) *Task {
 
 // endregion
 
-// region Parameter
+// region Parameters
+func (o Parameters) MarshalJSON() ([]byte, error) {
+	type noMethod Parameters
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
-func (o *Task) SetParameter(v *Parameter) *Task {
-	if o.Parameter = v; o.Parameter == nil {
+func (o *Tasks) SetParameters(v *Parameters) *Tasks {
+	if o.Parameters = v; o.Parameters == nil {
 		o.nullFields = append(o.nullFields, "Parameter")
 	}
 	return o
 }
 
-func (o *Parameter) SetClusterRoll(v *ParameterClusterRoll) *Parameter {
+// endregion
+
+// region ClusterRoll
+func (o *Parameters) SetClusterRoll(v *ParameterClusterRoll) *Parameters {
 	if o.ClusterRoll = v; o.ClusterRoll == nil {
 		o.nullFields = append(o.nullFields, "ClusterRoll")
 	}
 	return o
+}
+
+func (o ParameterClusterRoll) MarshalJSON() ([]byte, error) {
+	type noMethod ParameterClusterRoll
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
 // endregion
