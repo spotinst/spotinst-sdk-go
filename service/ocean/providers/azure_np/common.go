@@ -305,6 +305,7 @@ func (o *Headrooms) SetNumOfUnits(v *int) *Headrooms {
 
 type Scheduling struct {
 	ShutdownHours *ShutdownHours `json:"shutdownHours,omitempty"`
+	Tasks         []*Tasks       `json:"tasks,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -313,6 +314,35 @@ type Scheduling struct {
 type ShutdownHours struct {
 	TimeWindows []string `json:"timeWindows,omitempty"`
 	IsEnabled   *bool    `json:"isEnabled,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Tasks struct {
+	IsEnabled      *bool       `json:"isEnabled,omitempty"`
+	TaskType       *string     `json:"taskType,omitempty"`
+	CronExpression *string     `json:"cronExpression,omitempty"`
+	Parameters     *Parameters `json:"parameters,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Parameters struct {
+	ClusterRoll *ParameterClusterRoll `json:"clusterRoll,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ParameterClusterRoll struct {
+	BatchSizePercentage       *int     `json:"batchSizePercentage,omitempty"`
+	Comment                   *string  `json:"comment,omitempty"`
+	RespectPdb                *bool    `json:"respectPdb,omitempty"`
+	RespectRestrictScaleDown  *bool    `json:"respectRestrictScaleDown,omitempty"`
+	BatchMinHealthyPercentage *int     `json:"batchMinHealthyPercentage,omitempty"`
+	VngIds                    []string `json:"vngIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -512,3 +542,118 @@ func (o *Filters) SetGpuTypes(v []string) *Filters {
 }
 
 //end region
+
+// region Tasks
+
+func (o *Scheduling) SetTasks(v []*Tasks) *Scheduling {
+	if o.Tasks = v; o.Tasks == nil {
+		o.nullFields = append(o.nullFields, "Tasks")
+	}
+	return o
+}
+
+func (o Tasks) MarshalJSON() ([]byte, error) {
+	type noMethod Tasks
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Tasks) SetIsEnabled(v *bool) *Tasks {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *Tasks) SetTaskType(v *string) *Tasks {
+	if o.TaskType = v; o.TaskType == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Tasks) SetCronExpression(v *string) *Tasks {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+// endregion
+
+// region Parameters
+func (o Parameters) MarshalJSON() ([]byte, error) {
+	type noMethod Parameters
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Tasks) SetParameters(v *Parameters) *Tasks {
+	if o.Parameters = v; o.Parameters == nil {
+		o.nullFields = append(o.nullFields, "Parameter")
+	}
+	return o
+}
+
+// endregion
+
+// region ClusterRoll
+func (o *Parameters) SetClusterRoll(v *ParameterClusterRoll) *Parameters {
+	if o.ClusterRoll = v; o.ClusterRoll == nil {
+		o.nullFields = append(o.nullFields, "ClusterRoll")
+	}
+	return o
+}
+
+func (o ParameterClusterRoll) MarshalJSON() ([]byte, error) {
+	type noMethod ParameterClusterRoll
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// endregion
+
+// region ParameterClusterRoll
+func (o *ParameterClusterRoll) SetBatchSizePercentage(v *int) *ParameterClusterRoll {
+	if o.BatchSizePercentage = v; o.BatchSizePercentage == nil {
+		o.nullFields = append(o.nullFields, "BatchSizePercentage")
+	}
+	return o
+}
+
+func (o *ParameterClusterRoll) SetComment(v *string) *ParameterClusterRoll {
+	if o.Comment = v; o.Comment == nil {
+		o.nullFields = append(o.nullFields, "Comment")
+	}
+	return o
+}
+
+func (o *ParameterClusterRoll) SetRespectPdb(v *bool) *ParameterClusterRoll {
+	if o.RespectPdb = v; o.RespectPdb == nil {
+		o.nullFields = append(o.nullFields, "RespectPdb")
+	}
+	return o
+}
+
+func (o *ParameterClusterRoll) SetRespectRestrictScaleDown(v *bool) *ParameterClusterRoll {
+	if o.RespectRestrictScaleDown = v; o.RespectRestrictScaleDown == nil {
+		o.nullFields = append(o.nullFields, "RespectRestrictScaleDown")
+	}
+	return o
+}
+
+func (o *ParameterClusterRoll) SetBatchMinHealthyPercentage(v *int) *ParameterClusterRoll {
+	if o.BatchMinHealthyPercentage = v; o.BatchMinHealthyPercentage == nil {
+		o.nullFields = append(o.nullFields, "BatchMinHealthyPercentage")
+	}
+	return o
+}
+
+func (o *ParameterClusterRoll) SetVngIds(v []string) *ParameterClusterRoll {
+	if o.VngIds = v; o.VngIds == nil {
+		o.nullFields = append(o.nullFields, "VngIds")
+	}
+	return o
+}
+
+// endregion
