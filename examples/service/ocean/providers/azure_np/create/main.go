@@ -63,6 +63,25 @@ func main() {
 					},
 					IsEnabled: spotinst.Bool(true),
 				},
+				Tasks: []*azure_np.Task{
+					{
+						IsEnabled:      spotinst.Bool(true),
+						Type:           spotinst.String("clusterRoll"),
+						CronExpression: spotinst.String("0 1 * * *"),
+						Parameter: &azure_np.Parameter{
+							ClusterRoll: &azure_np.ParameterClusterRoll{
+								BatchSizePercentage:       spotinst.Int(20),
+								Comment:                   spotinst.String("Scheduled cluster roll"),
+								BatchMinHealthyPercentage: spotinst.Int(80),
+								RespectPdb:                spotinst.Bool(true),
+								VngIds: []string{
+									"vng123",
+									"vng456",
+								},
+							},
+						},
+					},
+				},
 			},
 			Health: &azure_np.Health{
 				GracePeriod: spotinst.Int(600),
