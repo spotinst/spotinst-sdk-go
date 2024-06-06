@@ -230,6 +230,7 @@ type Gallery struct {
 	GalleryName       *string `json:"galleryName,omitempty"`
 	ImageName         *string `json:"imageName,omitempty"`
 	VersionName       *string `json:"versionName,omitempty"`
+	SpotAccountId     *string `json:"spotAccountId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -428,6 +429,7 @@ type DeallocationConfig struct {
 	DiskDeallocationConfig     *ResourceDeallocationConfig `json:"diskDeallocationConfig,omitempty"`
 	SnapshotDeallocationConfig *ResourceDeallocationConfig `json:"snapshotDeallocationConfig,omitempty"`
 	PublicIPDeallocationConfig *ResourceDeallocationConfig `json:"publicIpDeallocationConfig,omitempty"`
+	ShouldDeregisterFromLb     *bool                       `json:"shouldDeregisterFromLb,omitempty"`
 }
 
 type ResourceDeallocationConfig struct {
@@ -1779,6 +1781,13 @@ func (o *Gallery) SetImageName(v *string) *Gallery {
 func (o *Gallery) SetVersionName(v *string) *Gallery {
 	if o.VersionName = v; o.VersionName == nil {
 		o.nullFields = append(o.nullFields, "VersionName")
+	}
+	return o
+}
+
+func (o *Gallery) SetSpotAccountId(v *string) *Gallery {
+	if o.SpotAccountId = v; o.SpotAccountId == nil {
+		o.nullFields = append(o.nullFields, "SpotAccountId")
 	}
 	return o
 }
