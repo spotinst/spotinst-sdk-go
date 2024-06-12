@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	// List all right sizing rules in an ocean cluster
-	out, err := svc.CloudProviderAWS().ListRightSizingRules(ctx, &ocean.ListRightSizingRulesInput{
+	out, err := svc.CloudProviderAWS().ListRightSizingRules(ctx, &rightSizing.ListRightSizingRulesInput{
 		OceanId: spotinst.String("o-1234abcd"),
 	})
 	if err != nil {

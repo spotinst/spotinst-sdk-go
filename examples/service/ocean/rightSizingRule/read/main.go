@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	// Read an existing right sizing rule
-	out, err := svc.CloudProviderAWS().ReadRightSizingRule(ctx, &ocean.ReadRightSizingRuleInput{
+	out, err := svc.CloudProviderAWS().ReadRightSizingRule(ctx, &rightSizing.ReadRightSizingRuleInput{
 		RuleName: spotinst.String("tf-rule"),
 		OceanId:  spotinst.String("o-1234abcd"),
 	})

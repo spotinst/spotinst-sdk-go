@@ -28,7 +28,7 @@ func main() {
 	ctx := context.Background()
 
 	// Delete existing Right Sizing rules
-	_, err := svc.CloudProviderAWS().DeleteRightSizingRules(ctx, &ocean.DeleteRightSizingRuleInput{
+	_, err := svc.CloudProviderAWS().DeleteRightSizingRules(ctx, &rightSizing.DeleteRightSizingRuleInput{
 		OceanId:   spotinst.String("o-1234abcd"),
 		RuleNames: []string{"tf-rule-1", "tf-rule-2"},
 	})

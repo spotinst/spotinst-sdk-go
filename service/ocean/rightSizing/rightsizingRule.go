@@ -1,4 +1,4 @@
-package ocean
+package rightSizing
 
 import (
 	"context"
@@ -151,7 +151,7 @@ type ReadRightSizingRuleOutput struct {
 
 type UpdateRightSizingRuleInput struct {
 	RuleName        *string          `json:"ruleName,omitempty"`
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+	RightSizingRule *RightSizingRule `json:"rightsizingRule,omitempty"`
 }
 
 type UpdateRightSizingRuleOutput struct {
@@ -170,7 +170,7 @@ type CreateRightSizingRuleInput struct {
 }
 
 type CreateRightSizingRuleOutput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+	RightSizingRule *RightSizingRule `json:"rightsizingRule,omitempty"`
 }
 
 func rightSizingRuleFromJSON(in []byte) (*RightSizingRule, error) {

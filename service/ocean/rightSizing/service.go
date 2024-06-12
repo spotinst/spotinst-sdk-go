@@ -1,6 +1,6 @@
-package ocean
+package rightSizing
 
-/*import (
+import (
 	"context"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
@@ -40,4 +40,4 @@ func New(sess *session.Session, cfgs ...*spotinst.Config) *ServiceOp {
 		Client: client.New(sess.Config),
 	}
 }
-*/
+

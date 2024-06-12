@@ -28,24 +28,24 @@ func main() {
 	ctx := context.Background()
 
 	// Attach Workloads to existing Right Sizing Rule
-	_, err := svc.CloudProviderAWS().AttachWorkloadsToRule(ctx, &ocean.RightSizingAttachDetachInput{
+	_, err := svc.CloudProviderAWS().AttachWorkloadsToRule(ctx, &rightSizing.RightSizingAttachDetachInput{
 		RuleName: spotinst.String("tf-rule"),
 		OceanId: spotinst.String("o-1234abcd"),
-		Namespaces: []*ocean.Namespace{
-			&ocean.Namespace{
+		Namespaces: []*rightSizing.Namespace{
+			&rightSizing.Namespace{
 				NamespaceName: spotinst.String("test-namespace"),
-				Workloads: []*ocean.Workload{
-					&ocean.Workload{
+				Workloads: []*rightSizing.Workload{
+					&rightSizing.Workload{
 						Name: spotinst.String("testdeploy"),
 						WorkloadType: spotinst.String("Deployment"),
 						// RegexName: spotinst.String("test*"), Regex and Name are mutually exclusive
 					},
 				},
 			},
-			&ocean.Namespace{
+			&rightSizing.Namespace{
 				NamespaceName: spotinst.String("test-namespace"),
-				Labels: []*ocean.Label{
-					&ocean.Label{
+				Labels: []*rightSizing.Label{
+					&rightSizing.Label{
 						Key: spotinst.String("test-key"),
 						Value: spotinst.String("test-value"),
 					},

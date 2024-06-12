@@ -29,35 +29,35 @@ func main() {
 	ctx := context.Background()
 
 	// Update an existing right sizing rule
-	out, err := svc.CloudProviderAWS().UpdateRightSizingRule(ctx, &ocean.UpdateRightSizingRuleInput{
+	out, err := svc.CloudProviderAWS().UpdateRightSizingRule(ctx, &rightSizing.UpdateRightSizingRuleInput{
 		RuleName: spotinst.String("tf-rule"),
-		RightSizingRule: &ocean.RightSizingRule{
+		RightSizingRule: &rightSizing.RightSizingRule{
 			Name:        spotinst.String("tf-rule-updated"),
 			OceanId:     spotinst.String("o-1234abcd"),
 			RestartPods: spotinst.Bool(true),
-			RecommendationApplicationIntervals: []*ocean.RecommendationApplicationInterval{
-				&ocean.RecommendationApplicationInterval{
+			RecommendationApplicationIntervals: []*rightSizing.RecommendationApplicationInterval{
+				&rightSizing.RecommendationApplicationInterval{
 					RepetitionBasis: spotinst.String("WEEKLY"),
-					WeeklyRepetitionBasis: &ocean.WeeklyRepetitionBasis{
+					WeeklyRepetitionBasis: &rightSizing.WeeklyRepetitionBasis{
 						IntervalDays: []string{"MONDAY"},
-						IntervalHours: &ocean.IntervalHours{
+						IntervalHours: &rightSizing.IntervalHours{
 							StartTime: spotinst.String("13:00"),
 							EndTime:   spotinst.String("15:00"),
 						},
 					},
 				},
 			},
-			RecommendationApplicationBoundaries: &ocean.RecommendationApplicationBoundaries{
-				Cpu: &ocean.Cpu{
+			RecommendationApplicationBoundaries: &rightSizing.RecommendationApplicationBoundaries{
+				Cpu: &rightSizing.Cpu{
 					Min: spotinst.Int(9),
 					Max: spotinst.Int(99),
 				},
-				Memory: &ocean.Memory{
+				Memory: &rightSizing.Memory{
 					Min: spotinst.Int(9),
 					Max: spotinst.Int(99),
 				},
 			},
-			RecommendationApplicationMinThreshold: &ocean.RecommendationApplicationMinThreshold{
+			RecommendationApplicationMinThreshold: &rightSizing.RecommendationApplicationMinThreshold{
 				CpuPercentage:    spotinst.Float64(0.75),
 				MemoryPercentage: spotinst.Float64(0.75),
 			},

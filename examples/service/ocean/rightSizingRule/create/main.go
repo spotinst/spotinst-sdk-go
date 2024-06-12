@@ -28,20 +28,20 @@ func main() {
 	ctx := context.Background()
 
 	// Create a new right sizing rule.
-	out, err := svc.CreateRightSizingRule(ctx, &ocean.CreateRightSizingRuleInput{
-		RightSizingRule: &ocean.RightSizingRule{
+	out, err := svc.CreateRightSizingRule(ctx, &rightSizing.CreateRightSizingRuleInput{
+		RightSizingRule: &rightSizing.RightSizingRule{
 			Name:        spotinst.String("tf-rule-3"),
 			OceanId:     spotinst.String("o-9a8a856c"),
 			RestartPods: spotinst.Bool(true),
-			RecommendationApplicationIntervals: []*ocean.RecommendationApplicationInterval{
-				&ocean.RecommendationApplicationInterval{
+			RecommendationApplicationIntervals: []*rightSizing.RecommendationApplicationInterval{
+				&rightSizing.RecommendationApplicationInterval{
 					RepetitionBasis: spotinst.String("MONTHLY"),
-					MonthlyRepetitionBasis: &ocean.MonthlyRepetitionBasis{
+					MonthlyRepetitionBasis: &rightSizing.MonthlyRepetitionBasis{
 						IntervalMonths: []int{1, 2, 3},
 						WeekOfTheMonth: []string{"FIRST", "SECOND"},
-						WeeklyRepetitionBasis: &ocean.WeeklyRepetitionBasis{
+						WeeklyRepetitionBasis: &rightSizing.WeeklyRepetitionBasis{
 							IntervalDays: []string{"TUESDAY"},
-							IntervalHours: &ocean.IntervalHours{
+							IntervalHours: &rightSizing.IntervalHours{
 								StartTime: spotinst.String("12:00"),
 								EndTime:   spotinst.String("16:00"),
 							},
@@ -49,21 +49,21 @@ func main() {
 					},
 				},
 			},
-			RecommendationApplicationBoundaries: &ocean.RecommendationApplicationBoundaries{
-				Cpu: &ocean.Cpu{
+			RecommendationApplicationBoundaries: &rightSizing.RecommendationApplicationBoundaries{
+				Cpu: &rightSizing.Cpu{
 					Min: spotinst.Int(10),
 					Max: spotinst.Int(100),
 				},
-				Memory: &ocean.Memory{
+				Memory: &rightSizing.Memory{
 					Min: spotinst.Int(10),
 					Max: spotinst.Int(100),
 				},
 			},
-			RecommendationApplicationMinThreshold: &ocean.RecommendationApplicationMinThreshold{
+			RecommendationApplicationMinThreshold: &rightSizing.RecommendationApplicationMinThreshold{
 				CpuPercentage:    spotinst.Float64(0.5),
 				MemoryPercentage: spotinst.Float64(0.5),
 			},
-			RecommendationApplicationOverheadValues: &ocean.RecommendationApplicationOverheadValues{
+			RecommendationApplicationOverheadValues: &rightSizing.RecommendationApplicationOverheadValues{
 				CpuPercentage:    spotinst.Float64(0.25),
 				MemoryPercentage: spotinst.Float64(0.25),
 			},
