@@ -64,6 +64,10 @@ func main() {
 				CpuPercentage:    spotinst.Float64(0.5),
 				MemoryPercentage: spotinst.Float64(0.5),
 			},
+            RecommendationApplicationOverheadValues: &aws.RecommendationApplicationOverheadValues{
+        	    CpuPercentage:    spotinst.Float64(0.25),
+        		MemoryPercentage: spotinst.Float64(0.25),
+        	},
 		},
 	})
 	if err != nil {
