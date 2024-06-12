@@ -90,6 +90,13 @@ type Memory struct {
 	forceSendFields []string
 	nullFields      []string
 }
+type Label struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
 
 type Namespace struct {
 	NamespaceName *string     `json:"namespaceName,omitempty"`

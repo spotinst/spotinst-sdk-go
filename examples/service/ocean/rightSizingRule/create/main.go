@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -29,20 +28,20 @@ func main() {
 	ctx := context.Background()
 
 	// Create a new right sizing rule.
-	out, err := svc.CloudProviderAWS().CreateRightSizingRule(ctx, &aws.CreateRightSizingRuleInput{
-		RightSizingRule: &aws.RightSizingRule{
-			Name:        spotinst.String("tf-rule"),
-			OceanId:     spotinst.String("o-1234abcd"),
+	out, err := svc.CreateRightSizingRule(ctx, &ocean.CreateRightSizingRuleInput{
+		RightSizingRule: &ocean.RightSizingRule{
+			Name:        spotinst.String("tf-rule-3"),
+			OceanId:     spotinst.String("o-9a8a856c"),
 			RestartPods: spotinst.Bool(true),
-			RecommendationApplicationIntervals: []*aws.RecommendationApplicationInterval{
-				&aws.RecommendationApplicationInterval{
+			RecommendationApplicationIntervals: []*ocean.RecommendationApplicationInterval{
+				&ocean.RecommendationApplicationInterval{
 					RepetitionBasis: spotinst.String("MONTHLY"),
-					MonthlyRepetitionBasis: &aws.MonthlyRepetitionBasis{
+					MonthlyRepetitionBasis: &ocean.MonthlyRepetitionBasis{
 						IntervalMonths: []int{1, 2, 3},
 						WeekOfTheMonth: []string{"FIRST", "SECOND"},
-						WeeklyRepetitionBasis: &aws.WeeklyRepetitionBasis{
+						WeeklyRepetitionBasis: &ocean.WeeklyRepetitionBasis{
 							IntervalDays: []string{"TUESDAY"},
-							IntervalHours: &aws.IntervalHours{
+							IntervalHours: &ocean.IntervalHours{
 								StartTime: spotinst.String("12:00"),
 								EndTime:   spotinst.String("16:00"),
 							},
@@ -50,24 +49,24 @@ func main() {
 					},
 				},
 			},
-			RecommendationApplicationBoundaries: &aws.RecommendationApplicationBoundaries{
-				Cpu: &aws.Cpu{
+			RecommendationApplicationBoundaries: &ocean.RecommendationApplicationBoundaries{
+				Cpu: &ocean.Cpu{
 					Min: spotinst.Int(10),
 					Max: spotinst.Int(100),
 				},
-				Memory: &aws.Memory{
+				Memory: &ocean.Memory{
 					Min: spotinst.Int(10),
 					Max: spotinst.Int(100),
 				},
 			},
-			RecommendationApplicationMinThreshold: &aws.RecommendationApplicationMinThreshold{
+			RecommendationApplicationMinThreshold: &ocean.RecommendationApplicationMinThreshold{
 				CpuPercentage:    spotinst.Float64(0.5),
 				MemoryPercentage: spotinst.Float64(0.5),
 			},
-            RecommendationApplicationOverheadValues: &aws.RecommendationApplicationOverheadValues{
-        	    CpuPercentage:    spotinst.Float64(0.25),
-        		MemoryPercentage: spotinst.Float64(0.25),
-        	},
+			RecommendationApplicationOverheadValues: &ocean.RecommendationApplicationOverheadValues{
+				CpuPercentage:    spotinst.Float64(0.25),
+				MemoryPercentage: spotinst.Float64(0.25),
+			},
 		},
 	})
 	if err != nil {
@@ -75,9 +74,12 @@ func main() {
 	}
 
 	// Output.
-	if out.RightSizingRule != nil {
+	/*	if out.RightSizingRule != nil {
 		log.Printf("RightSizing  Rule %q: %s",
 			spotinst.StringValue(out.RightSizingRule.Name),
 			stringutil.Stringify(out.RightSizingRule))
+	}*/
+	if out != nil {
+		log.Printf(stringutil.Stringify(out))
 	}
 }

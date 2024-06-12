@@ -3,7 +3,6 @@ package aws
 import (
 	"context"
 	"encoding/json"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"io/ioutil"
 	"net/http"
 

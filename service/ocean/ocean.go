@@ -1,6 +1,7 @@
 package ocean
 
 import (
+	"context"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
@@ -20,6 +21,20 @@ type Service interface {
 	CloudProviderAzure() azure.Service
 	Spark() spark.Service
 	CloudProviderAzureNP() azure_np.Service
+	//serviceRightSizingRule
+}
+type ServiceRightSize interface {
+	serviceRightSizingRule
+}
+
+type serviceRightSizingRule interface {
+	CreateRightSizingRule(context.Context, *CreateRightSizingRuleInput) (*CreateRightSizingRuleOutput, error)
+	ReadRightSizingRule(context.Context, *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error)
+	ListRightSizingRules(context.Context, *ListRightSizingRulesInput) (*ListRightSizingRulesOutput, error)
+	UpdateRightSizingRule(context.Context, *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error)
+	DeleteRightSizingRules(context.Context, *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error)
+	AttachWorkloadsToRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+	DetachWorkloadsFromRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
 }
 
 type ServiceOp struct {
@@ -67,3 +82,13 @@ func (s *ServiceOp) CloudProviderAzureNP() azure_np.Service {
 		Client: s.Client,
 	}
 }
+
+//type serviceRightSizingRule interface {
+//	CreateRightSizingRule(context.Context, *CreateRightSizingRuleInput) (*CreateRightSizingRuleOutput, error)
+//	ReadRightSizingRule(context.Context, *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error)
+//	ListRightSizingRules(context.Context, *ListRightSizingRulesInput) (*ListRightSizingRulesOutput, error)
+//	UpdateRightSizingRule(context.Context, *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error)
+//	DeleteRightSizingRules(context.Context, *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error)
+//	AttachWorkloadsToRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+//	DetachWorkloadsFromRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+//}
