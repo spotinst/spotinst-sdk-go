@@ -27,34 +27,12 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Attach Workloads to existing Right Sizing Rule
-	_, err := svc.CloudProviderAWS().AttachWorkloadsToRule(ctx, &aws.RightSizingAttachDetachInput{
-		RuleName: spotinst.String("tf-rule"),
-		OceanId: spotinst.String("o-1234abcd"),
-		Namespaces: []*aws.Namespace{
-			&aws.Namespace{
-				NamespaceName: spotinst.String("test-namespace"),
-				Workloads: []*aws.Workload{
-					&aws.Workload{
-						Name: spotinst.String("testdeploy"),
-						WorkloadType: spotinst.String("Deployment"),
-						// RegexName: spotinst.String("test*"), Regex and Name are mutually exclusive
-					},
-				},
-			},
-			&aws.Namespace{
-				NamespaceName: spotinst.String("test-namespace"),
-				Labels: []*aws.Label{
-					&aws.Label{
-						Key: spotinst.String("test-key"),
-						Value: spotinst.String("test-value"),
-					},
-				},
-			},
-		},
+	// Delete existing Right Sizing rules
+	_, err := svc.CloudProviderAWS().DeleteRightSizingRules(ctx, &ocean.DeleteRightSizingRuleInput{
+		OceanId:   spotinst.String("o-1234abcd"),
+		RuleNames: []string{"tf-rule-1", "tf-rule-2"},
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to attach workloads to right sizing rule: %v", err)
+		log.Fatalf("spotinst: failed to delete right sizing rule: %v", err)
 	}
-
 }

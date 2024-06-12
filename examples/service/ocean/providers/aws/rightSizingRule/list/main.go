@@ -28,19 +28,20 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Read an existing right sizing rule
-	out, err := svc.CloudProviderAWS().ReadRightSizingRule(ctx, &aws.ReadRightSizingRuleInput{
-		RuleName: spotinst.String("tf-rule"),
-		OceanId:  spotinst.String("o-1234abcd"),
+	// List all right sizing rules in an ocean cluster
+	out, err := svc.CloudProviderAWS().ListRightSizingRules(ctx, &ocean.ListRightSizingRulesInput{
+		OceanId: spotinst.String("o-1234abcd"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to create right sizing rule: %v", err)
 	}
 
-	// Output.
-	if out.RightSizingRule != nil {
-		log.Printf("RightSizing  Rule %q: %s",
-			spotinst.StringValue(out.RightSizingRule.Name),
-			stringutil.Stringify(out.RightSizingRule))
+	// Output all rules, if any.
+	if len(out.RightSizingRules) > 0 {
+		for _, rule := range out.RightSizingRules {
+			log.Printf("RightSizing Rule %q: %s",
+				spotinst.StringValue(rule.Name),
+				stringutil.Stringify(rule))
+		}
 	}
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -27,34 +28,19 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Detach Workloads from existing Right Sizing Rule
-	_, err := svc.CloudProviderAWS().DetachWorkloadsFromRule(ctx, &aws.RightSizingAttachDetachInput{
+	// Read an existing right sizing rule
+	out, err := svc.CloudProviderAWS().ReadRightSizingRule(ctx, &ocean.ReadRightSizingRuleInput{
 		RuleName: spotinst.String("tf-rule"),
 		OceanId:  spotinst.String("o-1234abcd"),
-		Namespaces: []*aws.Namespace{
-			&aws.Namespace{
-				NamespaceName: spotinst.String("test-namespace"),
-				Workloads: []*aws.Workload{
-					&aws.Workload{
-						Name:         spotinst.String("testdeploy"),
-						WorkloadType: spotinst.String("Deployment"),
-						// RegexName: spotinst.String("test*"), Regex and Name are mutually exclusive
-					},
-				},
-			},
-			&aws.Namespace{
-				NamespaceName: spotinst.String("test-namespace"),
-				Labels: []*aws.Label{
-					&aws.Label{
-						Key:   spotinst.String("test-key"),
-						Value: spotinst.String("test-value"),
-					},
-				},
-			},
-		},
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to attach workloads to right sizing rule: %v", err)
+		log.Fatalf("spotinst: failed to create right sizing rule: %v", err)
 	}
 
+	// Output.
+	if out.RightSizingRule != nil {
+		log.Printf("RightSizing  Rule %q: %s",
+			spotinst.StringValue(out.RightSizingRule.Name),
+			stringutil.Stringify(out.RightSizingRule))
+	}
 }
