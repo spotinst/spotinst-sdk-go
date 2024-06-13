@@ -12,7 +12,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
-type RightSizingRule struct {
+type RightsizingRule struct {
 	Name                                    *string                                  `json:"ruleName,omitempty"`
 	OceanId                                 *string                                  `json:"oceanId,omitempty"`
 	RestartPods                             *bool                                    `json:"restartPods,omitempty"`
@@ -124,12 +124,12 @@ type RecommendationApplicationOverheadValues struct {
 	nullFields      []string
 }
 
-type ListRightSizingRulesInput struct {
+type ListRightsizingRulesInput struct {
 	OceanId *string `json:"oceanId,omitempty"`
 }
 
-type ListRightSizingRulesOutput struct {
-	RightSizingRules []*RightSizingRule `json:"rightSizingRules,omitempty"`
+type ListRightsizingRulesOutput struct {
+	RightsizingRules []*RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
 type RightSizingAttachDetachInput struct {
@@ -140,58 +140,58 @@ type RightSizingAttachDetachInput struct {
 
 type RightSizingAttachDetachOutput struct{}
 
-type ReadRightSizingRuleInput struct {
+type ReadRightsizingRuleInput struct {
 	RuleName *string `json:"ruleName,omitempty"`
 	OceanId  *string `json:"oceanId,omitempty"`
 }
 
-type ReadRightSizingRuleOutput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+type ReadRightsizingRuleOutput struct {
+	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
-type UpdateRightSizingRuleInput struct {
+type UpdateRightsizingRuleInput struct {
 	RuleName        *string          `json:"ruleName,omitempty"`
-	RightSizingRule *RightSizingRule `json:"rightsizingRule,omitempty"`
+	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
-type UpdateRightSizingRuleOutput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+type UpdateRightsizingRuleOutput struct {
+	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
-type DeleteRightSizingRuleInput struct {
+type DeleteRightsizingRuleInput struct {
 	RuleNames []string `json:"ruleNames,omitempty"`
 	OceanId   *string  `json:"oceanId,omitempty"`
 }
 
-type DeleteRightSizingRuleOutput struct{}
+type DeleteRightsizingRuleOutput struct{}
 
-type CreateRightSizingRuleInput struct {
-	RightSizingRule *RightSizingRule `json:"rightSizingRule,omitempty"`
+type CreateRightsizingRuleInput struct {
+	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
-type CreateRightSizingRuleOutput struct {
-	RightSizingRule *RightSizingRule `json:"rightsizingRule,omitempty"`
+type CreateRightsizingRuleOutput struct {
+	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
-func rightSizingRuleFromJSON(in []byte) (*RightSizingRule, error) {
-	b := new(RightSizingRule)
+func rightsizingRuleFromJSON(in []byte) (*RightsizingRule, error) {
+	b := new(RightsizingRule)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func rightSizingRulesFromJSON(in []byte) ([]*RightSizingRule, error) {
+func rightsizingRulesFromJSON(in []byte) ([]*RightsizingRule, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*RightSizingRule, len(rw.Response.Items))
+	out := make([]*RightsizingRule, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := rightSizingRuleFromJSON(rb)
+		b, err := rightsizingRuleFromJSON(rb)
 		if err != nil {
 			return nil, err
 		}
@@ -200,15 +200,15 @@ func rightSizingRulesFromJSON(in []byte) ([]*RightSizingRule, error) {
 	return out, nil
 }
 
-func rightSizingRulesFromHttpResponse(resp *http.Response) ([]*RightSizingRule, error) {
+func rightsizingRulesFromHttpResponse(resp *http.Response) ([]*RightsizingRule, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-	return rightSizingRulesFromJSON(body)
+	return rightsizingRulesFromJSON(body)
 }
 
-func (s *ServiceOp) ListRightSizingRules(ctx context.Context, input *ListRightSizingRulesInput) (*ListRightSizingRulesOutput, error) {
+func (s *ServiceOp) ListRightsizingRules(ctx context.Context, input *ListRightsizingRulesInput) (*ListRightsizingRulesOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanId),
 	})
@@ -223,26 +223,26 @@ func (s *ServiceOp) ListRightSizingRules(ctx context.Context, input *ListRightSi
 	}
 	defer resp.Body.Close()
 
-	gs, err := rightSizingRulesFromHttpResponse(resp)
+	gs, err := rightsizingRulesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	return &ListRightSizingRulesOutput{RightSizingRules: gs}, nil
+	return &ListRightsizingRulesOutput{RightsizingRules: gs}, nil
 }
 
-func (s *ServiceOp) CreateRightSizingRule(ctx context.Context, input *CreateRightSizingRuleInput) (*CreateRightSizingRuleOutput, error) {
+func (s *ServiceOp) CreateRightsizingRule(ctx context.Context, input *CreateRightsizingRuleInput) (*CreateRightsizingRuleOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule", uritemplates.Values{
-		"oceanId": spotinst.StringValue(input.RightSizingRule.OceanId),
+		"oceanId": spotinst.StringValue(input.RightsizingRule.OceanId),
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	// We do NOT need the ID anymore, so let's drop it.
-	input.RightSizingRule.OceanId = nil
+	input.RightsizingRule.OceanId = nil
 	r := client.NewRequest(http.MethodPost, path)
-	r.Obj = input.RightSizingRule
+	r.Obj = input.RightsizingRule
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -250,20 +250,20 @@ func (s *ServiceOp) CreateRightSizingRule(ctx context.Context, input *CreateRigh
 	}
 	defer resp.Body.Close()
 
-	gs, err := rightSizingRulesFromHttpResponse(resp)
+	gs, err := rightsizingRulesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(CreateRightSizingRuleOutput)
+	output := new(CreateRightsizingRuleOutput)
 	if len(gs) > 0 {
-		output.RightSizingRule = gs[0]
+		output.RightsizingRule = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) ReadRightSizingRule(ctx context.Context, input *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error) {
+func (s *ServiceOp) ReadRightsizingRule(ctx context.Context, input *ReadRightsizingRuleInput) (*ReadRightsizingRuleOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
 		"oceanId":  spotinst.StringValue(input.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
@@ -280,28 +280,28 @@ func (s *ServiceOp) ReadRightSizingRule(ctx context.Context, input *ReadRightSiz
 	}
 	defer resp.Body.Close()
 
-	gs, err := rightSizingRulesFromHttpResponse(resp)
+	gs, err := rightsizingRulesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(ReadRightSizingRuleOutput)
+	output := new(ReadRightsizingRuleOutput)
 	if len(gs) > 0 {
-		output.RightSizingRule = gs[0]
+		output.RightsizingRule = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error) {
+func (s *ServiceOp) UpdateRightsizingRule(ctx context.Context, input *UpdateRightsizingRuleInput) (*UpdateRightsizingRuleOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}", uritemplates.Values{
-		"oceanId":  spotinst.StringValue(input.RightSizingRule.OceanId),
+		"oceanId":  spotinst.StringValue(input.RightsizingRule.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
 	})
 
-	input.RightSizingRule.OceanId = nil
-	if input.RightSizingRule.Name == nil {
-		input.RightSizingRule.Name = input.RuleName
+	input.RightsizingRule.OceanId = nil
+	if input.RightsizingRule.Name == nil {
+		input.RightsizingRule.Name = input.RuleName
 	}
 
 	if err != nil {
@@ -309,7 +309,7 @@ func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRigh
 	}
 
 	r := client.NewRequest(http.MethodPut, path)
-	r.Obj = input.RightSizingRule
+	r.Obj = input.RightsizingRule
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -317,20 +317,20 @@ func (s *ServiceOp) UpdateRightSizingRule(ctx context.Context, input *UpdateRigh
 	}
 	defer resp.Body.Close()
 
-	gs, err := rightSizingRulesFromHttpResponse(resp)
+	gs, err := rightsizingRulesFromHttpResponse(resp)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(UpdateRightSizingRuleOutput)
+	output := new(UpdateRightsizingRuleOutput)
 	if len(gs) > 0 {
-		output.RightSizingRule = gs[0]
+		output.RightsizingRule = gs[0]
 	}
 
 	return output, nil
 }
 
-func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error) {
+func (s *ServiceOp) DeleteRightsizingRules(ctx context.Context, input *DeleteRightsizingRuleInput) (*DeleteRightsizingRuleOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanId),
 	})
@@ -349,7 +349,7 @@ func (s *ServiceOp) DeleteRightSizingRules(ctx context.Context, input *DeleteRig
 	}
 	defer resp.Body.Close()
 
-	return &DeleteRightSizingRuleOutput{}, nil
+	return &DeleteRightsizingRuleOutput{}, nil
 }
 
 func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
@@ -396,57 +396,57 @@ func (s *ServiceOp) DetachWorkloadsFromRule(ctx context.Context, input *RightSiz
 	return &RightSizingAttachDetachOutput{}, nil
 }
 
-// region RightSizingRule
+// region RightsizingRule
 
-func (o RightSizingRule) MarshalJSON() ([]byte, error) {
-	type noMethod RightSizingRule
+func (o RightsizingRule) MarshalJSON() ([]byte, error) {
+	type noMethod RightsizingRule
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *RightSizingRule) SetName(v *string) *RightSizingRule {
+func (o *RightsizingRule) SetName(v *string) *RightsizingRule {
 	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Name")
 	}
 	return o
 }
 
-func (o *RightSizingRule) SetOceanId(v *string) *RightSizingRule {
+func (o *RightsizingRule) SetOceanId(v *string) *RightsizingRule {
 	if o.OceanId = v; o.OceanId == nil {
 		o.nullFields = append(o.nullFields, "oceanId")
 	}
 	return o
 }
 
-func (o *RightSizingRule) SetRestartPods(v *bool) *RightSizingRule {
+func (o *RightsizingRule) SetRestartPods(v *bool) *RightsizingRule {
 	if o.RestartPods = v; o.RestartPods == nil {
 		o.nullFields = append(o.nullFields, "RestartPods")
 	}
 	return o
 }
 
-func (o *RightSizingRule) SetRecommendationApplicationIntervals(v []*RecommendationApplicationInterval) *RightSizingRule {
+func (o *RightsizingRule) SetRecommendationApplicationIntervals(v []*RecommendationApplicationInterval) *RightsizingRule {
 	if o.RecommendationApplicationIntervals = v; o.RecommendationApplicationIntervals == nil {
 		o.nullFields = append(o.nullFields, "RecommendationApplicationIntervals")
 	}
 	return o
 }
 
-func (o *RightSizingRule) SetRecommendationApplicationBoundaries(v *RecommendationApplicationBoundaries) *RightSizingRule {
+func (o *RightsizingRule) SetRecommendationApplicationBoundaries(v *RecommendationApplicationBoundaries) *RightsizingRule {
 	if o.RecommendationApplicationBoundaries = v; o.RecommendationApplicationBoundaries == nil {
 		o.nullFields = append(o.nullFields, "RecommendationApplicationBoundaries")
 	}
 	return o
 }
 
-func (o *RightSizingRule) SetRecommendationApplicationMinThreshold(v *RecommendationApplicationMinThreshold) *RightSizingRule {
+func (o *RightsizingRule) SetRecommendationApplicationMinThreshold(v *RecommendationApplicationMinThreshold) *RightsizingRule {
 	if o.RecommendationApplicationMinThreshold = v; o.RecommendationApplicationMinThreshold == nil {
 		o.nullFields = append(o.nullFields, "RecommendationApplicationMinThreshold")
 	}
 	return o
 }
 
-func (o *RightSizingRule) SetRecommendationApplicationOverheadValues(v *RecommendationApplicationOverheadValues) *RightSizingRule {
+func (o *RightsizingRule) SetRecommendationApplicationOverheadValues(v *RecommendationApplicationOverheadValues) *RightsizingRule {
 	if o.RecommendationApplicationOverheadValues = v; o.RecommendationApplicationOverheadValues == nil {
 		o.nullFields = append(o.nullFields, "RecommendationApplicationOverheadValues")
 	}

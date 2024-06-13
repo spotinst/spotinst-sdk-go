@@ -2,10 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/rightSizing"
 	"log"
 
-	"github.com/spotinst/spotinst-sdk-go/service/ocean"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 )
@@ -22,15 +21,15 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := ocean.New(sess)
+	svc := rightSizing.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Create a new right sizing rule.
-	out, err := svc.CreateRightSizingRule(ctx, &rightSizing.CreateRightSizingRuleInput{
-		RightSizingRule: &rightSizing.RightSizingRule{
-			Name:        spotinst.String("tf-rule-3"),
+	out, err := svc.CreateRightsizingRule(ctx, &rightSizing.CreateRightsizingRuleInput{
+		RightsizingRule: &rightSizing.RightsizingRule{
+			Name:        spotinst.String("tf-rule-7"),
 			OceanId:     spotinst.String("o-9a8a856c"),
 			RestartPods: spotinst.Bool(true),
 			RecommendationApplicationIntervals: []*rightSizing.RecommendationApplicationInterval{
@@ -74,12 +73,14 @@ func main() {
 	}
 
 	// Output.
-	/*	if out.RightSizingRule != nil {
-		log.Printf("RightSizing  Rule %q: %s",
-			spotinst.StringValue(out.RightSizingRule.Name),
-			stringutil.Stringify(out.RightSizingRule))
-	}*/
-	if out != nil {
-		log.Printf(stringutil.Stringify(out))
-	}
+	//if out.RightsizingRule != nil {
+	//	log.Printf("RightSizing  Rule %q: %s",
+	//		spotinst.StringValue(out.RightsizingRule.Name),
+	//		stringutil.Stringify(out.RightsizingRule))
+	//}
+
+	///*	if out.RightsizingRule != nil {
+	//	log.Printf("RightSizing  Rule name is: %s",
+	//		spotinst.StringValue(out.RightsizingRule.Name))
+	//}*/
 }

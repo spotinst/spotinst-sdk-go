@@ -12,15 +12,15 @@ import (
 // of the Spotinst API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	serviceRightSizingRule
+	serviceRightsizingRule
 }
 
-type serviceRightSizingRule interface {
-	CreateRightSizingRule(context.Context, *CreateRightSizingRuleInput) (*CreateRightSizingRuleOutput, error)
-	ReadRightSizingRule(context.Context, *ReadRightSizingRuleInput) (*ReadRightSizingRuleOutput, error)
-	ListRightSizingRules(context.Context, *ListRightSizingRulesInput) (*ListRightSizingRulesOutput, error)
-	UpdateRightSizingRule(context.Context, *UpdateRightSizingRuleInput) (*UpdateRightSizingRuleOutput, error)
-	DeleteRightSizingRules(context.Context, *DeleteRightSizingRuleInput) (*DeleteRightSizingRuleOutput, error)
+type serviceRightsizingRule interface {
+	CreateRightsizingRule(context.Context, *CreateRightsizingRuleInput) (*CreateRightsizingRuleOutput, error)
+	ReadRightsizingRule(context.Context, *ReadRightsizingRuleInput) (*ReadRightsizingRuleOutput, error)
+	ListRightsizingRules(context.Context, *ListRightsizingRulesInput) (*ListRightsizingRulesOutput, error)
+	UpdateRightsizingRule(context.Context, *UpdateRightsizingRuleInput) (*UpdateRightsizingRuleOutput, error)
+	DeleteRightsizingRules(context.Context, *DeleteRightsizingRuleInput) (*DeleteRightsizingRuleOutput, error)
 	AttachWorkloadsToRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
 	DetachWorkloadsFromRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
 }
@@ -40,4 +40,3 @@ func New(sess *session.Session, cfgs ...*spotinst.Config) *ServiceOp {
 		Client: client.New(sess.Config),
 	}
 }
-
