@@ -17,7 +17,7 @@ type Request struct {
 	url    *url.URL
 	method string
 	body   io.Reader
-	header http.Header
+	Header http.Header
 }
 
 // toHTTP converts the request to an HTTP request.
@@ -28,7 +28,7 @@ func (r *Request) toHTTP(ctx context.Context, cfg *spotinst.Config) (*http.Reque
 		return nil, err
 	}
 	if creds.Token != "" {
-		r.header.Set("Authorization", "Bearer "+creds.Token)
+		r.Header.Set("Authorization", "Bearer "+creds.Token)
 	}
 	if creds.Account != "" {
 		r.Params.Set("accountId", creds.Account)
@@ -58,7 +58,7 @@ func (r *Request) toHTTP(ctx context.Context, cfg *spotinst.Config) (*http.Reque
 
 	// Set request headers.
 	req.Host = cfg.BaseURL.Host
-	req.Header = r.header
+	req.Header = r.Header
 	req.Header.Set("Content-Type", cfg.ContentType)
 	req.Header.Add("Accept", cfg.ContentType)
 	req.Header.Add("User-Agent", cfg.UserAgent)
