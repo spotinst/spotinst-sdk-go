@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
+	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
-	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 )
 
 func main() {
@@ -28,23 +28,19 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// Update cluster configuration.
-	out, err := svc.CloudProviderAzure().UpdateCluster(ctx, &azure.UpdateClusterInput{
-		Cluster: &azure.Cluster{
-			ID: spotinst.String("o-12345"),
-			Strategy: &azure.Strategy{
-				SpotPercentage: spotinst.Int(100),
-			},
-		},
+	// List cluster roll.
+	out, err := svc.CloudProviderAzureNP().ListRolls(ctx, &azure_np.ListRollsInput{
+		ClusterID: spotinst.String("o-12345"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to update cluster: %v", err)
+		log.Fatalf("spotinst: failed to list roll: %v", err)
 	}
 
-	// Output.
-	if out.Cluster != nil {
-		log.Printf("Cluster %q: %s",
-			spotinst.StringValue(out.Cluster.ID),
-			stringutil.Stringify(out.Cluster))
+	if len(out.Rolls) > 0 {
+		for _, roll := range out.Rolls {
+			log.Printf("Roll %q: %s",
+				spotinst.StringValue(roll.ID),
+				stringutil.Stringify(roll))
+		}
 	}
 }

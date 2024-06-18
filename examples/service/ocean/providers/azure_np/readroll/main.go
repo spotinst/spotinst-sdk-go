@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
 
@@ -28,19 +28,18 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// List cluster roll.
-	out, err := svc.CloudProviderAzure().ListRolls(ctx, &azure.ListRollsInput{
+	// Read cluster roll.
+	out, err := svc.CloudProviderAzureNP().ReadRoll(ctx, &azure_np.ReadRollInput{
 		ClusterID: spotinst.String("o-12345"),
+		RollID:    spotinst.String("scr-12345"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to list roll: %v", err)
+		log.Fatalf("spotinst: failed to read roll: %v", err)
 	}
 
-	if len(out.Rolls) > 0 {
-		for _, roll := range out.Rolls {
-			log.Printf("Roll %q: %s",
-				spotinst.StringValue(roll.ID),
-				stringutil.Stringify(roll))
-		}
+	if (out.Roll) != nil {
+		log.Printf("Roll details: %q: %s",
+			spotinst.StringValue(out.Roll.ID),
+			stringutil.Stringify(out))
 	}
 }
