@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
 	"log"
 
@@ -29,8 +29,8 @@ func main() {
 	ctx := context.Background()
 
 	// Trigger cluster roll.
-	out, err := svc.CloudProviderAzure().CreateRoll(ctx, &azure.CreateRollInput{
-		Roll: &azure.RollSpec{
+	out, err := svc.CloudProviderAzureNP().CreateRoll(ctx, &azure_np.CreateRollInput{
+		Roll: &azure_np.RollSpec{
 			ClusterID:                 spotinst.String("o-12345"),
 			BatchSizePercentage:       spotinst.Int(20),
 			Comment:                   spotinst.String("Comment to describe roll."),
