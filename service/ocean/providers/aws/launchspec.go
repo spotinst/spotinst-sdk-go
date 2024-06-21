@@ -41,6 +41,7 @@ type LaunchSpec struct {
 	InstanceMetadataOptions  *LaunchspecInstanceMetadataOptions `json:"instanceMetadataOptions,omitempty"`
 	Images                   []*Images                          `json:"images,omitempty"`
 	InstanceTypesFilters     *InstanceTypesFilters              `json:"instanceTypesFilters,omitempty"`
+	PreferredOnDemandTypes   []string                           `json:"preferredOnDemandTypes,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -587,6 +588,13 @@ func (o *LaunchSpec) SetInstanceTypes(v []string) *LaunchSpec {
 func (o *LaunchSpec) SetPreferredSpotTypes(v []string) *LaunchSpec {
 	if o.PreferredSpotTypes = v; o.PreferredSpotTypes == nil {
 		o.nullFields = append(o.nullFields, "PreferredSpotTypes")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetPreferredOnDemandTypes(v []string) *LaunchSpec {
+	if o.PreferredOnDemandTypes = v; o.PreferredOnDemandTypes == nil {
+		o.nullFields = append(o.nullFields, "PreferredOnDemandTypes")
 	}
 	return o
 }
