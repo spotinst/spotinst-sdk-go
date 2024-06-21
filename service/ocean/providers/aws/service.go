@@ -14,10 +14,9 @@ import (
 type Service interface {
 	serviceKubernetes
 	serviceECS
-	//serviceCommon
+	serviceCommon
 	serviceExtendedResourceDefinition
 }
-
 type serviceKubernetes interface {
 	ListClusters(context.Context, *ListClustersInput) (*ListClustersOutput, error)
 	CreateCluster(context.Context, *CreateClusterInput) (*CreateClusterOutput, error)
