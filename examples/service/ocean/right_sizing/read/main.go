@@ -2,13 +2,12 @@ package main
 
 import (
 	"context"
-	"log"
-
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
+	"log"
 )
 
 func main() {
@@ -28,20 +27,19 @@ func main() {
 	// Create a new context.
 	ctx := context.Background()
 
-	// List all right sizing rules in an ocean cluster
-	out, err := svc.CloudProviderAWS().ListRightSizingRules(ctx, &rightSizing.ListRightSizingRulesInput{
-		OceanId: spotinst.String("o-1234abcd"),
+	// Read an existing right sizing rule
+	out, err := svc.RightSizing().ReadRightsizingRule(ctx, &right_sizing.ReadRightsizingRuleInput{
+		RuleName: spotinst.String("test-rule1"),
+		OceanId:  spotinst.String("o-12abc54"),
 	})
 	if err != nil {
-		log.Fatalf("spotinst: failed to create right sizing rule: %v", err)
+		log.Fatalf("spotinst: failed to read the right sizing rule: %v", err)
 	}
 
-	// Output all rules, if any.
-	if len(out.RightSizingRules) > 0 {
-		for _, rule := range out.RightSizingRules {
-			log.Printf("RightSizing Rule %q: %s",
-				spotinst.StringValue(rule.Name),
-				stringutil.Stringify(rule))
-		}
+	// Output.
+	if out.RightsizingRule != nil {
+		log.Printf("RightSizing  Rule %q: %s",
+			spotinst.StringValue(out.RightsizingRule.RuleName),
+			stringutil.Stringify(out.RightsizingRule))
 	}
 }

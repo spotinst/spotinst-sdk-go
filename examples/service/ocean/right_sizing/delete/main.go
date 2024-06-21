@@ -2,12 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
-
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
+	"log"
 )
 
 func main() {
@@ -28,9 +27,9 @@ func main() {
 	ctx := context.Background()
 
 	// Delete existing Right Sizing rules
-	_, err := svc.CloudProviderAWS().DeleteRightSizingRules(ctx, &rightSizing.DeleteRightSizingRuleInput{
-		OceanId:   spotinst.String("o-1234abcd"),
-		RuleNames: []string{"tf-rule-1", "tf-rule-2"},
+	_, err := svc.RightSizing().DeleteRightsizingRules(ctx, &right_sizing.DeleteRightsizingRuleInput{
+		OceanId:   spotinst.String("o-12ab345"),
+		RuleNames: []string{"test-rule1", "test-rule2"},
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to delete right sizing rule: %v", err)

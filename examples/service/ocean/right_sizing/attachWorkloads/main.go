@@ -2,12 +2,11 @@ package main
 
 import (
 	"context"
-	"log"
-
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
+	"log"
 )
 
 func main() {
@@ -28,25 +27,25 @@ func main() {
 	ctx := context.Background()
 
 	// Attach Workloads to existing Right Sizing Rule
-	_, err := svc.CloudProviderAWS().AttachWorkloadsToRule(ctx, &rightSizing.RightSizingAttachDetachInput{
-		RuleName: spotinst.String("tf-rule"),
-		OceanId: spotinst.String("o-1234abcd"),
-		Namespaces: []*rightSizing.Namespace{
-			&rightSizing.Namespace{
-				NamespaceName: spotinst.String("test-namespace"),
-				Workloads: []*rightSizing.Workload{
-					&rightSizing.Workload{
-						Name: spotinst.String("testdeploy"),
+	_, err := svc.RightSizing().AttachRightSizingRule(ctx, &right_sizing.RightSizingAttachDetachInput{
+		RuleName: spotinst.String("test-rule1"),
+		OceanId:  spotinst.String("o-123ab54"),
+		Namespaces: []*right_sizing.Namespace{
+			{
+				NamespaceName: spotinst.String("nameSpace"),
+				Workloads: []*right_sizing.Workload{
+					{
+						Name:         spotinst.String("workloadName"),
 						WorkloadType: spotinst.String("Deployment"),
 						// RegexName: spotinst.String("test*"), Regex and Name are mutually exclusive
 					},
 				},
 			},
-			&rightSizing.Namespace{
-				NamespaceName: spotinst.String("test-namespace"),
-				Labels: []*rightSizing.Label{
-					&rightSizing.Label{
-						Key: spotinst.String("test-key"),
+			{
+				NamespaceName: spotinst.String("nameSpace"),
+				Labels: []*right_sizing.Label{
+					{
+						Key:   spotinst.String("test-key"),
 						Value: spotinst.String("test-value"),
 					},
 				},

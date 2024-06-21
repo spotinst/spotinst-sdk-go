@@ -1,11 +1,11 @@
 package ocean
 
 import (
-	"context"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/aws"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/gcp"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/spark"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
@@ -21,6 +21,7 @@ type Service interface {
 	CloudProviderAzure() azure.Service
 	Spark() spark.Service
 	CloudProviderAzureNP() azure_np.Service
+	RightSizing() right_sizing.Service
 }
 
 type ServiceOp struct {
@@ -69,3 +70,8 @@ func (s *ServiceOp) CloudProviderAzureNP() azure_np.Service {
 	}
 }
 
+func (s *ServiceOp) RightSizing() right_sizing.Service {
+	return &right_sizing.ServiceOp{
+		Client: s.Client,
+	}
+}

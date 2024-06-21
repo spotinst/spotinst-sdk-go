@@ -1,4 +1,4 @@
-package rightSizing
+package right_sizing
 
 import (
 	"context"
@@ -12,17 +12,13 @@ import (
 // of the Spotinst API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	serviceRightsizingRule
-}
-
-type serviceRightsizingRule interface {
 	CreateRightsizingRule(context.Context, *CreateRightsizingRuleInput) (*CreateRightsizingRuleOutput, error)
 	ReadRightsizingRule(context.Context, *ReadRightsizingRuleInput) (*ReadRightsizingRuleOutput, error)
 	ListRightsizingRules(context.Context, *ListRightsizingRulesInput) (*ListRightsizingRulesOutput, error)
 	UpdateRightsizingRule(context.Context, *UpdateRightsizingRuleInput) (*UpdateRightsizingRuleOutput, error)
 	DeleteRightsizingRules(context.Context, *DeleteRightsizingRuleInput) (*DeleteRightsizingRuleOutput, error)
-	AttachWorkloadsToRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
-	DetachWorkloadsFromRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+	AttachRightSizingRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+	DetachRightSizingRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
 }
 
 type ServiceOp struct {

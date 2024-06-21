@@ -1,4 +1,4 @@
-package rightSizing
+package right_sizing
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
@@ -13,19 +14,23 @@ import (
 )
 
 type RightsizingRule struct {
-	Name                                    *string                                  `json:"ruleName,omitempty"`
+	RuleName                                *string                                  `json:"ruleName,omitempty"`
 	OceanId                                 *string                                  `json:"oceanId,omitempty"`
 	RestartPods                             *bool                                    `json:"restartPods,omitempty"`
-	RecommendationApplicationIntervals      []*RecommendationApplicationInterval     `json:"recommendationApplicationIntervals,omitempty"`
+	RecommendationApplicationIntervals      []*RecommendationApplicationIntervals    `json:"recommendationApplicationIntervals,omitempty"`
 	RecommendationApplicationMinThreshold   *RecommendationApplicationMinThreshold   `json:"recommendationApplicationMinThreshold,omitempty"`
 	RecommendationApplicationBoundaries     *RecommendationApplicationBoundaries     `json:"recommendationApplicationBoundaries,omitempty"`
 	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues `json:"recommendationApplicationOverheadValues,omitempty"`
+
+	// Read-only fields.
+	CreatedAt *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt *time.Time `json:"updatedAt,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
-type RecommendationApplicationInterval struct {
+type RecommendationApplicationIntervals struct {
 	RepetitionBasis        *string                 `json:"repetitionBasis,omitempty"`
 	WeeklyRepetitionBasis  *WeeklyRepetitionBasis  `json:"weeklyRepetitionBasis,omitempty"`
 	MonthlyRepetitionBasis *MonthlyRepetitionBasis `json:"monthlyRepetitionBasis,omitempty"`
@@ -298,18 +303,15 @@ func (s *ServiceOp) UpdateRightsizingRule(ctx context.Context, input *UpdateRigh
 		"oceanId":  spotinst.StringValue(input.RightsizingRule.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
 	})
-
-	input.RightsizingRule.OceanId = nil
-	if input.RightsizingRule.Name == nil {
-		input.RightsizingRule.Name = input.RuleName
-	}
-
 	if err != nil {
 		return nil, err
 	}
 
+	input.RightsizingRule.OceanId = nil
+
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input.RightsizingRule
+	input.RuleName = nil
 
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
@@ -352,7 +354,7 @@ func (s *ServiceOp) DeleteRightsizingRules(ctx context.Context, input *DeleteRig
 	return &DeleteRightsizingRuleOutput{}, nil
 }
 
-func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
+func (s *ServiceOp) AttachRightSizingRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/attachment", uritemplates.Values{
 		"oceanId":  spotinst.StringValue(input.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
@@ -374,7 +376,7 @@ func (s *ServiceOp) AttachWorkloadsToRule(ctx context.Context, input *RightSizin
 	return &RightSizingAttachDetachOutput{}, nil
 }
 
-func (s *ServiceOp) DetachWorkloadsFromRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
+func (s *ServiceOp) DetachRightSizingRule(ctx context.Context, input *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/detachment", uritemplates.Values{
 		"oceanId":  spotinst.StringValue(input.OceanId),
 		"ruleName": spotinst.StringValue(input.RuleName),
@@ -404,9 +406,9 @@ func (o RightsizingRule) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *RightsizingRule) SetName(v *string) *RightsizingRule {
-	if o.Name = v; o.Name == nil {
-		o.nullFields = append(o.nullFields, "Name")
+func (o *RightsizingRule) SetRuleName(v *string) *RightsizingRule {
+	if o.RuleName = v; o.RuleName == nil {
+		o.nullFields = append(o.nullFields, "RuleName")
 	}
 	return o
 }
@@ -425,7 +427,7 @@ func (o *RightsizingRule) SetRestartPods(v *bool) *RightsizingRule {
 	return o
 }
 
-func (o *RightsizingRule) SetRecommendationApplicationIntervals(v []*RecommendationApplicationInterval) *RightsizingRule {
+func (o *RightsizingRule) SetRecommendationApplicationIntervals(v []*RecommendationApplicationIntervals) *RightsizingRule {
 	if o.RecommendationApplicationIntervals = v; o.RecommendationApplicationIntervals == nil {
 		o.nullFields = append(o.nullFields, "RecommendationApplicationIntervals")
 	}
@@ -455,27 +457,27 @@ func (o *RightsizingRule) SetRecommendationApplicationOverheadValues(v *Recommen
 
 // region RecommendationApplicationInterval
 
-func (o RecommendationApplicationInterval) MarshalJSON() ([]byte, error) {
-	type noMethod RecommendationApplicationInterval
+func (o RecommendationApplicationIntervals) MarshalJSON() ([]byte, error) {
+	type noMethod RecommendationApplicationIntervals
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *RecommendationApplicationInterval) SetRepetitionBasis(v *string) *RecommendationApplicationInterval {
+func (o *RecommendationApplicationIntervals) SetRepetitionBasis(v *string) *RecommendationApplicationIntervals {
 	if o.RepetitionBasis = v; o.RepetitionBasis == nil {
 		o.nullFields = append(o.nullFields, "RepetitionBasis")
 	}
 	return o
 }
 
-func (o *RecommendationApplicationInterval) SetWeeklyRepetitionBasis(v *WeeklyRepetitionBasis) *RecommendationApplicationInterval {
+func (o *RecommendationApplicationIntervals) SetWeeklyRepetitionBasis(v *WeeklyRepetitionBasis) *RecommendationApplicationIntervals {
 	if o.WeeklyRepetitionBasis = v; o.WeeklyRepetitionBasis == nil {
 		o.nullFields = append(o.nullFields, "WeeklyRepetitionBasis")
 	}
 	return o
 }
 
-func (o *RecommendationApplicationInterval) SetMonthlyRepetitionBasis(v *MonthlyRepetitionBasis) *RecommendationApplicationInterval {
+func (o *RecommendationApplicationIntervals) SetMonthlyRepetitionBasis(v *MonthlyRepetitionBasis) *RecommendationApplicationIntervals {
 	if o.MonthlyRepetitionBasis = v; o.MonthlyRepetitionBasis == nil {
 		o.nullFields = append(o.nullFields, "MonthlyRepetitionBasis")
 	}

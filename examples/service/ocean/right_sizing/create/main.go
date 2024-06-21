@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/rightSizing"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
 	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
@@ -21,26 +22,26 @@ func main() {
 	// Optional spotinst.Config values can also be provided as variadic
 	// arguments to the New function. This option allows you to provide
 	// service specific configuration.
-	svc := rightSizing.New(sess)
+	svc := ocean.New(sess)
 
 	// Create a new context.
 	ctx := context.Background()
 
 	// Create a new right sizing rule.
-	out, err := svc.CreateRightsizingRule(ctx, &rightSizing.CreateRightsizingRuleInput{
-		RightsizingRule: &rightSizing.RightsizingRule{
-			Name:        spotinst.String("tf-rule-7"),
-			OceanId:     spotinst.String("o-9a8a856c"),
+	out, err := svc.RightSizing().CreateRightsizingRule(ctx, &right_sizing.CreateRightsizingRuleInput{
+		RightsizingRule: &right_sizing.RightsizingRule{
+			RuleName:    spotinst.String("test-rule1"),
+			OceanId:     spotinst.String("o-12ab34"),
 			RestartPods: spotinst.Bool(true),
-			RecommendationApplicationIntervals: []*rightSizing.RecommendationApplicationInterval{
-				&rightSizing.RecommendationApplicationInterval{
+			RecommendationApplicationIntervals: []*right_sizing.RecommendationApplicationIntervals{
+				{
 					RepetitionBasis: spotinst.String("MONTHLY"),
-					MonthlyRepetitionBasis: &rightSizing.MonthlyRepetitionBasis{
+					MonthlyRepetitionBasis: &right_sizing.MonthlyRepetitionBasis{
 						IntervalMonths: []int{1, 2, 3},
 						WeekOfTheMonth: []string{"FIRST", "SECOND"},
-						WeeklyRepetitionBasis: &rightSizing.WeeklyRepetitionBasis{
+						WeeklyRepetitionBasis: &right_sizing.WeeklyRepetitionBasis{
 							IntervalDays: []string{"TUESDAY"},
-							IntervalHours: &rightSizing.IntervalHours{
+							IntervalHours: &right_sizing.IntervalHours{
 								StartTime: spotinst.String("12:00"),
 								EndTime:   spotinst.String("16:00"),
 							},
@@ -48,21 +49,21 @@ func main() {
 					},
 				},
 			},
-			RecommendationApplicationBoundaries: &rightSizing.RecommendationApplicationBoundaries{
-				Cpu: &rightSizing.Cpu{
+			RecommendationApplicationBoundaries: &right_sizing.RecommendationApplicationBoundaries{
+				Cpu: &right_sizing.Cpu{
 					Min: spotinst.Int(10),
 					Max: spotinst.Int(100),
 				},
-				Memory: &rightSizing.Memory{
+				Memory: &right_sizing.Memory{
 					Min: spotinst.Int(10),
 					Max: spotinst.Int(100),
 				},
 			},
-			RecommendationApplicationMinThreshold: &rightSizing.RecommendationApplicationMinThreshold{
+			RecommendationApplicationMinThreshold: &right_sizing.RecommendationApplicationMinThreshold{
 				CpuPercentage:    spotinst.Float64(0.5),
 				MemoryPercentage: spotinst.Float64(0.5),
 			},
-			RecommendationApplicationOverheadValues: &rightSizing.RecommendationApplicationOverheadValues{
+			RecommendationApplicationOverheadValues: &right_sizing.RecommendationApplicationOverheadValues{
 				CpuPercentage:    spotinst.Float64(0.25),
 				MemoryPercentage: spotinst.Float64(0.25),
 			},
@@ -73,14 +74,8 @@ func main() {
 	}
 
 	// Output.
-	//if out.RightsizingRule != nil {
-	//	log.Printf("RightSizing  Rule %q: %s",
-	//		spotinst.StringValue(out.RightsizingRule.Name),
-	//		stringutil.Stringify(out.RightsizingRule))
-	//}
-
-	///*	if out.RightsizingRule != nil {
-	//	log.Printf("RightSizing  Rule name is: %s",
-	//		spotinst.StringValue(out.RightsizingRule.Name))
-	//}*/
+	if out.RightsizingRule != nil {
+		log.Printf("RightSizing  Rule name is %s:",
+			spotinst.StringValue(out.RightsizingRule.RuleName))
+	}
 }
