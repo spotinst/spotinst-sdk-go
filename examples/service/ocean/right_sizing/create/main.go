@@ -51,8 +51,8 @@ func main() {
 			},
 			RecommendationApplicationBoundaries: &right_sizing.RecommendationApplicationBoundaries{
 				Cpu: &right_sizing.Cpu{
-					Min: spotinst.Int(10),
-					Max: spotinst.Int(100),
+					Min: spotinst.Float64(10),
+					Max: spotinst.Float64(100),
 				},
 				Memory: &right_sizing.Memory{
 					Min: spotinst.Int(10),
