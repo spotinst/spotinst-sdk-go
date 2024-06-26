@@ -75,8 +75,8 @@ type RecommendationApplicationBoundaries struct {
 }
 
 type Cpu struct {
-	Min *int `json:"min,omitempty"`
-	Max *int `json:"max,omitempty"`
+	Min *float64 `json:"min,omitempty"`
+	Max *float64 `json:"max,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -534,7 +534,11 @@ func (o *MonthlyRepetitionBasis) SetMonthlyWeeklyRepetitionBasis(v *WeeklyRepeti
 }
 
 // region RecommendationApplicationBoundaries
-
+func (o RecommendationApplicationBoundaries) MarshalJSON() ([]byte, error) {
+	type noMethod RecommendationApplicationBoundaries
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 func (o *RecommendationApplicationBoundaries) SetCpu(v *Cpu) *RecommendationApplicationBoundaries {
 	if o.Cpu = v; o.Cpu == nil {
 		o.nullFields = append(o.nullFields, "Cpu")
@@ -550,15 +554,20 @@ func (o *RecommendationApplicationBoundaries) SetMemory(v *Memory) *Recommendati
 }
 
 // region Cpu
+func (o Cpu) MarshalJSON() ([]byte, error) {
+	type noMethod Cpu
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
-func (o *Cpu) SetMin(v *int) *Cpu {
+func (o *Cpu) SetMin(v *float64) *Cpu {
 	if o.Min = v; o.Min == nil {
 		o.nullFields = append(o.nullFields, "Cpu")
 	}
 	return o
 }
 
-func (o *Cpu) SetMax(v *int) *Cpu {
+func (o *Cpu) SetMax(v *float64) *Cpu {
 	if o.Max = v; o.Min == nil {
 		o.nullFields = append(o.nullFields, "Cpu")
 	}
@@ -566,6 +575,11 @@ func (o *Cpu) SetMax(v *int) *Cpu {
 }
 
 // region Memory
+func (o Memory) MarshalJSON() ([]byte, error) {
+	type noMethod Memory
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *Memory) SetMin(v *int) *Memory {
 	if o.Min = v; o.Min == nil {
@@ -582,6 +596,11 @@ func (o *Memory) SetMax(v *int) *Memory {
 }
 
 // region RecommendationApplicationMinThreshold
+func (o RecommendationApplicationMinThreshold) MarshalJSON() ([]byte, error) {
+	type noMethod RecommendationApplicationMinThreshold
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *RecommendationApplicationMinThreshold) SetCpuPercentage(v *float64) *RecommendationApplicationMinThreshold {
 	if o.CpuPercentage = v; o.CpuPercentage == nil {
@@ -598,6 +617,11 @@ func (o *RecommendationApplicationMinThreshold) SetMemoryPercentage(v *float64) 
 }
 
 // region RecommendationApplicationOverheadValues
+func (o RecommendationApplicationOverheadValues) MarshalJSON() ([]byte, error) {
+	type noMethod RecommendationApplicationOverheadValues
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
 
 func (o *RecommendationApplicationOverheadValues) SetOverheadCpuPercentage(v *float64) *RecommendationApplicationOverheadValues {
 	if o.CpuPercentage = v; o.CpuPercentage == nil {

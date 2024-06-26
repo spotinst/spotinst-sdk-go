@@ -120,6 +120,7 @@ type LaunchSpecification struct {
 	Tags                     []*Tag                    `json:"tags,omitempty"`
 	BlockDeviceMappings      []*BlockDeviceMapping     `json:"blockDeviceMappings,omitempty"`
 	ResourceTagSpecification *ResourceTagSpecification `json:"resourceTagSpecification,omitempty"`
+	MetadataOptions          *MetadataOptions          `json:"metadataOptions,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -329,6 +330,15 @@ type LoadBalancer struct {
 
 type AMIBackup struct {
 	ShouldDeleteImages *bool `json:"shouldDeleteImages,omitempty"`
+}
+
+type MetadataOptions struct {
+	HttpPutResponseHopLimit *int    `json:"httpPutResponseHopLimit,omitempty"`
+	HttpTokens              *string `json:"httpTokens,omitempty"`
+	InstanceMetadataTags    *string `json:"instanceMetadataTags,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 type DeallocationConfig struct {
@@ -1208,6 +1218,13 @@ func (o *LaunchSpecification) SetResourceTagSpecification(v *ResourceTagSpecific
 	return o
 }
 
+func (o *LaunchSpecification) SetMetadataOptions(v *MetadataOptions) *LaunchSpecification {
+	if o.MetadataOptions = v; o.MetadataOptions == nil {
+		o.nullFields = append(o.nullFields, "MetadataOptions")
+	}
+	return o
+}
+
 // endregion
 
 // region NetworkInterface
@@ -1662,6 +1679,33 @@ func (o AMIs) MarshalJSON() ([]byte, error) {
 func (o *AMIs) SetShouldTag(v *bool) *AMIs {
 	if o.ShouldTag = v; o.ShouldTag == nil {
 		o.nullFields = append(o.nullFields, "ShouldTag")
+	}
+	return o
+}
+
+func (o MetadataOptions) MarshalJSON() ([]byte, error) {
+	type noMethod MetadataOptions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *MetadataOptions) SetHttpPutResponseHopLimit(v *int) *MetadataOptions {
+	if o.HttpPutResponseHopLimit = v; o.HttpPutResponseHopLimit == nil {
+		o.nullFields = append(o.nullFields, "HttpPutResponseHopLimit")
+	}
+	return o
+}
+
+func (o *MetadataOptions) SetHttpTokens(v *string) *MetadataOptions {
+	if o.HttpTokens = v; o.HttpTokens == nil {
+		o.nullFields = append(o.nullFields, "HttpTokens")
+	}
+	return o
+}
+
+func (o *MetadataOptions) SetInstanceMetadataTags(v *string) *MetadataOptions {
+	if o.InstanceMetadataTags = v; o.InstanceMetadataTags == nil {
+		o.nullFields = append(o.nullFields, "InstanceMetadataTags")
 	}
 	return o
 }
