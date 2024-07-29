@@ -146,6 +146,38 @@ func (s *ServiceOp) SetServiceAccount(ctx context.Context, input *SetServiceAcco
 	return output, nil
 }
 
+type ReadServiceAccountsInput struct {
+	AccountId *string `json:"accountId,omitempty"`
+}
+type ReadServiceAccountsOutput struct {
+	ServiceAccounts *ServiceAccounts `json:"serviceAccount,omitempty"`
+}
+
+func (s *ServiceOp) ReadServiceAccount(ctx context.Context, input *ReadServiceAccountsInput) (*ReadServiceAccountsOutput, error) {
+	r := client.NewRequest(http.MethodGet, "/gcp/setup/credentials")
+	if input != nil {
+		r.Params.Set("accountId", spotinst.StringValue(input.AccountId))
+	}
+
+	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := serviceAccountsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ReadServiceAccountsOutput)
+	if len(gs) > 0 {
+		output.ServiceAccounts = gs[0]
+	}
+
+	return output, nil
+}
+
 func serviceAccountsFromHttpResponse(resp *http.Response) ([]*ServiceAccounts, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -164,7 +196,9 @@ func serviceAccountsFromJSON(in []byte) ([]*ServiceAccounts, error) {
 		return out, nil
 	}
 	for i, rb := range rw.Response.Items {
-		b, err := serviceAccountFromJSON(rb)
+		var objmap map[string]json.RawMessage
+		err := json.Unmarshal(rb, &objmap)
+		b, err := serviceAccountFromJSON(objmap["serviceAccount"])
 		if err != nil {
 			return nil, err
 		}

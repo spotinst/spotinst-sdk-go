@@ -17,6 +17,7 @@ type Service interface {
 
 type serviceCredentials interface {
 	SetServiceAccount(context.Context, *SetServiceAccountsInput) (*SetServiceAccountsOutput, error)
+	ReadServiceAccount(context.Context, *ReadServiceAccountsInput) (*ReadServiceAccountsOutput, error)
 }
 
 type ServiceOp struct {
