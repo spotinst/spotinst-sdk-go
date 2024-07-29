@@ -1,8 +1,8 @@
-package account
+package gcp
 
 import (
-	"github.com/spotinst/spotinst-sdk-go/service/account/providers/aws"
-	"github.com/spotinst/spotinst-sdk-go/service/account/providers/gcp"
+	"context"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -12,14 +12,16 @@ import (
 // of the Spotinst API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	CloudProviderAWS() aws.Service
+	serviceCredentials
+}
+
+type serviceCredentials interface {
+	SetServiceAccount(context.Context, *SetServiceAccountsInput) (*SetServiceAccountsOutput, error)
 }
 
 type ServiceOp struct {
 	Client *client.Client
 }
-
-var _ Service = &ServiceOp{}
 
 func New(sess *session.Session, cfgs ...*spotinst.Config) *ServiceOp {
 	cfg := &spotinst.Config{}
@@ -27,18 +29,6 @@ func New(sess *session.Session, cfgs ...*spotinst.Config) *ServiceOp {
 	cfg.Merge(cfgs...)
 
 	return &ServiceOp{
-		Client: client.New(cfg),
-	}
-}
-
-func (s *ServiceOp) CloudProviderAWS() aws.Service {
-	return &aws.ServiceOp{
-		Client: s.Client,
-	}
-}
-
-func (s *ServiceOp) CloudProviderGCP() gcp.Service {
-	return &gcp.ServiceOp{
-		Client: s.Client,
+		Client: client.New(sess.Config),
 	}
 }
