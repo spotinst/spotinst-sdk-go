@@ -13,6 +13,7 @@ import (
 // the service.
 type Service interface {
 	CloudProviderAWS() aws.Service
+	CloudProviderGCP() gcp.Service
 }
 
 type ServiceOp struct {
