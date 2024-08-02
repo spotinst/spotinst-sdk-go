@@ -53,13 +53,6 @@ func (o *Account) SetName(v *string) *Account {
 	return o
 }
 
-func (o *Account) SetOrganizationId(v *string) *Account {
-	if o.OrganizationId = v; o.OrganizationId == nil {
-		o.nullFields = append(o.nullFields, "OrganizationId")
-	}
-	return o
-}
-
 func (o Account) MarshalJSON() ([]byte, error) {
 	type noMethod Account
 	raw := noMethod(o)
