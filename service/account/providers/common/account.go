@@ -74,21 +74,41 @@ type CreateAccountOutput struct {
 }
 
 func (s *ServiceOp) CreateAccount(ctx context.Context, input *CreateAccountInput) (*CreateAccountOutput, error) {
+	name := input.Account.Name
+	output := new(CreateAccountOutput)
+	res := client.NewRequest(http.MethodGet, "/setup/account")
+	response_get, err := client.RequireOK(s.Client.DoOrg(ctx, res))
+	if err != nil {
+		return nil, err
+	}
+	defer response_get.Body.Close()
+
+	getAccounts, err := accountsFromHttpResponse(response_get)
+	if err != nil {
+		return nil, err
+	}
+	if len(getAccounts) > 0 {
+		for i := 0; i < len(getAccounts); i++ {
+			s := spotinst.StringValue(getAccounts[i].Name)
+			if s == spotinst.StringValue(name) {
+				output.Account = getAccounts[i]
+				return output, nil
+			}
+		}
+	}
 	r := client.NewRequest(http.MethodPost, "/setup/account")
 	r.Obj = input
-
-	resp, err := client.RequireOK(s.Client.DoOrg(ctx, r))
+	resp_post, err := client.RequireOK(s.Client.DoOrg(ctx, r))
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer resp_post.Body.Close()
 
-	gs, err := accountsFromHttpResponse(resp)
+	gs, err := accountsFromHttpResponse(resp_post)
 	if err != nil {
 		return nil, err
 	}
 
-	output := new(CreateAccountOutput)
 	if len(gs) > 0 {
 		output.Account = gs[0]
 	}
