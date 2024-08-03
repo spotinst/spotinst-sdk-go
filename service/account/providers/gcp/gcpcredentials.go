@@ -22,10 +22,8 @@ type ServiceAccounts struct {
 	TokenUri                *string `json:"token_uri,omitempty"`
 	AuthProviderX509CertUrl *string `json:"auth_provider_x509_cert_url,omitempty"`
 	ClientX509CertUrl       *string `json:"client_x509_cert_url,omitempty"`
-
-	forceSendFields []string
-
-	nullFields []string
+	forceSendFields         []string
+	nullFields              []string
 }
 
 func (o ServiceAccounts) MarshalJSON() ([]byte, error) {
