@@ -2,6 +2,8 @@ package account
 
 import (
 	"github.com/spotinst/spotinst-sdk-go/service/account/providers/aws"
+	"github.com/spotinst/spotinst-sdk-go/service/account/providers/common"
+	"github.com/spotinst/spotinst-sdk-go/service/account/providers/gcp"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -12,6 +14,8 @@ import (
 // the service.
 type Service interface {
 	CloudProviderAWS() aws.Service
+	CloudProviderGCP() gcp.Service
+	CloudProviderCommon() common.Service
 }
 
 type ServiceOp struct {
@@ -32,6 +36,18 @@ func New(sess *session.Session, cfgs ...*spotinst.Config) *ServiceOp {
 
 func (s *ServiceOp) CloudProviderAWS() aws.Service {
 	return &aws.ServiceOp{
+		Client: s.Client,
+	}
+}
+
+func (s *ServiceOp) CloudProviderGCP() gcp.Service {
+	return &gcp.ServiceOp{
+		Client: s.Client,
+	}
+}
+
+func (s *ServiceOp) CloudProviderCommon() common.Service {
+	return &common.ServiceOp{
 		Client: s.Client,
 	}
 }
