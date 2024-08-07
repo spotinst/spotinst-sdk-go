@@ -221,7 +221,8 @@ type TagSelector struct {
 }
 
 type LaunchSpecStrategy struct {
-	SpotPercentage *int `json:"spotPercentage,omitempty"`
+	SpotPercentage  *int `json:"spotPercentage,omitempty"`
+	DrainingTimeout *int `json:"drainingTimeout,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1039,6 +1040,13 @@ func (o LaunchSpecStrategy) MarshalJSON() ([]byte, error) {
 func (o *LaunchSpecStrategy) SetSpotPercentage(v *int) *LaunchSpecStrategy {
 	if o.SpotPercentage = v; o.SpotPercentage == nil {
 		o.nullFields = append(o.nullFields, "SpotPercentage")
+	}
+	return o
+}
+
+func (o *LaunchSpecStrategy) SetDrainingTimeout(v *int) *LaunchSpecStrategy {
+	if o.DrainingTimeout = v; o.DrainingTimeout == nil {
+		o.nullFields = append(o.nullFields, "DrainingTimeout")
 	}
 	return o
 }
