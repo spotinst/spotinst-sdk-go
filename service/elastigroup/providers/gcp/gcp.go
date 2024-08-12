@@ -371,11 +371,13 @@ type ScalingPolicy struct {
 
 // Strategy defines the strategy attributes of a Group.
 type Strategy struct {
-	DrainingTimeout       *int    `json:"drainingTimeout,omitempty"`
-	FallbackToOnDemand    *bool   `json:"fallbackToOd,omitempty"`
-	PreemptiblePercentage *int    `json:"preemptiblePercentage,omitempty"`
-	OnDemandCount         *int    `json:"onDemandCount,omitempty"`
-	ProvisioningModel     *string `json:"provisioningModel,omitempty"`
+	DrainingTimeout       *int                 `json:"drainingTimeout,omitempty"`
+	FallbackToOnDemand    *bool                `json:"fallbackToOd,omitempty"`
+	PreemptiblePercentage *int                 `json:"preemptiblePercentage,omitempty"`
+	OnDemandCount         *int                 `json:"onDemandCount,omitempty"`
+	ProvisioningModel     *string              `json:"provisioningModel,omitempty"`
+	RevertToPreemptible   *RevertToPreemptible `json:"revertToPreemptible,omitempty"`
+	OptimizationWindows   []string             `json:"optimizationWindows,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -535,6 +537,13 @@ type UpdateGroupInput struct {
 // UpdateGroupOutPut contains a description of the updated Elastigroup, if successful.
 type UpdateGroupOutput struct {
 	Group *Group `json:"group,omitempty"`
+}
+
+type RevertToPreemptible struct {
+	PerformAt *string `json:"performAt,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 // endregion
@@ -2177,6 +2186,27 @@ func (o *Strategy) SetOnDemandCount(v *int) *Strategy {
 func (o *Strategy) SetProvisioningModel(v *string) *Strategy {
 	if o.ProvisioningModel = v; o.ProvisioningModel == nil {
 		o.nullFields = append(o.nullFields, "ProvisioningModel")
+	}
+	return o
+}
+
+func (o *Strategy) SetRevertToPreemptible(v *RevertToPreemptible) *Strategy {
+	if o.RevertToPreemptible = v; o.RevertToPreemptible == nil {
+		o.nullFields = append(o.nullFields, "RevertToPreemptible")
+	}
+	return o
+}
+
+func (o *RevertToPreemptible) SetPerformAt(v *string) *RevertToPreemptible {
+	if o.PerformAt = v; o.PerformAt == nil {
+		o.nullFields = append(o.nullFields, "PerformAt")
+	}
+	return o
+}
+
+func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
+	if o.OptimizationWindows = v; o.OptimizationWindows == nil {
+		o.nullFields = append(o.nullFields, "OptimizationWindows")
 	}
 	return o
 }
