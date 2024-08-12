@@ -40,7 +40,12 @@ func main() {
 			},
 			Strategy: &gcp.Strategy{
 				FallbackToOnDemand:    spotinst.Bool(true),
-				PreemptiblePercentage: spotinst.Int(50),
+				PreemptiblePercentage: spotinst.Int(100),
+				OnDemandCount:         spotinst.Int(1),
+				RevertToPreemptible: &gcp.RevertToPreemptible{
+					PerformAt: spotinst.String("timeWindow"),
+				},
+				OptimizationWindows: []string{"Mon:01:00-Mon:03:00"},
 			},
 			Compute: &gcp.Compute{
 				InstanceTypes: &gcp.InstanceTypes{
@@ -50,7 +55,7 @@ func main() {
 						"n1-standard-2",
 					},
 				},
-				AvailabilityZones: []string{"us-central1-a"},
+				AvailabilityZones: []string{"us-central1-a", "us-central1-b", "us-central1-c"},
 				Subnets: []*gcp.Subnet{
 					{
 						Region: spotinst.String("us-central1"),
@@ -61,6 +66,25 @@ func main() {
 				},
 				LaunchSpecification: &gcp.LaunchSpecification{
 					InstanceNamePrefix: spotinst.String("terraform"),
+					NetworkInterfaces: []*gcp.NetworkInterface{
+						{
+							Network:   spotinst.String("default"),
+							ProjectID: nil,
+						},
+					},
+					Disks: []*gcp.Disk{
+						{
+							InitializeParams: &gcp.InitializeParams{
+								DiskSizeGB:  spotinst.Int(10),
+								DiskType:    spotinst.String("pd-standard"),
+								SourceImage: spotinst.String("https://www.googleapis.com/compute/v1/projects/test/global/images/docker-image-1"),
+							},
+							Mode:       spotinst.String("READ_WRITE"),
+							Type:       spotinst.String("PERSISTENT"),
+							AutoDelete: spotinst.Bool(true),
+							Boot:       spotinst.Bool(true),
+						},
+					},
 				},
 			},
 		},
