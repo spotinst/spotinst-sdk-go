@@ -2151,6 +2151,12 @@ func (o Strategy) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+func (o RevertToPreemptible) MarshalJSON() ([]byte, error) {
+	type noMethod RevertToPreemptible
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
 // SetDrainingTimeout sets the time to keep an instance alive after detaching it from the group
 func (o *Strategy) SetDrainingTimeout(v *int) *Strategy {
 	if o.DrainingTimeout = v; o.DrainingTimeout == nil {
