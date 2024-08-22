@@ -534,6 +534,7 @@ type Strategy struct {
 	MinimumInstanceLifetime     *int             `json:"minimumInstanceLifetime,omitempty"`
 	ConsiderODPricing           *bool            `json:"considerODPricing,omitempty"`
 	ImmediateODRecoverThreshold *int             `json:"immediateODRecoverThreshold,omitempty"`
+	RestrictSingleAz            *bool            `json:"restrictSingleAz,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -695,6 +696,7 @@ type LaunchSpecification struct {
 	CPUOptions                                    *CPUOptions               `json:"cpuOptions,omitempty"`
 	ResourceTagSpecification                      *ResourceTagSpecification `json:"resourceTagSpecification,omitempty"`
 	ITF                                           *ITF                      `json:"itf,omitempty"`
+	AutoHealing                                   *bool                     `json:"autoHealing,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -866,14 +868,34 @@ type BlockDeviceMapping struct {
 }
 
 type EBS struct {
-	DeleteOnTermination *bool   `json:"deleteOnTermination,omitempty"`
-	Encrypted           *bool   `json:"encrypted,omitempty"`
-	KmsKeyId            *string `json:"kmsKeyId,omitempty"`
-	SnapshotID          *string `json:"snapshotId,omitempty"`
-	VolumeType          *string `json:"volumeType,omitempty"`
-	VolumeSize          *int    `json:"volumeSize,omitempty"`
-	IOPS                *int    `json:"iops,omitempty"`
-	Throughput          *int    `json:"throughput,omitempty"`
+	DeleteOnTermination *bool              `json:"deleteOnTermination,omitempty"`
+	Encrypted           *bool              `json:"encrypted,omitempty"`
+	KmsKeyId            *string            `json:"kmsKeyId,omitempty"`
+	SnapshotID          *string            `json:"snapshotId,omitempty"`
+	VolumeType          *string            `json:"volumeType,omitempty"`
+	VolumeSize          *int               `json:"volumeSize,omitempty"`
+	IOPS                *int               `json:"iops,omitempty"`
+	Throughput          *int               `json:"throughput,omitempty"`
+	DynamicIOPS         *DynamicIOPS       `json:"dynamicIops,omitempty"`
+	DynamicVolumeSize   *DynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type DynamicIOPS struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type DynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3693,6 +3715,12 @@ func (o *Strategy) SetMinimumInstanceLifetime(v *int) *Strategy {
 	}
 	return o
 }
+func (o *Strategy) SetRestrictSingleAz(v *bool) *Strategy {
+	if o.RestrictSingleAz = v; o.RestrictSingleAz == nil {
+		o.nullFields = append(o.nullFields, "RestrictSingleAz")
+	}
+	return o
+}
 func (o *Strategy) SetConsiderODPricing(v *bool) *Strategy {
 	if o.ConsiderODPricing = v; o.ConsiderODPricing == nil {
 		o.nullFields = append(o.nullFields, "ConsiderODPricing")
@@ -4334,6 +4362,13 @@ func (o *LaunchSpecification) SetITF(v *ITF) *LaunchSpecification {
 	return o
 }
 
+func (o *LaunchSpecification) SetAutoHealing(v *bool) *LaunchSpecification {
+	if o.AutoHealing = v; o.AutoHealing == nil {
+		o.nullFields = append(o.nullFields, "AutoHealing")
+	}
+	return o
+}
+
 // endregion
 
 // region Matcher
@@ -4819,6 +4854,74 @@ func (o *EBS) SetIOPS(v *int) *EBS {
 func (o *EBS) SetThroughput(v *int) *EBS {
 	if o.Throughput = v; o.Throughput == nil {
 		o.nullFields = append(o.nullFields, "Throughput")
+	}
+	return o
+}
+
+func (o *EBS) SetDynamicIOPS(v *DynamicIOPS) *EBS {
+	if o.DynamicIOPS = v; o.DynamicIOPS == nil {
+		o.nullFields = append(o.nullFields, "DynamicIOPS")
+	}
+	return o
+}
+
+func (o *EBS) SetDynamicVolumeSize(v *DynamicVolumeSize) *EBS {
+	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
+		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
+	}
+	return o
+}
+
+func (o DynamicVolumeSize) MarshalJSON() ([]byte, error) {
+	type noMethod DynamicVolumeSize
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *DynamicVolumeSize) SetBaseSize(v *int) *DynamicVolumeSize {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *DynamicVolumeSize) SetResource(v *string) *DynamicVolumeSize {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *DynamicVolumeSize) SetSizePerResourceUnit(v *int) *DynamicVolumeSize {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+func (o DynamicIOPS) MarshalJSON() ([]byte, error) {
+	type noMethod DynamicIOPS
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *DynamicIOPS) SetBaseSize(v *int) *DynamicIOPS {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *DynamicIOPS) SetResource(v *string) *DynamicIOPS {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *DynamicIOPS) SetSizePerResourceUnit(v *int) *DynamicIOPS {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
 	}
 	return o
 }
