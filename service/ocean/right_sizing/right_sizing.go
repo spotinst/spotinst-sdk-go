@@ -14,7 +14,6 @@ import (
 type RightsizingRule struct {
 	RuleName                                *string                                `json:"ruleName,omitempty"`
 	OceanId                                 *string                                `json:"oceanId,omitempty"`
-	RestartPods                             *bool                                  `json:"restartPods,omitempty"`
 	RestartReplicas                         *string                                `json:"restartReplicas,omitempty"`
 	ExcludePreliminaryRecommendations       *bool                                  `json:"excludePreliminaryRecommendations,omitempty"`
 	RecommendationApplicationIntervals      []*RecommendationApplicationIntervals  `json:"recommendationApplicationIntervals,omitempty"`
@@ -420,13 +419,6 @@ func (o *RightsizingRule) SetRuleName(v *string) *RightsizingRule {
 func (o *RightsizingRule) SetOceanId(v *string) *RightsizingRule {
 	if o.OceanId = v; o.OceanId == nil {
 		o.nullFields = append(o.nullFields, "oceanId")
-	}
-	return o
-}
-
-func (o *RightsizingRule) SetRestartPods(v *bool) *RightsizingRule {
-	if o.RestartPods = v; o.RestartPods == nil {
-		o.nullFields = append(o.nullFields, "RestartPods")
 	}
 	return o
 }
