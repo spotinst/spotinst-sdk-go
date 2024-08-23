@@ -30,9 +30,13 @@ func main() {
 	// Create a new right sizing rule.
 	out, err := svc.RightSizing().CreateRightsizingRule(ctx, &right_sizing.CreateRightsizingRuleInput{
 		RightsizingRule: &right_sizing.RightsizingRule{
-			RuleName:    spotinst.String("test-rule1"),
-			OceanId:     spotinst.String("o-12ab34"),
-			RestartPods: spotinst.Bool(true),
+			RuleName:                          spotinst.String("test-rule1"),
+			OceanId:                           spotinst.String("o-12ab34"),
+			ExcludePreliminaryRecommendations: spotinst.Bool(true),
+			RestartReplicas:                   spotinst.String("MORE_THAN_ONE_REPLICA"),
+			RecommendationApplicationHPA: &right_sizing.RecommendationApplicationHPA{
+				AllowHPARecommendations: spotinst.Bool(true),
+			},
 			RecommendationApplicationIntervals: []*right_sizing.RecommendationApplicationIntervals{
 				{
 					RepetitionBasis: spotinst.String("MONTHLY"),
