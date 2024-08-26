@@ -12,15 +12,15 @@ import (
 )
 
 type RightsizingRule struct {
-	RuleName                                *string                                `json:"ruleName,omitempty"`
-	OceanId                                 *string                                `json:"oceanId,omitempty"`
-	RestartReplicas                         *string                                `json:"restartReplicas,omitempty"`
-	ExcludePreliminaryRecommendations       *bool                                  `json:"excludePreliminaryRecommendations,omitempty"`
-	RecommendationApplicationIntervals      []*RecommendationApplicationIntervals  `json:"recommendationApplicationIntervals,omitempty"`
-	RecommendationApplicationMinThreshold   *RecommendationApplicationMinThreshold `json:"recommendationApplicationMinThreshold,omitempty"`
-	RecommendationApplicationBoundaries     *RecommendationApplicationBoundaries   `json:"recommendationApplicationBoundaries,omitempty"`
-	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues
-	RecommendationApplicationHPA            *RecommendationApplicationHPA
+	RuleName                                *string                                  `json:"ruleName,omitempty"`
+	OceanId                                 *string                                  `json:"oceanId,omitempty"`
+	RestartReplicas                         *string                                  `json:"restartReplicas,omitempty"`
+	ExcludePreliminaryRecommendations       *bool                                    `json:"excludePreliminaryRecommendations,omitempty"`
+	RecommendationApplicationIntervals      []*RecommendationApplicationIntervals    `json:"recommendationApplicationIntervals,omitempty"`
+	RecommendationApplicationMinThreshold   *RecommendationApplicationMinThreshold   `json:"recommendationApplicationMinThreshold,omitempty"`
+	RecommendationApplicationBoundaries     *RecommendationApplicationBoundaries     `json:"recommendationApplicationBoundaries,omitempty"`
+	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues `json:"recommendationApplicationOverheadValues,omitempty"`
+	RecommendationApplicationHPA            *RecommendationApplicationHPA            `json:"recommendationApplicationHPA,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
