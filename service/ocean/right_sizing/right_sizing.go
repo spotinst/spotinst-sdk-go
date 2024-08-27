@@ -669,7 +669,7 @@ func (o RecommendationApplicationHPA) MarshalJSON() ([]byte, error) {
 
 func (o *RecommendationApplicationHPA) SetAllowHPARecommendations(v *bool) *RecommendationApplicationHPA {
 	if o.AllowHPARecommendations = v; o.AllowHPARecommendations == nil {
-		o.nullFields = append(o.nullFields, "AllowHPARecommendation")
+		o.nullFields = append(o.nullFields, "AllowHPARecommendations")
 	}
 	return o
 }
