@@ -14,11 +14,13 @@ import (
 type RightsizingRule struct {
 	RuleName                                *string                                  `json:"ruleName,omitempty"`
 	OceanId                                 *string                                  `json:"oceanId,omitempty"`
-	RestartPods                             *bool                                    `json:"restartPods,omitempty"`
+	RestartReplicas                         *string                                  `json:"restartReplicas,omitempty"`
+	ExcludePreliminaryRecommendations       *bool                                    `json:"excludePreliminaryRecommendations,omitempty"`
 	RecommendationApplicationIntervals      []*RecommendationApplicationIntervals    `json:"recommendationApplicationIntervals,omitempty"`
 	RecommendationApplicationMinThreshold   *RecommendationApplicationMinThreshold   `json:"recommendationApplicationMinThreshold,omitempty"`
 	RecommendationApplicationBoundaries     *RecommendationApplicationBoundaries     `json:"recommendationApplicationBoundaries,omitempty"`
 	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues `json:"recommendationApplicationOverheadValues,omitempty"`
+	RecommendationApplicationHPA            *RecommendationApplicationHPA            `json:"recommendationApplicationHPA,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -118,6 +120,13 @@ type Workload struct {
 type RecommendationApplicationOverheadValues struct {
 	CpuPercentage    *float64 `json:"cpuPercentage,omitempty"`
 	MemoryPercentage *float64 `json:"memoryPercentage,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RecommendationApplicationHPA struct {
+	AllowHPARecommendations *bool `json:"allowHPARecommendations,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -414,9 +423,16 @@ func (o *RightsizingRule) SetOceanId(v *string) *RightsizingRule {
 	return o
 }
 
-func (o *RightsizingRule) SetRestartPods(v *bool) *RightsizingRule {
-	if o.RestartPods = v; o.RestartPods == nil {
-		o.nullFields = append(o.nullFields, "RestartPods")
+func (o *RightsizingRule) SetRestartReplicas(v *string) *RightsizingRule {
+	if o.RestartReplicas = v; o.RestartReplicas == nil {
+		o.nullFields = append(o.nullFields, "RestartReplicas")
+	}
+	return o
+}
+
+func (o *RightsizingRule) SetExcludePreliminaryRecommendations(v *bool) *RightsizingRule {
+	if o.ExcludePreliminaryRecommendations = v; o.ExcludePreliminaryRecommendations == nil {
+		o.nullFields = append(o.nullFields, "ExcludePreliminaryRecommendations")
 	}
 	return o
 }
@@ -445,6 +461,13 @@ func (o *RightsizingRule) SetRecommendationApplicationMinThreshold(v *Recommenda
 func (o *RightsizingRule) SetRecommendationApplicationOverheadValues(v *RecommendationApplicationOverheadValues) *RightsizingRule {
 	if o.RecommendationApplicationOverheadValues = v; o.RecommendationApplicationOverheadValues == nil {
 		o.nullFields = append(o.nullFields, "RecommendationApplicationOverheadValues")
+	}
+	return o
+}
+
+func (o *RightsizingRule) SetRecommendationApplicationHPA(v *RecommendationApplicationHPA) *RightsizingRule {
+	if o.RecommendationApplicationHPA = v; o.RecommendationApplicationHPA == nil {
+		o.nullFields = append(o.nullFields, "RecommendationApplicationHPA")
 	}
 	return o
 }
@@ -633,6 +656,20 @@ func (o *RecommendationApplicationOverheadValues) SetOverheadCpuPercentage(v *fl
 func (o *RecommendationApplicationOverheadValues) SetOverheadMemoryPercentage(v *float64) *RecommendationApplicationOverheadValues {
 	if o.MemoryPercentage = v; o.MemoryPercentage == nil {
 		o.nullFields = append(o.nullFields, "MemoryPercentage")
+	}
+	return o
+}
+
+// region RecommendationApplicationHPA
+func (o RecommendationApplicationHPA) MarshalJSON() ([]byte, error) {
+	type noMethod RecommendationApplicationHPA
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RecommendationApplicationHPA) SetAllowHPARecommendations(v *bool) *RecommendationApplicationHPA {
+	if o.AllowHPARecommendations = v; o.AllowHPARecommendations == nil {
+		o.nullFields = append(o.nullFields, "AllowHPARecommendations")
 	}
 	return o
 }

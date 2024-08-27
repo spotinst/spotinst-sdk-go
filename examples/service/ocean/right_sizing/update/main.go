@@ -31,8 +31,7 @@ func main() {
 	out, err := svc.RightSizing().UpdateRightsizingRule(ctx, &right_sizing.UpdateRightsizingRuleInput{
 		RuleName: spotinst.String("test-rule1"),
 		RightsizingRule: &right_sizing.RightsizingRule{
-			OceanId:     spotinst.String("o-12ab34"),
-			RestartPods: spotinst.Bool(true),
+			OceanId: spotinst.String("o-12ab34"),
 			RecommendationApplicationIntervals: []*right_sizing.RecommendationApplicationIntervals{
 				{
 					RepetitionBasis: spotinst.String("MONTHLY"),
