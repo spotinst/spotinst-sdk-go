@@ -55,6 +55,7 @@ type Strategy struct {
 	CapacityReservation *CapacityReservation `json:"capacityReservation,omitempty"`
 	AvailabilityVsCost  *int                 `json:"availabilityVsCost,omitempty"`
 	OdWindows           []string             `json:"odWindows,omitempty"`
+	VmAdmins            []string             `json:"vmAdmins,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1019,6 +1020,13 @@ func (o *Strategy) SetOdWindows(v []string) *Strategy {
 func (o *Strategy) SetAvailabilityVsCost(v *int) *Strategy {
 	if o.AvailabilityVsCost = v; o.AvailabilityVsCost == nil {
 		o.nullFields = append(o.nullFields, "AvailabilityVsCost")
+	}
+	return o
+}
+
+func (o *Strategy) SetVmAdmins(v []string) *Strategy {
+	if o.VmAdmins = v; o.VmAdmins == nil {
+		o.nullFields = append(o.nullFields, "VmAdmins")
 	}
 	return o
 }
