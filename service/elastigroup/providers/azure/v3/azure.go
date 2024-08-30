@@ -112,8 +112,9 @@ type LoadBalancer struct {
 }
 
 type Image struct {
-	MarketPlace *MarketPlaceImage `json:"marketplace,omitempty"`
-	Custom      *CustomImage      `json:"custom,omitempty"`
+	MarketPlace  *MarketPlaceImage `json:"marketplace,omitempty"`
+	Custom       *CustomImage      `json:"custom,omitempty"`
+	GalleryImage *GalleryImage     `json:"gallery,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -132,6 +133,17 @@ type MarketPlaceImage struct {
 type CustomImage struct {
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
 	Name              *string `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GalleryImage struct {
+	GalleryName       *string `json:"galleryName,omitempty"`
+	ImageName         *string `json:"imageName,omitempty"`
+	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+	SpotAccountId     *string `json:"spotAccountId,omitempty"`
+	Version           *string `json:"version,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -667,6 +679,13 @@ func (o *Image) SetCustom(v *CustomImage) *Image {
 	return o
 }
 
+func (o *Image) SetGalleryImage(v *GalleryImage) *Image {
+	if o.GalleryImage = v; o.GalleryImage == nil {
+		o.nullFields = append(o.nullFields, "GalleryImage")
+	}
+	return o
+}
+
 // endregion
 
 // region MarketPlaceImage
@@ -754,6 +773,47 @@ func (o *CustomImage) SetName(v *string) *CustomImage {
 }
 
 // endregion
+
+func (o GalleryImage) MarshalJSON() ([]byte, error) {
+	type noMethod GalleryImage
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GalleryImage) SetGalleryName(v *string) *GalleryImage {
+	if o.GalleryName = v; o.GalleryName == nil {
+		o.nullFields = append(o.nullFields, "GalleryName")
+	}
+	return o
+}
+
+func (o *GalleryImage) SetImageName(v *string) *GalleryImage {
+	if o.ImageName = v; o.ImageName == nil {
+		o.nullFields = append(o.nullFields, "ImageName")
+	}
+	return o
+}
+
+func (o *GalleryImage) SetResourceGroupName(v *string) *GalleryImage {
+	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
+		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *GalleryImage) SetSpotAccountId(v *string) *GalleryImage {
+	if o.SpotAccountId = v; o.SpotAccountId == nil {
+		o.nullFields = append(o.nullFields, "SpotAccountId")
+	}
+	return o
+}
+
+func (o *GalleryImage) SetVersion(v *string) *GalleryImage {
+	if o.Version = v; o.Version == nil {
+		o.nullFields = append(o.nullFields, "Version")
+	}
+	return o
+}
 
 // region Network
 
