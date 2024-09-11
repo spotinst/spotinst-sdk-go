@@ -35,6 +35,11 @@ func main() {
 			ImageID:          spotinst.String("ami-abcd123456"),
 			SecurityGroupIDs: []string{"sg-123456"},
 			SubnetIDs:        []string{"subnet-12345", "subnet-67890"},
+			Strategy: &aws.LaunchSpecStrategy{
+				DrainingTimeout:          spotinst.Int(500),
+				UtilizeCommitments:       spotinst.Bool(true),
+				UtilizeReservedInstances: spotinst.Bool(true),
+			},
 			InstanceTypesFilters: &aws.InstanceTypesFilters{
 				DiskTypes:             []string{"EBS", "SSD"},
 				MinVcpu:               spotinst.Int(2),

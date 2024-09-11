@@ -221,8 +221,10 @@ type TagSelector struct {
 }
 
 type LaunchSpecStrategy struct {
-	SpotPercentage  *int `json:"spotPercentage,omitempty"`
-	DrainingTimeout *int `json:"drainingTimeout,omitempty"`
+	SpotPercentage           *int  `json:"spotPercentage,omitempty"`
+	DrainingTimeout          *int  `json:"drainingTimeout,omitempty"`
+	UtilizeCommitments       *bool `json:"utilizeCommitments,omitempty"`
+	UtilizeReservedInstances *bool `json:"utilizeReservedInstances,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1047,6 +1049,20 @@ func (o *LaunchSpecStrategy) SetSpotPercentage(v *int) *LaunchSpecStrategy {
 func (o *LaunchSpecStrategy) SetDrainingTimeout(v *int) *LaunchSpecStrategy {
 	if o.DrainingTimeout = v; o.DrainingTimeout == nil {
 		o.nullFields = append(o.nullFields, "DrainingTimeout")
+	}
+	return o
+}
+
+func (o *LaunchSpecStrategy) SetUtilizeCommitments(v *bool) *LaunchSpecStrategy {
+	if o.UtilizeCommitments = v; o.UtilizeCommitments == nil {
+		o.nullFields = append(o.nullFields, "UtilizeCommitments")
+	}
+	return o
+}
+
+func (o *LaunchSpecStrategy) SetUtilizeReservedInstances(v *bool) *LaunchSpecStrategy {
+	if o.UtilizeReservedInstances = v; o.UtilizeReservedInstances == nil {
+		o.nullFields = append(o.nullFields, "UtilizeReservedInstances")
 	}
 	return o
 }
