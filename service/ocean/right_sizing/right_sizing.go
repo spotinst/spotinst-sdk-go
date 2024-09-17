@@ -116,6 +116,14 @@ type Workload struct {
 	forceSendFields []string
 	nullFields      []string
 }
+type Workloads struct {
+	Name      *string `json:"name,omitempty"`
+	Type      *string `json:"type,omitempty"`
+	Namespace *string `json:"namespace,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
 
 type RecommendationApplicationOverheadValues struct {
 	CpuPercentage    *float64 `json:"cpuPercentage,omitempty"`
@@ -155,6 +163,15 @@ type ReadRightsizingRuleInput struct {
 
 type ReadRightsizingRuleOutput struct {
 	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
+}
+
+type GetWorkloadsAttachedInput struct {
+	RuleName *string `json:"ruleName,omitempty"`
+	OceanId  *string `json:"oceanId,omitempty"`
+}
+
+type GetWorkloadsAttachedOutput struct {
+	Workloads []*Workloads `json:"workloads,omitempty"`
 }
 
 type UpdateRightsizingRuleInput struct {
@@ -214,6 +231,42 @@ func rightsizingRulesFromHttpResponse(resp *http.Response) ([]*RightsizingRule, 
 		return nil, err
 	}
 	return rightsizingRulesFromJSON(body)
+}
+
+// ======================================
+func workloadsFromHttpResponse(resp *http.Response) ([]*Workloads, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return workloadsFromJSON(body)
+}
+
+func workloadsFromJSON(in []byte) ([]*Workloads, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*Workloads, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := workloadFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func workloadFromJSON(in []byte) (*Workloads, error) {
+	b := new(Workloads)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
 }
 
 func (s *ServiceOp) ListRightsizingRules(ctx context.Context, input *ListRightsizingRulesInput) (*ListRightsizingRulesOutput, error) {
@@ -399,6 +452,36 @@ func (s *ServiceOp) DetachRightSizingRule(ctx context.Context, input *RightSizin
 	defer resp.Body.Close()
 
 	return &RightSizingAttachDetachOutput{}, nil
+}
+
+func (s *ServiceOp) GetWorkloadsAttached(ctx context.Context, input *GetWorkloadsAttachedInput) (*GetWorkloadsAttachedOutput, error) {
+	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/workloads", uritemplates.Values{
+		"oceanId":  spotinst.StringValue(input.OceanId),
+		"ruleName": spotinst.StringValue(input.RuleName),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := workloadsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(GetWorkloadsAttachedOutput)
+	if len(gs) > 0 {
+		output.Workloads = gs
+	}
+
+	return output, nil
 }
 
 // region RightsizingRule

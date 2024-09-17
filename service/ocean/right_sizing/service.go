@@ -19,6 +19,7 @@ type Service interface {
 	DeleteRightsizingRules(context.Context, *DeleteRightsizingRuleInput) (*DeleteRightsizingRuleOutput, error)
 	AttachRightSizingRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
 	DetachRightSizingRule(context.Context, *RightSizingAttachDetachInput) (*RightSizingAttachDetachOutput, error)
+	GetWorkloadsAttached(context.Context, *GetWorkloadsAttachedInput) (*GetWorkloadsAttachedOutput, error)
 }
 
 type ServiceOp struct {
