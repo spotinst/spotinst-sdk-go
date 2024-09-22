@@ -21,6 +21,7 @@ type Group struct {
 	Capacity          *Capacity `json:"capacity,omitempty"`
 	Compute           *Compute  `json:"compute,omitempty"`
 	Strategy          *Strategy `json:"strategy,omitempty"`
+	Scaling           *Scaling  `json:"scaling,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -205,6 +206,51 @@ type ManagedServiceIdentity struct {
 type Tags struct {
 	TagKey   *string `json:"tagKey,omitempty"`
 	TagValue *string `json:"tagValue,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Scaling struct {
+	Up   []*ScalingPolicy `json:"up,omitempty"`
+	Down []*ScalingPolicy `json:"down,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ScalingPolicy struct {
+	PolicyName        *string       `json:"policyName,omitempty"`
+	MetricName        *string       `json:"metricName,omitempty"`
+	Namespace         *string       `json:"namespace,omitempty"`
+	Statistic         *string       `json:"statistic,omitempty"`
+	Unit              *string       `json:"unit,omitempty"`
+	Threshold         *float64      `json:"threshold,omitempty"`
+	EvaluationPeriods *int          `json:"evaluationPeriods,omitempty"`
+	Period            *int          `json:"period,omitempty"`
+	Cooldown          *int          `json:"cooldown,omitempty"`
+	Operator          *string       `json:"operator,omitempty"`
+	Dimensions        []*Dimensions `json:"dimensions,omitempty"`
+	Action            *Action       `json:"action,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Action struct {
+	Type       *string `json:"type,omitempty"`
+	Adjustment *string `json:"adjustment,omitempty"`
+	Maximum    *int    `json:"maximum,omitempty"`
+	Minimum    *int    `json:"minimum,omitempty"`
+	Target     *int    `json:"target,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Dimensions struct {
+	Key   *string `json:"key,omitempty"`
+	Value *string `json:"value,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -460,6 +506,13 @@ func (o *Group) SetStrategy(v *Strategy) *Group {
 func (o *Group) SetRegion(v *string) *Group {
 	if o.Region = v; o.Region == nil {
 		o.nullFields = append(o.nullFields, "Region")
+	}
+	return o
+}
+
+func (o *Group) SetScaling(v *Scaling) *Group {
+	if o.Scaling = v; o.Scaling == nil {
+		o.nullFields = append(o.nullFields, "Scaling")
 	}
 	return o
 }
@@ -1055,3 +1108,178 @@ func (o *LoadBalancer) SeBackendPoolNames(v []string) *LoadBalancer {
 }
 
 // endregion
+
+func (o Scaling) MarshalJSON() ([]byte, error) {
+	type noMethod Scaling
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Scaling) SetUp(v []*ScalingPolicy) *Scaling {
+	if o.Up = v; o.Up == nil {
+		o.nullFields = append(o.nullFields, "Up")
+	}
+	return o
+}
+
+func (o *Scaling) SetDown(v []*ScalingPolicy) *Scaling {
+	if o.Down = v; o.Down == nil {
+		o.nullFields = append(o.nullFields, "Down")
+	}
+	return o
+}
+
+func (o ScalingPolicy) MarshalJSON() ([]byte, error) {
+	type noMethod ScalingPolicy
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ScalingPolicy) SetPolicyName(v *string) *ScalingPolicy {
+	if o.PolicyName = v; o.PolicyName == nil {
+		o.nullFields = append(o.nullFields, "PolicyName")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetMetricName(v *string) *ScalingPolicy {
+	if o.MetricName = v; o.MetricName == nil {
+		o.nullFields = append(o.nullFields, "MetricName")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetNamespace(v *string) *ScalingPolicy {
+	if o.Namespace = v; o.Namespace == nil {
+		o.nullFields = append(o.nullFields, "Namespace")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetStatistic(v *string) *ScalingPolicy {
+	if o.Statistic = v; o.Statistic == nil {
+		o.nullFields = append(o.nullFields, "Statistic")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetUnit(v *string) *ScalingPolicy {
+	if o.Unit = v; o.Unit == nil {
+		o.nullFields = append(o.nullFields, "Unit")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetThreshold(v *float64) *ScalingPolicy {
+	if o.Threshold = v; o.Threshold == nil {
+		o.nullFields = append(o.nullFields, "Threshold")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetEvaluationPeriods(v *int) *ScalingPolicy {
+	if o.EvaluationPeriods = v; o.EvaluationPeriods == nil {
+		o.nullFields = append(o.nullFields, "EvaluationPeriods")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetPeriod(v *int) *ScalingPolicy {
+	if o.Period = v; o.Period == nil {
+		o.nullFields = append(o.nullFields, "Period")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetCooldown(v *int) *ScalingPolicy {
+	if o.Cooldown = v; o.Cooldown == nil {
+		o.nullFields = append(o.nullFields, "Cooldown")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetOperator(v *string) *ScalingPolicy {
+	if o.Operator = v; o.Operator == nil {
+		o.nullFields = append(o.nullFields, "Operator")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetDimensions(v []*Dimensions) *ScalingPolicy {
+	if o.Dimensions = v; o.Dimensions == nil {
+		o.nullFields = append(o.nullFields, "Dimensions")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetAction(v *Action) *ScalingPolicy {
+	if o.Action = v; o.Action == nil {
+		o.nullFields = append(o.nullFields, "Action")
+	}
+	return o
+}
+
+func (o Action) MarshalJSON() ([]byte, error) {
+	type noMethod Action
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Action) SetType(v *string) *Action {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Action) SetAdjustment(v *string) *Action {
+	if o.Adjustment = v; o.Adjustment == nil {
+		o.nullFields = append(o.nullFields, "Adjustment")
+	}
+	return o
+}
+
+func (o *Action) SetMaximum(v *int) *Action {
+	if o.Maximum = v; o.Maximum == nil {
+		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+func (o *Action) SetMinimum(v *int) *Action {
+	if o.Minimum = v; o.Minimum == nil {
+		o.nullFields = append(o.nullFields, "Minimum")
+	}
+	return o
+}
+
+func (o *Action) SetTarget(v *int) *Action {
+	if o.Target = v; o.Target == nil {
+		o.nullFields = append(o.nullFields, "Target")
+	}
+	return o
+}
+
+// endregion
+
+// region Dimension
+
+func (o Dimensions) MarshalJSON() ([]byte, error) {
+	type noMethod Dimensions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Dimensions) SetKey(v *string) *Dimensions {
+	if o.Key = v; o.Key == nil {
+		o.nullFields = append(o.nullFields, "Key")
+	}
+	return o
+}
+
+func (o *Dimensions) SetValue(v *string) *Dimensions {
+	if o.Value = v; o.Value == nil {
+		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
