@@ -232,6 +232,8 @@ type ScalingPolicy struct {
 	Operator          *string       `json:"operator,omitempty"`
 	Dimensions        []*Dimensions `json:"dimensions,omitempty"`
 	Action            *Action       `json:"action,omitempty"`
+	Source            *string       `json:"source,omitempty"`
+	IsEnabled         *bool         `json:"isEnabled,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -249,7 +251,7 @@ type Action struct {
 }
 
 type Dimensions struct {
-	Key   *string `json:"key,omitempty"`
+	Name  *string `json:"name,omitempty"`
 	Value *string `json:"value,omitempty"`
 
 	forceSendFields []string
@@ -1219,6 +1221,20 @@ func (o *ScalingPolicy) SetAction(v *Action) *ScalingPolicy {
 	return o
 }
 
+func (o *ScalingPolicy) SetIsEnabled(v *bool) *ScalingPolicy {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *ScalingPolicy) SetSource(v *string) *ScalingPolicy {
+	if o.Source = v; o.Source == nil {
+		o.nullFields = append(o.nullFields, "Source")
+	}
+	return o
+}
+
 func (o Action) MarshalJSON() ([]byte, error) {
 	type noMethod Action
 	raw := noMethod(o)
@@ -1270,8 +1286,8 @@ func (o Dimensions) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *Dimensions) SetKey(v *string) *Dimensions {
-	if o.Key = v; o.Key == nil {
+func (o *Dimensions) SetName(v *string) *Dimensions {
+	if o.Name = v; o.Name == nil {
 		o.nullFields = append(o.nullFields, "Key")
 	}
 	return o
