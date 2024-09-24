@@ -242,9 +242,9 @@ type ScalingPolicy struct {
 type Action struct {
 	Type       *string `json:"type,omitempty"`
 	Adjustment *string `json:"adjustment,omitempty"`
-	Maximum    *int    `json:"maximum,omitempty"`
-	Minimum    *int    `json:"minimum,omitempty"`
-	Target     *int    `json:"target,omitempty"`
+	Maximum    *string `json:"maximum,omitempty"`
+	Minimum    *string `json:"minimum,omitempty"`
+	Target     *string `json:"target,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1255,21 +1255,21 @@ func (o *Action) SetAdjustment(v *string) *Action {
 	return o
 }
 
-func (o *Action) SetMaximum(v *int) *Action {
+func (o *Action) SetMaximum(v *string) *Action {
 	if o.Maximum = v; o.Maximum == nil {
 		o.nullFields = append(o.nullFields, "Maximum")
 	}
 	return o
 }
 
-func (o *Action) SetMinimum(v *int) *Action {
+func (o *Action) SetMinimum(v *string) *Action {
 	if o.Minimum = v; o.Minimum == nil {
 		o.nullFields = append(o.nullFields, "Minimum")
 	}
 	return o
 }
 
-func (o *Action) SetTarget(v *int) *Action {
+func (o *Action) SetTarget(v *string) *Action {
 	if o.Target = v; o.Target == nil {
 		o.nullFields = append(o.nullFields, "Target")
 	}
