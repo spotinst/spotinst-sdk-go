@@ -89,6 +89,7 @@ type LaunchSpecification struct {
 	Tags                     []*Tags                   `json:"tags,omitempty"`
 	LoadBalancersConfig      *LoadBalancersConfig      `json:"loadBalancersConfig,omitempty"`
 	ShutdownScript           *string                   `json:"shutdownScript,omitempty"`
+	Extensions               []*Extensions             `json:"extensions,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -253,6 +254,29 @@ type Action struct {
 type Dimensions struct {
 	Name  *string `json:"name,omitempty"`
 	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Extensions struct {
+	APIVersion                    *string                        `json:"apiVersion,omitempty"`
+	EnableAutomaticUpgrade        *bool                          `json:"enableAutomaticUpgrade,omitempty"`
+	MinorVersionAutoUpgrade       *bool                          `json:"minorVersionAutoUpgrade,omitempty"`
+	Name                          *string                        `json:"name,omitempty"`
+	ProtectedSettingsFromKeyVault *ProtectedSettingsFromKeyVault `json:"protectedSettingsFromKeyVault,omitempty"`
+	ProtectedSettings             map[string]interface{}         `json:"protectedSettings,omitempty"`
+	PublicSettings                map[string]interface{}         `json:"publicSettings,omitempty"`
+	Publisher                     *string                        `json:"publisher,omitempty"`
+	Type                          *string                        `json:"type,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ProtectedSettingsFromKeyVault struct {
+	SecretUrl   *string `json:"secretUrl,omitempty"`
+	SourceVault *string `json:"sourceVault,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -706,6 +730,13 @@ func (o *LaunchSpecification) SetShutdownScript(v *string) *LaunchSpecification 
 func (o *LaunchSpecification) SetTags(v []*Tags) *LaunchSpecification {
 	if o.Tags = v; o.Tags == nil {
 		o.nullFields = append(o.nullFields, "Tags")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetExtensions(v []*Extensions) *LaunchSpecification {
+	if o.Extensions = v; o.Extensions == nil {
+		o.nullFields = append(o.nullFields, "Extensions")
 	}
 	return o
 }
@@ -1296,6 +1327,101 @@ func (o *Dimensions) SetName(v *string) *Dimensions {
 func (o *Dimensions) SetValue(v *string) *Dimensions {
 	if o.Value = v; o.Value == nil {
 		o.nullFields = append(o.nullFields, "Value")
+	}
+	return o
+}
+
+// endregion
+
+// region Extension
+
+func (o Extensions) MarshalJSON() ([]byte, error) {
+	type noMethod Extensions
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Extensions) SetName(v *string) *Extensions {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *Extensions) SetType(v *string) *Extensions {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+func (o *Extensions) SetPublisher(v *string) *Extensions {
+	if o.Publisher = v; o.Publisher == nil {
+		o.nullFields = append(o.nullFields, "Publisher")
+	}
+	return o
+}
+
+func (o *Extensions) SetAPIVersion(v *string) *Extensions {
+	if o.APIVersion = v; o.APIVersion == nil {
+		o.nullFields = append(o.nullFields, "APIVersion")
+	}
+	return o
+}
+
+func (o *Extensions) SetMinorVersionAutoUpgrade(v *bool) *Extensions {
+	if o.MinorVersionAutoUpgrade = v; o.MinorVersionAutoUpgrade == nil {
+		o.nullFields = append(o.nullFields, "MinorVersionAutoUpgrade")
+	}
+	return o
+}
+
+func (o *Extensions) SetEnableAutomaticUpgrade(v *bool) *Extensions {
+	if o.EnableAutomaticUpgrade = v; o.EnableAutomaticUpgrade == nil {
+		o.nullFields = append(o.nullFields, "EnableAutomaticUpgrade")
+	}
+	return o
+}
+
+func (o *Extensions) SetProtectedSettings(v map[string]interface{}) *Extensions {
+	if o.ProtectedSettings = v; o.ProtectedSettings == nil {
+		o.nullFields = append(o.nullFields, "ProtectedSettings")
+	}
+	return o
+}
+
+func (o *Extensions) SetProtectedSettingsFromKeyVault(v *ProtectedSettingsFromKeyVault) *Extensions {
+	if o.ProtectedSettingsFromKeyVault = v; o.ProtectedSettingsFromKeyVault == nil {
+		o.nullFields = append(o.nullFields, "ProtectedSettingsFromKeyVault")
+	}
+	return o
+}
+
+func (o *Extensions) SetPublicSettings(v map[string]interface{}) *Extensions {
+	if o.PublicSettings = v; o.PublicSettings == nil {
+		o.nullFields = append(o.nullFields, "PublicSettings")
+	}
+	return o
+}
+
+// endregion
+
+func (o ProtectedSettingsFromKeyVault) MarshalJSON() ([]byte, error) {
+	type noMethod ProtectedSettingsFromKeyVault
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ProtectedSettingsFromKeyVault) SetSecretUrl(v *string) *ProtectedSettingsFromKeyVault {
+	if o.SecretUrl = v; o.SecretUrl == nil {
+		o.nullFields = append(o.nullFields, "SecretUrl")
+	}
+	return o
+}
+
+func (o *ProtectedSettingsFromKeyVault) SetSourceVault(v *string) *ProtectedSettingsFromKeyVault {
+	if o.SourceVault = v; o.SourceVault == nil {
+		o.nullFields = append(o.nullFields, "SourceVault")
 	}
 	return o
 }
