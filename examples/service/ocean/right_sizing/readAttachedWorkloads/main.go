@@ -29,8 +29,8 @@ func main() {
 
 	// Read an existing right sizing rule
 	out, err := svc.RightSizing().ReadRightsizingRuleAttachedWorkloads(ctx, &right_sizing.ReadRightsizingRuleAttachedWorkloadsInput{
-		RuleName: spotinst.String("tf-rule-sharad1"),
-		OceanId:  spotinst.String("o-0d23e398"),
+		RuleName: spotinst.String("test-rule"),
+		OceanId:  spotinst.String("o-123456"),
 	})
 	if err != nil {
 		log.Fatalf("spotinst: failed to read the right sizing rule: %v", err)
