@@ -157,6 +157,18 @@ type ReadRightsizingRuleOutput struct {
 	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
 }
 
+type ReadRightsizingRuleAttachedWorkloadsInput struct {
+	RuleName *string `json:"ruleName,omitempty"`
+	OceanId  *string `json:"oceanId,omitempty"`
+}
+
+type ReadRightsizingRuleAttachedWorkloadsOutput struct {
+	RightsizingRuleAttachedWorkloads *RightsizingRuleAttachedWorkloads `json:"rightsizingRule,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
 type UpdateRightsizingRuleInput struct {
 	RuleName        *string          `json:"ruleName,omitempty"`
 	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
@@ -179,6 +191,42 @@ type CreateRightsizingRuleInput struct {
 
 type CreateRightsizingRuleOutput struct {
 	RightsizingRule *RightsizingRule `json:"rightsizingRule,omitempty"`
+}
+
+type RightsizingRuleAttachedWorkloads struct {
+	RightsizingRuleWorkloads []*RightsizingRuleWorkloads `json:"workloads,omitempty"`
+	RightsizingRuleLabels    []*RightsizingRuleLabels    `json:"labels,omitempty"`
+	RightsizingRuleRegex     []*RightsizingRuleRegex     `json:"regexes,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RightsizingRuleWorkloads struct {
+	Namespace *string `json:"namespace,omitempty"`
+	Type      *string `json:"type,omitempty"`
+	Name      *string `json:"name,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RightsizingRuleLabels struct {
+	Key       *string `json:"key,omitempty"`
+	Value     *string `json:"value,omitempty"`
+	Namespace *string `json:"namespace,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RightsizingRuleRegex struct {
+	Name         *string `json:"name,omitempty"`
+	WorkloadType *string `json:"workloadType,omitempty"`
+	Namespace    *string `json:"namespace,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 func rightsizingRuleFromJSON(in []byte) (*RightsizingRule, error) {
@@ -214,6 +262,41 @@ func rightsizingRulesFromHttpResponse(resp *http.Response) ([]*RightsizingRule, 
 		return nil, err
 	}
 	return rightsizingRulesFromJSON(body)
+}
+
+func rightsizingRulesAttachedWorkloadsFromHttpResponse(resp *http.Response) ([]*RightsizingRuleAttachedWorkloads, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	return rightsizingRulesAttachedWorkloadsFromJSON(body)
+}
+
+func rightsizingRulesAttachedWorkloadsFromJSON(in []byte) ([]*RightsizingRuleAttachedWorkloads, error) {
+	var rw client.Response
+	if err := json.Unmarshal(in, &rw); err != nil {
+		return nil, err
+	}
+	out := make([]*RightsizingRuleAttachedWorkloads, len(rw.Response.Items))
+	if len(out) == 0 {
+		return out, nil
+	}
+	for i, rb := range rw.Response.Items {
+		b, err := rightsizingRulesAttachedWorkloadFromJSON(rb)
+		if err != nil {
+			return nil, err
+		}
+		out[i] = b
+	}
+	return out, nil
+}
+
+func rightsizingRulesAttachedWorkloadFromJSON(in []byte) (*RightsizingRuleAttachedWorkloads, error) {
+	b := new(RightsizingRuleAttachedWorkloads)
+	if err := json.Unmarshal(in, b); err != nil {
+		return nil, err
+	}
+	return b, nil
 }
 
 func (s *ServiceOp) ListRightsizingRules(ctx context.Context, input *ListRightsizingRulesInput) (*ListRightsizingRulesOutput, error) {
@@ -296,6 +379,36 @@ func (s *ServiceOp) ReadRightsizingRule(ctx context.Context, input *ReadRightsiz
 	output := new(ReadRightsizingRuleOutput)
 	if len(gs) > 0 {
 		output.RightsizingRule = gs[0]
+	}
+
+	return output, nil
+}
+
+func (s *ServiceOp) ReadRightsizingRuleAttachedWorkloads(ctx context.Context, input *ReadRightsizingRuleAttachedWorkloadsInput) (*ReadRightsizingRuleAttachedWorkloadsOutput, error) {
+	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/rule/{ruleName}/workloads", uritemplates.Values{
+		"oceanId":  spotinst.StringValue(input.OceanId),
+		"ruleName": spotinst.StringValue(input.RuleName),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	r := client.NewRequest(http.MethodGet, path)
+	resp, err := client.RequireOK(s.Client.Do(ctx, r))
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	gs, err := rightsizingRulesAttachedWorkloadsFromHttpResponse(resp)
+	if err != nil {
+		return nil, err
+	}
+
+	output := new(ReadRightsizingRuleAttachedWorkloadsOutput)
+	if len(gs) > 0 {
+		output.RightsizingRuleAttachedWorkloads = gs[0]
 	}
 
 	return output, nil
