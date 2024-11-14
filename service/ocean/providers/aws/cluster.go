@@ -405,16 +405,21 @@ type RollClusterStatus struct {
 }
 
 type RollSpec struct {
-	ID                           *string  `json:"id,omitempty"`
-	ClusterID                    *string  `json:"clusterId,omitempty"`
-	Comment                      *string  `json:"comment,omitempty"`
-	Status                       *string  `json:"status,omitempty"`
-	BatchSizePercentage          *int     `json:"batchSizePercentage,omitempty"`
-	BatchMinHealthyPercentage    *int     `json:"batchMinHealthyPercentage,omitempty"`
-	RespectPDB                   *bool    `json:"respectPdb,omitempty"`
-	DisableLaunchSpecAutoScaling *bool    `json:"disableLaunchSpecAutoScaling,omitempty"`
-	LaunchSpecIDs                []string `json:"launchSpecIds,omitempty"`
-	InstanceIDs                  []string `json:"instanceIds,omitempty"`
+	ID                           *string    `json:"id,omitempty"`
+	ClusterID                    *string    `json:"clusterId,omitempty"`
+	Comment                      *string    `json:"comment,omitempty"`
+	Status                       *string    `json:"status,omitempty"`
+	BatchSizePercentage          *int       `json:"batchSizePercentage,omitempty"`
+	BatchMinHealthyPercentage    *int       `json:"batchMinHealthyPercentage,omitempty"`
+	RespectPDB                   *bool      `json:"respectPdb,omitempty"`
+	DisableLaunchSpecAutoScaling *bool      `json:"disableLaunchSpecAutoScaling,omitempty"`
+	LaunchSpecIDs                []string   `json:"launchSpecIds,omitempty"`
+	InstanceIDs                  []string   `json:"instanceIds,omitempty"`
+	Progress                     *Progress  `json:"progress,omitempty"`
+	CurrentBatch                 *int       `json:"currentBatch,omitempty"`
+	NumOfBatches                 *int       `json:"numOfBatches,omitempty"`
+	CreatedAt                    *time.Time `json:"createdAt,omitempty"`
+	UpdatedAt                    *time.Time `json:"updatedAt,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -450,7 +455,7 @@ type ListRollsInput struct {
 }
 
 type ListRollsOutput struct {
-	Rolls []*RollStatus `json:"rolls,omitempty"`
+	Rolls []*RollSpec `json:"rolls,omitempty"`
 }
 
 type CreateRollInput struct {
@@ -458,7 +463,7 @@ type CreateRollInput struct {
 }
 
 type CreateRollOutput struct {
-	Roll *RollStatus `json:"roll,omitempty"`
+	Roll *RollSpec `json:"roll,omitempty"`
 }
 
 type ReadRollInput struct {
@@ -467,7 +472,7 @@ type ReadRollInput struct {
 }
 
 type ReadRollOutput struct {
-	Roll *RollStatus `json:"roll,omitempty"`
+	Roll *RollSpec `json:"roll,omitempty"`
 }
 
 type UpdateRollInput struct {
@@ -475,7 +480,7 @@ type UpdateRollInput struct {
 }
 
 type UpdateRollOutput struct {
-	Roll *RollStatus `json:"roll,omitempty"`
+	Roll *RollSpec `json:"roll,omitempty"`
 }
 
 type GetLogEventsInput struct {
@@ -681,20 +686,20 @@ func rollClusterStatusesFromHttpResponse(resp *http.Response) ([]*RollClusterSta
 	return rollClusterStatusesFromJSON(body)
 }
 
-func rollStatusFromJSON(in []byte) (*RollStatus, error) {
-	b := new(RollStatus)
+func rollStatusFromJSON(in []byte) (*RollSpec, error) {
+	b := new(RollSpec)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func rollStatusesFromJSON(in []byte) ([]*RollStatus, error) {
+func rollStatusesFromJSON(in []byte) ([]*RollSpec, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
-	out := make([]*RollStatus, len(rw.Response.Items))
+	out := make([]*RollSpec, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
@@ -708,7 +713,7 @@ func rollStatusesFromJSON(in []byte) ([]*RollStatus, error) {
 	return out, nil
 }
 
-func rollStatusesFromHttpResponse(resp *http.Response) ([]*RollStatus, error) {
+func rollStatusesFromHttpResponse(resp *http.Response) ([]*RollSpec, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -2026,6 +2031,13 @@ func (o *RollSpec) SetLaunchSpecIDs(v []string) *RollSpec {
 func (o *RollSpec) SetInstanceIDs(v []string) *RollSpec {
 	if o.InstanceIDs = v; o.InstanceIDs == nil {
 		o.nullFields = append(o.nullFields, "InstanceIDs")
+	}
+	return o
+}
+
+func (o *RollSpec) SetClusterID(v *string) *RollSpec {
+	if o.ClusterID = v; o.ClusterID == nil {
+		o.nullFields = append(o.nullFields, "ClusterID")
 	}
 	return o
 }
