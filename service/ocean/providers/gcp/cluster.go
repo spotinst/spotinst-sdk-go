@@ -70,8 +70,16 @@ type AutoScaler struct {
 }
 
 type AutoScalerDown struct {
-	EvaluationPeriods      *int     `json:"evaluationPeriods,omitempty"`
-	MaxScaleDownPercentage *float64 `json:"maxScaleDownPercentage,omitempty"`
+	EvaluationPeriods      *int                 `json:"evaluationPeriods,omitempty"`
+	MaxScaleDownPercentage *float64             `json:"maxScaleDownPercentage,omitempty"`
+	AggressiveScaleDown    *AggressiveScaleDown `json:"aggressiveScaleDown,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AggressiveScaleDown struct {
+	IsEnabled *bool `json:"isEnabled,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -178,8 +186,22 @@ type GKE struct {
 }
 
 type InstanceTypes struct {
-	Whitelist []string `json:"whitelist,omitempty"`
-	Blacklist []string `json:"blacklist,omitempty"`
+	Whitelist      []string `json:"whitelist,omitempty"`
+	Blacklist      []string `json:"blacklist,omitempty"`
+	PreferredTypes []string `json:"preferredTypes,omitempty"`
+	Filters        *Filters `json:"filters,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Filters struct {
+	ExcludeFamilies []string `json:"excludeFamilies,omitempty"`
+	IncludeFamilies []string `json:"includeFamilies,omitempty"`
+	MaxMemoryGiB    *float64 `json:"maxMemoryGiB,omitempty"`
+	MaxVcpu         *int     `json:"maxVcpu,omitempty"`
+	MinMemoryGiB    *float64 `json:"minMemoryGiB,omitempty"`
+	MinVcpu         *int     `json:"minVcpu,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -954,6 +976,68 @@ func (o *InstanceTypes) SetBlacklist(v []string) *InstanceTypes {
 	return o
 }
 
+func (o *InstanceTypes) SetPreferredTypes(v []string) *InstanceTypes {
+	if o.PreferredTypes = v; o.PreferredTypes == nil {
+		o.nullFields = append(o.nullFields, "PreferredTypes")
+	}
+	return o
+}
+
+func (o *InstanceTypes) SetFilters(v *Filters) *InstanceTypes {
+	if o.Filters = v; o.Filters == nil {
+		o.nullFields = append(o.nullFields, "Filters")
+	}
+	return o
+}
+
+func (o Filters) MarshalJSON() ([]byte, error) {
+	type noMethod Filters
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Filters) SetExcludeFamilies(v []string) *Filters {
+	if o.ExcludeFamilies = v; o.ExcludeFamilies == nil {
+		o.nullFields = append(o.nullFields, "ExcludeFamilies")
+	}
+	return o
+}
+
+func (o *Filters) SetIncludeFamilies(v []string) *Filters {
+	if o.IncludeFamilies = v; o.IncludeFamilies == nil {
+		o.nullFields = append(o.nullFields, "IncludeFamilies")
+	}
+	return o
+}
+
+func (o *Filters) SetMaxMemoryGiB(v *float64) *Filters {
+	if o.MaxMemoryGiB = v; o.MaxMemoryGiB == nil {
+		o.nullFields = append(o.nullFields, "MaxMemoryGiB")
+	}
+	return o
+}
+
+func (o *Filters) SetMaxVcpu(v *int) *Filters {
+	if o.MaxVcpu = v; o.MaxVcpu == nil {
+		o.nullFields = append(o.nullFields, "MaxVcpu")
+	}
+	return o
+}
+
+func (o *Filters) SetMinMemoryGiB(v *float64) *Filters {
+	if o.MinMemoryGiB = v; o.MinMemoryGiB == nil {
+		o.nullFields = append(o.nullFields, "MinMemoryGiB")
+	}
+	return o
+}
+
+func (o *Filters) SetMinVcpu(v *int) *Filters {
+	if o.MinVcpu = v; o.MinVcpu == nil {
+		o.nullFields = append(o.nullFields, "MinVcpu")
+	}
+	return o
+}
+
 // endregion
 
 // region LaunchSpecification
@@ -1367,7 +1451,27 @@ func (o *AutoScalerDown) SetMaxScaleDownPercentage(v *float64) *AutoScalerDown {
 	return o
 }
 
+func (o *AutoScalerDown) SetAggressiveScaleDown(v *AggressiveScaleDown) *AutoScalerDown {
+	if o.AggressiveScaleDown = v; o.AggressiveScaleDown == nil {
+		o.nullFields = append(o.nullFields, "AggressiveScaleDown")
+	}
+	return o
+}
+
 // endregion
+
+func (o AggressiveScaleDown) MarshalJSON() ([]byte, error) {
+	type noMethod AggressiveScaleDown
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AggressiveScaleDown) SetIsEnabled(v *bool) *AggressiveScaleDown {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
 
 // region RollSpec
 
