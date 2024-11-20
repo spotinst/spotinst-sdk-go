@@ -219,6 +219,7 @@ type LaunchSpecification struct {
 	BlockDeviceMappings                           []*ClusterBlockDeviceMappings `json:"blockDeviceMappings,omitempty"`
 	LaunchSpecScheduling                          *LaunchSpecScheduling         `json:"scheduling,omitempty"`
 	ResourceTagSpecification                      *ResourceTagSpecification     `json:"resourceTagSpecification,omitempty"`
+	ReservedENIs                                  *int                          `json:"reservedENIs,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1687,6 +1688,13 @@ func (o *LaunchSpecification) SetResourceTagSpecification(v *ResourceTagSpecific
 func (o *LaunchSpecification) SetHealthCheckUnhealthyDurationBeforeReplacement(v *int) *LaunchSpecification {
 	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
 		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetReservedENIs(v *int) *LaunchSpecification {
+	if o.ReservedENIs = v; o.ReservedENIs == nil {
+		o.nullFields = append(o.nullFields, "ReservedENIs")
 	}
 	return o
 }

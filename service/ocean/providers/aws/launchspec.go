@@ -42,6 +42,7 @@ type LaunchSpec struct {
 	Images                   []*Images                          `json:"images,omitempty"`
 	InstanceTypesFilters     *InstanceTypesFilters              `json:"instanceTypesFilters,omitempty"`
 	PreferredOnDemandTypes   []string                           `json:"preferredOnDemandTypes,omitempty"`
+	ReservedENIs             *int                               `json:"reservedENIs,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -701,6 +702,13 @@ func (o *LaunchSpec) SetInstanceTypesFilters(v *InstanceTypesFilters) *LaunchSpe
 func (o *LaunchSpec) SetEphemeralStorage(v *EphemeralStorage) *LaunchSpec {
 	if o.EphemeralStorage = v; o.EphemeralStorage == nil {
 		o.nullFields = append(o.nullFields, "EphemeralStorage")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetReservedENIs(v *int) *LaunchSpec {
+	if o.ReservedENIs = v; o.ReservedENIs == nil {
+		o.nullFields = append(o.nullFields, "ReservedENIs")
 	}
 	return o
 }
