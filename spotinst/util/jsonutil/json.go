@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
-	"unsafe"
 )
 
 // MarshalJSON returns a JSON encoding of schema containing only selected fields.
@@ -65,7 +64,8 @@ func schemaToMap(schema interface{}, mustInclude, useNull map[string]struct{}) (
 			// Get a copy of `forceSendFields` slice.
 			var forceSendFields []string
 			if f := sfe.FieldByName("forceSendFields"); f.IsValid() {
-				i := reflect.NewAt(f.Type(), unsafe.Pointer(f.UnsafeAddr())).Elem().Interface()
+				//i := reflect.NewAt(f.Type(), unsafe.Pointer(f.UnsafeAddr())).Elem().Interface()
+				i := f.Interface()
 				if v, ok := i.([]string); ok {
 					forceSendFields = v
 				}
@@ -74,7 +74,8 @@ func schemaToMap(schema interface{}, mustInclude, useNull map[string]struct{}) (
 			// Get a copy of `nullFields` slice.
 			var nullFields []string
 			if f := sfe.FieldByName("nullFields"); f.IsValid() {
-				i := reflect.NewAt(f.Type(), unsafe.Pointer(f.UnsafeAddr())).Elem().Interface()
+				//i := reflect.NewAt(f.Type(), unsafe.Pointer(f.UnsafeAddr())).Elem().Interface()
+				i := f.Interface()
 				if v, ok := i.([]string); ok {
 					nullFields = v
 				}
