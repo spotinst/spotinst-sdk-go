@@ -63,22 +63,14 @@ func schemaToMap(schema interface{}, mustInclude, useNull map[string]struct{}) (
 
 			// Get a copy of `forceSendFields` slice.
 			var forceSendFields []string
-			if f := sfe.FieldByName("forceSendFields"); f.IsValid() {
-				//i := reflect.NewAt(f.Type(), unsafe.Pointer(f.UnsafeAddr())).Elem().Interface()
-				i := f.Interface()
-				if v, ok := i.([]string); ok {
-					forceSendFields = v
-				}
+			if f := sfe.FieldByName("forceSendFields"); f.IsValid() && f.Type().Kind() == reflect.Slice && f.Type().Elem().Kind() == reflect.String {
+				forceSendFields = f.Interface().([]string)
 			}
 
 			// Get a copy of `nullFields` slice.
 			var nullFields []string
-			if f := sfe.FieldByName("nullFields"); f.IsValid() {
-				//i := reflect.NewAt(f.Type(), unsafe.Pointer(f.UnsafeAddr())).Elem().Interface()
-				i := f.Interface()
-				if v, ok := i.([]string); ok {
-					nullFields = v
-				}
+			if f := sfe.FieldByName("nullFields"); f.IsValid() && f.Type().Kind() == reflect.Slice && f.Type().Elem().Kind() == reflect.String {
+				nullFields = f.Interface().([]string)
 			}
 
 			// Marshal the embedded field.
