@@ -1,7 +1,7 @@
 package spotinst
 
 // SDKVersion is the current version of the SDK.
-const SDKVersion = "1.375.0"
+const SDKVersion = "1.376.0"
 
 // SDKName is the name of the SDK.
 const SDKName = "spotinst-sdk-go"
