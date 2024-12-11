@@ -664,9 +664,10 @@ type RequiredVCpu struct {
 }
 
 type AvailabilityZone struct {
-	Name               *string `json:"name,omitempty"`
-	SubnetID           *string `json:"subnetId,omitempty"`
-	PlacementGroupName *string `json:"placementGroupName,omitempty"`
+	Name               *string  `json:"name,omitempty"`
+	SubnetID           *string  `json:"subnetId,omitempty"`
+	PlacementGroupName *string  `json:"placementGroupName,omitempty"`
+	SubnetIDs          []string `json:"subnetIds,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -4186,6 +4187,13 @@ func (o *AvailabilityZone) SetSubnetId(v *string) *AvailabilityZone {
 func (o *AvailabilityZone) SetPlacementGroupName(v *string) *AvailabilityZone {
 	if o.PlacementGroupName = v; o.PlacementGroupName == nil {
 		o.nullFields = append(o.nullFields, "PlacementGroupName")
+	}
+	return o
+}
+
+func (o *AvailabilityZone) SetSubnetIDs(v []string) *AvailabilityZone {
+	if o.SubnetIDs = v; o.SubnetIDs == nil {
+		o.nullFields = append(o.nullFields, "SubnetIDs")
 	}
 	return o
 }
