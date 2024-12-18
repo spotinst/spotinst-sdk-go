@@ -447,6 +447,7 @@ type DeallocationConfig struct {
 	SnapshotDeallocationConfig *ResourceDeallocationConfig `json:"snapshotDeallocationConfig,omitempty"`
 	PublicIPDeallocationConfig *ResourceDeallocationConfig `json:"publicIpDeallocationConfig,omitempty"`
 	ShouldDeregisterFromLb     *bool                       `json:"shouldDeregisterFromLb,omitempty"`
+	ShouldRevertToOd           *bool                       `json:"shouldRevertToOd,omitempty"`
 }
 
 type ResourceDeallocationConfig struct {
