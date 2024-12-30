@@ -52,6 +52,7 @@ type ECSStrategy struct {
 	UtilizeCommitments       *bool                  `json:"utilizeCommitments,omitempty"`
 	SpotPercentage           *int                   `json:"spotPercentage,omitempty"`
 	ClusterOrientation       *ECSClusterOrientation `json:"clusterOrientation,omitempty"`
+	FallbackToOnDemand       *bool                  `json:"fallbackToOd,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -863,6 +864,13 @@ func (o *ECSStrategy) SetUtilizeCommitments(v *bool) *ECSStrategy {
 func (o *ECSStrategy) SetSpotPercentage(v *int) *ECSStrategy {
 	if o.SpotPercentage = v; o.SpotPercentage == nil {
 		o.nullFields = append(o.nullFields, "SpotPercentage")
+	}
+	return o
+}
+
+func (o *ECSStrategy) SetFallbackToOnDemand(v *bool) *ECSStrategy {
+	if o.FallbackToOnDemand = v; o.FallbackToOnDemand == nil {
+		o.nullFields = append(o.nullFields, "FallbackToOnDemand")
 	}
 	return o
 }
