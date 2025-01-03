@@ -142,12 +142,13 @@ type BackendService struct {
 
 // Compute defines the compute attributes of a Group.
 type Compute struct {
-	AvailabilityZones   []string             `json:"availabilityZones,omitempty"`
-	GPU                 *GPU                 `json:"gpu,omitempty"`
-	Health              *Health              `json:"health,omitempty"`
-	InstanceTypes       *InstanceTypes       `json:"instanceTypes,omitempty"`
-	LaunchSpecification *LaunchSpecification `json:"launchSpecification,omitempty"`
-	Subnets             []*Subnet            `json:"subnets,omitempty"`
+	AvailabilityZones          []string             `json:"availabilityZones,omitempty"`
+	GPU                        *GPU                 `json:"gpu,omitempty"`
+	Health                     *Health              `json:"health,omitempty"`
+	InstanceTypes              *InstanceTypes       `json:"instanceTypes,omitempty"`
+	LaunchSpecification        *LaunchSpecification `json:"launchSpecification,omitempty"`
+	Subnets                    []*Subnet            `json:"subnets,omitempty"`
+	PreferredAvailabilityZones []string             `json:"preferredAvailabilityZones,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -239,6 +240,7 @@ type LaunchSpecification struct {
 	ShutdownScript       *string               `json:"shutdownScript,omitempty"`
 	Tags                 []string              `json:"tags,omitempty"`
 	InstanceNamePrefix   *string               `json:"instanceNamePrefix,omitempty"`
+	MinCpuPlatform       *string               `json:"minCpuPlatform,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -371,13 +373,14 @@ type ScalingPolicy struct {
 
 // Strategy defines the strategy attributes of a Group.
 type Strategy struct {
-	DrainingTimeout       *int                 `json:"drainingTimeout,omitempty"`
-	FallbackToOnDemand    *bool                `json:"fallbackToOd,omitempty"`
-	PreemptiblePercentage *int                 `json:"preemptiblePercentage,omitempty"`
-	OnDemandCount         *int                 `json:"onDemandCount,omitempty"`
-	ProvisioningModel     *string              `json:"provisioningModel,omitempty"`
-	RevertToPreemptible   *RevertToPreemptible `json:"revertToPreemptible,omitempty"`
-	OptimizationWindows   []string             `json:"optimizationWindows,omitempty"`
+	DrainingTimeout          *int                 `json:"drainingTimeout,omitempty"`
+	FallbackToOnDemand       *bool                `json:"fallbackToOd,omitempty"`
+	PreemptiblePercentage    *int                 `json:"preemptiblePercentage,omitempty"`
+	OnDemandCount            *int                 `json:"onDemandCount,omitempty"`
+	ProvisioningModel        *string              `json:"provisioningModel,omitempty"`
+	RevertToPreemptible      *RevertToPreemptible `json:"revertToPreemptible,omitempty"`
+	OptimizationWindows      []string             `json:"optimizationWindows,omitempty"`
+	ShouldUtilizeCommitments *bool                `json:"shouldUtilizeCommitments,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1106,6 +1109,13 @@ func (o *Compute) SetSubnets(v []*Subnet) *Compute {
 	return o
 }
 
+func (o *Compute) SetPreferredAvailabilityZones(v []string) *Compute {
+	if o.PreferredAvailabilityZones = v; o.PreferredAvailabilityZones == nil {
+		o.nullFields = append(o.nullFields, "PreferredAvailabilityZones")
+	}
+	return o
+}
+
 // region GPU Setters
 
 func (o GPU) MarshalJSON() ([]byte, error) {
@@ -1316,6 +1326,13 @@ func (o *LaunchSpecification) SetTags(v []string) *LaunchSpecification {
 func (o *LaunchSpecification) SetInstanceNamePrefix(v *string) *LaunchSpecification {
 	if o.InstanceNamePrefix = v; o.InstanceNamePrefix == nil {
 		o.nullFields = append(o.nullFields, "InstanceNamePrefix")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetMinCpuPlatform(v *string) *LaunchSpecification {
+	if o.MinCpuPlatform = v; o.MinCpuPlatform == nil {
+		o.nullFields = append(o.nullFields, "MinCpuPlatform")
 	}
 	return o
 }
@@ -2213,6 +2230,13 @@ func (o *RevertToPreemptible) SetPerformAt(v *string) *RevertToPreemptible {
 func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
 	if o.OptimizationWindows = v; o.OptimizationWindows == nil {
 		o.nullFields = append(o.nullFields, "OptimizationWindows")
+	}
+	return o
+}
+
+func (o *Strategy) SetShouldUtilizeCommitments(v *bool) *Strategy {
+	if o.ShouldUtilizeCommitments = v; o.ShouldUtilizeCommitments == nil {
+		o.nullFields = append(o.nullFields, "ShouldUtilizeCommitments")
 	}
 	return o
 }
