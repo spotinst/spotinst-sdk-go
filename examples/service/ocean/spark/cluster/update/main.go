@@ -75,6 +75,9 @@ func main() {
 						"spark-apps-extra-ns-2",
 					}),
 				},
+				Workspaces: &spark.WorkspacesConfig{
+					StorageClassOverride: spotinst.String("another-storage-class"),
+				},
 			},
 		},
 	})
