@@ -98,6 +98,7 @@ func main() {
 						SubnetIDs: []string{
 							"subnet-12345",
 						},
+						PlacementGroupName: spotinst.String("placement_group_name"),
 					},
 					{
 						Name: spotinst.String("us-west-2b"),
