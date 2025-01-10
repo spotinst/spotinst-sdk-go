@@ -32,6 +32,9 @@ func main() {
 		Cluster: &gcp.Cluster{
 			Name:                spotinst.String("foo"),
 			ControllerClusterID: spotinst.String("foo"),
+			AutoUpdate: &gcp.AutoUpdate{
+				IsEnabled: spotinst.Bool(true),
+			},
 			Scheduling: &gcp.Scheduling{
 				Tasks: []*gcp.Task{
 					{
