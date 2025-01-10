@@ -92,6 +92,18 @@ func main() {
 					"subnet-12345",
 					"subnet-67890",
 				},
+				AvailabilityZones: []*aws.AvailabilityZone{
+					{
+						Name: spotinst.String("us-west-2a"),
+						SubnetIDs: []string{
+							"subnet-12345",
+						},
+						PlacementGroupName: spotinst.String("placement_group_name"),
+					},
+					{
+						Name: spotinst.String("us-west-2b"),
+					},
+				},
 				LaunchSpecification: &aws.LaunchSpecification{
 					ImageID:          spotinst.String("ami-12345"),
 					Monitoring:       spotinst.Bool(false),
