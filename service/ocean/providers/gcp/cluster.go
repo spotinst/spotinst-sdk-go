@@ -23,6 +23,7 @@ type Cluster struct {
 	Compute             *Compute    `json:"compute,omitempty"`
 	Strategy            *Strategy   `json:"strategy,omitempty"`
 	GKE                 *GKE        `json:"gke,omitempty"`
+	AutoUpdate          *AutoUpdate `json:"autoUpdate,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -347,6 +348,13 @@ type CreateRollInput struct {
 
 type CreateRollOutput struct {
 	Roll *RollStatus `json:"roll,omitempty"`
+}
+
+type AutoUpdate struct {
+	IsEnabled *bool `json:"isEnabled,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
 }
 
 func clusterFromJSON(in []byte) (*Cluster, error) {
@@ -701,6 +709,13 @@ func (o *Cluster) SetGKE(v *GKE) *Cluster {
 func (o *Cluster) SetScheduling(v *Scheduling) *Cluster {
 	if o.Scheduling = v; o.Scheduling == nil {
 		o.nullFields = append(o.nullFields, "Scheduling")
+	}
+	return o
+}
+
+func (o *Cluster) SetAutoUpdate(v *AutoUpdate) *Cluster {
+	if o.AutoUpdate = v; o.AutoUpdate == nil {
+		o.nullFields = append(o.nullFields, "AutoUpdate")
 	}
 	return o
 }
@@ -1596,6 +1611,23 @@ func (o ClusterRoll) MarshalJSON() ([]byte, error) {
 	type noMethod ClusterRoll
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// endregion
+
+// region AutoUpdate
+
+func (o AutoUpdate) MarshalJSON() ([]byte, error) {
+	type noMethod AutoUpdate
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoUpdate) SetIsEnabled(v *bool) *AutoUpdate {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
 }
 
 // endregion
