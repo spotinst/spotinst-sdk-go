@@ -31,6 +31,14 @@ type Config struct {
 	Compute       *ComputeConfig       `json:"compute,omitempty"`
 	LogCollection *LogCollectionConfig `json:"logCollection,omitempty"`
 	Spark         *SparkConfig         `json:"spark,omitempty"`
+	Workspaces    *WorkspacesConfig    `json:"workspaces,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type WorkspacesConfig struct {
+	StorageClassOverride *string `json:"storageClassOverride,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -191,6 +199,13 @@ func (c Config) MarshalJSON() ([]byte, error) {
 func (c *Config) SetIngress(v *IngressConfig) *Config {
 	if c.Ingress = v; c.Ingress == nil {
 		c.nullFields = append(c.nullFields, "Ingress")
+	}
+	return c
+}
+
+func (c *Config) SetWorkspaces(v *WorkspacesConfig) *Config {
+	if c.Workspaces = v; c.Workspaces == nil {
+		c.nullFields = append(c.nullFields, "Workspaces")
 	}
 	return c
 }
@@ -441,6 +456,23 @@ func (l *LogCollectionConfig) SetCollectAppLogs(v *bool) *LogCollectionConfig {
 		l.nullFields = append(l.nullFields, "CollectAppLogs")
 	}
 	return l
+}
+
+// endregion
+
+// region Workspaces
+
+func (w WorkspacesConfig) MarshalJSON() ([]byte, error) {
+	type noMethod WorkspacesConfig
+	raw := noMethod(w)
+	return jsonutil.MarshalJSON(raw, w.forceSendFields, w.nullFields)
+}
+
+func (w *WorkspacesConfig) SetStorageClassOverride(v *string) *WorkspacesConfig {
+	if w.StorageClassOverride = v; w.StorageClassOverride == nil {
+		w.nullFields = append(w.nullFields, "StorageClassOverride")
+	}
+	return w
 }
 
 // endregion
