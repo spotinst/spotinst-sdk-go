@@ -56,6 +56,13 @@ func (o *Credentials) SetSubscriptionId(v *string) *Credentials {
 	return o
 }
 
+func (o *Credentials) SetAccountId(v *string) *Credentials {
+	if o.AccountId = v; o.AccountId == nil {
+		o.nullFields = append(o.nullFields, "AccountId")
+	}
+	return o
+}
+
 type SetCredentialsInput struct {
 	Credentials *Credentials `json:"credentials,omitempty"`
 }
