@@ -22,7 +22,7 @@ type ClusterNodes struct {
 	NodeName                     *string  `json:"nodeName,omitempty"`
 	RegistrationStatus           *string  `json:"registrationStatus,omitempty"`
 	WorkloadRequestedMilliCpu    *int     `json:"workloadRequestedMilliCpu,omitempty"`
-	WorkloadRequestedMemoryInMiB *int     `json:"workloadRequestedMemoryInMiB,omitempty"`
+	WorkloadRequestedMemoryInMiB *float64 `json:"workloadRequestedMemoryInMiB,omitempty"`
 	WorkloadRequestedGpu         *int     `json:"workloadRequestedGpu,omitempty"`
 	HeadroomRequestedMilliCpu    *int     `json:"headroomRequestedMilliCpu,omitempty"`
 	HeadroomRequestedMemoryInMiB *int     `json:"headroomRequestedMemoryInMiB,omitempty"`
