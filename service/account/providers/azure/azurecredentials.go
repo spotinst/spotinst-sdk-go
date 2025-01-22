@@ -11,15 +11,13 @@ import (
 )
 
 type Credentials struct {
-	AccountId      *string `json:"accountId,omitempty"`
-	ClientId       *string `json:"clientId,omitempty"`
-	ClientSecret   *string `json:"clientSecret,omitempty"`
-	TenantId       *string `json:"tenantId,omitempty"`
-	SubscriptionId *string `json:"subscriptionId,omitempty"`
-
+	AccountId       *string `json:"accountId,omitempty"`
+	ClientId        *string `json:"clientId,omitempty"`
+	ClientSecret    *string `json:"clientSecret,omitempty"`
+	TenantId        *string `json:"tenantId,omitempty"`
+	SubscriptionId  *string `json:"subscriptionId,omitempty"`
 	forceSendFields []string
-
-	nullFields []string
+	nullFields      []string
 }
 
 func (o Credentials) MarshalJSON() ([]byte, error) {
