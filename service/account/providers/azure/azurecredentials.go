@@ -16,6 +16,7 @@ type Credentials struct {
 	ClientSecret    *string `json:"clientSecret,omitempty"`
 	TenantId        *string `json:"tenantId,omitempty"`
 	SubscriptionId  *string `json:"subscriptionId,omitempty"`
+	
 	forceSendFields []string
 	nullFields      []string
 }
