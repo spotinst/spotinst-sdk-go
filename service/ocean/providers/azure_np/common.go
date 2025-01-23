@@ -304,14 +304,23 @@ func (o *Headrooms) SetNumOfUnits(v *int) *Headrooms {
 //region Scheduling
 
 type Scheduling struct {
-	ShutdownHours *ShutdownHours `json:"shutdownHours,omitempty"`
-	Tasks         []*Tasks       `json:"tasks,omitempty"`
+	ShutdownHours   *ShutdownHours   `json:"shutdownHours,omitempty"`
+	Tasks           []*Tasks         `json:"tasks,omitempty"`
+	SuspensionHours *SuspensionHours `json:"suspensionHours,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type ShutdownHours struct {
+	TimeWindows []string `json:"timeWindows,omitempty"`
+	IsEnabled   *bool    `json:"isEnabled,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type SuspensionHours struct {
 	TimeWindows []string `json:"timeWindows,omitempty"`
 	IsEnabled   *bool    `json:"isEnabled,omitempty"`
 
@@ -330,7 +339,8 @@ type Tasks struct {
 }
 
 type Parameters struct {
-	ClusterRoll *ParameterClusterRoll `json:"clusterRoll,omitempty"`
+	ClusterRoll   *ParameterClusterRoll `json:"clusterRoll,omitempty"`
+	UpgradeConfig *UpgradeConfig        `json:"upgradeConfig,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -343,6 +353,15 @@ type ParameterClusterRoll struct {
 	RespectRestrictScaleDown  *bool    `json:"respectRestrictScaleDown,omitempty"`
 	BatchMinHealthyPercentage *int     `json:"batchMinHealthyPercentage,omitempty"`
 	VngIds                    []string `json:"vngIds,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type UpgradeConfig struct {
+	ApplyRoll      *bool                 `json:"applyRoll,omitempty"`
+	ScopeVersion   *string               `json:"scopeVersion,omitempty"`
+	RollParameters *ParameterClusterRoll `json:"rollParameters,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -361,6 +380,13 @@ func (o *Scheduling) SetShutdownHours(v *ShutdownHours) *Scheduling {
 	return o
 }
 
+func (o *Scheduling) SetSuspensionHours(v *SuspensionHours) *Scheduling {
+	if o.SuspensionHours = v; o.SuspensionHours == nil {
+		o.nullFields = append(o.nullFields, "SuspensionHours")
+	}
+	return o
+}
+
 func (o ShutdownHours) MarshalJSON() ([]byte, error) {
 	type noMethod ShutdownHours
 	raw := noMethod(o)
@@ -375,6 +401,26 @@ func (o *ShutdownHours) SetTimeWindows(v []string) *ShutdownHours {
 }
 
 func (o *ShutdownHours) SetIsEnabled(v *bool) *ShutdownHours {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o SuspensionHours) MarshalJSON() ([]byte, error) {
+	type noMethod SuspensionHours
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *SuspensionHours) SetTimeWindows(v []string) *SuspensionHours {
+	if o.TimeWindows = v; o.TimeWindows == nil {
+		o.nullFields = append(o.nullFields, "TimeWindows")
+	}
+	return o
+}
+
+func (o *SuspensionHours) SetIsEnabled(v *bool) *SuspensionHours {
 	if o.IsEnabled = v; o.IsEnabled == nil {
 		o.nullFields = append(o.nullFields, "IsEnabled")
 	}
@@ -605,6 +651,13 @@ func (o *Parameters) SetClusterRoll(v *ParameterClusterRoll) *Parameters {
 	return o
 }
 
+func (o *Parameters) SetUpgradeConfig(v *UpgradeConfig) *Parameters {
+	if o.UpgradeConfig = v; o.UpgradeConfig == nil {
+		o.nullFields = append(o.nullFields, "UpgradeConfig")
+	}
+	return o
+}
+
 func (o ParameterClusterRoll) MarshalJSON() ([]byte, error) {
 	type noMethod ParameterClusterRoll
 	raw := noMethod(o)
@@ -657,3 +710,30 @@ func (o *ParameterClusterRoll) SetVngIds(v []string) *ParameterClusterRoll {
 }
 
 // endregion
+
+func (o UpgradeConfig) MarshalJSON() ([]byte, error) {
+	type noMethod UpgradeConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *UpgradeConfig) SetApplyRoll(v *bool) *UpgradeConfig {
+	if o.ApplyRoll = v; o.ApplyRoll == nil {
+		o.nullFields = append(o.nullFields, "ApplyRoll")
+	}
+	return o
+}
+
+func (o *UpgradeConfig) SetScopeVersion(v *string) *UpgradeConfig {
+	if o.ScopeVersion = v; o.ScopeVersion == nil {
+		o.nullFields = append(o.nullFields, "ScopeVersion")
+	}
+	return o
+}
+
+func (o *UpgradeConfig) SetRollParameters(v *ParameterClusterRoll) *UpgradeConfig {
+	if o.RollParameters = v; o.RollParameters == nil {
+		o.nullFields = append(o.nullFields, "RollParameteres")
+	}
+	return o
+}

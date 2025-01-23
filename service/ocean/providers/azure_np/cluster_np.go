@@ -22,6 +22,7 @@ type Cluster struct {
 	Health                   *Health                   `json:"health,omitempty"`
 	VirtualNodeGroupTemplate *VirtualNodeGroupTemplate `json:"virtualNodeGroupTemplate,omitempty"`
 	Scheduling               *Scheduling               `json:"scheduling,omitempty"`
+	Logging                  *Logging                  `json:"logging,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -68,6 +69,28 @@ type VirtualNodeGroupTemplate struct {
 	Taints             []*Taint            `json:"taints,omitempty"`
 	AutoScale          *AutoScale          `json:"autoScale,omitempty"`
 	VmSizes            *VmSizes            `json:"vmSizes,omitempty"`
+	Scheduling         *Scheduling         `json:"scheduling,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Logging struct {
+	Export *Export `json:"export,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type Export struct {
+	AzureBlob *AzureBlob `json:"azureBlob,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AzureBlob struct {
+	Id *string `json:"id,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -513,6 +536,13 @@ func (o *Cluster) SetScheduling(v *Scheduling) *Cluster {
 	return o
 }
 
+func (o *Cluster) SetLogging(v *Logging) *Cluster {
+	if o.Logging = v; o.Logging == nil {
+		o.nullFields = append(o.nullFields, "Logging")
+	}
+	return o
+}
+
 // endregion
 
 // region AKS
@@ -744,6 +774,13 @@ func (o *VirtualNodeGroupTemplate) SetVmSizes(v *VmSizes) *VirtualNodeGroupTempl
 	return o
 }
 
+func (o *VirtualNodeGroupTemplate) SetScheduling(v *Scheduling) *VirtualNodeGroupTemplate {
+	if o.Scheduling = v; o.Scheduling == nil {
+		o.nullFields = append(o.nullFields, "Scheduling")
+	}
+	return o
+}
+
 // endregion
 
 // region Health
@@ -757,6 +794,45 @@ func (o Health) MarshalJSON() ([]byte, error) {
 func (o *Health) SetGracePeriod(v *int) *Health {
 	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o Logging) MarshalJSON() ([]byte, error) {
+	type noMethod Logging
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Logging) SetExport(v *Export) *Logging {
+	if o.Export = v; o.Export == nil {
+		o.nullFields = append(o.nullFields, "Export")
+	}
+	return o
+}
+
+func (o Export) MarshalJSON() ([]byte, error) {
+	type noMethod Export
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *Export) SetAzureBlob(v *AzureBlob) *Export {
+	if o.AzureBlob = v; o.AzureBlob == nil {
+		o.nullFields = append(o.nullFields, "AzureBlob")
+	}
+	return o
+}
+
+func (o AzureBlob) MarshalJSON() ([]byte, error) {
+	type noMethod AzureBlob
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AzureBlob) SetId(v *string) *AzureBlob {
+	if o.Id = v; o.Id == nil {
+		o.nullFields = append(o.nullFields, "Id")
 	}
 	return o
 }
