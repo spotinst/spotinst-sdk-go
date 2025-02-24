@@ -212,8 +212,46 @@ type IAMInstanceProfile struct {
 }
 
 type InstanceTypes struct {
-	PreferredType *string  `json:"preferredType,omitempty"`
-	Types         []string `json:"types,omitempty"`
+	PreferredType        *string               `json:"preferredType,omitempty"`
+	Types                []string              `json:"types,omitempty"`
+	PreferredTypes       []string              `json:"preferredTypes,omitempty"`
+	ResourceRequirements *ResourceRequirements `json:"resourceRequirements,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ResourceRequirements struct {
+	ExcludedInstanceFamilies    []string        `json:"excludedInstanceFamilies,omitempty"`
+	ExcludedInstanceGenerations []string        `json:"excludedInstanceGenerations,omitempty"`
+	ExcludedInstanceTypes       []string        `json:"excludedInstanceTypes,omitempty"`
+	RequiredGpu                 *RequiredGpu    `json:"requiredGpu,omitempty"`
+	RequiredMemory              *RequiredMemory `json:"requiredMemory,omitempty"`
+	RequiredVCpu                *RequiredVCpu   `json:"requiredVCpu,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RequiredGpu struct {
+	Maximum *int `json:"maximum,omitempty"`
+	Minimum *int `json:"minimum,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RequiredMemory struct {
+	Maximum *int `json:"maximum,omitempty"`
+	Minimum *int `json:"minimum,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type RequiredVCpu struct {
+	Maximum *int `json:"maximum,omitempty"`
+	Minimum *int `json:"minimum,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1328,7 +1366,129 @@ func (o *InstanceTypes) SetInstanceTypes(v []string) *InstanceTypes {
 	return o
 }
 
+func (o *InstanceTypes) SetPreferredTypes(v []string) *InstanceTypes {
+	if o.PreferredTypes = v; o.PreferredTypes == nil {
+		o.nullFields = append(o.nullFields, "PreferredTypes")
+	}
+	return o
+}
+
+func (o *InstanceTypes) SetResourceRequirements(v *ResourceRequirements) *InstanceTypes {
+	if o.ResourceRequirements = v; o.ResourceRequirements == nil {
+		o.nullFields = append(o.nullFields, "ResourceRequirements")
+	}
+	return o
+}
+
 // endregion
+
+func (o ResourceRequirements) MarshalJSON() ([]byte, error) {
+	type noMethod ResourceRequirements
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ResourceRequirements) SetExcludedInstanceFamilies(v []string) *ResourceRequirements {
+	if o.ExcludedInstanceFamilies = v; o.ExcludedInstanceFamilies == nil {
+		o.nullFields = append(o.nullFields, "ExcludedInstanceFamilies")
+	}
+	return o
+}
+
+func (o *ResourceRequirements) SetExcludedInstanceGenerations(v []string) *ResourceRequirements {
+	if o.ExcludedInstanceGenerations = v; o.ExcludedInstanceGenerations == nil {
+		o.nullFields = append(o.nullFields, "ExcludedInstanceGenerations")
+	}
+	return o
+}
+
+func (o *ResourceRequirements) SetExcludedInstanceTypes(v []string) *ResourceRequirements {
+	if o.ExcludedInstanceTypes = v; o.ExcludedInstanceTypes == nil {
+		o.nullFields = append(o.nullFields, "ExcludedInstanceTypes")
+	}
+	return o
+}
+
+func (o *ResourceRequirements) SetRequiredGpu(v *RequiredGpu) *ResourceRequirements {
+	if o.RequiredGpu = v; o.RequiredGpu == nil {
+		o.nullFields = append(o.nullFields, "RequiredGpu")
+	}
+	return o
+}
+
+func (o *ResourceRequirements) SetRequiredVCpu(v *RequiredVCpu) *ResourceRequirements {
+	if o.RequiredVCpu = v; o.RequiredVCpu == nil {
+		o.nullFields = append(o.nullFields, "RequiredVCpu")
+	}
+	return o
+}
+
+func (o *ResourceRequirements) SetRequiredMemory(v *RequiredMemory) *ResourceRequirements {
+	if o.RequiredMemory = v; o.RequiredMemory == nil {
+		o.nullFields = append(o.nullFields, "RequiredMemory")
+	}
+	return o
+}
+
+func (o RequiredGpu) MarshalJSON() ([]byte, error) {
+	type noMethod RequiredGpu
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RequiredGpu) SetMaximum(v *int) *RequiredGpu {
+	if o.Maximum = v; o.Maximum == nil {
+		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+func (o *RequiredGpu) SetMinimum(v *int) *RequiredGpu {
+	if o.Minimum = v; o.Minimum == nil {
+		o.nullFields = append(o.nullFields, "Minimum")
+	}
+	return o
+}
+
+func (o RequiredMemory) MarshalJSON() ([]byte, error) {
+	type noMethod RequiredMemory
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RequiredMemory) SetMaximum(v *int) *RequiredMemory {
+	if o.Maximum = v; o.Maximum == nil {
+		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+func (o *RequiredMemory) SetMinimum(v *int) *RequiredMemory {
+	if o.Minimum = v; o.Minimum == nil {
+		o.nullFields = append(o.nullFields, "Minimum")
+	}
+	return o
+}
+
+func (o RequiredVCpu) MarshalJSON() ([]byte, error) {
+	type noMethod RequiredVCpu
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *RequiredVCpu) SetMaximum(v *int) *RequiredVCpu {
+	if o.Maximum = v; o.Maximum == nil {
+		o.nullFields = append(o.nullFields, "Maximum")
+	}
+	return o
+}
+
+func (o *RequiredVCpu) SetMinimum(v *int) *RequiredVCpu {
+	if o.Minimum = v; o.Minimum == nil {
+		o.nullFields = append(o.nullFields, "Minimum")
+	}
+	return o
+}
 
 // region HealthCheck
 
