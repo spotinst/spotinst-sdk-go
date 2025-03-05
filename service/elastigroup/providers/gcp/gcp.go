@@ -229,18 +229,19 @@ type Label struct {
 
 // LaunchSpecification defines launch attributes for the Group. LaunchSpecification is an element of Compute.
 type LaunchSpecification struct {
-	BackendServiceConfig *BackendServiceConfig `json:"backendServiceConfig,omitempty"`
-	Disks                []*Disk               `json:"disks,omitempty"`
-	Labels               []*Label              `json:"labels,omitempty"`
-	IPForwarding         *bool                 `json:"ipForwarding,omitempty"`
-	NetworkInterfaces    []*NetworkInterface   `json:"networkInterfaces,omitempty"`
-	Metadata             []*Metadata           `json:"metadata,omitempty"`
-	ServiceAccount       *string               `json:"serviceAccount,omitempty"`
-	StartupScript        *string               `json:"startupScript,omitempty"`
-	ShutdownScript       *string               `json:"shutdownScript,omitempty"`
-	Tags                 []string              `json:"tags,omitempty"`
-	InstanceNamePrefix   *string               `json:"instanceNamePrefix,omitempty"`
-	MinCpuPlatform       *string               `json:"minCpuPlatform,omitempty"`
+	BackendServiceConfig   *BackendServiceConfig   `json:"backendServiceConfig,omitempty"`
+	Disks                  []*Disk                 `json:"disks,omitempty"`
+	Labels                 []*Label                `json:"labels,omitempty"`
+	IPForwarding           *bool                   `json:"ipForwarding,omitempty"`
+	NetworkInterfaces      []*NetworkInterface     `json:"networkInterfaces,omitempty"`
+	Metadata               []*Metadata             `json:"metadata,omitempty"`
+	ServiceAccount         *string                 `json:"serviceAccount,omitempty"`
+	StartupScript          *string                 `json:"startupScript,omitempty"`
+	ShutdownScript         *string                 `json:"shutdownScript,omitempty"`
+	Tags                   []string                `json:"tags,omitempty"`
+	InstanceNamePrefix     *string                 `json:"instanceNamePrefix,omitempty"`
+	MinCpuPlatform         *string                 `json:"minCpuPlatform,omitempty"`
+	ShieldedInstanceConfig *ShieldedInstanceConfig `json:"shieldedInstanceConfig,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -279,6 +280,14 @@ type NetworkInterface struct {
 type Subnet struct {
 	Region      *string  `json:"region,omitempty"`
 	SubnetNames []string `json:"subnetNames,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ShieldedInstanceConfig struct {
+	EnableSecureBoot          *bool `json:"enableSecureBoot,omitempty"`
+	EnableIntegrityMonitoring *bool `json:"enableIntegrityMonitoring,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1337,6 +1346,13 @@ func (o *LaunchSpecification) SetMinCpuPlatform(v *string) *LaunchSpecification 
 	return o
 }
 
+func (o *LaunchSpecification) SetShieldedInstanceConfig(v *ShieldedInstanceConfig) *LaunchSpecification {
+	if o.ShieldedInstanceConfig = v; o.ShieldedInstanceConfig == nil {
+		o.nullFields = append(o.nullFields, "ShieldedInstanceConfig")
+	}
+	return o
+}
+
 // region BackendServiceConfig setters
 
 func (o BackendServiceConfig) MarshalJSON() ([]byte, error) {
@@ -2242,3 +2258,23 @@ func (o *Strategy) SetShouldUtilizeCommitments(v *bool) *Strategy {
 }
 
 // endregion
+
+func (o ShieldedInstanceConfig) MarshalJSON() ([]byte, error) {
+	type noMethod ShieldedInstanceConfig
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ShieldedInstanceConfig) SetEnableSecureBoot(v *bool) *ShieldedInstanceConfig {
+	if o.EnableSecureBoot = v; o.EnableSecureBoot == nil {
+		o.nullFields = append(o.nullFields, "EnableSecureBoot")
+	}
+	return o
+}
+
+func (o *ShieldedInstanceConfig) SetEnableIntegrityMonitoring(v *bool) *ShieldedInstanceConfig {
+	if o.EnableIntegrityMonitoring = v; o.EnableIntegrityMonitoring == nil {
+		o.nullFields = append(o.nullFields, "EnableIntegrityMonitoring")
+	}
+	return o
+}
