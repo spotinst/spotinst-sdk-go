@@ -220,6 +220,7 @@ type LaunchSpecification struct {
 	LaunchSpecScheduling                          *LaunchSpecScheduling         `json:"scheduling,omitempty"`
 	ResourceTagSpecification                      *ResourceTagSpecification     `json:"resourceTagSpecification,omitempty"`
 	ReservedENIs                                  *int                          `json:"reservedENIs,omitempty"`
+	InstanceStorePolicy                           *InstanceStorePolicy          `json:"instanceStorePolicy,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1695,6 +1696,13 @@ func (o *LaunchSpecification) SetHealthCheckUnhealthyDurationBeforeReplacement(v
 func (o *LaunchSpecification) SetReservedENIs(v *int) *LaunchSpecification {
 	if o.ReservedENIs = v; o.ReservedENIs == nil {
 		o.nullFields = append(o.nullFields, "ReservedENIs")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetInstanceStorePolicy(v *InstanceStorePolicy) *LaunchSpecification {
+	if o.InstanceStorePolicy = v; o.InstanceStorePolicy == nil {
+		o.nullFields = append(o.nullFields, "InstanceStorePolicy")
 	}
 	return o
 }
