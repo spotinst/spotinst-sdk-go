@@ -535,6 +535,7 @@ type Strategy struct {
 	ConsiderODPricing           *bool            `json:"considerODPricing,omitempty"`
 	ImmediateODRecoverThreshold *int             `json:"immediateODRecoverThreshold,omitempty"`
 	RestrictSingleAz            *bool            `json:"restrictSingleAz,omitempty"`
+	MaxReplacementsPercentage   *int             `json:"maxReplacementsPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -3725,6 +3726,13 @@ func (o *Strategy) SetRestrictSingleAz(v *bool) *Strategy {
 func (o *Strategy) SetConsiderODPricing(v *bool) *Strategy {
 	if o.ConsiderODPricing = v; o.ConsiderODPricing == nil {
 		o.nullFields = append(o.nullFields, "ConsiderODPricing")
+	}
+	return o
+}
+
+func (o *Strategy) SetMaxReplacementsPercentage(v *int) *Strategy {
+	if o.MaxReplacementsPercentage = v; o.MaxReplacementsPercentage == nil {
+		o.nullFields = append(o.nullFields, "MaxReplacementsPercentage")
 	}
 	return o
 }
