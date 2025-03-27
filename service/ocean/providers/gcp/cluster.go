@@ -51,6 +51,7 @@ type Strategy struct {
 	ProvisioningModel        *string `json:"provisioningModel,omitempty"`
 	PreemptiblePercentage    *int    `json:"preemptiblePercentage,omitempty"`
 	ShouldUtilizeCommitments *bool   `json:"shouldUtilizeCommitments,omitempty"`
+	ScalingOrientation       *string `json:"scalingOrientation,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -918,6 +919,13 @@ func (o *Strategy) SetPreemptiblePercentage(v *int) *Strategy {
 func (o *Strategy) SetShouldUtilizeCommitments(v *bool) *Strategy {
 	if o.ShouldUtilizeCommitments = v; o.ShouldUtilizeCommitments == nil {
 		o.nullFields = append(o.nullFields, "ShouldUtilizeCommitments")
+	}
+	return o
+}
+
+func (o *Strategy) SetScalingOrientation(v *string) *Strategy {
+	if o.ScalingOrientation = v; o.ScalingOrientation == nil {
+		o.nullFields = append(o.nullFields, "ScalingOrientation")
 	}
 	return o
 }

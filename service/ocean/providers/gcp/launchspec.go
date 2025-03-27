@@ -88,7 +88,8 @@ type AutoScaleHeadroom struct {
 }
 
 type LaunchSpecStrategy struct {
-	PreemptiblePercentage *int `json:"preemptiblePercentage,omitempty"`
+	PreemptiblePercentage *int    `json:"preemptiblePercentage,omitempty"`
+	ScalingOrientation    *string `json:"scalingOrientation,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -693,6 +694,13 @@ func (o LaunchSpecStrategy) MarshalJSON() ([]byte, error) {
 func (o *LaunchSpecStrategy) SetPreemptiblePercentage(v *int) *LaunchSpecStrategy {
 	if o.PreemptiblePercentage = v; o.PreemptiblePercentage == nil {
 		o.nullFields = append(o.nullFields, "PreemptiblePercentage")
+	}
+	return o
+}
+
+func (o *LaunchSpecStrategy) SetScalingOrientation(v *string) *LaunchSpecStrategy {
+	if o.ScalingOrientation = v; o.ScalingOrientation == nil {
+		o.nullFields = append(o.nullFields, "ScalingOrientation")
 	}
 	return o
 }
