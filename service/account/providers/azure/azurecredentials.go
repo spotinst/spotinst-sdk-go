@@ -16,6 +16,7 @@ type Credentials struct {
 	ClientSecret   *string `json:"clientSecret,omitempty"`
 	TenantId       *string `json:"tenantId,omitempty"`
 	SubscriptionId *string `json:"subscriptionId,omitempty"`
+	ExpirationDate *string `json:"expirationDate,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -58,6 +59,13 @@ func (o *Credentials) SetSubscriptionId(v *string) *Credentials {
 func (o *Credentials) SetAccountId(v *string) *Credentials {
 	if o.AccountId = v; o.AccountId == nil {
 		o.nullFields = append(o.nullFields, "AccountId")
+	}
+	return o
+}
+
+func (o *Credentials) SetExpirationDate(v *string) *Credentials {
+	if o.ExpirationDate = v; o.ExpirationDate == nil {
+		o.nullFields = append(o.nullFields, "ExpirationDate")
 	}
 	return o
 }
