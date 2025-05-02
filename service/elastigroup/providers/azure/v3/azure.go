@@ -83,9 +83,23 @@ type Compute struct {
 }
 
 type VMSizes struct {
-	OnDemandSizes      []string `json:"odSizes,omitempty"`
-	SpotSizes          []string `json:"spotSizes,omitempty"`
-	PreferredSpotSizes []string `json:"preferredSpotSizes,omitempty"`
+	OnDemandSizes      []string            `json:"odSizes,omitempty"`
+	SpotSizes          []string            `json:"spotSizes,omitempty"`
+	PreferredSpotSizes []string            `json:"preferredSpotSizes,omitempty"`
+	SpotSizeAttributes *SpotSizeAttributes `json:"spotSizeAttributes,omitempty"`
+	ExcludedVmSizes    []string            `json:"excludedVmSizes,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type SpotSizeAttributes struct {
+	MaxCpu     *int `json:"maxCpu,omitempty"`
+	MaxMemory  *int `json:"maxMemory,omitempty"`
+	MaxStorage *int `json:"maxStorage,omitempty"`
+	MinCpu     *int `json:"minCpu,omitempty"`
+	MinMemory  *int `json:"minMemory,omitempty"`
+	MinStorage *int `json:"minStorage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -914,6 +928,72 @@ func (o *VMSizes) SetSpotSizes(v []string) *VMSizes {
 func (o *VMSizes) SetPreferredSpotSizes(v []string) *VMSizes {
 	if o.PreferredSpotSizes = v; o.PreferredSpotSizes == nil {
 		o.nullFields = append(o.nullFields, "PreferredSpotSizes")
+	}
+	return o
+}
+
+func (o *VMSizes) SetSpotSizeAttributes(v *SpotSizeAttributes) *VMSizes {
+	if o.SpotSizeAttributes = v; o.SpotSizeAttributes == nil {
+		o.nullFields = append(o.nullFields, "SpotSizeAttributes")
+	}
+	return o
+}
+
+func (o *VMSizes) SetExcludedVmSizes(v []string) *VMSizes {
+	if o.ExcludedVmSizes = v; o.ExcludedVmSizes == nil {
+		o.nullFields = append(o.nullFields, "ExcludedVmSizes")
+	}
+	return o
+}
+
+// endregion
+
+// region SpotSizeAttributes
+
+func (o SpotSizeAttributes) MarshalJSON() ([]byte, error) {
+	type noMethod SpotSizeAttributes
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *SpotSizeAttributes) SetMaxCpu(v *int) *SpotSizeAttributes {
+	if o.MaxCpu = v; o.MaxCpu == nil {
+		o.nullFields = append(o.nullFields, "MaxCpu")
+	}
+	return o
+}
+
+func (o *SpotSizeAttributes) SetMaxMemory(v *int) *SpotSizeAttributes {
+	if o.MaxMemory = v; o.MaxMemory == nil {
+		o.nullFields = append(o.nullFields, "MaxMemory")
+	}
+	return o
+}
+
+func (o *SpotSizeAttributes) SetMaxStorage(v *int) *SpotSizeAttributes {
+	if o.MaxStorage = v; o.MaxStorage == nil {
+		o.nullFields = append(o.nullFields, "MaxStorage")
+	}
+	return o
+}
+
+func (o *SpotSizeAttributes) SetMinCpu(v *int) *SpotSizeAttributes {
+	if o.MinCpu = v; o.MinCpu == nil {
+		o.nullFields = append(o.nullFields, "MinCpu")
+	}
+	return o
+}
+
+func (o *SpotSizeAttributes) SetMinMemory(v *int) *SpotSizeAttributes {
+	if o.MinMemory = v; o.MinMemory == nil {
+		o.nullFields = append(o.nullFields, "MinMemory")
+	}
+	return o
+}
+
+func (o *SpotSizeAttributes) SetMinStorage(v *int) *SpotSizeAttributes {
+	if o.MinStorage = v; o.MinStorage == nil {
+		o.nullFields = append(o.nullFields, "MinStorage")
 	}
 	return o
 }
