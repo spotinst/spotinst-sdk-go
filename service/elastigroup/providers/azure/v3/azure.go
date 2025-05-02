@@ -94,13 +94,12 @@ type VMSizes struct {
 }
 
 type SpotSizeAttributes struct {
-	MaxCpu          *int    `json:"maxCpu,omitempty"`
-	MaxMemory       *int    `json:"maxMemory,omitempty"`
-	MaxStorage      *int    `json:"maxStorage,omitempty"`
-	MinCpu          *int    `json:"minCpu,omitempty"`
-	MinMemory       *int    `json:"minMemory,omitempty"`
-	MinStorage      *int    `json:"minStorage,omitempty"`
-	CPUArchitecture *string `json:"cpuArchitecture,omitempty"`
+	MaxCpu     *int `json:"maxCpu,omitempty"`
+	MaxMemory  *int `json:"maxMemory,omitempty"`
+	MaxStorage *int `json:"maxStorage,omitempty"`
+	MinCpu     *int `json:"minCpu,omitempty"`
+	MinMemory  *int `json:"minMemory,omitempty"`
+	MinStorage *int `json:"minStorage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -995,13 +994,6 @@ func (o *SpotSizeAttributes) SetMinMemory(v *int) *SpotSizeAttributes {
 func (o *SpotSizeAttributes) SetMinStorage(v *int) *SpotSizeAttributes {
 	if o.MinStorage = v; o.MinStorage == nil {
 		o.nullFields = append(o.nullFields, "MinStorage")
-	}
-	return o
-}
-
-func (o *SpotSizeAttributes) SetCPUArchitecture(v *string) *SpotSizeAttributes {
-	if o.CPUArchitecture = v; o.CPUArchitecture == nil {
-		o.nullFields = append(o.nullFields, "CPUArchitecture")
 	}
 	return o
 }
