@@ -400,6 +400,7 @@ type Security struct {
 	SecureBootEnabled            *bool   `json:"secureBootEnabled,omitempty"`
 	SecurityType                 *string `json:"securityType,omitempty"`
 	VTpmEnabled                  *bool   `json:"vTpmEnabled,omitempty"`
+	EncryptionAtHost             *bool   `json:"encryptionAtHost,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -2225,6 +2226,13 @@ func (o *Security) SetSecurityType(v *string) *Security {
 func (o *Security) SetVTpmEnabled(v *bool) *Security {
 	if o.VTpmEnabled = v; o.VTpmEnabled == nil {
 		o.nullFields = append(o.nullFields, "VTpmEnabled")
+	}
+	return o
+}
+
+func (o *Security) SetEncryptionAtHost(v *bool) *Security {
+	if o.EncryptionAtHost = v; o.EncryptionAtHost == nil {
+		o.nullFields = append(o.nullFields, "EncryptionAtHost")
 	}
 	return o
 }
