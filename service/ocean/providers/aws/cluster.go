@@ -221,6 +221,7 @@ type LaunchSpecification struct {
 	ResourceTagSpecification                      *ResourceTagSpecification     `json:"resourceTagSpecification,omitempty"`
 	ReservedENIs                                  *int                          `json:"reservedENIs,omitempty"`
 	InstanceStorePolicy                           *InstanceStorePolicy          `json:"instanceStorePolicy,omitempty"`
+	StartupTaints                                 []*StartupTaints              `json:"startupTaints,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1703,6 +1704,13 @@ func (o *LaunchSpecification) SetReservedENIs(v *int) *LaunchSpecification {
 func (o *LaunchSpecification) SetInstanceStorePolicy(v *InstanceStorePolicy) *LaunchSpecification {
 	if o.InstanceStorePolicy = v; o.InstanceStorePolicy == nil {
 		o.nullFields = append(o.nullFields, "InstanceStorePolicy")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetStartupTaints(v []*StartupTaints) *LaunchSpecification {
+	if o.StartupTaints = v; o.StartupTaints == nil {
+		o.nullFields = append(o.nullFields, "StartupTaints")
 	}
 	return o
 }
