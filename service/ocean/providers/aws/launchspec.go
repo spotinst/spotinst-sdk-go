@@ -44,6 +44,7 @@ type LaunchSpec struct {
 	PreferredOnDemandTypes   []string                           `json:"preferredOnDemandTypes,omitempty"`
 	ReservedENIs             *int                               `json:"reservedENIs,omitempty"`
 	InstanceStorePolicy      *InstanceStorePolicy               `json:"instanceStorePolicy,omitempty"`
+	StartupTaints            []*StartupTaints                   `json:"startupTaints,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -717,6 +718,13 @@ func (o *LaunchSpec) SetReservedENIs(v *int) *LaunchSpec {
 func (o *LaunchSpec) SetInstanceStorePolicy(v *InstanceStorePolicy) *LaunchSpec {
 	if o.InstanceStorePolicy = v; o.InstanceStorePolicy == nil {
 		o.nullFields = append(o.nullFields, "InstanceStorePolicy")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetStartupTaints(v []*StartupTaints) *LaunchSpec {
+	if o.StartupTaints = v; o.StartupTaints == nil {
+		o.nullFields = append(o.nullFields, "StartupTaints")
 	}
 	return o
 }
