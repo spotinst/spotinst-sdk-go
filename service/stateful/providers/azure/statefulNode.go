@@ -368,7 +368,6 @@ type Persistence struct {
 	ShouldPersistDataDisks   *bool   `json:"shouldPersistDataDisks,omitempty"`
 	DataDisksPersistenceMode *string `json:"dataDisksPersistenceMode,omitempty"`
 	ShouldPersistNetwork     *bool   `json:"shouldPersistNetwork,omitempty"`
-	ShouldPersistVM          *bool   `json:"shouldPersistVm,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1184,13 +1183,6 @@ func (o *Persistence) SetDataDisksPersistenceMode(v *string) *Persistence {
 func (o *Persistence) SetShouldPersistNetwork(v *bool) *Persistence {
 	if o.ShouldPersistNetwork = v; o.ShouldPersistNetwork == nil {
 		o.nullFields = append(o.nullFields, "ShouldPersistNetwork")
-	}
-	return o
-}
-
-func (o *Persistence) SetShouldPersistVM(v *bool) *Persistence {
-	if o.ShouldPersistVM = v; o.ShouldPersistVM == nil {
-		o.nullFields = append(o.nullFields, "ShouldPersistVm")
 	}
 	return o
 }
