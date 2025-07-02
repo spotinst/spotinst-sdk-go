@@ -131,10 +131,19 @@ type BackendServiceConfig struct {
 
 // BackendService defines the configuration for a single backend service.
 type BackendService struct {
-	BackendServiceName *string     `json:"backendServiceName,omitempty"`
-	LocationType       *string     `json:"locationType,omitempty"`
-	Scheme             *string     `json:"scheme,omitempty"`
-	NamedPorts         *NamedPorts `json:"namedPorts,omitempty"`
+	BackendServiceName *string           `json:"backendServiceName,omitempty"`
+	LocationType       *string           `json:"locationType,omitempty"`
+	Scheme             *string           `json:"scheme,omitempty"`
+	NamedPorts         *NamedPorts       `json:"namedPorts,omitempty"`
+	BackendBalancing   *BackendBalancing `json:"backendBalancing,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type BackendBalancing struct {
+	BackendBalancingMode *string `json:"backendBalancingMode,omitempty"`
+	MaxRatePerInstance   *int    `json:"maxRatePerInstance,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1409,6 +1418,13 @@ func (o *BackendService) SetNamedPorts(v *NamedPorts) *BackendService {
 	return o
 }
 
+func (o *BackendService) SetBackendBalancing(v *BackendBalancing) *BackendService {
+	if o.BackendBalancing = v; o.BackendBalancing == nil {
+		o.nullFields = append(o.nullFields, "BackendBalancing")
+	}
+	return o
+}
+
 // region NamedPort setters
 
 func (o NamedPorts) MarshalJSON() ([]byte, error) {
@@ -1434,6 +1450,26 @@ func (o *NamedPorts) SetPorts(v []int) *NamedPorts {
 }
 
 // endregion
+
+func (o BackendBalancing) MarshalJSON() ([]byte, error) {
+	type noMethod BackendBalancing
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *BackendBalancing) SetBackendBalancingMode(v *string) *BackendBalancing {
+	if o.BackendBalancingMode = v; o.BackendBalancingMode == nil {
+		o.nullFields = append(o.nullFields, "BackendBalancingMode")
+	}
+	return o
+}
+
+func (o *BackendBalancing) SetMaxRatePerInstance(v *int) *BackendBalancing {
+	if o.MaxRatePerInstance = v; o.MaxRatePerInstance == nil {
+		o.nullFields = append(o.nullFields, "MaxRatePerInstance")
+	}
+	return o
+}
 
 // endregion
 
