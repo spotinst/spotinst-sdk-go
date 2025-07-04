@@ -11,7 +11,7 @@ type Service interface {
 	ListNotificationCenterPolicy(context.Context, *ListNotificationCenterPolicyInput) (*ListNotificationCenterPolicyOutput, error)
 	CreateNotificationCenterPolicy(context.Context, *NotificationCenter) (*CreateNotificationCenterPolicyOutput, error)
 	ReadNotificationCenterPolicy(context.Context, *ReadNotificationCenterPolicyInput) (*ReadNotificationCenterPolicyOutput, error)
-	UpdateNotificationCenterPolicy(context.Context, *UpdateNotificationCenterPolicyInput) (*UpdateNotificationCenterPolicyOutput, error)
+	UpdateNotificationCenterPolicy(context.Context, *NotificationCenter) error
 	DeleteNotificationCenterPolicy(context.Context, *DeleteNotificationCenterPolicyInput) (*DeleteNotificationCenterPolicyOutput, error)
 }
 

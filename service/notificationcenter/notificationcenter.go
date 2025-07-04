@@ -93,9 +93,6 @@ type ReadNotificationCenterPolicyOutput struct {
 	NotificationCenter *NotificationCenter `json:"notificationCenter,omitempty"`
 }
 
-type UpdateNotificationCenterPolicyInput struct {
-	NotificationCenter *NotificationCenter `json:"notificationCenter,omitempty"`
-}
 type UpdateNotificationCenterPolicyOutput struct{}
 
 type DeleteNotificationCenterPolicyInput struct {
@@ -196,32 +193,23 @@ func (s *ServiceOp) ReadNotificationCenterPolicy(ctx context.Context, input *Rea
 	return output, nil
 }
 
-func (s *ServiceOp) UpdateNotificationCenterPolicy(ctx context.Context, input *UpdateNotificationCenterPolicyInput) (*UpdateNotificationCenterPolicyOutput, error) {
+func (s *ServiceOp) UpdateNotificationCenterPolicy(ctx context.Context, input *NotificationCenter) error { //} (*UpdateNotificationCenterPolicyOutput, error) {
 	path, err := uritemplates.Expand("/notificationCenter/policy/{policyId}", uritemplates.Values{
-		"policyId": spotinst.StringValue(input.NotificationCenter.ID),
+		"policyId": spotinst.StringValue(input.ID),
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
-	input.NotificationCenter.ID = nil
+	input.ID = nil
 	r := client.NewRequest(http.MethodPut, path)
 	r.Obj = input
 	resp, err := client.RequireOK(s.Client.Do(ctx, r))
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer resp.Body.Close()
-	/*gs, err := notificationsFromHttpResponse(resp)
-	if err != nil {
-		return nil, err
-	}
-	output := new(UpdateNotificationCenterPolicyOutput)
-	if len(gs) > 0 {
-	output.NotificationCenter = gs[0]
-	}
-	return output, nil
-	*/
-	return &UpdateNotificationCenterPolicyOutput{}, nil
+
+	return nil
 }
 
 func (s *ServiceOp) DeleteNotificationCenterPolicy(ctx context.Context, input *DeleteNotificationCenterPolicyInput) (*DeleteNotificationCenterPolicyOutput, error) {
