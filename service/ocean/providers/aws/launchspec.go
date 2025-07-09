@@ -224,10 +224,18 @@ type TagSelector struct {
 }
 
 type LaunchSpecStrategy struct {
-	SpotPercentage           *int  `json:"spotPercentage,omitempty"`
-	DrainingTimeout          *int  `json:"drainingTimeout,omitempty"`
-	UtilizeCommitments       *bool `json:"utilizeCommitments,omitempty"`
-	UtilizeReservedInstances *bool `json:"utilizeReservedInstances,omitempty"`
+	SpotPercentage           *int                   `json:"spotPercentage,omitempty"`
+	DrainingTimeout          *int                   `json:"drainingTimeout,omitempty"`
+	UtilizeCommitments       *bool                  `json:"utilizeCommitments,omitempty"`
+	UtilizeReservedInstances *bool                  `json:"utilizeReservedInstances,omitempty"`
+	Orientation              *LaunchSpecOrientation `json:"orientation,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LaunchSpecOrientation struct {
+	AvailabilityVsCost *string `json:"availabilityVsCost,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1091,7 +1099,27 @@ func (o *LaunchSpecStrategy) SetUtilizeReservedInstances(v *bool) *LaunchSpecStr
 	return o
 }
 
+func (o *LaunchSpecStrategy) SetOrientation(v *LaunchSpecOrientation) *LaunchSpecStrategy {
+	if o.Orientation = v; o.Orientation == nil {
+		o.nullFields = append(o.nullFields, "Orientation")
+	}
+	return o
+}
+
 // endregion
+
+func (o LaunchSpecOrientation) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecOrientation
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LaunchSpecOrientation) SetAvailabilityVsCost(v *string) *LaunchSpecOrientation {
+	if o.AvailabilityVsCost = v; o.AvailabilityVsCost == nil {
+		o.nullFields = append(o.nullFields, "AvailabilityVsCost")
+	}
+	return o
+}
 
 //region Scheduling
 
