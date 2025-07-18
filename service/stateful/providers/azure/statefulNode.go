@@ -208,6 +208,7 @@ type Tag struct {
 type ManagedServiceIdentity struct {
 	Name              *string `json:"name,omitempty"`
 	ResourceGroupName *string `json:"resourceGroupName,omitempty"`
+	SubscriptionID    *string `json:"subscriptionId,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1731,6 +1732,13 @@ func (o *ManagedServiceIdentity) SetName(v *string) *ManagedServiceIdentity {
 func (o *ManagedServiceIdentity) SetResourceGroupName(v *string) *ManagedServiceIdentity {
 	if o.ResourceGroupName = v; o.ResourceGroupName == nil {
 		o.nullFields = append(o.nullFields, "ResourceGroupName")
+	}
+	return o
+}
+
+func (o *ManagedServiceIdentity) SetSubscriptionID(v *string) *ManagedServiceIdentity {
+	if o.SubscriptionID = v; o.SubscriptionID == nil {
+		o.nullFields = append(o.nullFields, "SubscriptionID")
 	}
 	return o
 }
