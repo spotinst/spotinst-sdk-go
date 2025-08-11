@@ -222,6 +222,7 @@ type LaunchSpecification struct {
 	ReservedENIs                                  *int                          `json:"reservedENIs,omitempty"`
 	InstanceStorePolicy                           *InstanceStorePolicy          `json:"instanceStorePolicy,omitempty"`
 	StartupTaints                                 []*StartupTaints              `json:"startupTaints,omitempty"`
+	PrimaryIPv6                                   *bool                         `json:"primaryIpv6,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1711,6 +1712,13 @@ func (o *LaunchSpecification) SetInstanceStorePolicy(v *InstanceStorePolicy) *La
 func (o *LaunchSpecification) SetStartupTaints(v []*StartupTaints) *LaunchSpecification {
 	if o.StartupTaints = v; o.StartupTaints == nil {
 		o.nullFields = append(o.nullFields, "StartupTaints")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetPrimaryIPv6(v *bool) *LaunchSpecification {
+	if o.PrimaryIPv6 = v; o.PrimaryIPv6 == nil {
+		o.nullFields = append(o.nullFields, "PrimaryIPv6")
 	}
 	return o
 }
