@@ -34,6 +34,7 @@ type LaunchSpec struct {
 	LaunchSpecScheduling        *GKELaunchSpecScheduling       `json:"scheduling,omitempty"`
 	LaunchSpecTags              []string                       `json:"tags,omitempty"`
 	LaunchSpecNetworkInterfaces []*LaunchSpecNetworkInterfaces `json:"networkInterfaces,omitempty"`
+	Filters                     *Filters                       `json:"filters,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -887,6 +888,13 @@ func (o *GKELaunchSpecTaskHeadroom) SetNumOfUnits(v *int) *GKELaunchSpecTaskHead
 func (o *LaunchSpec) SetLaunchSpecNetworkInterfaces(v []*LaunchSpecNetworkInterfaces) *LaunchSpec {
 	if o.LaunchSpecNetworkInterfaces = v; o.LaunchSpecNetworkInterfaces == nil {
 		o.nullFields = append(o.nullFields, "LaunchSpecNetworkInterfaces")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetFilters(v *Filters) *LaunchSpec {
+	if o.Filters = v; o.Filters == nil {
+		o.nullFields = append(o.nullFields, "Filters")
 	}
 	return o
 }
