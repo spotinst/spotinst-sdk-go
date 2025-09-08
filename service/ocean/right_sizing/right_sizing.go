@@ -21,6 +21,7 @@ type RightsizingRule struct {
 	RecommendationApplicationBoundaries     *RecommendationApplicationBoundaries     `json:"recommendationApplicationBoundaries,omitempty"`
 	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues `json:"recommendationApplicationOverheadValues,omitempty"`
 	RecommendationApplicationHPA            *RecommendationApplicationHPA            `json:"recommendationApplicationHPA,omitempty"`
+	AutoApplyDefinition                     *AutoApplyDefinition                     `json:"autoApplyDefinition,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -127,6 +128,15 @@ type RecommendationApplicationOverheadValues struct {
 
 type RecommendationApplicationHPA struct {
 	AllowHPARecommendations *bool `json:"allowHPARecommendations,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type AutoApplyDefinition struct {
+	Enabled    *bool                `json:"enabled,omitempty"`
+	Labels     *map[string][]string `json:"labels,omitempty"`
+	Namespaces []string             `json:"namespaces,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -585,6 +595,13 @@ func (o *RightsizingRule) SetRecommendationApplicationHPA(v *RecommendationAppli
 	return o
 }
 
+func (o *RightsizingRule) SetAutoApplyDefinition(v *AutoApplyDefinition) *RightsizingRule {
+	if o.AutoApplyDefinition = v; o.AutoApplyDefinition == nil {
+		o.nullFields = append(o.nullFields, "AutoApplyDefinition")
+	}
+	return o
+}
+
 // region RecommendationApplicationInterval
 
 func (o RecommendationApplicationIntervals) MarshalJSON() ([]byte, error) {
@@ -783,6 +800,33 @@ func (o RecommendationApplicationHPA) MarshalJSON() ([]byte, error) {
 func (o *RecommendationApplicationHPA) SetAllowHPARecommendations(v *bool) *RecommendationApplicationHPA {
 	if o.AllowHPARecommendations = v; o.AllowHPARecommendations == nil {
 		o.nullFields = append(o.nullFields, "AllowHPARecommendations")
+	}
+	return o
+}
+
+func (o *AutoApplyDefinition) MarshalJSON() ([]byte, error) {
+	type noMethod AutoApplyDefinition
+	raw := noMethod(*o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AutoApplyDefinition) SetEnabled(v *bool) *AutoApplyDefinition {
+	if o.Enabled = v; o.Enabled == nil {
+		o.nullFields = append(o.nullFields, "Enabled")
+	}
+	return o
+}
+
+func (o *AutoApplyDefinition) SetLabels(v *map[string][]string) *AutoApplyDefinition {
+	if o.Labels = v; o.Labels == nil {
+		o.nullFields = append(o.nullFields, "Labels")
+	}
+	return o
+}
+
+func (o *AutoApplyDefinition) SetNamespaces(v []string) *AutoApplyDefinition {
+	if o.Namespaces = v; o.Namespaces == nil {
+		o.nullFields = append(o.nullFields, "Namespaces")
 	}
 	return o
 }
