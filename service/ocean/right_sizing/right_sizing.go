@@ -22,6 +22,7 @@ type RightsizingRule struct {
 	RecommendationApplicationOverheadValues *RecommendationApplicationOverheadValues `json:"recommendationApplicationOverheadValues,omitempty"`
 	RecommendationApplicationHPA            *RecommendationApplicationHPA            `json:"recommendationApplicationHPA,omitempty"`
 	AutoApplyDefinition                     *AutoApplyDefinition                     `json:"autoApplyDefinition,omitempty"`
+	DownsideOnly                            *bool                                    `json:"downsideOnly,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -598,6 +599,13 @@ func (o *RightsizingRule) SetRecommendationApplicationHPA(v *RecommendationAppli
 func (o *RightsizingRule) SetAutoApplyDefinition(v *AutoApplyDefinition) *RightsizingRule {
 	if o.AutoApplyDefinition = v; o.AutoApplyDefinition == nil {
 		o.nullFields = append(o.nullFields, "AutoApplyDefinition")
+	}
+	return o
+}
+
+func (o *RightsizingRule) SetDownsideOnly(v *bool) *RightsizingRule {
+	if o.DownsideOnly = v; o.DownsideOnly == nil {
+		o.nullFields = append(o.nullFields, "DownsideOnly")
 	}
 	return o
 }
