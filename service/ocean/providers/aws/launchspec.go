@@ -33,6 +33,7 @@ type LaunchSpec struct {
 	BlockDeviceMappings      []*BlockDeviceMapping              `json:"blockDeviceMappings,omitempty"`
 	EphemeralStorage         *EphemeralStorage                  `json:"ephemeralStorage,omitempty"`
 	Labels                   []*Label                           `json:"labels,omitempty"`
+	LoadBalancers            []*VNGLoadBalancer                 `json:"loadBalancers,omitempty"`
 	Taints                   []*Taint                           `json:"taints,omitempty"`
 	Tags                     []*Tag                             `json:"tags,omitempty"`
 	AssociatePublicIPAddress *bool                              `json:"associatePublicIpAddress,omitempty"`
@@ -150,6 +151,15 @@ type DynamicVolumeSize struct {
 type Label struct {
 	Key   *string `json:"key,omitempty"`
 	Value *string `json:"value,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type VNGLoadBalancer struct {
+	Arn  *string `json:"arn,omitempty"`
+	Name *string `json:"name,omitempty"`
+	Type *string `json:"type,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -634,6 +644,13 @@ func (o *LaunchSpec) SetLabels(v []*Label) *LaunchSpec {
 	return o
 }
 
+func (o *LaunchSpec) SetVNGLoadBalancer(v []*VNGLoadBalancer) *LaunchSpec {
+	if o.LoadBalancers = v; o.LoadBalancers == nil {
+		o.nullFields = append(o.nullFields, "LoadBalancers")
+	}
+	return o
+}
+
 func (o *LaunchSpec) SetTaints(v []*Taint) *LaunchSpec {
 	if o.Taints = v; o.Taints == nil {
 		o.nullFields = append(o.nullFields, "Taints")
@@ -928,6 +945,37 @@ func (o *Label) SetValue(v *string) *Label {
 }
 
 // endregion
+
+// region LoadBalancers
+
+func (o VNGLoadBalancer) MarshalJSON() ([]byte, error) {
+	type noMethod VNGLoadBalancer
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VNGLoadBalancer) SetArn(v *string) *VNGLoadBalancer {
+	if o.Arn = v; o.Arn == nil {
+		o.nullFields = append(o.nullFields, "Arn")
+	}
+	return o
+}
+
+func (o *VNGLoadBalancer) SetName(v *string) *VNGLoadBalancer {
+	if o.Name = v; o.Name == nil {
+		o.nullFields = append(o.nullFields, "Name")
+	}
+	return o
+}
+
+func (o *VNGLoadBalancer) SetType(v *string) *VNGLoadBalancer {
+	if o.Type = v; o.Type == nil {
+		o.nullFields = append(o.nullFields, "Type")
+	}
+	return o
+}
+
+//// endregion
 
 // region Taints
 
