@@ -183,6 +183,20 @@ type AutoScale struct {
 	nullFields      []string
 }
 
+type AutoScalerDownVNG struct {
+	MaxScaleDownPercentage *float64                `json:"maxScaleDownPercentage,omitempty"`
+	AggressiveScaleDown    *AggressiveScaleDownVNG `json:"aggressiveScaleDown,omitempty"`
+	forceSendFields        []string
+	nullFields             []string
+}
+
+type AggressiveScaleDownVNG struct {
+	IsEnabled *bool `json:"isEnabled,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
 type AutoScaleHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
 	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
@@ -191,12 +205,6 @@ type AutoScaleHeadroom struct {
 
 	forceSendFields []string
 	nullFields      []string
-}
-type AutoScalerDownVNG struct {
-	MaxScaleDownPercentage *float64                `json:"maxScaleDownPercentage,omitempty"`
-	AggressiveScaleDown    *AggressiveScaleDownVNG `json:"aggressiveScaleDown,omitempty"`
-	forceSendFields        []string
-	nullFields             []string
 }
 
 func (o *AutoScalerDownVNG) SetMaxScaleDownPercentage(v *float64) *AutoScalerDownVNG {
@@ -394,13 +402,6 @@ type DeleteLaunchSpecInput struct {
 	LaunchSpecID *string `json:"launchSpecId,omitempty"`
 	ForceDelete  *bool   `json:"-"`
 	DeleteNodes  *bool   `json:"-"`
-}
-
-type AggressiveScaleDownVNG struct {
-	IsEnabled *bool `json:"isEnabled,omitempty"`
-
-	forceSendFields []string
-	nullFields      []string
 }
 
 type DeleteLaunchSpecOutput struct{}
