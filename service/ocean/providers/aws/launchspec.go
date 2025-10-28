@@ -219,6 +219,23 @@ func (o AutoScalerDownVNG) MarshalJSON() ([]byte, error) {
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
+// region Aggressive Scale Down
+
+func (o AggressiveScaleDownVNG) MarshalJSON() ([]byte, error) {
+	type noMethod AggressiveScaleDownVNG
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AggressiveScaleDownVNG) SetIsEnabled(v *bool) *AggressiveScaleDownVNG {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+// endregion
+
 type ElasticIPPool struct {
 	TagSelector *TagSelector `json:"tagSelector,omitempty"`
 
@@ -1492,23 +1509,6 @@ func (o EphemeralStorage) MarshalJSON() ([]byte, error) {
 	type noMethod EphemeralStorage
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-// endregion
-
-// region Aggressive Scale Down
-
-func (o AggressiveScaleDownVNG) MarshalJSON() ([]byte, error) {
-	type noMethod AggressiveScaleDownVNG
-	raw := noMethod(o)
-	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
-}
-
-func (o *AggressiveScaleDownVNG) SetIsEnabled(v *bool) *AggressiveScaleDownVNG {
-	if o.IsEnabled = v; o.IsEnabled == nil {
-		o.nullFields = append(o.nullFields, "IsEnabled")
-	}
-	return o
 }
 
 // endregion
