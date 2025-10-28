@@ -183,6 +183,20 @@ type AutoScale struct {
 	nullFields      []string
 }
 
+type AutoScalerDownVNG struct {
+	MaxScaleDownPercentage *float64                `json:"maxScaleDownPercentage,omitempty"`
+	AggressiveScaleDown    *AggressiveScaleDownVNG `json:"aggressiveScaleDown,omitempty"`
+	forceSendFields        []string
+	nullFields             []string
+}
+
+type AggressiveScaleDownVNG struct {
+	IsEnabled *bool `json:"isEnabled,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
 type AutoScaleHeadroom struct {
 	CPUPerUnit    *int `json:"cpuPerUnit,omitempty"`
 	GPUPerUnit    *int `json:"gpuPerUnit,omitempty"`
@@ -191,11 +205,6 @@ type AutoScaleHeadroom struct {
 
 	forceSendFields []string
 	nullFields      []string
-}
-type AutoScalerDownVNG struct {
-	MaxScaleDownPercentage *float64 `json:"maxScaleDownPercentage,omitempty"`
-	forceSendFields        []string
-	nullFields             []string
 }
 
 func (o *AutoScalerDownVNG) SetMaxScaleDownPercentage(v *float64) *AutoScalerDownVNG {
@@ -217,6 +226,30 @@ func (o AutoScalerDownVNG) MarshalJSON() ([]byte, error) {
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
+
+// region Aggressive Scale Down
+
+func (o *AutoScalerDownVNG) SetAggressiveScaleDownVNG(v *AggressiveScaleDownVNG) *AutoScalerDownVNG {
+	if o.AggressiveScaleDown = v; o.AggressiveScaleDown == nil {
+		o.nullFields = append(o.nullFields, "AggressiveScaleDown")
+	}
+	return o
+}
+
+func (o AggressiveScaleDownVNG) MarshalJSON() ([]byte, error) {
+	type noMethod AggressiveScaleDownVNG
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *AggressiveScaleDownVNG) SetIsEnabled(v *bool) *AggressiveScaleDownVNG {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+// endregion
 
 type ElasticIPPool struct {
 	TagSelector *TagSelector `json:"tagSelector,omitempty"`
