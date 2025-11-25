@@ -134,12 +134,22 @@ type EBS struct {
 	VolumeSize          *int               `json:"volumeSize,omitempty"`
 	Throughput          *int               `json:"throughput,omitempty"`
 	DynamicVolumeSize   *DynamicVolumeSize `json:"dynamicVolumeSize,omitempty"`
+	DynamicIops         *VNGDynamicIops    `json:"dynamicIops,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
 }
 
 type DynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type VNGDynamicIops struct {
 	BaseSize            *int    `json:"baseSize,omitempty"`
 	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
 	Resource            *string `json:"resource,omitempty"`
@@ -898,6 +908,13 @@ func (o *EBS) SetThroughput(v *int) *EBS {
 	return o
 }
 
+func (o *EBS) SetDynamicIops(v *VNGDynamicIops) *EBS {
+	if o.DynamicIops = v; o.DynamicIops == nil {
+		o.nullFields = append(o.nullFields, "DynamicIops")
+	}
+	return o
+}
+
 // endregion
 
 // region DynamicVolumeSize
@@ -923,6 +940,37 @@ func (o *DynamicVolumeSize) SetResource(v *string) *DynamicVolumeSize {
 }
 
 func (o *DynamicVolumeSize) SetSizePerResourceUnit(v *int) *DynamicVolumeSize {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+// endregion
+
+// region VNGDynamicIops
+
+func (o VNGDynamicIops) MarshalJSON() ([]byte, error) {
+	type noMethod VNGDynamicIops
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *VNGDynamicIops) SetBaseSize(v *int) *VNGDynamicIops {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *VNGDynamicIops) SetResource(v *string) *VNGDynamicIops {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *VNGDynamicIops) SetSizePerResourceUnit(v *int) *VNGDynamicIops {
 	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
 		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
 	}
