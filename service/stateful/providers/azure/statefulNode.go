@@ -46,16 +46,17 @@ type StatefulNode struct {
 }
 
 type Strategy struct {
-	PreferredLifecycle  *string              `json:"preferredLifecycle,omitempty"`
-	Signals             []*Signal            `json:"signals,omitempty"`
-	FallbackToOnDemand  *bool                `json:"fallbackToOd,omitempty"`
-	DrainingTimeout     *int                 `json:"drainingTimeout,omitempty"`
-	RevertToSpot        *RevertToSpot        `json:"revertToSpot,omitempty"`
-	OptimizationWindows []string             `json:"optimizationWindows,omitempty"`
-	CapacityReservation *CapacityReservation `json:"capacityReservation,omitempty"`
-	AvailabilityVsCost  *int                 `json:"availabilityVsCost,omitempty"`
-	OdWindows           []string             `json:"odWindows,omitempty"`
-	VmAdmins            []string             `json:"vmAdmins,omitempty"`
+	PreferredLifecycle     *string                 `json:"preferredLifecycle,omitempty"`
+	Signals                []*Signal               `json:"signals,omitempty"`
+	FallbackToOnDemand     *bool                   `json:"fallbackToOd,omitempty"`
+	DrainingTimeout        *int                    `json:"drainingTimeout,omitempty"`
+	RevertToSpot           *RevertToSpot           `json:"revertToSpot,omitempty"`
+	OptimizationWindows    []string                `json:"optimizationWindows,omitempty"`
+	CapacityReservation    *CapacityReservation    `json:"capacityReservation,omitempty"`
+	AvailabilityVsCost     *int                    `json:"availabilityVsCost,omitempty"`
+	OdWindows              []string                `json:"odWindows,omitempty"`
+	VmAdmins               []string                `json:"vmAdmins,omitempty"`
+	InterruptionToleration *InterruptionToleration `json:"interruptionToleration,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -80,6 +81,15 @@ type CapacityReservation struct {
 	ShouldUtilize             *bool                       `json:"shouldUtilize,omitempty"`
 	UtilizationStrategy       *string                     `json:"utilizationStrategy,omitempty"`
 	CapacityReservationGroups []*CapacityReservationGroup `json:"capacityReservationGroups,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+type InterruptionToleration struct {
+	Cooldown         *int  `json:"cooldown,omitempty"`
+	EvaluationPeriod *int  `json:"evaluationPeriod,omitempty"`
+	IsEnabled        *bool `json:"isEnabled,omitempty"`
+	Threshold        *int  `json:"threshold,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1018,6 +1028,13 @@ func (o *Strategy) SetCapacityReservation(v *CapacityReservation) *Strategy {
 	return o
 }
 
+func (o *Strategy) SetInterruptionToleration(v *InterruptionToleration) *Strategy {
+	if o.InterruptionToleration = v; o.InterruptionToleration == nil {
+		o.nullFields = append(o.nullFields, "InterruptionToleration")
+	}
+	return o
+}
+
 func (o *Strategy) SetOptimizationWindows(v []string) *Strategy {
 	if o.OptimizationWindows = v; o.OptimizationWindows == nil {
 		o.nullFields = append(o.nullFields, "OptimizationWindows")
@@ -1114,6 +1131,44 @@ func (o *CapacityReservation) SetUtilizationStrategy(v *string) *CapacityReserva
 func (o *CapacityReservation) SetCapacityReservationGroups(v []*CapacityReservationGroup) *CapacityReservation {
 	if o.CapacityReservationGroups = v; o.CapacityReservationGroups == nil {
 		o.nullFields = append(o.nullFields, "CapacityReservationGroups")
+	}
+	return o
+}
+
+// endregion
+
+// region InterruptionToleration
+
+func (o InterruptionToleration) MarshalJSON() ([]byte, error) {
+	type noMethod InterruptionToleration
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *InterruptionToleration) SetCooldown(v *int) *InterruptionToleration {
+	if o.Cooldown = v; o.Cooldown == nil {
+		o.nullFields = append(o.nullFields, "Cooldown")
+	}
+	return o
+}
+
+func (o *InterruptionToleration) SetEvaluationPeriod(v *int) *InterruptionToleration {
+	if o.EvaluationPeriod = v; o.EvaluationPeriod == nil {
+		o.nullFields = append(o.nullFields, "EvaluationPeriod")
+	}
+	return o
+}
+
+func (o *InterruptionToleration) SetIsEnabled(v *bool) *InterruptionToleration {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *InterruptionToleration) SetThreshold(v *int) *InterruptionToleration {
+	if o.Threshold = v; o.Threshold == nil {
+		o.nullFields = append(o.nullFields, "Threshold")
 	}
 	return o
 }
