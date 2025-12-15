@@ -41,6 +41,12 @@ func main() {
 					},
 				},
 				AvailabilityVsCost: spotinst.Int(100),
+				InterruptionToleration: &azure.InterruptionToleration{
+					Cooldown:         spotinst.Int(120),
+					EvaluationPeriod: spotinst.Int(30),
+					IsEnabled:        spotinst.Bool(true),
+					Threshold:        spotinst.Int(3),
+				},
 				OdWindows:          []string{"Mon:19:46-Mon:20:46"},
 				FallbackToOnDemand: spotinst.Bool(true),
 				DrainingTimeout:    spotinst.Int(12),
