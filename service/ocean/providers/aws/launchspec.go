@@ -295,8 +295,9 @@ type LaunchSpecOrientation struct {
 }
 
 type LaunchSpecScheduling struct {
-	Tasks         []*LaunchSpecTask        `json:"tasks,omitempty"`
-	ShutdownHours *LaunchSpecShutdownHours `json:"shutdownHours,omitempty"`
+	Tasks               []*LaunchSpecTask              `json:"tasks,omitempty"`
+	ShutdownHours       *LaunchSpecShutdownHours       `json:"shutdownHours,omitempty"`
+	OptimizationWindows *LaunchSpecOptimizationWindows `json:"optimizationWindows,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -315,6 +316,23 @@ type LaunchSpecTask struct {
 type LaunchSpecShutdownHours struct {
 	IsEnabled   *bool    `json:"isEnabled,omitempty"`
 	TimeWindows []string `json:"timeWindows,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LaunchSpecOptimizationWindows struct {
+	IsEnabled *bool                           `json:"isEnabled,omitempty"`
+	Windows   []*LaunchSpecOptimizationWindow `json:"windows,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type LaunchSpecOptimizationWindow struct {
+	CronExpression *string  `json:"cronExpression,omitempty"`
+	Duration       *string  `json:"duration,omitempty"`
+	Effects        []string `json:"effects,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1272,6 +1290,13 @@ func (o *LaunchSpecScheduling) SetShutdownHours(v *LaunchSpecShutdownHours) *Lau
 	return o
 }
 
+func (o *LaunchSpecScheduling) SetOptimizationWindows(v *LaunchSpecOptimizationWindows) *LaunchSpecScheduling {
+	if o.OptimizationWindows = v; o.OptimizationWindows == nil {
+		o.nullFields = append(o.nullFields, "OptimizationWindows")
+	}
+	return o
+}
+
 // endregion
 
 //region LaunchSpecTask
@@ -1333,6 +1358,63 @@ func (o *LaunchSpecShutdownHours) SetTimeWindows(v []string) *LaunchSpecShutdown
 	}
 	return o
 }
+
+// endregion
+
+//region LaunchSpecOptimizationWindows
+
+func (o LaunchSpecOptimizationWindows) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecOptimizationWindows
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LaunchSpecOptimizationWindows) SetIsEnabled(v *bool) *LaunchSpecOptimizationWindows {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *LaunchSpecOptimizationWindows) SetWindows(v []*LaunchSpecOptimizationWindow) *LaunchSpecOptimizationWindows {
+	if o.Windows = v; o.Windows == nil {
+		o.nullFields = append(o.nullFields, "Windows")
+	}
+	return o
+}
+
+// endregion
+
+//region Window
+
+func (o LaunchSpecOptimizationWindow) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecOptimizationWindow
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LaunchSpecOptimizationWindow) SetCronExpression(v *string) *LaunchSpecOptimizationWindow {
+	if o.CronExpression = v; o.CronExpression == nil {
+		o.nullFields = append(o.nullFields, "CronExpression")
+	}
+	return o
+}
+
+func (o *LaunchSpecOptimizationWindow) SetDuration(v *string) *LaunchSpecOptimizationWindow {
+	if o.Duration = v; o.Duration == nil {
+		o.nullFields = append(o.nullFields, "Duration")
+	}
+	return o
+}
+
+func (o *LaunchSpecOptimizationWindow) SetEffects(v []string) *LaunchSpecOptimizationWindow {
+	if o.Effects = v; o.Effects == nil {
+		o.nullFields = append(o.nullFields, "Effects")
+	}
+	return o
+}
+
+// endregion
 
 //region TaskConfig
 
