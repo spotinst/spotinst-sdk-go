@@ -160,8 +160,9 @@ func (o *NodeCountLimits) SetMaxCount(v *int) *NodeCountLimits {
 
 // Strategy region
 type Strategy struct {
-	SpotPercentage *int  `json:"spotPercentage,omitempty"`
-	FallbackToOD   *bool `json:"fallbackToOd,omitempty"`
+	SpotPercentage  *int  `json:"spotPercentage,omitempty"`
+	FallbackToOD    *bool `json:"fallbackToOd,omitempty"`
+	DrainingTimeout *int  `json:"drainingTimeout,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -183,6 +184,13 @@ func (o *Strategy) SetSpotPercentage(v *int) *Strategy {
 func (o *Strategy) SetFallbackToOD(v *bool) *Strategy {
 	if o.FallbackToOD = v; o.FallbackToOD == nil {
 		o.nullFields = append(o.nullFields, "FallbackToOD")
+	}
+	return o
+}
+
+func (o *Strategy) SetDrainingTimeout(v *int) *Strategy {
+	if o.DrainingTimeout = v; o.DrainingTimeout == nil {
+		o.nullFields = append(o.nullFields, "DrainingTimeout")
 	}
 	return o
 }
