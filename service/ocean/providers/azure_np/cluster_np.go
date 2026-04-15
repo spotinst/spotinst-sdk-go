@@ -53,7 +53,9 @@ type AutoScaler struct {
 }
 
 type Health struct {
-	GracePeriod *int `json:"gracePeriod,omitempty"`
+	GracePeriod                                   *int  `json:"gracePeriod,omitempty"`
+	ShouldReplaceUnhealthyInstances               *bool `json:"shouldReplaceUnhealthyInstances,omitempty"`
+	HealthCheckUnhealthyDurationBeforeReplacement *int  `json:"healthCheckUnhealthyDurationBeforeReplacement,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -794,6 +796,20 @@ func (o Health) MarshalJSON() ([]byte, error) {
 func (o *Health) SetGracePeriod(v *int) *Health {
 	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o *Health) SetShouldReplaceUnhealthyInstances(v *bool) *Health {
+	if o.ShouldReplaceUnhealthyInstances = v; o.ShouldReplaceUnhealthyInstances == nil {
+		o.nullFields = append(o.nullFields, "ShouldReplaceUnhealthyInstances")
+	}
+	return o
+}
+
+func (o *Health) SetHealthCheckUnhealthyDurationBeforeReplacement(v *int) *Health {
+	if o.HealthCheckUnhealthyDurationBeforeReplacement = v; o.HealthCheckUnhealthyDurationBeforeReplacement == nil {
+		o.nullFields = append(o.nullFields, "HealthCheckUnhealthyDurationBeforeReplacement")
 	}
 	return o
 }
