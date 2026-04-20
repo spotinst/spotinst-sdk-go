@@ -160,9 +160,10 @@ func (o *NodeCountLimits) SetMaxCount(v *int) *NodeCountLimits {
 
 // Strategy region
 type Strategy struct {
-	SpotPercentage  *int  `json:"spotPercentage,omitempty"`
-	FallbackToOD    *bool `json:"fallbackToOd,omitempty"`
-	DrainingTimeout *int  `json:"drainingTimeout,omitempty"`
+	SpotPercentage           *int  `json:"spotPercentage,omitempty"`
+	FallbackToOD             *bool `json:"fallbackToOd,omitempty"`
+	DrainingTimeout          *int  `json:"drainingTimeout,omitempty"`
+	ShouldUtilizeCommitments *bool `json:"shouldUtilizeCommitments,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -191,6 +192,13 @@ func (o *Strategy) SetFallbackToOD(v *bool) *Strategy {
 func (o *Strategy) SetDrainingTimeout(v *int) *Strategy {
 	if o.DrainingTimeout = v; o.DrainingTimeout == nil {
 		o.nullFields = append(o.nullFields, "DrainingTimeout")
+	}
+	return o
+}
+
+func (o *Strategy) SetShouldUtilizeCommitments(v *bool) *Strategy {
+	if o.ShouldUtilizeCommitments = v; o.ShouldUtilizeCommitments == nil {
+		o.nullFields = append(o.nullFields, "ShouldUtilizeCommitments")
 	}
 	return o
 }
