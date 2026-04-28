@@ -48,16 +48,17 @@ type Cluster struct {
 }
 
 type Strategy struct {
-	SpotPercentage           *float64            `json:"spotPercentage,omitempty"`
-	UtilizeReservedInstances *bool               `json:"utilizeReservedInstances,omitempty"`
-	FallbackToOnDemand       *bool               `json:"fallbackToOd,omitempty"`
-	DrainingTimeout          *int                `json:"drainingTimeout,omitempty"`
-	GracePeriod              *int                `json:"gracePeriod,omitempty"`
-	UtilizeCommitments       *bool               `json:"utilizeCommitments,omitempty"`
-	ClusterOrientation       *ClusterOrientation `json:"clusterOrientation,omitempty"`
-	SpreadNodesBy            *string             `json:"spreadNodesBy,omitempty"`
-	forceSendFields          []string
-	nullFields               []string
+	SpotPercentage                *float64            `json:"spotPercentage,omitempty"`
+	UtilizeReservedInstances      *bool               `json:"utilizeReservedInstances,omitempty"`
+	FallbackToOnDemand            *bool               `json:"fallbackToOd,omitempty"`
+	DrainingTimeout               *int                `json:"drainingTimeout,omitempty"`
+	GracePeriod                   *int                `json:"gracePeriod,omitempty"`
+	MaxReplacementLimitPercentage *int                `json:"maxReplacementLimitPercentage,omitempty"`
+	UtilizeCommitments            *bool               `json:"utilizeCommitments,omitempty"`
+	ClusterOrientation            *ClusterOrientation `json:"clusterOrientation,omitempty"`
+	SpreadNodesBy                 *string             `json:"spreadNodesBy,omitempty"`
+	forceSendFields               []string
+	nullFields                    []string
 }
 type ClusterOrientation struct {
 	AvailabilityVsCost *string `json:"availabilityVsCost,omitempty"`
@@ -1282,6 +1283,13 @@ func (o *Strategy) SetDrainingTimeout(v *int) *Strategy {
 func (o *Strategy) SetGracePeriod(v *int) *Strategy {
 	if o.GracePeriod = v; o.GracePeriod == nil {
 		o.nullFields = append(o.nullFields, "GracePeriod")
+	}
+	return o
+}
+
+func (o *Strategy) SetMaxReplacementLimitPercentage(v *int) *Strategy {
+	if o.MaxReplacementLimitPercentage = v; o.MaxReplacementLimitPercentage == nil {
+		o.nullFields = append(o.nullFields, "MaxReplacementLimitPercentage")
 	}
 	return o
 }
