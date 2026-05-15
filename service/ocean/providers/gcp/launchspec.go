@@ -105,7 +105,9 @@ type ShieldedInstanceConfig struct {
 }
 
 type Storage struct {
-	LocalSSDCount *int `json:"localSsdCount,omitempty"`
+	LocalSSDCount                 *int `json:"localSsdCount,omitempty"`
+	LocalNvmeSsdCount             *int `json:"localNvmeSsdCount,omitempty"`
+	LocalSsdEphemeralStorageCount *int `json:"localSsdEphemeralStorageCount,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -743,6 +745,20 @@ func (o Storage) MarshalJSON() ([]byte, error) {
 func (o *Storage) SetLocalSSDCount(v *int) *Storage {
 	if o.LocalSSDCount = v; o.LocalSSDCount == nil {
 		o.nullFields = append(o.nullFields, "LocalSSDCount")
+	}
+	return o
+}
+
+func (o *Storage) SetLocalNvmeSsdCount(v *int) *Storage {
+	if o.LocalNvmeSsdCount = v; o.LocalNvmeSsdCount == nil {
+		o.nullFields = append(o.nullFields, "LocalNvmeSsdCount")
+	}
+	return o
+}
+
+func (o *Storage) SetLocalSsdEphemeralStorageCount(v *int) *Storage {
+	if o.LocalSsdEphemeralStorageCount = v; o.LocalSsdEphemeralStorageCount == nil {
+		o.nullFields = append(o.nullFields, "LocalSsdEphemeralStorageCount")
 	}
 	return o
 }
