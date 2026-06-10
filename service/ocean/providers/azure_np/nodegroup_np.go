@@ -27,6 +27,7 @@ type VirtualNodeGroup struct {
 	Taints             []*Taint            `json:"taints,omitempty"`
 	VmSizes            *VmSizes            `json:"vmSizes,omitempty"`
 	Scheduling         *Scheduling         `json:"scheduling,omitempty"`
+	RestrictScaleDown  *bool               `json:"restrictScaleDown,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -327,6 +328,13 @@ func (o *VirtualNodeGroup) SetVmSizes(v *VmSizes) *VirtualNodeGroup {
 func (o *VirtualNodeGroup) SetScheduling(v *Scheduling) *VirtualNodeGroup {
 	if o.Scheduling = v; o.Scheduling == nil {
 		o.nullFields = append(o.nullFields, "Scheduling")
+	}
+	return o
+}
+
+func (o *VirtualNodeGroup) SetRestrictScaleDown(v *bool) *VirtualNodeGroup {
+	if o.RestrictScaleDown = v; o.RestrictScaleDown == nil {
+		o.nullFields = append(o.nullFields, "RestrictScaleDown")
 	}
 	return o
 }
