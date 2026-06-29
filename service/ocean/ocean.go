@@ -5,7 +5,6 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/gcp"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/spark"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -17,7 +16,6 @@ import (
 type Service interface {
 	CloudProviderAWS() aws.Service
 	CloudProviderGCP() gcp.Service
-	Spark() spark.Service
 	CloudProviderAzureNP() azure_np.Service
 	RightSizing() right_sizing.Service
 }
@@ -46,12 +44,6 @@ func (s *ServiceOp) CloudProviderAWS() aws.Service {
 
 func (s *ServiceOp) CloudProviderGCP() gcp.Service {
 	return &gcp.ServiceOp{
-		Client: s.Client,
-	}
-}
-
-func (s *ServiceOp) Spark() spark.Service {
-	return &spark.ServiceOp{
 		Client: s.Client,
 	}
 }
