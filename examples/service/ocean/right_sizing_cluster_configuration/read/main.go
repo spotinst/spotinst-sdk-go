@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/cluster_right_sizing"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing_cluster_config"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	// Read cluster configuration.
-	out, err := svc.ClusterRightSizing().ReadClusterConfiguration(ctx, &cluster_right_sizing.ReadClusterConfigurationInput{
+	out, err := svc.ClusterRightSizing().ReadClusterConfiguration(ctx, &right_sizing_cluster_config.ReadRightsizingClusterConfigurationInput{
 		OceanId:           spotinst.String("o-123456"),
 		ClusterIdentifier: spotinst.String("my-cluster-identifier"),
 	})
@@ -38,7 +38,7 @@ func main() {
 	}
 
 	if out.ClusterConfiguration != nil {
-		log.Printf("Current cluster right-sizing config: %s",
+		log.Printf("[Read] Current cluster right-sizing config: %s",
 			stringutil.Stringify(out.ClusterConfiguration))
 	}
 }

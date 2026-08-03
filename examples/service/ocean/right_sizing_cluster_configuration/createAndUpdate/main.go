@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/cluster_right_sizing"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing_cluster_config"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
@@ -30,10 +30,10 @@ func main() {
 
 	// Create a new cluster.
 
-	out, err := svc.ClusterRightSizing().PostClusterConfiguration(ctx, &cluster_right_sizing.PostClusterConfigurationInput{
+	out, err := svc.ClusterRightSizing().PostClusterConfiguration(ctx, &right_sizing_cluster_config.RightsizingClusterConfigurationInput{
 		OceanId:           spotinst.String("o-123456"),
 		ClusterIdentifier: spotinst.String("my-cluster-identifier"),
-		Config: &cluster_right_sizing.ClusterConfiguration{
+		Config: &right_sizing_cluster_config.RightsizingClusterConfiguration{
 			AdjustLimitOnDownsize:           spotinst.Bool(true),
 			DownsideOnly:                    spotinst.Bool(true),
 			RecommendationsCpuPercentile:    spotinst.Int(99),
@@ -45,7 +45,7 @@ func main() {
 	}
 
 	if out.ClusterConfiguration != nil {
-		log.Printf("Posted cluster right-sizing config: %s",
+		log.Printf("[Create/Update] cluster right-sizing config: %s",
 			stringutil.Stringify(out.ClusterConfiguration))
 	}
 }

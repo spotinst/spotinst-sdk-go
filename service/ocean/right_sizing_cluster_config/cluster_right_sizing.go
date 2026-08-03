@@ -1,4 +1,4 @@
-package cluster_right_sizing
+package right_sizing_cluster_config
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
 )
 
-type ClusterConfiguration struct {
+type RightsizingClusterConfiguration struct {
 	AdjustLimitOnDownsize           *bool `json:"adjustLimitOnDownsize,omitempty"`
 	DownsideOnly                    *bool `json:"downsideOnly,omitempty"`
 	RecommendationsCpuPercentile    *int  `json:"recommendationsCpuPercentile,omitempty"`
@@ -22,27 +22,27 @@ type ClusterConfiguration struct {
 	nullFields      []string
 }
 
-type PostClusterConfigurationInput struct {
-	OceanId           *string               `json:"oceanId,omitempty"`
-	ClusterIdentifier *string               `json:"clusterIdentifier,omitempty"`
-	Config            *ClusterConfiguration `json:"config,omitempty"`
+type RightsizingClusterConfigurationInput struct {
+	OceanId           *string                          `json:"oceanId,omitempty"`
+	ClusterIdentifier *string                          `json:"clusterIdentifier,omitempty"`
+	Config            *RightsizingClusterConfiguration `json:"config,omitempty"`
 }
 
-type PostClusterConfigurationOutput struct {
-	ClusterConfiguration *ClusterConfiguration `json:"config,omitempty"`
+type RightsizingClusterConfigurationOutput struct {
+	ClusterConfiguration *RightsizingClusterConfiguration `json:"config,omitempty"`
 }
 
-type ReadClusterConfigurationInput struct {
+type ReadRightsizingClusterConfigurationInput struct {
 	OceanId           *string `json:"oceanId,omitempty"`
 	ClusterIdentifier *string `json:"clusterIdentifier,omitempty"`
 }
 
-type ReadClusterConfigurationOutput struct {
-	ClusterConfiguration *ClusterConfiguration `json:"config,omitempty"`
+type ReadRightsizingClusterConfigurationOutput struct {
+	ClusterConfiguration *RightsizingClusterConfiguration `json:"config,omitempty"`
 }
 
 type clusterConfigurationWrapper struct {
-	Config *ClusterConfiguration `json:"config,omitempty"`
+	Config *RightsizingClusterConfiguration `json:"config,omitempty"`
 }
 
 func clusterConfigurationWrapperFromJSON(in []byte) (*clusterConfigurationWrapper, error) {
@@ -53,21 +53,21 @@ func clusterConfigurationWrapperFromJSON(in []byte) (*clusterConfigurationWrappe
 	return b, nil
 }
 
-func clusterConfigurationFromJSON(in []byte) (*ClusterConfiguration, error) {
-	b := new(ClusterConfiguration)
+func clusterConfigurationFromJSON(in []byte) (*RightsizingClusterConfiguration, error) {
+	b := new(RightsizingClusterConfiguration)
 	if err := json.Unmarshal(in, b); err != nil {
 		return nil, err
 	}
 	return b, nil
 }
 
-func clusterConfigurationsFromJSON(in []byte) ([]*ClusterConfiguration, error) {
+func clusterConfigurationsFromJSON(in []byte) ([]*RightsizingClusterConfiguration, error) {
 	var rw client.Response
 	if err := json.Unmarshal(in, &rw); err != nil {
 		return nil, err
 	}
 
-	out := make([]*ClusterConfiguration, len(rw.Response.Items))
+	out := make([]*RightsizingClusterConfiguration, len(rw.Response.Items))
 	if len(out) == 0 {
 		return out, nil
 	}
@@ -93,7 +93,7 @@ func clusterConfigurationsFromJSON(in []byte) ([]*ClusterConfiguration, error) {
 	return out, nil
 }
 
-func clusterConfigurationsFromHttpResponse(resp *http.Response) ([]*ClusterConfiguration, error) {
+func clusterConfigurationsFromHttpResponse(resp *http.Response) ([]*RightsizingClusterConfiguration, error) {
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ func clusterConfigurationsFromHttpResponse(resp *http.Response) ([]*ClusterConfi
 	return clusterConfigurationsFromJSON(body)
 }
 
-func (s *ServiceOp) PostClusterConfiguration(ctx context.Context, input *PostClusterConfigurationInput) (*PostClusterConfigurationOutput, error) {
+func (s *ServiceOp) PostClusterConfiguration(ctx context.Context, input *RightsizingClusterConfigurationInput) (*RightsizingClusterConfigurationOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/cluster/configuration", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanId),
 	})
@@ -129,7 +129,7 @@ func (s *ServiceOp) PostClusterConfiguration(ctx context.Context, input *PostClu
 		return nil, err
 	}
 
-	output := new(PostClusterConfigurationOutput)
+	output := new(RightsizingClusterConfigurationOutput)
 	if len(cfgs) > 0 {
 		output.ClusterConfiguration = cfgs[0]
 	}
@@ -137,7 +137,7 @@ func (s *ServiceOp) PostClusterConfiguration(ctx context.Context, input *PostClu
 	return output, nil
 }
 
-func (s *ServiceOp) ReadClusterConfiguration(ctx context.Context, input *ReadClusterConfigurationInput) (*ReadClusterConfigurationOutput, error) {
+func (s *ServiceOp) ReadClusterConfiguration(ctx context.Context, input *ReadRightsizingClusterConfigurationInput) (*ReadRightsizingClusterConfigurationOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/cluster/configuration", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanId),
 	})
@@ -161,7 +161,7 @@ func (s *ServiceOp) ReadClusterConfiguration(ctx context.Context, input *ReadClu
 		return nil, err
 	}
 
-	output := new(ReadClusterConfigurationOutput)
+	output := new(ReadRightsizingClusterConfigurationOutput)
 	if len(cfgs) > 0 {
 		output.ClusterConfiguration = cfgs[0]
 	}
@@ -171,34 +171,34 @@ func (s *ServiceOp) ReadClusterConfiguration(ctx context.Context, input *ReadClu
 
 // region ClusterConfiguration
 
-func (o ClusterConfiguration) MarshalJSON() ([]byte, error) {
-	type noMethod ClusterConfiguration
+func (o RightsizingClusterConfiguration) MarshalJSON() ([]byte, error) {
+	type noMethod RightsizingClusterConfiguration
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
 }
 
-func (o *ClusterConfiguration) SetAdjustLimitOnDownsize(v *bool) *ClusterConfiguration {
+func (o *RightsizingClusterConfiguration) SetAdjustLimitOnDownsize(v *bool) *RightsizingClusterConfiguration {
 	if o.AdjustLimitOnDownsize = v; o.AdjustLimitOnDownsize == nil {
 		o.nullFields = append(o.nullFields, "AdjustLimitOnDownsize")
 	}
 	return o
 }
 
-func (o *ClusterConfiguration) SetDownsideOnly(v *bool) *ClusterConfiguration {
+func (o *RightsizingClusterConfiguration) SetDownsideOnly(v *bool) *RightsizingClusterConfiguration {
 	if o.DownsideOnly = v; o.DownsideOnly == nil {
 		o.nullFields = append(o.nullFields, "DownsideOnly")
 	}
 	return o
 }
 
-func (o *ClusterConfiguration) SetRecommendationsCpuPercentile(v *int) *ClusterConfiguration {
+func (o *RightsizingClusterConfiguration) SetRecommendationsCpuPercentile(v *int) *RightsizingClusterConfiguration {
 	if o.RecommendationsCpuPercentile = v; o.RecommendationsCpuPercentile == nil {
 		o.nullFields = append(o.nullFields, "RecommendationsCpuPercentile")
 	}
 	return o
 }
 
-func (o *ClusterConfiguration) SetRecommendationsMemoryPercentile(v *int) *ClusterConfiguration {
+func (o *RightsizingClusterConfiguration) SetRecommendationsMemoryPercentile(v *int) *RightsizingClusterConfiguration {
 	if o.RecommendationsMemoryPercentile = v; o.RecommendationsMemoryPercentile == nil {
 		o.nullFields = append(o.nullFields, "RecommendationsMemoryPercentile")
 	}

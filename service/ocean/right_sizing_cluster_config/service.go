@@ -1,4 +1,4 @@
-package cluster_right_sizing
+package right_sizing_cluster_config
 
 import (
 	"context"
@@ -12,8 +12,8 @@ import (
 // of the Spotinst API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	PostClusterConfiguration(context.Context, *PostClusterConfigurationInput) (*PostClusterConfigurationOutput, error)
-	ReadClusterConfiguration(context.Context, *ReadClusterConfigurationInput) (*ReadClusterConfigurationOutput, error)
+	PostClusterConfiguration(context.Context, *RightsizingClusterConfigurationInput) (*RightsizingClusterConfigurationOutput, error)
+	ReadClusterConfiguration(context.Context, *ReadRightsizingClusterConfigurationInput) (*ReadRightsizingClusterConfigurationOutput, error)
 }
 
 type ServiceOp struct {
