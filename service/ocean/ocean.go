@@ -5,6 +5,7 @@ import (
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/gcp"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing_cluster_config"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -18,6 +19,7 @@ type Service interface {
 	CloudProviderGCP() gcp.Service
 	CloudProviderAzureNP() azure_np.Service
 	RightSizing() right_sizing.Service
+	RightSizingClusterConfig() right_sizing_cluster_config.Service
 }
 
 type ServiceOp struct {
@@ -56,6 +58,12 @@ func (s *ServiceOp) CloudProviderAzureNP() azure_np.Service {
 
 func (s *ServiceOp) RightSizing() right_sizing.Service {
 	return &right_sizing.ServiceOp{
+		Client: s.Client,
+	}
+}
+
+func (s *ServiceOp) RightSizingClusterConfig() right_sizing_cluster_config.Service {
+	return &right_sizing_cluster_config.ServiceOp{
 		Client: s.Client,
 	}
 }
