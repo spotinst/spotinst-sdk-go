@@ -29,7 +29,7 @@ func main() {
 	ctx := context.Background()
 
 	// Read cluster configuration.
-	out, err := svc.RightSizingCluster().ReadRightSizingClusterConfiguration(ctx, &right_sizing_cluster_config.ReadRightsizingClusterConfigurationInput{
+	out, err := svc.RightSizingClusterConfig().ReadRightSizingClusterConfiguration(ctx, &right_sizing_cluster_config.ReadRightsizingClusterConfigurationInput{
 		OceanId:           spotinst.String("o-123456"),
 		ClusterIdentifier: spotinst.String("my-cluster-identifier"),
 	})
