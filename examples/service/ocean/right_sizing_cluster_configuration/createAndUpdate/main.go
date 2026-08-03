@@ -30,7 +30,7 @@ func main() {
 
 	// Create a new cluster.
 
-	out, err := svc.ClusterRightSizing().PostClusterConfiguration(ctx, &right_sizing_cluster_config.RightsizingClusterConfigurationInput{
+	out, err := svc.RightSizingCluster().PostClusterConfiguration(ctx, &right_sizing_cluster_config.RightsizingClusterConfigurationInput{
 		OceanId:           spotinst.String("o-123456"),
 		ClusterIdentifier: spotinst.String("my-cluster-identifier"),
 		Config: &right_sizing_cluster_config.RightsizingClusterConfiguration{

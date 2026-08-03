@@ -19,7 +19,7 @@ type Service interface {
 	CloudProviderGCP() gcp.Service
 	CloudProviderAzureNP() azure_np.Service
 	RightSizing() right_sizing.Service
-	ClusterRightSizing() right_sizing_cluster_config.Service
+	RightSizingCluster() right_sizing_cluster_config.Service
 }
 
 type ServiceOp struct {
@@ -62,7 +62,7 @@ func (s *ServiceOp) RightSizing() right_sizing.Service {
 	}
 }
 
-func (s *ServiceOp) ClusterRightSizing() right_sizing_cluster_config.Service {
+func (s *ServiceOp) RightSizingCluster() right_sizing_cluster_config.Service {
 	return &right_sizing_cluster_config.ServiceOp{
 		Client: s.Client,
 	}
