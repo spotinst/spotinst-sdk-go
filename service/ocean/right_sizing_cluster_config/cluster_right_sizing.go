@@ -101,7 +101,7 @@ func clusterConfigurationsFromHttpResponse(resp *http.Response) ([]*RightsizingC
 	return clusterConfigurationsFromJSON(body)
 }
 
-func (s *ServiceOp) PostClusterConfiguration(ctx context.Context, input *RightsizingClusterConfigurationInput) (*RightsizingClusterConfigurationOutput, error) {
+func (s *ServiceOp) PostRightSizingClusterConfiguration(ctx context.Context, input *RightsizingClusterConfigurationInput) (*RightsizingClusterConfigurationOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/cluster/configuration", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanId),
 	})
@@ -137,7 +137,7 @@ func (s *ServiceOp) PostClusterConfiguration(ctx context.Context, input *Rightsi
 	return output, nil
 }
 
-func (s *ServiceOp) ReadClusterConfiguration(ctx context.Context, input *ReadRightsizingClusterConfigurationInput) (*ReadRightsizingClusterConfigurationOutput, error) {
+func (s *ServiceOp) ReadRightSizingClusterConfiguration(ctx context.Context, input *ReadRightsizingClusterConfigurationInput) (*ReadRightsizingClusterConfigurationOutput, error) {
 	path, err := uritemplates.Expand("/ocean/{oceanId}/rightSizing/cluster/configuration", uritemplates.Values{
 		"oceanId": spotinst.StringValue(input.OceanId),
 	})

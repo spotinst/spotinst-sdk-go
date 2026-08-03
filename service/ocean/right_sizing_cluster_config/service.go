@@ -12,8 +12,8 @@ import (
 // of the Spotinst API. See this package's package overview docs for details on
 // the service.
 type Service interface {
-	PostClusterConfiguration(context.Context, *RightsizingClusterConfigurationInput) (*RightsizingClusterConfigurationOutput, error)
-	ReadClusterConfiguration(context.Context, *ReadRightsizingClusterConfigurationInput) (*ReadRightsizingClusterConfigurationOutput, error)
+	PostRightSizingClusterConfiguration(context.Context, *RightsizingClusterConfigurationInput) (*RightsizingClusterConfigurationOutput, error)
+	ReadRightSizingClusterConfiguration(context.Context, *ReadRightsizingClusterConfigurationInput) (*ReadRightsizingClusterConfigurationOutput, error)
 }
 
 type ServiceOp struct {
