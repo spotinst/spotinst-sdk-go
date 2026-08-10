@@ -122,7 +122,16 @@ type ResourceLimits struct {
 }
 
 type GKELaunchSpecScheduling struct {
-	Tasks []*GKELaunchSpecTask `json:"tasks,omitempty"`
+	Tasks         []*GKELaunchSpecTask        `json:"tasks,omitempty"`
+	ShutdownHours *GKELaunchSpecShutdownHours `json:"shutdownHours,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type GKELaunchSpecShutdownHours struct {
+	IsEnabled   *bool    `json:"isEnabled,omitempty"`
+	TimeWindows []string `json:"timeWindows,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -800,6 +809,37 @@ func (o GKELaunchSpecScheduling) MarshalJSON() ([]byte, error) {
 func (o *GKELaunchSpecScheduling) SetTasks(v []*GKELaunchSpecTask) *GKELaunchSpecScheduling {
 	if o.Tasks = v; o.Tasks == nil {
 		o.nullFields = append(o.nullFields, "Tasks")
+	}
+	return o
+}
+
+func (o *GKELaunchSpecScheduling) SetShutdownHours(v *GKELaunchSpecShutdownHours) *GKELaunchSpecScheduling {
+	if o.ShutdownHours = v; o.ShutdownHours == nil {
+		o.nullFields = append(o.nullFields, "ShutdownHours")
+	}
+	return o
+}
+
+// endregion
+
+//region ShutdownHours
+
+func (o GKELaunchSpecShutdownHours) MarshalJSON() ([]byte, error) {
+	type noMethod GKELaunchSpecShutdownHours
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *GKELaunchSpecShutdownHours) SetIsEnabled(v *bool) *GKELaunchSpecShutdownHours {
+	if o.IsEnabled = v; o.IsEnabled == nil {
+		o.nullFields = append(o.nullFields, "IsEnabled")
+	}
+	return o
+}
+
+func (o *GKELaunchSpecShutdownHours) SetTimeWindows(v []string) *GKELaunchSpecShutdownHours {
+	if o.TimeWindows = v; o.TimeWindows == nil {
+		o.nullFields = append(o.nullFields, "TimeWindows")
 	}
 	return o
 }
