@@ -248,7 +248,8 @@ func (o *Taint) SetEffect(v *string) *Taint {
 //region AutoScale
 
 type AutoScale struct {
-	Headrooms []*Headrooms `json:"headrooms,omitempty"`
+	Headrooms              []*Headrooms `json:"headrooms,omitempty"`
+	AutoHeadroomPercentage *int         `json:"autoHeadroomPercentage,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -273,6 +274,13 @@ func (o AutoScale) MarshalJSON() ([]byte, error) {
 func (o *AutoScale) SetHeadrooms(v []*Headrooms) *AutoScale {
 	if o.Headrooms = v; o.Headrooms == nil {
 		o.nullFields = append(o.nullFields, "Headrooms")
+	}
+	return o
+}
+
+func (o *AutoScale) SetAutoHeadroomPercentage(v *int) *AutoScale {
+	if o.AutoHeadroomPercentage = v; o.AutoHeadroomPercentage == nil {
+		o.nullFields = append(o.nullFields, "AutoHeadroomPercentage")
 	}
 	return o
 }

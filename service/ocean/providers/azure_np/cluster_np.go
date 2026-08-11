@@ -43,10 +43,11 @@ type AKS struct {
 }
 
 type AutoScaler struct {
-	IsEnabled      *bool           `json:"isEnabled,omitempty"`
-	ResourceLimits *ResourceLimits `json:"resourceLimits,omitempty"`
-	Down           *Down           `json:"down,omitempty"`
-	Headroom       *Headroom       `json:"headroom,omitempty"`
+	IsEnabled                        *bool           `json:"isEnabled,omitempty"`
+	ResourceLimits                   *ResourceLimits `json:"resourceLimits,omitempty"`
+	Down                             *Down           `json:"down,omitempty"`
+	Headroom                         *Headroom       `json:"headroom,omitempty"`
+	EnableAutomaticAndManualHeadroom *bool           `json:"enableAutomaticAndManualHeadroom,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -617,6 +618,13 @@ func (o *AutoScaler) SetDown(v *Down) *AutoScaler {
 func (o *AutoScaler) SetHeadroom(v *Headroom) *AutoScaler {
 	if o.Headroom = v; o.Headroom == nil {
 		o.nullFields = append(o.nullFields, "Headroom")
+	}
+	return o
+}
+
+func (o *AutoScaler) SetEnableAutomaticAndManualHeadroom(v *bool) *AutoScaler {
+	if o.EnableAutomaticAndManualHeadroom = v; o.EnableAutomaticAndManualHeadroom == nil {
+		o.nullFields = append(o.nullFields, "EnableAutomaticAndManualHeadroom")
 	}
 	return o
 }
