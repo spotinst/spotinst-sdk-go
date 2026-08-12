@@ -3,12 +3,13 @@ package right_sizing
 import (
 	"context"
 	"encoding/json"
+	"io/ioutil"
+	"net/http"
+
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/client"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/uritemplates"
-	"io/ioutil"
-	"net/http"
 )
 
 type RightsizingRule struct {
@@ -23,6 +24,8 @@ type RightsizingRule struct {
 	RecommendationApplicationHPA            *RecommendationApplicationHPA            `json:"recommendationApplicationHPA,omitempty"`
 	AutoApplyDefinition                     *AutoApplyDefinition                     `json:"autoApplyDefinition,omitempty"`
 	DownsideOnly                            *bool                                    `json:"downsideOnly,omitempty"`
+	CpuPercentile                           *int                                     `json:"cpuPercentile,omitempty"`
+	MemoryPercentile                        *int                                     `json:"memoryPercentile,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -606,6 +609,20 @@ func (o *RightsizingRule) SetAutoApplyDefinition(v *AutoApplyDefinition) *Rights
 func (o *RightsizingRule) SetDownsideOnly(v *bool) *RightsizingRule {
 	if o.DownsideOnly = v; o.DownsideOnly == nil {
 		o.nullFields = append(o.nullFields, "DownsideOnly")
+	}
+	return o
+}
+
+func (o *RightsizingRule) SetCpuPercentile(v *int) *RightsizingRule {
+	if o.CpuPercentile = v; o.CpuPercentile == nil {
+		o.nullFields = append(o.nullFields, "CpuPercentile")
+	}
+	return o
+}
+
+func (o *RightsizingRule) SetMemoryPercentile(v *int) *RightsizingRule {
+	if o.MemoryPercentile = v; o.MemoryPercentile == nil {
+		o.nullFields = append(o.nullFields, "MemoryPercentile")
 	}
 	return o
 }
