@@ -15,6 +15,7 @@ type NodePoolProperties struct {
 	VnetSubnetIDs      []string         `json:"vnetSubnetIDs,omitempty"`
 	LinuxOSConfig      *LinuxOSConfig   `json:"linuxOSConfig,omitempty"`
 	LocalDnsProfile    *LocalDnsProfile `json:"localDnsProfile,omitempty"`
+	EncryptionAtHost   *bool            `json:"encryptionAtHost,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -36,6 +37,13 @@ func (o *NodePoolProperties) SetLinuxOSConfig(v *LinuxOSConfig) *NodePoolPropert
 func (o *NodePoolProperties) SetLocalDnsProfile(v *LocalDnsProfile) *NodePoolProperties {
 	if o.LocalDnsProfile = v; o.LocalDnsProfile == nil {
 		o.nullFields = append(o.nullFields, "LocalDnsProfile")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetEncryptionAtHost(v *bool) *NodePoolProperties {
+	if o.EncryptionAtHost = v; o.EncryptionAtHost == nil {
+		o.nullFields = append(o.nullFields, "EncryptionAtHost")
 	}
 	return o
 }
