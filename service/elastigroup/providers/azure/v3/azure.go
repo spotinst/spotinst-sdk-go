@@ -123,6 +123,7 @@ type LaunchSpecification struct {
 	Security                 *Security                   `json:"security,omitempty"`
 	UserData                 *string                     `json:"userData,omitempty"`
 	VmNamePrefix             *string                     `json:"vmNamePrefix,omitempty"`
+	LicenseType              *string                     `json:"licenseType,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1124,6 +1125,13 @@ func (o *LaunchSpecification) SetUserData(v *string) *LaunchSpecification {
 func (o *LaunchSpecification) SetVmNamePrefix(v *string) *LaunchSpecification {
 	if o.VmNamePrefix = v; o.VmNamePrefix == nil {
 		o.nullFields = append(o.nullFields, "VmNamePrefix")
+	}
+	return o
+}
+
+func (o *LaunchSpecification) SetLicenseType(v *string) *LaunchSpecification {
+	if o.LicenseType = v; o.LicenseType == nil {
+		o.nullFields = append(o.nullFields, "LicenseType")
 	}
 	return o
 }
