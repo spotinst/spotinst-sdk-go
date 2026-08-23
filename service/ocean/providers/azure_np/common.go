@@ -590,7 +590,8 @@ func (o *SuspensionHours) SetIsEnabled(v *bool) *SuspensionHours {
 // region vmSizes
 
 type VmSizes struct {
-	Filters *Filters `json:"filters,omitempty"`
+	Filters          *Filters `json:"filters,omitempty"`
+	PreferredVmSizes []string `json:"preferredVmSizes,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -626,6 +627,13 @@ func (o VmSizes) MarshalJSON() ([]byte, error) {
 func (o *VmSizes) SetFilters(v *Filters) *VmSizes {
 	if o.Filters = v; o.Filters == nil {
 		o.nullFields = append(o.nullFields, "Filters")
+	}
+	return o
+}
+
+func (o *VmSizes) SetPreferredVmSizes(v []string) *VmSizes {
+	if o.PreferredVmSizes = v; o.PreferredVmSizes == nil {
+		o.nullFields = append(o.nullFields, "PreferredVmSizes")
 	}
 	return o
 }
