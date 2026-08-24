@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"log"
+
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
@@ -98,6 +99,54 @@ func main() {
 					KubernetesVersion:  spotinst.String("1.26"),
 					PodSubnetIDs:       []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
 					VnetSubnetIDs:      []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
+					EncryptionAtHost:   spotinst.Bool(true),
+					LocalDnsProfile: &azure_np.LocalDnsProfile{
+						Mode: spotinst.String("Preferred"),
+						VnetDNSOverrides: map[string]*azure_np.DNSOverrideSettings{
+							".": {
+								CacheDurationInSeconds:      spotinst.Int(4000),
+								ForwardDestination:          spotinst.String("ClusterCoreDNS"),
+								ForwardPolicy:               spotinst.String("RoundRobin"),
+								MaxConcurrent:               spotinst.Int(4000),
+								Protocol:                    spotinst.String("ForceTCP"),
+								QueryLogging:                spotinst.String("Error"),
+								ServeStale:                  spotinst.String("Verify"),
+								ServeStaleDurationInSeconds: spotinst.Int(4000),
+							},
+							"cluster.local": {
+								CacheDurationInSeconds:      spotinst.Int(3600),
+								ForwardDestination:          spotinst.String("VnetDNS"),
+								ForwardPolicy:               spotinst.String("Sequential"),
+								MaxConcurrent:               spotinst.Int(3600),
+								Protocol:                    spotinst.String("PreferUDP"),
+								QueryLogging:                spotinst.String("Log"),
+								ServeStale:                  spotinst.String("Immediate"),
+								ServeStaleDurationInSeconds: spotinst.Int(3600),
+							},
+						},
+						KubeDNSOverrides: map[string]*azure_np.DNSOverrideSettings{
+							".": {
+								CacheDurationInSeconds:      spotinst.Int(4000),
+								ForwardDestination:          spotinst.String("ClusterCoreDNS"),
+								ForwardPolicy:               spotinst.String("RoundRobin"),
+								MaxConcurrent:               spotinst.Int(4000),
+								Protocol:                    spotinst.String("ForceTCP"),
+								QueryLogging:                spotinst.String("Error"),
+								ServeStale:                  spotinst.String("Verify"),
+								ServeStaleDurationInSeconds: spotinst.Int(4000),
+							},
+							"cluster.local": {
+								CacheDurationInSeconds:      spotinst.Int(3600),
+								ForwardDestination:          spotinst.String("VnetDNS"),
+								ForwardPolicy:               spotinst.String("Sequential"),
+								MaxConcurrent:               spotinst.Int(3600),
+								Protocol:                    spotinst.String("PreferUDP"),
+								QueryLogging:                spotinst.String("Log"),
+								ServeStale:                  spotinst.String("Immediate"),
+								ServeStaleDurationInSeconds: spotinst.Int(3600),
+							},
+						},
+					},
 				},
 				NodeCountLimits: &azure_np.NodeCountLimits{
 					MinCount: spotinst.Int(0),
@@ -168,6 +217,10 @@ func main() {
 							"nvidia-tesla-t4",
 							"nvidia-tesla-a100",
 						},
+					},
+					PreferredVmSizes: []string{
+						"Standard_D4s_v3",
+						"Standard_D8s_v3",
 					},
 				},
 			},

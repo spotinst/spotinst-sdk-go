@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/spotinst/spotinst-sdk-go/service/elastigroup"
 	azurev3 "github.com/spotinst/spotinst-sdk-go/service/elastigroup/providers/azure/v3"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/util/stringutil"
-	"log"
 )
 
 func main() {
@@ -62,6 +63,7 @@ func main() {
 						},
 					},
 					ShutdownScript: spotinst.String("foo"),
+					LicenseType:    spotinst.String("foo"),
 					Network: &azurev3.Network{
 						ResourceGroupName:  spotinst.String("foo"),
 						VirtualNetworkName: spotinst.String("foo"),

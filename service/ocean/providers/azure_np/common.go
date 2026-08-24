@@ -4,16 +4,18 @@ import "github.com/spotinst/spotinst-sdk-go/spotinst/util/jsonutil"
 
 // NodePoolProperties region
 type NodePoolProperties struct {
-	MaxPodsPerNode     *int           `json:"maxPodsPerNode,omitempty"`
-	EnableNodePublicIP *bool          `json:"enableNodePublicIP,omitempty"`
-	OsDiskSizeGB       *int           `json:"osDiskSizeGB,omitempty"`
-	OsDiskType         *string        `json:"osDiskType,omitempty"`
-	OsType             *string        `json:"osType,omitempty"`
-	OsSKU              *string        `json:"osSKU,omitempty"`
-	KubernetesVersion  *string        `json:"kubernetesVersion,omitempty"`
-	PodSubnetIDs       []string       `json:"podSubnetIDs,omitempty"`
-	VnetSubnetIDs      []string       `json:"vnetSubnetIDs,omitempty"`
-	LinuxOSConfig      *LinuxOSConfig `json:"linuxOSConfig,omitempty"`
+	MaxPodsPerNode     *int             `json:"maxPodsPerNode,omitempty"`
+	EnableNodePublicIP *bool            `json:"enableNodePublicIP,omitempty"`
+	OsDiskSizeGB       *int             `json:"osDiskSizeGB,omitempty"`
+	OsDiskType         *string          `json:"osDiskType,omitempty"`
+	OsType             *string          `json:"osType,omitempty"`
+	OsSKU              *string          `json:"osSKU,omitempty"`
+	KubernetesVersion  *string          `json:"kubernetesVersion,omitempty"`
+	PodSubnetIDs       []string         `json:"podSubnetIDs,omitempty"`
+	VnetSubnetIDs      []string         `json:"vnetSubnetIDs,omitempty"`
+	LinuxOSConfig      *LinuxOSConfig   `json:"linuxOSConfig,omitempty"`
+	LocalDnsProfile    *LocalDnsProfile `json:"localDnsProfile,omitempty"`
+	EncryptionAtHost   *bool            `json:"encryptionAtHost,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -28,6 +30,20 @@ func (o NodePoolProperties) MarshalJSON() ([]byte, error) {
 func (o *NodePoolProperties) SetLinuxOSConfig(v *LinuxOSConfig) *NodePoolProperties {
 	if o.LinuxOSConfig = v; o.LinuxOSConfig == nil {
 		o.nullFields = append(o.nullFields, "LinuxOSConfig")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetLocalDnsProfile(v *LocalDnsProfile) *NodePoolProperties {
+	if o.LocalDnsProfile = v; o.LocalDnsProfile == nil {
+		o.nullFields = append(o.nullFields, "LocalDnsProfile")
+	}
+	return o
+}
+
+func (o *NodePoolProperties) SetEncryptionAtHost(v *bool) *NodePoolProperties {
+	if o.EncryptionAtHost = v; o.EncryptionAtHost == nil {
+		o.nullFields = append(o.nullFields, "EncryptionAtHost")
 	}
 	return o
 }
@@ -111,6 +127,124 @@ func (o *LinuxOSConfig) SetSysctls(v *Sysctls) *LinuxOSConfig {
 	}
 	return o
 }
+
+// LocalDnsProfile region
+type LocalDnsProfile struct {
+	Mode             *string                         `json:"mode,omitempty"`
+	VnetDNSOverrides map[string]*DNSOverrideSettings `json:"vnetDNSOverrides,omitempty"`
+	KubeDNSOverrides map[string]*DNSOverrideSettings `json:"kubeDNSOverrides,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o LocalDnsProfile) MarshalJSON() ([]byte, error) {
+	type noMethod LocalDnsProfile
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LocalDnsProfile) SetMode(v *string) *LocalDnsProfile {
+	if o.Mode = v; o.Mode == nil {
+		o.nullFields = append(o.nullFields, "Mode")
+	}
+	return o
+}
+
+func (o *LocalDnsProfile) SetVnetDNSOverrides(v map[string]*DNSOverrideSettings) *LocalDnsProfile {
+	if o.VnetDNSOverrides = v; o.VnetDNSOverrides == nil {
+		o.nullFields = append(o.nullFields, "VnetDNSOverrides")
+	}
+	return o
+}
+
+func (o *LocalDnsProfile) SetKubeDNSOverrides(v map[string]*DNSOverrideSettings) *LocalDnsProfile {
+	if o.KubeDNSOverrides = v; o.KubeDNSOverrides == nil {
+		o.nullFields = append(o.nullFields, "KubeDNSOverrides")
+	}
+	return o
+}
+
+// endregion
+
+// DNSOverrideSettings region
+type DNSOverrideSettings struct {
+	QueryLogging                *string `json:"queryLogging,omitempty"`
+	Protocol                    *string `json:"protocol,omitempty"`
+	ForwardDestination          *string `json:"forwardDestination,omitempty"`
+	ForwardPolicy               *string `json:"forwardPolicy,omitempty"`
+	MaxConcurrent               *int    `json:"maxConcurrent,omitempty"`
+	CacheDurationInSeconds      *int    `json:"cacheDurationInSeconds,omitempty"`
+	ServeStaleDurationInSeconds *int    `json:"serveStaleDurationInSeconds,omitempty"`
+	ServeStale                  *string `json:"serveStale,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+func (o DNSOverrideSettings) MarshalJSON() ([]byte, error) {
+	type noMethod DNSOverrideSettings
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *DNSOverrideSettings) SetQueryLogging(v *string) *DNSOverrideSettings {
+	if o.QueryLogging = v; o.QueryLogging == nil {
+		o.nullFields = append(o.nullFields, "QueryLogging")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetProtocol(v *string) *DNSOverrideSettings {
+	if o.Protocol = v; o.Protocol == nil {
+		o.nullFields = append(o.nullFields, "Protocol")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetForwardDestination(v *string) *DNSOverrideSettings {
+	if o.ForwardDestination = v; o.ForwardDestination == nil {
+		o.nullFields = append(o.nullFields, "ForwardDestination")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetForwardPolicy(v *string) *DNSOverrideSettings {
+	if o.ForwardPolicy = v; o.ForwardPolicy == nil {
+		o.nullFields = append(o.nullFields, "ForwardPolicy")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetMaxConcurrent(v *int) *DNSOverrideSettings {
+	if o.MaxConcurrent = v; o.MaxConcurrent == nil {
+		o.nullFields = append(o.nullFields, "MaxConcurrent")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetCacheDurationInSeconds(v *int) *DNSOverrideSettings {
+	if o.CacheDurationInSeconds = v; o.CacheDurationInSeconds == nil {
+		o.nullFields = append(o.nullFields, "CacheDurationInSeconds")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetServeStaleDurationInSeconds(v *int) *DNSOverrideSettings {
+	if o.ServeStaleDurationInSeconds = v; o.ServeStaleDurationInSeconds == nil {
+		o.nullFields = append(o.nullFields, "ServeStaleDurationInSeconds")
+	}
+	return o
+}
+
+func (o *DNSOverrideSettings) SetServeStale(v *string) *DNSOverrideSettings {
+	if o.ServeStale = v; o.ServeStale == nil {
+		o.nullFields = append(o.nullFields, "ServeStale")
+	}
+	return o
+}
+
+// endregion
 
 // Sysctls region
 type Sysctls struct {
@@ -456,7 +590,8 @@ func (o *SuspensionHours) SetIsEnabled(v *bool) *SuspensionHours {
 // region vmSizes
 
 type VmSizes struct {
-	Filters *Filters `json:"filters,omitempty"`
+	Filters          *Filters `json:"filters,omitempty"`
+	PreferredVmSizes []string `json:"preferredVmSizes,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -492,6 +627,13 @@ func (o VmSizes) MarshalJSON() ([]byte, error) {
 func (o *VmSizes) SetFilters(v *Filters) *VmSizes {
 	if o.Filters = v; o.Filters == nil {
 		o.nullFields = append(o.nullFields, "Filters")
+	}
+	return o
+}
+
+func (o *VmSizes) SetPreferredVmSizes(v []string) *VmSizes {
+	if o.PreferredVmSizes = v; o.PreferredVmSizes == nil {
+		o.nullFields = append(o.nullFields, "PreferredVmSizes")
 	}
 	return o
 }
