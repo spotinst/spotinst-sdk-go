@@ -2,9 +2,10 @@ package main
 
 import (
 	"context"
+	"log"
+
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
 	"github.com/spotinst/spotinst-sdk-go/service/ocean/right_sizing"
-	"log"
 
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
 	"github.com/spotinst/spotinst-sdk-go/spotinst/session"
@@ -34,6 +35,8 @@ func main() {
 			OceanId:                           spotinst.String("o-12ab34"),
 			ExcludePreliminaryRecommendations: spotinst.Bool(true),
 			RestartReplicas:                   spotinst.String("MORE_THAN_ONE_REPLICA"),
+			CpuPercentile:                     spotinst.Int(90),
+			MemoryPercentile:                  spotinst.Int(95),
 			RecommendationApplicationHPA: &right_sizing.RecommendationApplicationHPA{
 				AllowHPARecommendations: spotinst.Bool(true),
 			},
