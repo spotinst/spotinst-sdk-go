@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 	"log"
+
+	"github.com/spotinst/spotinst-sdk-go/service/ocean/providers/azure_np"
 
 	"github.com/spotinst/spotinst-sdk-go/service/ocean"
 	"github.com/spotinst/spotinst-sdk-go/spotinst"
@@ -168,6 +169,10 @@ func main() {
 							"nvidia-tesla-t4",
 							"nvidia-tesla-a100",
 						},
+					},
+					PreferredVmSizes: []string{
+						"Standard_D4s_v3",
+						"Standard_F4s_v2",
 					},
 				},
 			},
