@@ -163,7 +163,7 @@ func main() {
 				},
 				PreferredVmSizes: []string{
 					"Standard_D4s_v3",
-					"Standard_F4s_v2",
+					"Standard_D8s_v3",
 				},
 			},
 		},
