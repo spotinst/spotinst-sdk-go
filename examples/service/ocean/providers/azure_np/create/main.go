@@ -99,6 +99,7 @@ func main() {
 					KubernetesVersion:  spotinst.String("1.26"),
 					PodSubnetIDs:       []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
 					VnetSubnetIDs:      []string{"/subscriptions/123456-1234-1234-1234-123456789/resourceGroups/ExampleResourceGroup/providers/Microsoft.Network/virtualNetworks/ExampleVirtualNetwork/subnets/default"},
+					EncryptionAtHost:   spotinst.Bool(true),
 				},
 				NodeCountLimits: &azure_np.NodeCountLimits{
 					MinCount: spotinst.Int(0),
