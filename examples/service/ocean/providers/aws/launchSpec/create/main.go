@@ -75,6 +75,10 @@ func main() {
 				}},
 			EphemeralStorage: &aws.EphemeralStorage{
 				DeviceName: spotinst.String("/dev/xvdb"),
+			},
+			CapacityReservations: &aws.CapacityReservations{
+				CapacityReservationIDs: []string{"cr-1a2b3c4d", "cr-5e6f7g8h"},
+				Fallback:               spotinst.Bool(true),
 			}},
 	})
 	if err != nil {
