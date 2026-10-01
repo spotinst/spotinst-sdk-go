@@ -46,6 +46,7 @@ type LaunchSpec struct {
 	ReservedENIs             *int                               `json:"reservedENIs,omitempty"`
 	InstanceStorePolicy      *InstanceStorePolicy               `json:"instanceStorePolicy,omitempty"`
 	StartupTaints            []*StartupTaints                   `json:"startupTaints,omitempty"`
+	CapacityReservations     *CapacityReservations              `json:"capacityReservations,omitempty"`
 
 	// Read-only fields.
 	CreatedAt *time.Time `json:"createdAt,omitempty"`
@@ -388,6 +389,14 @@ type InstanceTypesFilters struct {
 
 type EphemeralStorage struct {
 	DeviceName *string `json:"deviceName,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type CapacityReservations struct {
+	CapacityReservationIDs []string `json:"ids,omitempty"`
+	Fallback               *bool    `json:"fallback,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -811,6 +820,13 @@ func (o *LaunchSpec) SetInstanceStorePolicy(v *InstanceStorePolicy) *LaunchSpec 
 func (o *LaunchSpec) SetStartupTaints(v []*StartupTaints) *LaunchSpec {
 	if o.StartupTaints = v; o.StartupTaints == nil {
 		o.nullFields = append(o.nullFields, "StartupTaints")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetCapacityReservations(v *CapacityReservations) *LaunchSpec {
+	if o.CapacityReservations = v; o.CapacityReservations == nil {
+		o.nullFields = append(o.nullFields, "CapacityReservations")
 	}
 	return o
 }
@@ -1640,6 +1656,30 @@ func (o EphemeralStorage) MarshalJSON() ([]byte, error) {
 	type noMethod EphemeralStorage
 	raw := noMethod(o)
 	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+// endregion
+
+// region CapacityReservations
+
+func (o CapacityReservations) MarshalJSON() ([]byte, error) {
+	type noMethod CapacityReservations
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *CapacityReservations) SetCapacityReservationIDs(v []string) *CapacityReservations {
+	if o.CapacityReservationIDs = v; o.CapacityReservationIDs == nil {
+		o.nullFields = append(o.nullFields, "CapacityReservationIDs")
+	}
+	return o
+}
+
+func (o *CapacityReservations) SetFallback(v *bool) *CapacityReservations {
+	if o.Fallback = v; o.Fallback == nil {
+		o.nullFields = append(o.nullFields, "Fallback")
+	}
+	return o
 }
 
 // endregion
