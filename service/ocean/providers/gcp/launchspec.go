@@ -35,6 +35,7 @@ type LaunchSpec struct {
 	LaunchSpecTags              []string                       `json:"tags,omitempty"`
 	LaunchSpecNetworkInterfaces []*LaunchSpecNetworkInterfaces `json:"networkInterfaces,omitempty"`
 	Filters                     *Filters                       `json:"filters,omitempty"`
+	DynamicVolumeSize           *LaunchSpecDynamicVolumeSize   `json:"dynamicVolumeSize,omitempty"`
 
 	// forceSendFields is a list of field names (e.g. "Keys") to
 	// unconditionally include in API requests. By default, fields with
@@ -187,6 +188,14 @@ type LaunchSpecAliasIPRanges struct {
 
 	forceSendFields []string
 	nullFields      []string
+}
+
+type LaunchSpecDynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
+	forceSendFields     []string
+	nullFields          []string
 }
 
 type ListLaunchSpecsInput struct {
@@ -1009,6 +1018,44 @@ func (o *LaunchSpecAliasIPRanges) SetIPCidrRange(v *string) *LaunchSpecAliasIPRa
 func (o *LaunchSpecAliasIPRanges) SetSubnetworkRangeName(v *string) *LaunchSpecAliasIPRanges {
 	if o.SubnetworkRangeName = v; o.SubnetworkRangeName == nil {
 		o.nullFields = append(o.nullFields, "SubnetworkRangeName")
+	}
+	return o
+}
+
+// endregion
+
+// region DynamicVolumeSize
+
+func (o LaunchSpecDynamicVolumeSize) MarshalJSON() ([]byte, error) {
+	type noMethod LaunchSpecDynamicVolumeSize
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *LaunchSpecDynamicVolumeSize) SetBaseSize(v *int) *LaunchSpecDynamicVolumeSize {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *LaunchSpecDynamicVolumeSize) SetResource(v *string) *LaunchSpecDynamicVolumeSize {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *LaunchSpecDynamicVolumeSize) SetSizePerResourceUnit(v *int) *LaunchSpecDynamicVolumeSize {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
+	}
+	return o
+}
+
+func (o *LaunchSpec) SetDynamicVolumeSize(v *LaunchSpecDynamicVolumeSize) *LaunchSpec {
+	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
+		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
 	}
 	return o
 }

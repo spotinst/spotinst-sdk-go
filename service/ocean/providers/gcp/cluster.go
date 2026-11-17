@@ -202,12 +202,22 @@ type LaunchSpecification struct {
 	IPForwarding           *bool                             `json:"ipForwarding,omitempty"`
 	Metadata               []*Metadata                       `json:"metadata,omitempty"`
 	RootVolumeSizeInGB     *int                              `json:"rootVolumeSizeInGb,omitempty"`
+	DynamicVolumeSize      *ClusterDynamicVolumeSize         `json:"dynamicVolumeSize,omitempty"`
 	ServiceAccount         *string                           `json:"serviceAccount,omitempty"`
 	SourceImage            *string                           `json:"sourceImage,omitempty"`
 	Tags                   []string                          `json:"tags,omitempty"`
 	RootVolumeType         *string                           `json:"rootVolumeType,omitempty"`
 	ShieldedInstanceConfig *LaunchSpecShieldedInstanceConfig `json:"shieldedInstanceConfig,omitempty"`
 	UseAsTemplateOnly      *bool                             `json:"useAsTemplateOnly,omitempty"`
+
+	forceSendFields []string
+	nullFields      []string
+}
+
+type ClusterDynamicVolumeSize struct {
+	BaseSize            *int    `json:"baseSize,omitempty"`
+	Resource            *string `json:"resource,omitempty"`
+	SizePerResourceUnit *int    `json:"sizePerResourceUnit,omitempty"`
 
 	forceSendFields []string
 	nullFields      []string
@@ -1046,6 +1056,13 @@ func (o *LaunchSpecification) SetRootVolumeSizeInGB(v *int) *LaunchSpecification
 	return o
 }
 
+func (o *LaunchSpecification) SetDynamicVolumeSize(v *ClusterDynamicVolumeSize) *LaunchSpecification {
+	if o.DynamicVolumeSize = v; o.DynamicVolumeSize == nil {
+		o.nullFields = append(o.nullFields, "DynamicVolumeSize")
+	}
+	return o
+}
+
 func (o *LaunchSpecification) SetServiceAccount(v *string) *LaunchSpecification {
 	if o.ServiceAccount = v; o.ServiceAccount == nil {
 		o.nullFields = append(o.nullFields, "ServiceAccount")
@@ -1482,6 +1499,37 @@ func (o *RollSpec) SetInstanceNames(v []string) *RollSpec {
 func (o *RollSpec) SetRespectPDB(v *bool) *RollSpec {
 	if o.RespectPDB = v; o.RespectPDB == nil {
 		o.nullFields = append(o.nullFields, "RespectPdb")
+	}
+	return o
+}
+
+// endregion
+
+// region ClusterDynamicVolumeSize
+
+func (o ClusterDynamicVolumeSize) MarshalJSON() ([]byte, error) {
+	type noMethod ClusterDynamicVolumeSize
+	raw := noMethod(o)
+	return jsonutil.MarshalJSON(raw, o.forceSendFields, o.nullFields)
+}
+
+func (o *ClusterDynamicVolumeSize) SetBaseSize(v *int) *ClusterDynamicVolumeSize {
+	if o.BaseSize = v; o.BaseSize == nil {
+		o.nullFields = append(o.nullFields, "BaseSize")
+	}
+	return o
+}
+
+func (o *ClusterDynamicVolumeSize) SetResource(v *string) *ClusterDynamicVolumeSize {
+	if o.Resource = v; o.Resource == nil {
+		o.nullFields = append(o.nullFields, "Resource")
+	}
+	return o
+}
+
+func (o *ClusterDynamicVolumeSize) SetSizePerResourceUnit(v *int) *ClusterDynamicVolumeSize {
+	if o.SizePerResourceUnit = v; o.SizePerResourceUnit == nil {
+		o.nullFields = append(o.nullFields, "SizePerResourceUnit")
 	}
 	return o
 }
